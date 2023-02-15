@@ -81,7 +81,7 @@ function SignInPage() {
             Iniciar Sesión
           </Typography>
           <div className="flex items-baseline mt-2 font-medium">
-            <Typography>¿No tiene una cuenta?</Typography>
+            <Typography>¿No tiene una cuenta1?</Typography>
             <Link className="ml-4" to="/sign-up">
               Registrarse
             </Link>
