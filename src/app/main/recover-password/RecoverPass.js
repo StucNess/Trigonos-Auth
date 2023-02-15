@@ -1,38 +1,40 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
+
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
+
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useEffect } from 'react';
 import jwtService from '../../auth/services/jwtService';
-//MIS IMPORTACIONES
+//IMPORTACIONES OBSOLETAS, pueden que sirvan a un futuro si no eliminar..
 import FormLabel from '@mui/material/FormLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
+import Checkbox from '@mui/material/Checkbox';
+import FormControl from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Avatar from '@mui/material/Avatar';
 /**
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  email: yup.string().email('Por favor ingrese un email válido').required('Debe ingresar su email'),
+  email: yup.string().email('Por favor ingrese un email válido').required('Debe ingresar su email asociado a su cuenta de Trígonos'),
   password: yup
     .string()
     .required('Por favor ingrese su nueva contraseña')
     .min(8, 'La contraseña es muy corta - debe ser de al menos 8 caracteres.'),
   code_valid:yup
   .string()
-  .required('Por favor ingrese el código enviado a su email').min(4, 'El codigo es de al menos 4 caracteres'),
+  .required('Por favor ingrese el código enviado a su email, ejemplo: HFI8').min(4, 'El codigo es de al menos 4 caracteres'),
 });
 
 const defaultValues = {

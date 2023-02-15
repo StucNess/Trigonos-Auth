@@ -9,14 +9,15 @@ import Typography from '@mui/material/Typography';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
+
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useEffect } from 'react';
 import jwtService from '../../auth/services/jwtService';
-//MIS IMPORTACIONES
+//IMPORTACIONES OBSOLETAS, pueden que sirvan a un futuro si no eliminar..
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import AvatarGroup from '@mui/material/AvatarGroup';
+import Avatar from '@mui/material/Avatar';
 import FormLabel from '@mui/material/FormLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -161,34 +162,8 @@ function SignInPage() {
               type="submit"
               size="large"
             >
-              Iniciar Sesión1
-            </Button>
-             {/*     
-            <div className="flex items-center mt-32">
-              <div className="flex-auto mt-px border-t" />
-              <Typography className="mx-8" color="text.secondary">
-                Or continue with
-              </Typography>
-              <div className="flex-auto mt-px border-t" />
-            </div>
-
-            <div className="flex items-center mt-32 space-x-16">
-              <Button variant="outlined" className="flex-auto">
-                <FuseSvgIcon size={20} color="action">
-                  feather:facebook
-                </FuseSvgIcon>
-              </Button>
-              <Button variant="outlined" className="flex-auto">
-                <FuseSvgIcon size={20} color="action">
-                  feather:twitter
-                </FuseSvgIcon>
-              </Button>
-              <Button variant="outlined" className="flex-auto">
-                <FuseSvgIcon size={20} color="action">
-                  feather:github
-                </FuseSvgIcon>
-              </Button>
-            </div>*/}  
+              Iniciar Sesión
+            </Button> 
           </form>
         </div>
       </Paper>
