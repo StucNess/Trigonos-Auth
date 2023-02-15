@@ -25,20 +25,24 @@ import FormHelperText from '@mui/material/FormHelperText';
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  email: yup.string().email('You must enter a valid email').required('You must enter a email'),
+  email: yup.string().email('Por favor ingrese un email válido').required('Debe ingresar su email'),
   password: yup
     .string()
-    .required('Please enter your password.')
-    .min(4, 'Password is too short - must be at least 4 chars.'),
+    .required('Por favor ingrese su nueva contraseña')
+    .min(8, 'La contraseña es muy corta - debe ser de al menos 8 caracteres.'),
+  code_valid:yup
+  .string()
+  .required('Por favor ingrese el código enviado a su email').min(4, 'El codigo es de al menos 4 caracteres'),
 });
 
 const defaultValues = {
   email: '',
   password: '',
   remember: true,
+  code_valid: '7X8N',
 };
 
-function SignInPage() {
+function RecoverPass() {
   const { control, formState,register, handleSubmit, setError, setValue } = useForm({
     mode: 'onChange',
     defaultValues,
@@ -78,12 +82,12 @@ function SignInPage() {
         
           
           <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
-            Iniciar Sesión
+            Recuperar Contraseña
           </Typography>
           <div className="flex items-baseline mt-2 font-medium">
             <Typography>¿No tiene una cuenta?</Typography>
-            <Link className="ml-4" to="/sign-up">
-              Registrarse
+            <Link className="ml-4" to="/sign-in">
+                Iniciar Sesión
             </Link>
           </div>
 
@@ -119,7 +123,7 @@ function SignInPage() {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Contraseña"
+                  label="Contraseña Nueva"
                   type="password"
                   error={!!errors.password}
                   helperText={errors?.password?.message}
@@ -129,28 +133,26 @@ function SignInPage() {
                 />
               )}
             />
+            <Controller
+              name="code_valid"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Código"
+                  type="text"
+                  error={!!errors.code_valid}
+                  helperText={errors?.code_valid?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                  inputProps={{ maxLength: 4 }}
+                  
+                />
+              )}
+            />
             
-            
-            
-
-            <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between">
-              <Controller
-                name="remember"
-                control={control}
-                render={({ field }) => (
-                  <FormControl>
-                    <FormControlLabel
-                      label="Recordarme"
-                      control={<Checkbox size="small" {...field} />}
-                    />
-                  </FormControl>
-                )}
-              />
-
-              <Link className="text-md font-medium" to="/recover-password">
-                ¿Ha olvidado su contraseña?
-              </Link>
-            </div>
 
             <Button
               variant="contained"
@@ -161,34 +163,9 @@ function SignInPage() {
               type="submit"
               size="large"
             >
-              Iniciar Sesión
+              Cambiar Contraseña
             </Button>
-             {/*     
-            <div className="flex items-center mt-32">
-              <div className="flex-auto mt-px border-t" />
-              <Typography className="mx-8" color="text.secondary">
-                Or continue with
-              </Typography>
-              <div className="flex-auto mt-px border-t" />
-            </div>
-
-            <div className="flex items-center mt-32 space-x-16">
-              <Button variant="outlined" className="flex-auto">
-                <FuseSvgIcon size={20} color="action">
-                  feather:facebook
-                </FuseSvgIcon>
-              </Button>
-              <Button variant="outlined" className="flex-auto">
-                <FuseSvgIcon size={20} color="action">
-                  feather:twitter
-                </FuseSvgIcon>
-              </Button>
-              <Button variant="outlined" className="flex-auto">
-                <FuseSvgIcon size={20} color="action">
-                  feather:github
-                </FuseSvgIcon>
-              </Button>
-            </div>*/}  
+            
           </form>
         </div>
       </Paper>
@@ -206,4 +183,4 @@ function SignInPage() {
   );
 }
 
-export default SignInPage;
+export default RecoverPass;

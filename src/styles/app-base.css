@@ -97,6 +97,7 @@ a[role=button] {
 
 /* Medium Devices, Desktops Only */
 @media only screen and (min-width: 992px) {
+    
     ::-webkit-scrollbar {
         width: 8px;
         height: 8px;
@@ -117,6 +118,8 @@ a[role=button] {
     ::-webkit-scrollbar-thumb:active {
         border-radius: 20px;
     }
+    
+    
 }
 
 form label {
@@ -151,4 +154,35 @@ input:-webkit-autofill:active
 /*fullcalendar Fix*/
 .fc-scrollgrid-section-liquid {
     height: 1px !important;
+}
+
+
+#box_login{background-image: linear-gradient(to right, #e04e39, rgb(0,37,84));
+}
+#box_der{
+    background-image: url("/public/assets/images/logo/backgroudtrgns.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+.divLogo_{
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    margin-bottom: -80px;
+    margin-left: -50px;
+    margin-top: -50px;
+   
+}
+
+@media only screen and (max-width: 700px) {
+
+    .divLogo_{
+      
+        padding-top: 20px;
+        padding-bottom: 100px;
+        
+       
+    }
+
 }
