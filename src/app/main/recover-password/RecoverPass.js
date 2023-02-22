@@ -79,7 +79,7 @@ function RecoverPass() {
       <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
         <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
         <div className="divLogo_">
-          <img className="LogoTrgns"  src="assets/images/logo/LogoTRGNS.png"  />
+          <img className="LogoTrgns"  src="assets/images/logo/logoTRGNS.png" />
         </div>
         
           

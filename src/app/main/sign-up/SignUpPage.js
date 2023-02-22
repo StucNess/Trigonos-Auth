@@ -80,7 +80,7 @@ function SignUpPage() {
         <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
         
         <div className="divLogo_">
-          <img className="LogoTrgns"  src="assets/images/logo/LogoTRGNS.png"  />
+          <img className="LogoTrgns"  src="assets/images/logo/logoTRGNS.png" />
         </div>
           <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
             Registrarse

@@ -1,10 +1,11 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import FuseSplashScreen from '@fuse/core/FuseSplashScreen';
-import { showMessage } from 'app/store/fuse/messageSlice';
-import { logoutUser, setUser } from 'app/store/userSlice';
-import jwtService from './services/jwtService';
+import * as React from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import FuseSplashScreen from "@fuse/core/FuseSplashScreen";
+import { showMessage } from "app/store/fuse/messageSlice";
+import { logoutUser, setUser } from "app/store/userSlice";
+import jwtService from "./services/jwtService";
+import history from "@history";
 
 const AuthContext = React.createContext();
 
@@ -14,8 +15,8 @@ function AuthProvider({ children }) {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    jwtService.on('onAutoLogin', () => {
-      dispatch(showMessage({ message: 'Signing in with JWT' }));
+    jwtService.on("onAutoLogin", () => {
+      dispatch(showMessage({ message: "Signing in with JWT" }));
 
       /**
        * Sign in and retrieve user data with stored token
@@ -23,30 +24,30 @@ function AuthProvider({ children }) {
       jwtService
         .signInWithToken()
         .then((user) => {
-          success(user, 'Signed in with JWT');
+          success(user, "Ha iniciado sesión con JWT");
         })
         .catch((error) => {
           pass(error.message);
         });
     });
 
-    jwtService.on('onLogin', (user) => {
-      success(user, 'Signed in');
+    jwtService.on("onLogin", (user) => {
+      success(user, "Sesión iniciada");
     });
 
-    jwtService.on('onLogout', () => {
-      pass('Signed out');
+    jwtService.on("onLogout", () => {
+      pass("Se ha cerrado su sesión");
 
       dispatch(logoutUser());
     });
 
-    jwtService.on('onAutoLogout', (message) => {
+    jwtService.on("onAutoLogout", (message) => {
       pass(message);
 
       dispatch(logoutUser());
     });
 
-    jwtService.on('onNoAccessToken', () => {
+    jwtService.on("onNoAccessToken", () => {
       pass();
     });
 
@@ -61,6 +62,7 @@ function AuthProvider({ children }) {
         dispatch(setUser(user)),
         // You can receive data in here before app initialization
       ]).then((values) => {
+        history.push("/example");
         setWaitAuthCheck(false);
         setIsAuthenticated(true);
       });
@@ -79,14 +81,14 @@ function AuthProvider({ children }) {
   return waitAuthCheck ? (
     <FuseSplashScreen />
   ) : (
-    <AuthContext.Provider value={{ isAuthenticated }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>
   );
 }
 
 function useAuth() {
   const context = React.useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within a AuthProvider');
+    throw new Error("useAuth must be used within a AuthProvider");
   }
   return context;
 }

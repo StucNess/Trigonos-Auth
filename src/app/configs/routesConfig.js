@@ -1,36 +1,47 @@
-import FuseUtils from '@fuse/utils';
-import FuseLoading from '@fuse/core/FuseLoading';
-import { Navigate } from 'react-router-dom';
-import settingsConfig from 'app/configs/settingsConfig';
-import SignInConfig from '../main/sign-in/SignInConfig';
-import SignUpConfig from '../main/sign-up/SignUpConfig';
-import SignOutConfig from '../main/sign-out/SignOutConfig';
-import RecoverPassConfig from '../main/recover-password/RecoverPassConfig';
-import Error404Page from '../main/404/Error404Page';
-import ExampleConfig from '../main/example/ExampleConfig';
-/*Rutas mias */
+import FuseUtils from "@fuse/utils";
+import FuseLoading from "@fuse/core/FuseLoading";
+import { Navigate } from "react-router-dom";
+import settingsConfig from "app/configs/settingsConfig";
+import SignInConfig from "../main/sign-in/SignInConfig";
+import SignUpConfig from "../main/sign-up/SignUpConfig";
+import SignOutConfig from "../main/sign-out/SignOutConfig";
+import RecoverPassConfig from "../main/recover-password/RecoverPassConfig";
+import Error404Page from "../main/404/Error404Page";
+import ExampleConfig from "../main/example/ExampleConfig";
+import ComercialConfigs from "../main/comercial/ComercialConfigs";
+import AnalisisConfig from "../main/analisis/AnalisisConfig";
 
 
 
-const routeConfigs = [ExampleConfig, SignOutConfig, SignInConfig, SignUpConfig,RecoverPassConfig];
+const routeConfigs = [
+  ExampleConfig, 
+  SignOutConfig, 
+  SignInConfig, 
+  SignUpConfig,
+  RecoverPassConfig, 
+  ...ComercialConfigs, 
+  ...AnalisisConfig];
 
 const routes = [
-  ...FuseUtils.generateRoutesFromConfigs(routeConfigs, settingsConfig.defaultAuth),
+  ...FuseUtils.generateRoutesFromConfigs(
+    routeConfigs,
+    settingsConfig.defaultAuth
+  ),
   {
-    path: '/',
+    path: "/",
     element: <Navigate to="/example" />,
     auth: settingsConfig.defaultAuth,
   },
   {
-    path: 'loading',
+    path: "loading",
     element: <FuseLoading />,
   },
   {
-    path: '404',
+    path: "404",
     element: <Error404Page />,
   },
   {
-    path: '*',
+    path: "*",
     element: <Navigate to="404" />,
   },
 ];

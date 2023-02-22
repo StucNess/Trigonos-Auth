@@ -65,10 +65,13 @@ function FuseMessage(props) {
       <SnackbarContent
         className="FuseMessage-content"
         message={
+
           <div className="flex items-center">
+            
             {variantIcon[options.variant] && (
               <FuseSvgIcon color="inherit">{variantIcon[options.variant]}</FuseSvgIcon>
             )}
+            <img className="m-2 w-56 h-52"  src="assets/images/logo/logoTRGNS.png"  />
             <Typography className="mx-8">{options.message}</Typography>
           </div>
         }

@@ -1,20 +1,20 @@
-import _ from '@lodash';
-import FuseUtils from '@fuse/utils';
-import mockApi from '../mock-api.json';
-import mock from '../mock';
+import _ from "@lodash";
+import FuseUtils from "@fuse/utils";
+import mockApi from "../mock-api.json";
+import mock from "../mock";
 
 let notificationsDB = mockApi.components.examples.notifications.value;
 
-mock.onGet('/api/notifications').reply((config) => {
+mock.onGet("/api/notifications").reply((config) => {
   return [200, notificationsDB];
 });
 
-mock.onDelete('/api/notifications').reply((config) => {
+mock.onDelete("/api/notifications").reply((config) => {
   notificationsDB = [];
   return [200];
 });
 
-mock.onPost('/api/notifications').reply(({ data }) => {
+mock.onPost("/api/notifications").reply(({ data }) => {
   const newNotification = { id: FuseUtils.generateGUID(), ...JSON.parse(data) };
 
   notificationsDB.push(newNotification);

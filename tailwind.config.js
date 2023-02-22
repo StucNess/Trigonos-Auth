@@ -9,12 +9,46 @@ module.exports = {
   theme: {
     screens: {
       sm: '600px',
+      ssm: '769px',
       md: '960px',
+      
       lg: '1280px',
       xl: '1920px',
+      //Rangos
+      phone: {'min': '400px', 'max': '767px'},
+      // => @media (min-width: 640px and max-width: 767px) { ... }
+
+      laptop: {'min': '768px', 'max': '1023px'},
+      // => @media (min-width: 768px and max-width: 1023px) { ... }
+
+      desktop: {'min': '1024px', 'max': '1279px'},
+      // => @media (min-width: 1024px and max-width: 1279px) { ... }
+
+      tv: {'min': '1280px', 'max': '1535px'},
+      // => @media (min-width: 1280px and max-width: 1535px) { ... }
+
+      tvxl:  '1536px',
+      tvxxl:  '1900px',
+      tvdosk:  '2300px',
+
+      hd:'1534px',//minimo
+      hdmas: {'max': '1535px'},//máximo
+      smmax: {'max': '600px'},//máximo
+      // desktop_full: '1535px',
+      // desktop: '1279px',
+      // laptop: '1024px',
+      // phone:  '768px',
+      // phone_mini: '640px',
+      // mdesktop_full:  {'max': '1535px'},
+      // mdesktop: {'max': '1279px'},
+      // mlaptop: {'max': '1023px'},
+      // mphone:  {'max': '767px'},
+      // mphone_mini: {'max': '639px'},
       print: { raw: 'print' },
     },
     colors: ({ colors }) => ({
+      pantoneazul: '#002554',
+      pantonerojo: '#e04e39',
       inherit: colors.inherit,
       current: colors.current,
       transparent: 'transparent',

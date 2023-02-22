@@ -28,6 +28,14 @@ const Root = styled('div')(({ theme, config }) => ({
       width: '100%',
       margin: '0 auto',
     },
+    
+  }),...(config.mode === 'fullwidth' && {
+    '& .container': {
+      maxWidth: `${config.containerWidth}px`,
+      width: '100%',
+      margin: '0 auto',
+    },
+    
   }),
 }));
 

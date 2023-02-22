@@ -26,31 +26,38 @@ import FormHelperText from '@mui/material/FormHelperText';
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  email: yup.string().email('You must enter a valid email').required('You must enter a email'),
+  email: yup
+    .string()
+    .email("Debes ingresar un email válido")
+    .required("Por favor ingrese su email asociado a su cuenta"),
   password: yup
     .string()
-    .required('Please enter your password.')
-    .min(4, 'Password is too short - must be at least 4 chars.'),
+    .required("Por favor ingrese su contraseña asociada a su cuenta")
+    .min(4, "la contraseña es debasiado pequeña"),
 });
 
 const defaultValues = {
-  email: '',
-  password: '',
+  email: "",
+  password: "",
   remember: true,
 };
 
 function SignInPage() {
-  const { control, formState,register, handleSubmit, setError, setValue } = useForm({
-    mode: 'onChange',
-    defaultValues,
-    resolver: yupResolver(schema),
-  });
+  const { control, formState, register, handleSubmit, setError, setValue } =
+    useForm({
+      mode: "onChange",
+      defaultValues,
+      resolver: yupResolver(schema),
+    });
 
   const { isValid, dirtyFields, errors } = formState;
 
   useEffect(() => {
-    setValue('email', 'admin@fusetheme.com', { shouldDirty: true, shouldValidate: true });
-    setValue('password', 'admin', { shouldDirty: true, shouldValidate: true });
+    setValue("email", "admin@fusetheme.com", {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    setValue("password", "admin", { shouldDirty: true, shouldValidate: true });
   }, [setValue]);
 
   function onSubmit({ email, password }) {
@@ -59,13 +66,13 @@ function SignInPage() {
       .then((user) => {
         // No need to do anything, user data will be set at app/auth/AuthContext
       })
-      .catch((_errors) => {
-        _errors.forEach((error) => {
-          setError(error.type, {
-            type: 'manual',
-            message: error.message,
-          });
-        });
+      .catch((response) => {
+        // _errors.forEach((error) => {
+        //   setError(error.type, {
+        //     type: "manual",
+        //     message: error.message,
+        //   });
+        // });
       });
   }
 
@@ -73,16 +80,15 @@ function SignInPage() {
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
       <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
         <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
-        <div className="divLogo_">
-          <img className="LogoTrgns"  src="assets/images/logo/LogoTRGNS.png"  />
-        </div>
-        
-          
+          <div className="divLogo_">
+            <img className="LogoTrgns" src="assets/images/logo/LogoTRGNS.png" />
+          </div>
+
           <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
             Iniciar Sesión
           </Typography>
           <div className="flex items-baseline mt-2 font-medium">
-            <Typography>¿No tiene una cuenta?</Typography>
+            <Typography>¿No tiene una cuenta1?</Typography>
             <Link className="ml-4" to="/sign-up">
               Registrarse
             </Link>
@@ -92,8 +98,7 @@ function SignInPage() {
             name="loginForm"
             noValidate
             className="flex flex-col justify-center w-full mt-32"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+            onSubmit={handleSubmit(onSubmit)}>
             <Controller
               name="email"
               control={control}
@@ -130,9 +135,6 @@ function SignInPage() {
                 />
               )}
             />
-            
-            
-            
 
             <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between">
               <Controller
@@ -160,23 +162,16 @@ function SignInPage() {
               aria-label="Sign in"
               disabled={_.isEmpty(dirtyFields) || !isValid}
               type="submit"
-              size="large"
-            >
+              size="large">
               Iniciar Sesión
-            </Button> 
+            </Button>
           </form>
         </div>
       </Paper>
       <Box
-        className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden" id="box_der"
-        sx={{ backgroundColor: 'secondary.main' }}
-      >
-        
-         
-        
-      </Box>
-
-      
+        className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden"
+        id="box_der"
+        sx={{ backgroundColor: "secondary.main" }}></Box>
     </div>
   );
 }

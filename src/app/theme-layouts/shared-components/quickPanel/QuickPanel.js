@@ -15,7 +15,7 @@ import format from 'date-fns/format';
 import { memo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { selectQuickPanelData } from './store/dataSlice';
+import { selectQuickPanelData } from './store/dataSlice'; 
 import reducer from './store';
 import { selectQuickPanelState, toggleQuickPanel } from './store/stateSlice';
 

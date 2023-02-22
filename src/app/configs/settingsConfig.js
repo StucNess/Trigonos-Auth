@@ -1,13 +1,13 @@
-import themesConfig from 'app/configs/themesConfig';
-import i18n from '../../i18n';
+import themesConfig from "app/configs/themesConfig";
+import i18n from "../../i18n";
 
 const settingsConfig = {
   layout: {
-    style: 'layout1', // layout1 layout2 layout3
+    style: "layout2", // layout1 layout2 layout3
     config: {}, // checkout default layout configs at app/theme-layouts for example  app/theme-layouts/layout1/Layout1Config.js
   },
   customScrollbars: true,
-  direction: i18n.dir(i18n.options.lng) || 'ltr', // rtl, ltr
+  direction: i18n.dir(i18n.options.lng) || "ltr", // rtl,
   theme: {
     main: themesConfig.default,
     navbar: themesConfig.defaultDark,
@@ -19,11 +19,11 @@ const settingsConfig = {
    To make whole app accessible without authorization by default set defaultAuth: null
    *** The individual route configs which has auth option won't be overridden.
    */
-  defaultAuth: ['admin'],
+   defaultAuth: ["admin", "trgns"],
   /*
     Default redirect url for the logged-in user,
    */
-  loginRedirectUrl: '/',
+  loginRedirectUrl: "/",
 };
 
 export default settingsConfig;
