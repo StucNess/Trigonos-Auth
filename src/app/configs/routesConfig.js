@@ -13,6 +13,7 @@ import AnalisisConfig from "../main/analisis/AnalisisConfig";
 
 
 
+
 const routeConfigs = [
   ExampleConfig, 
   SignOutConfig, 
@@ -20,7 +21,8 @@ const routeConfigs = [
   SignUpConfig,
   RecoverPassConfig, 
   ...ComercialConfigs, 
-  ...AnalisisConfig];
+  ...AnalisisConfig,
+  ];
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(

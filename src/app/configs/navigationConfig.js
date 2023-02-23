@@ -56,6 +56,31 @@ const navigationConfig = [
         icon: "heroicons-outline:star",
         url: "example",
       },
+      {
+        id: 'c1.facturacion',
+        title: 'FACTURACIÓN',
+        type: 'collapse',
+        icon: 'heroicons-outline:calculator',
+        children: [
+         
+          {
+            id: 'c1.facturacion.EstadoFacturacion',
+            title: 'Estado Facturación',
+            type:'item',
+            icon: 'heroicons-outline:document-check',
+            url: '/comercial/estadoFacturacion',
+          
+          },
+          {
+            id: 'c1.facturacion.NominaPago',
+            title: 'Nominas de Pago',
+            type: 'item',
+            icon: 'heroicons-outline:rectangle-stack',
+            url: '/comercial/nominaPago',
+            
+          },
+      ]
+    }
     ],
   },
 ];
