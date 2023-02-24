@@ -10,7 +10,7 @@ const ParticipantesAppConfig = {
   },
   routes: [
     {
-      path: 'comercial/participantes',
+      path: 'comercial/Participantes',
       element: <ParticipantesApp />,
     },
   ],

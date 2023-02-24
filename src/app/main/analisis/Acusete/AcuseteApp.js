@@ -3,16 +3,15 @@ import { useTranslation } from "react-i18next";
 import FusePageSimple from "@fuse/core/FusePageSimple";
 import DemoContent from "@fuse/core/DemoContent";
 // import AcuseteApp from "./AcuseteApp";
-import GraficosAcusete from "./tabs/GraficosAcusete";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import * as React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import GraficosAcusete from "./tabs/GraficosAcusete";
 import { CallApiProyects } from "./store/CallApiProyects";
 import { CallApiData } from "./store/CallApiData";
 // let apiResponse = [];
@@ -44,6 +43,7 @@ function ExamplePage(props) {
   useEffect(() => {
     const fetchData = async () => {
       let prueba;
+      // eslint-disable-next-line prefer-const
       prueba = await CallApiProyects();
       return prueba;
     };

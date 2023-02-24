@@ -1407,6 +1407,14 @@
     "js-yaml" "^4.1.0"
     "minimatch" "^3.1.2"
     "strip-json-comments" "^3.1.1"
+<<<<<<< HEAD
+=======
+
+"@heroicons/react@^2.0.16":
+  "integrity" "sha512-x89rFxH3SRdYaA+JCXwfe+RkE1SFTo9GcOkZettHer71Y3T7V+ogKmfw5CjTazgS3d0ClJ7p1NA+SP7VQLQcLw=="
+  "resolved" "https://registry.npmjs.org/@heroicons/react/-/react-2.0.16.tgz"
+  "version" "2.0.16"
+>>>>>>> 12ad6b12f88e1e440f975b7104aac7f3115d3dfc
 
 "@hookform/resolvers@2.9.10":
   "integrity" "sha512-JIL1DgJIlH9yuxcNGtyhsWX/PgNltz+5Gr6+8SX9fhXc/hPbEIk6wPI82nhgvp3uUb6ZfAM5mqg/x7KR7NAb+A=="

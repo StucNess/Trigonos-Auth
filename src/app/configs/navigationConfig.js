@@ -10,11 +10,29 @@ i18next.addResourceBundle("ar", "navigation", ar);
 
 const navigationConfig = [
   {
+    id: "administracion",
+    title: "Administración",
+    subtitle: "Trigonos Energy",
+    type: "group",
+    icon: "heroicons-outline:user",
+    translate: "ADMINISTRACIÓN",
+    auth: authRoles.admin,
+    children: [
+      {
+        id: "administracion.crearUsuario",
+        title: "Agregar Usuarios",
+        type: "item",
+        icon: "heroicons-outline:user",
+        url: "/administracion/CreateUser",
+      },
+    ],
+  },
+  {
     id: "dashboards",
     title: "Dashboards",
     subtitle: "Trigonos Energy",
     type: "group",
-    icon: "heroicons-outline:home",
+    icon: "heroicons-outline:chart-bar",
     translate: "DASHBOARDS",
     children: [
       {
@@ -55,6 +73,28 @@ const navigationConfig = [
         type: "item",
         icon: "heroicons-outline:star",
         url: "example",
+      },
+      {
+        id: "c1.facturacion",
+        title: "FACTURACIÓN",
+        type: "collapse",
+        icon: "heroicons-outline:calculator",
+        children: [
+          {
+            id: "c1.facturacion.EstadoFacturacion",
+            title: "Estado Facturación",
+            type: "item",
+            icon: "heroicons-outline:document-check",
+            url: "/comercial/estadoFacturacion",
+          },
+          {
+            id: "c1.facturacion.NominaPago",
+            title: "Nominas de Pago",
+            type: "item",
+            icon: "heroicons-outline:rectangle-stack",
+            url: "/comercial/nominaPago",
+          },
+        ],
       },
     ],
   },

@@ -53,11 +53,11 @@ function SignInPage() {
   const { isValid, dirtyFields, errors } = formState;
 
   useEffect(() => {
-    setValue("email", "admin@fusetheme.com", {
+    setValue("email", "ejoocontactos@gmail.com", {
       shouldDirty: true,
       shouldValidate: true,
     });
-    setValue("password", "admin", { shouldDirty: true, shouldValidate: true });
+    setValue("password", "Colocolo2$", { shouldDirty: true, shouldValidate: true });
   }, [setValue]);
 
   function onSubmit({ email, password }) {
@@ -88,7 +88,7 @@ function SignInPage() {
             Iniciar Sesión
           </Typography>
           <div className="flex items-baseline mt-2 font-medium">
-            <Typography>¿No tiene una cuenta1?</Typography>
+            <Typography>¿No tiene una cuenta?</Typography>
             <Link className="ml-4" to="/sign-up">
               Registrarse
             </Link>

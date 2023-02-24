@@ -26,7 +26,7 @@ const ParticipantesApp = () => {
   function passToken(tokens) {
     setidPart(tokens);
   }
-
+ 
   return (
     <Root
       header={<ParticipantesAppHeader passToken={passToken} />}

@@ -10,17 +10,18 @@ import Error404Page from "../main/404/Error404Page";
 import ExampleConfig from "../main/example/ExampleConfig";
 import ComercialConfigs from "../main/comercial/ComercialConfigs";
 import AnalisisConfig from "../main/analisis/AnalisisConfig";
-
-
+import AdministracionConfig from "../main/administracion/AdministracionConfig";
 
 const routeConfigs = [
-  ExampleConfig, 
-  SignOutConfig, 
-  SignInConfig, 
+  ExampleConfig,
+  SignOutConfig,
+  SignInConfig,
   SignUpConfig,
-  RecoverPassConfig, 
-  ...ComercialConfigs, 
-  ...AnalisisConfig];
+  RecoverPassConfig,
+  ...ComercialConfigs,
+  ...AnalisisConfig,
+  ...AdministracionConfig,
+];
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(
