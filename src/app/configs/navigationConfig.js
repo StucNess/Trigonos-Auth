@@ -99,7 +99,7 @@ const navigationConfig = [
             title: "Facturación Masiva",
             type: "item",
             icon: "heroicons-outline:document-check",
-            url: "/comercial/nominaPago",
+            url: "/comercial/facturacionMasiva",
           },
         ],
       },
