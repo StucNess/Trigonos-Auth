@@ -1,27 +1,29 @@
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm } from 'react-hook-form';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { Link } from 'react-router-dom';
-import * as yup from 'yup';
-import _ from '@lodash';
+/* eslint-disable jsx-a11y/alt-text */
 
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import { useEffect } from 'react';
-import jwtService from '../../auth/services/jwtService';
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
+import * as yup from "yup";
+import _ from "@lodash";
+
+import Box from "@mui/material/Box";
+import Paper from "@mui/material/Paper";
+import { useEffect } from "react";
+import jwtService from "../../auth/services/jwtService";
 //IMPORTACIONES OBSOLETAS, pueden que sirvan a un futuro si no eliminar..
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
-import FormLabel from '@mui/material/FormLabel';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
+import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
+import AvatarGroup from "@mui/material/AvatarGroup";
+import Avatar from "@mui/material/Avatar";
+import FormLabel from "@mui/material/FormLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormHelperText from "@mui/material/FormHelperText";
 /**
  * Form Validation Schema
  */
@@ -57,7 +59,10 @@ function SignInPage() {
       shouldDirty: true,
       shouldValidate: true,
     });
-    setValue("password", "Colocolo2$", { shouldDirty: true, shouldValidate: true });
+    setValue("password", "Colocolo2$", {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   }, [setValue]);
 
   function onSubmit({ email, password }) {
