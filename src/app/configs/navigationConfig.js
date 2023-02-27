@@ -94,6 +94,13 @@ const navigationConfig = [
             icon: "heroicons-outline:rectangle-stack",
             url: "/comercial/nominaPago",
           },
+          {
+            id: "c1.facturacion.FacturacionMasiva",
+            title: "Facturación Masiva",
+            type: "item",
+            icon: "heroicons-outline:document-check",
+            url: "/comercial/facturacionMasiva",
+          },
         ],
       },
     ],

@@ -43,7 +43,7 @@ const rows = [
   createData('918060003', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
   createData('918060004', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
   createData('918060005', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
-
+  createData('918060705', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
   
 ];
 
@@ -242,7 +242,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function EnhancedTable() {
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('rut');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -256,19 +256,19 @@ export default function EnhancedTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.rut);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, rut) => {
+    const selectedIndex = selected.indexOf(rut);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, rut);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -296,7 +296,7 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
+  const isSelected = (rut) => selected.indexOf(rut) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -388,7 +388,7 @@ export default function EnhancedTable() {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[6, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
