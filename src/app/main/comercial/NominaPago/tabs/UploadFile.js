@@ -29,6 +29,7 @@ import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 
 
 
@@ -47,25 +48,26 @@ return (
         display: 'flex',
         '& > :not(style)': {
         m: 1,
-        width: '500px',
-        height: '500px',
+        width: '100%',
+        height: '100%',
+        minHeight: 300,
         },
             }}>
        
     
         <Paper variant="outlined">
-            <div className="flex justify-center  bg-pantoneazul  text-white p-[10px] rounded-[12px]">
+            <div className="flex justify-center  bg-pantoneazul  text-white p-[10px] ">
             
-            <HiOutlineCloudUpload  className="w-[30px] h-[30px] " /><h1> Subir fecha de pago según descarga de Nomina </h1>
+            <HiOutlineCloudUpload  className="w-[30px] h-[30px] mr-[10px]" /><b><span className="text-[16px]"> Subir fecha de pago según descarga de Nomina </span></b>
 
             </div>
-            <div className="flex justify-center bg-grey-50 h-[100px] p-[10px] text-center ">
+            <div className="flex justify-center  p-[10px] text-center border-2 border-pantoneazul bg-grey-100 align-middle smmax:space-x-[3px] sm:space-x-[10px]">
             
-            <HiOutlineInformationCircle className="w-[50px] h-[50px] text-red-300" /><h2>Se Debe seleccionar un <b>Cliente </b> antes de subir la <b>Nomina</b></h2>
+            <HiOutlineInformationCircle className="w-[30px] h-[30px] text-red-300  mr-[10px]" /> <span>Se debe seleccionar un <b>Cliente </b> antes de subir la <b>Nomina</b></span>
 
             </div>
             
-            <div  className="flex  w-full items-center justify-evenly   ">
+            <div  className="flex  w-full items-center justify-evenly   mt-[20px]">
             <LocalizationProvider dateAdapter={AdapterDayjs} sx={{ m: 1, minWidth: 350 }}>
                     <Stack spacing={3}>
                         <DesktopDatePicker
@@ -79,7 +81,28 @@ return (
             </LocalizationProvider>
                 
             </div>
-                        
+            <div  className="flex  w-full items-center justify-evenly m-[10px]  ">
+            <Button
+                  className="w-[150px]"
+                  variant="contained"
+                  color="secondary"
+                  startIcon={<FileUploadIcon />}
+                 
+                  
+                  style={{
+                    m: 1,
+                    width: 250,
+                    margin: "0 auto",
+                    display: "flex",
+                    marginTop: 25,
+                    
+                    color: "white",
+                  }}
+                  >
+                  Subir Archivo
+                </Button>     
+            </div>
+              
         
 
 

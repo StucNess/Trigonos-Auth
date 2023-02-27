@@ -34,6 +34,7 @@ module.exports = {
       hd:'1534px',//minimo
       hdmas: {'max': '1535px'},//máximo
       smmax: {'max': '600px'},//máximo
+      mdmax: {'max': '960px'},//máximo
       // desktop_full: '1535px',
       // desktop: '1279px',
       // laptop: '1024px',

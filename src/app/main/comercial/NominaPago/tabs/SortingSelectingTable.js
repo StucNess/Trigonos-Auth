@@ -39,10 +39,10 @@ function createData(rut, nombre, cod_modalidad, cod_banco, cta_abono,nro_factura
 
 const rows = [
   createData('918060006', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
-  createData('918060006', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
-  createData('918060006', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
-  createData('918060006', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
-  createData('918060006', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
+  createData('918060002', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
+  createData('918060003', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
+  createData('918060004', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
+  createData('918060005', 'Abastible S.A.', 3, 	1, 	8003670006,	11931849,'$1,379','$1,379'),
 
   
 ];
