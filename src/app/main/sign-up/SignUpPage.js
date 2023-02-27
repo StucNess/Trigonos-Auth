@@ -11,7 +11,7 @@ import * as yup from "yup";
 import _ from "@lodash";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-
+import OutlinedInput from "@mui/material/OutlinedInput";
 // import jwtService from '../../auth/services/jwtService';
 /*Importaciones mias*/
 import FormLabel from "@mui/material/FormLabel";
@@ -202,12 +202,12 @@ function SignUpPage() {
                     labelId="demo-multiple-name-label"
                     id="demo-multiple-name"
                     multiple
-                    // value={personName}
-                    // onChange={handleChange}
+                    value={personName}
+                    onChange={handleChange}
                     input={<OutlinedInput label="Name" />}
-                    // MenuProps={MenuProps}
+                    MenuProps={MenuProps}
                   >
-                    {/* {names.map((name) => (
+                    {names.map((name) => (
                       <MenuItem
                         key={name}
                         value={name}
@@ -215,7 +215,7 @@ function SignUpPage() {
                       >
                         {name}
                       </MenuItem>
-                    ))} */}
+                    ))}
                     <MenuItem>hola</MenuItem>
                   </Select>
                 </FormControl>

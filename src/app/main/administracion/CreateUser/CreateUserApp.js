@@ -125,7 +125,13 @@ function CreateUserApp(props) {
   };
   return (
     <Root
-      header={
+      // header={
+      //   <div className="p-24">
+      //     <h1>dsdfsdfsdf</h1>
+      //     <br />
+      //   </div>
+      // }
+      content={
         <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
           <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
             <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
@@ -136,14 +142,8 @@ function CreateUserApp(props) {
                 />
               </div>
               <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
-                Registrarse
+                Agregar Usuario
               </Typography>
-              <div className="flex items-baseline mt-2 font-medium">
-                <Typography>Tienes una cuenta?</Typography>
-                <Link className="ml-4" to="/sign-in">
-                  Iniciar Sesión
-                </Link>
-              </div>
 
               <form
                 name="registerForm"
@@ -253,46 +253,33 @@ function CreateUserApp(props) {
                         // MenuProps={MenuProps}
                       >
                         {apiResponseProyects.data != undefined ? (
-                          apiResponseProyects.map((e) => (
+                          apiResponseProyects.data.map((e) => (
                             <MenuItem
-                              key={name.commercial_Businesse}
-                              value={name.commercial_Businesse}
+                              key={e.id}
+                              value={e.id}
                               style={getStyles(
                                 e.commercial_Business,
                                 personName,
                                 theme
                               )}
                             >
-                              {e.commercial_Business}
+                              {e.business_Name}
                             </MenuItem>
                           ))
                         ) : (
                           <>
-                            <MenuItem value="1">Proyecto 1</MenuItem>
-                            <MenuItem value="2">Proyecto 2</MenuItem>
-                            <MenuItem value="3">Proyecto 6</MenuItem>
+                            <MenuItem id="1" value="1">
+                              Proyecto 1
+                            </MenuItem>
+                            <MenuItem id="2" value="2">
+                              Proyecto 2
+                            </MenuItem>
+                            <MenuItem id="3" value="3">
+                              Proyecto 6
+                            </MenuItem>
                           </>
                         )}
                       </Select>
-                    </FormControl>
-                  )}
-                />
-
-                <Controller
-                  name="acceptTermsConditions"
-                  control={control}
-                  render={({ field }) => (
-                    <FormControl
-                      className="items-center"
-                      error={!!errors.acceptTermsConditions}
-                    >
-                      <FormControlLabel
-                        label="Acepto los Términos de servicio y la Política de privacidad"
-                        control={<Checkbox size="small" {...field} />}
-                      />
-                      <FormHelperText>
-                        {errors?.acceptTermsConditions?.message}
-                      </FormHelperText>
                     </FormControl>
                   )}
                 />
@@ -306,7 +293,7 @@ function CreateUserApp(props) {
                   type="submit"
                   size="large"
                 >
-                  Crear cuenta
+                  Crear usuario
                 </Button>
               </form>
             </div>
@@ -317,12 +304,6 @@ function CreateUserApp(props) {
             id="box_der"
             sx={{ backgroundColor: "secondary.main" }}
           ></Box>
-        </div>
-      }
-      content={
-        <div className="p-24">
-          <h1>dsdfsdfsdf</h1>
-          <br />
         </div>
       }
       scroll="content"
