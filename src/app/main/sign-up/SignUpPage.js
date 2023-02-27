@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
@@ -18,7 +19,18 @@ import FormLabel from "@mui/material/FormLabel";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormHelperText from "@mui/material/FormHelperText";
-
+const names = [
+  "Oliver Hansen",
+  "Van Henry",
+  "April Tucker",
+  "Ralph Hubbard",
+  "Omar Alexander",
+  "Carlos Abbott",
+  "Miriam Wagner",
+  "Bradley Wilkerson",
+  "Virginia Andrews",
+  "Kelly Snyder",
+];
 /**
  * Form Validation Schema
  */
@@ -35,13 +47,13 @@ const schema = yup.object().shape({
   passwordConfirm: yup
     .string()
     .oneOf([yup.ref("password"), null], "Las contraseñas no coinciden"),
-  acceptTermsConditions: yup
-    .boolean()
-    .oneOf([true], "Los terminos y condiciones deben ser aceptados"),
-  project: yup
-    .string()
-    .required("Debe seleccionar un proyecto")
-    .oneOf(["1", "2"], "No esta disponible ese proyecto"),
+  // acceptTermsConditions: yup
+  //   .boolean()
+  //   .oneOf([true], "Los terminos y condiciones deben ser aceptados"),
+  // project: yup
+  //   .string()
+  //   .required("Debe seleccionar un proyecto")
+  //   .oneOf(["1", "2"], "No esta disponible ese proyecto"),
 });
 
 const defaultValues = {
@@ -49,7 +61,7 @@ const defaultValues = {
   email: "",
   password: "",
   passwordConfirm: "",
-  acceptTermsConditions: false,
+  // acceptTermsConditions: false,
   project: "",
 };
 
@@ -99,7 +111,6 @@ function SignUpPage() {
               Iniciar Sesión
             </Link>
           </div>
-
           <form
             name="registerForm"
             noValidate
@@ -187,8 +198,7 @@ function SignUpPage() {
                   label="Proyecto"
                   // error={!!errors.project}
                   type="select"
-                  required
-                >
+                  required>
                   {/* <FormLabel className="font-medium text-14" component="legend">
                     Proyecto
                   </FormLabel>
@@ -205,14 +215,12 @@ function SignUpPage() {
                     value={personName}
                     onChange={handleChange}
                     input={<OutlinedInput label="Name" />}
-                    MenuProps={MenuProps}
-                  >
+                    MenuProps={MenuProps}>
                     {names.map((name) => (
                       <MenuItem
                         key={name}
                         value={name}
-                        style={getStyles(name, personName, theme)}
-                      >
+                        style={getStyles(name, personName, theme)}>
                         {name}
                       </MenuItem>
                     ))}
@@ -228,8 +236,7 @@ function SignUpPage() {
               render={({ field }) => (
                 <FormControl
                   className="items-center"
-                  error={!!errors.acceptTermsConditions}
-                >
+                  error={!!errors.acceptTermsConditions}>
                   <FormControlLabel
                     label="Acepto los Términos de servicio y la Política de privacidad"
                     control={<Checkbox size="small" {...field} />}
@@ -248,8 +255,7 @@ function SignUpPage() {
               aria-label="Register"
               disabled={_.isEmpty(dirtyFields) || !isValid}
               type="submit"
-              size="large"
-            >
+              size="large">
               Crear cuenta
             </Button>
           </form>
@@ -259,8 +265,7 @@ function SignUpPage() {
       <Box
         className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden"
         id="box_der"
-        sx={{ backgroundColor: "secondary.main" }}
-      ></Box>
+        sx={{ backgroundColor: "secondary.main" }}></Box>
     </div>
   );
 }
