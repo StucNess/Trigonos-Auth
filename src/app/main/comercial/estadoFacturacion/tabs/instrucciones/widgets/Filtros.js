@@ -261,7 +261,7 @@ const Filtros = (props) => {
     <Paper
       sx={{ width: "100%", color: "grey.500" }} 
       // tvxxl:max-w-[78%] tvdosk:max-w-[70%]
-      className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full md:max-xl:flex hd:w-[360px]  ">
+      className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full md:max-xl:flex   ">
       <div className="flex flex-col sm:flex-row items-start justify-between">
         <Typography className="text-lg font-medium tracking-tight leading-6 truncate">
           Filtros
@@ -269,7 +269,7 @@ const Filtros = (props) => {
       </div>
       <div className="flex flex-col flex-auto mt-6">
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-          <Box className="flex flex-col smmax:w-[300px]   hd:w-[300px] hd:flex-col  hdmas:w[auto]  " >
+          <Box className="flex flex-col hd:flex-col  " >
                 {/* sx={{  width: 1000}} */}
             
 

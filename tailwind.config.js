@@ -32,6 +32,7 @@ module.exports = {
       tvdosk:  '2300px',
 
       hd:'1534px',//minimo
+      tvdoskmax: {'max': '2301px'},
       hdmas: {'max': '1535px'},//máximo
       smmax: {'max': '600px'},//máximo
       mdmax: {'max': '960px'},//máximo

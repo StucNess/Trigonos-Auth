@@ -72,7 +72,7 @@ const Instrucciones = (props) => {
   }
   return (
     <motion.div
-      className="grid grid-cols-1 sm:grid-cols-12 gap-24 w-full min-w-0 p-24 "
+      className="grid auto-cols-auto smmax:grid-cols-1 sm:grid-cols-12 gap-24 w-full min-w-0 p-24 "
       variants={container}
       initial="hidden"
       animate="show">
@@ -87,7 +87,7 @@ const Instrucciones = (props) => {
         />
       </motion.div>
       
-      <motion.div variants={item} className=" hdmas:col-span-12  hd:col-span-3 hd:max-w-[360px]"> 
+      <motion.div variants={item} className=" hdmas:col-span-12  hd:col-span-3 "> 
         {/*
         Cargar la diversificacion de las tablas aca
         */}
@@ -103,7 +103,7 @@ const Instrucciones = (props) => {
           cargando={charge}
         />
       </motion.div>
-      <motion.div variants={item} className="  hdmas:col-span-12   hd:col-span-9 max-w-[100%] " >
+      <motion.div variants={item} className="  hdmas:col-span-12   hd:col-span-9  " >
         <TablaInstrucciones
           idParticipante={props.id}
           estadoPar={estadosPar}
