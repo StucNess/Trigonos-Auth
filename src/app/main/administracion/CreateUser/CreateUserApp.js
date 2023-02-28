@@ -1,5 +1,12 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable prettier/prettier */
+import {
+  Autocomplete,
+
+  Stack,
+  
+  Alert,
+} from "@mui/material";
 import { useState, useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -89,7 +96,9 @@ function CreateUserApp(props) {
   });
   const [personName, setPersonName] = useState([]);
   const [rolName, setRolName] = useState("");
-  const { isValid, dirtyFields, errors, setError } = formState;
+  const [alertt, setAlertt] = useState(false);
+  const [error, setError] = useState(false);
+  const { isValid, dirtyFields, errors } = formState;
   const handleChangeProyect = (event) => {
     const {
       target: { value },
@@ -105,7 +114,19 @@ function CreateUserApp(props) {
     } = event;
     setRolName(value);
   };
+  
   useEffect(() => {
+    
+    if (alertt === true) {
+      setTimeout(() => {
+        setAlertt(false);
+      }, 5000);
+    }
+    if (error === true) {
+      setTimeout(() => {
+        setError(false);
+      }, 5000);
+    }
     const fetchData = async () => {
       let prueba;
       // eslint-disable-next-line prefer-const
@@ -115,7 +136,7 @@ function CreateUserApp(props) {
     fetchData().then((value) => {
       setApiResponseProyects(value);
     });
-  }, []);
+  },  [alertt, error]);
   function onSubmit(e) {
     const data = {
       email: e.email,
@@ -125,14 +146,13 @@ function CreateUserApp(props) {
       password: e.password,
       rol: rolName,
     };
-    axios
-      .post(jwtServiceConfig.signUp, data)
-      .then((response) => {
-        console.log("funciono");
-      })
-      .catch((error) => {
-        console.log("error");
-      });
+    axios.post(jwtServiceConfig.signUp, data)
+    .then((response) => {
+      setAlertt(true);
+    })
+    .catch((error) => {
+      setError(true);
+    });
   }
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
@@ -348,6 +368,20 @@ function CreateUserApp(props) {
             >
               Crear usuario
             </Button>
+            {alertt && (
+              <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
+                <Alert severity="success">
+                  Usuario registrado correctamente!!
+                </Alert>
+              </Stack>
+            )}
+            {error && (
+              <Stack className="mt-[10px]" sx={{ width: "100%"}} spacing={2}>
+                <Alert severity="warning">
+                  Error!! El usuario no se ha registrado
+                </Alert>
+              </Stack>
+            )}
           </form>
         </div>
       </Paper>
