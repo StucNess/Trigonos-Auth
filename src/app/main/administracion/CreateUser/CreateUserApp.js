@@ -5,6 +5,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
+import axios from "axios";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
@@ -19,6 +20,7 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FusePageSimple from "@fuse/core/FusePageSimple";
+import jwtServiceConfig from "../../../auth/services/jwtService/jwtServiceConfig";
 import { CallApiParticipants } from "../store/CallApiParticipants";
 
 const schema = yup.object().shape({
@@ -30,17 +32,18 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .required("Por favor ingrese una contraseña")
+    // .matches(/[A-Z]/, "La contraseña debe tener almenos una MAYUSCULA")
+    .matches(
+      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+      "La contraseña debe tener almenos una mayuscula, un numero y un caracter especial"
+    )
     .min(8, "Contraseña demasiado corta - mínimo 8 caracteres."),
   passwordConfirm: yup
     .string()
     .oneOf([yup.ref("password"), null], "Las contraseñas no coinciden"),
-  // acceptTermsConditions: yup
-  //   .boolean()
-  //   .oneOf([true], "Los terminos y condiciones deben ser aceptados"),
-  project: yup.string(),
-  //   .oneOf(["1", "2"], "No esta disponible ese proyecto"),
-});
 
+  project: yup.string(),
+});
 const defaultValues = {
   user: "",
   firstName: "",
@@ -79,17 +82,6 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 function CreateUserApp(props) {
   const theme = useTheme();
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      let prueba;
-      // eslint-disable-next-line prefer-const
-      prueba = await CallApiParticipants();
-      return prueba;
-    };
-    fetchData().then((value) => {
-      setApiResponseProyects(value);
-    });
-  }, []);
   const { control, formState, handleSubmit, reset } = useForm({
     mode: "onChange",
     defaultValues,
@@ -113,13 +105,29 @@ function CreateUserApp(props) {
     } = event;
     setRolName(value);
   };
-  // const onSubmit = (e) => {
-  //   console.log(e);
-  // };
+  useEffect(() => {
+    const fetchData = async () => {
+      let prueba;
+      // eslint-disable-next-line prefer-const
+      prueba = await CallApiParticipants();
+      return prueba;
+    };
+    fetchData().then((value) => {
+      setApiResponseProyects(value);
+    });
+  }, []);
   function onSubmit(e) {
-    console.log(e);
-    console.log(personName);
-    console.log(rolName);
+    const data = {
+      email: e.email,
+      username: e.user,
+      nombre: e.firstName,
+      apellido: e.lastName,
+      password: e.password,
+      rol: rolName,
+    };
+    axios.post(jwtServiceConfig.signUp, data).then((response) => {
+      console.log(response);
+    });
   }
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
@@ -136,7 +144,8 @@ function CreateUserApp(props) {
             name="registerForm"
             noValidate
             className="flex flex-col justify-center w-full mt-32"
-            onSubmit={handleSubmit(onSubmit)}>
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <Controller
               name="user"
               control={control}
@@ -253,7 +262,8 @@ function CreateUserApp(props) {
                   label="project"
                   error={!!errors.project}
                   type="select"
-                  required>
+                  required
+                >
                   <InputLabel id="demo-simple-select-standard-label">
                     Seleccione clientes
                   </InputLabel>
@@ -275,7 +285,8 @@ function CreateUserApp(props) {
                             e.commercial_Business,
                             personName,
                             theme
-                          )}>
+                          )}
+                        >
                           {e.business_Name}
                         </MenuItem>
                       ))
@@ -296,7 +307,8 @@ function CreateUserApp(props) {
                   className="mb-24"
                   label="Rol"
                   type="select"
-                  required>
+                  required
+                >
                   <InputLabel id="demo-simple-select-standard-label">
                     Seleccione rol
                   </InputLabel>
@@ -327,7 +339,8 @@ function CreateUserApp(props) {
               aria-label="Register"
               // disabled={_.isEmpty(dirtyFields) || !isValid}
               type="submit"
-              size="large">
+              size="large"
+            >
               Crear usuario
             </Button>
           </form>
