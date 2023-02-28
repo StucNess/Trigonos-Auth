@@ -125,9 +125,14 @@ function CreateUserApp(props) {
       password: e.password,
       rol: rolName,
     };
-    axios.post(jwtServiceConfig.signUp, data).then((response) => {
-      console.log(response);
-    });
+    axios
+      .post(jwtServiceConfig.signUp, data)
+      .then((response) => {
+        console.log("funciono");
+      })
+      .catch((error) => {
+        console.log("error");
+      });
   }
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">

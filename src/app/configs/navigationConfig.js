@@ -51,14 +51,12 @@ const navigationConfig = [
     type: "group",
     icon: "heroicons-outline:home",
     children: [
-      
       {
         id: "c1.Participantes",
         title: "Participantes",
         type: "item",
         icon: "heroicons-outline:clipboard-check",
         url: "/comercial/Participantes",
-        auth: authRoles.staff,
       },
       {
         id: "example-component",
