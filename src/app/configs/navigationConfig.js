@@ -51,13 +51,7 @@ const navigationConfig = [
     type: "group",
     icon: "heroicons-outline:home",
     children: [
-      {
-        id: "c1.EstadoFacturacion",
-        title: "Estado Facturación",
-        type: "item",
-        icon: "heroicons-outline:clipboard-check",
-        url: "/comercial/estadoFacturacion",
-      },
+      
       {
         id: "c1.Participantes",
         title: "Participantes",
@@ -84,21 +78,21 @@ const navigationConfig = [
             id: "c1.facturacion.EstadoFacturacion",
             title: "Estado Facturación",
             type: "item",
-            icon: "heroicons-outline:document-check",
+            icon: "heroicons-outline:clipboard-check",
             url: "/comercial/estadoFacturacion",
           },
           {
             id: "c1.facturacion.NominaPago",
             title: "Nominas de Pago",
             type: "item",
-            icon: "heroicons-outline:rectangle-stack",
+            icon: "heroicons-outline:clipboard-list",
             url: "/comercial/nominaPago",
           },
           {
             id: "c1.facturacion.FacturacionMasiva",
             title: "Facturación Masiva",
             type: "item",
-            icon: "heroicons-outline:document-check",
+            icon: "heroicons-outline:document-report",
             url: "/comercial/facturacionMasiva",
           },
         ],
