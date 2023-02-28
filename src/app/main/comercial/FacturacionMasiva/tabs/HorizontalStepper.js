@@ -14,6 +14,7 @@ import { HiOutlineInformationCircle,HiOutlineUser } from  "react-icons/hi";
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
+import themesConfig from 'app/configs/themesConfig';
 // PARA EL ESTILO DEL SELECT MULTIPLE
 function getStyles(name, personName, theme) {
     return {
@@ -117,11 +118,11 @@ export default function HorizontalLinearStepper() {
           <Typography sx={{ mt: 2, mb: 1 }}> </Typography>
           {activeStep ===0 ?( //seleccion de cliente
             <Box >
-                <div className="flex justify-center  bg-pantonerojo  text-white p-[10px] m-[40px] ">
+                <Box className="flex justify-center   text-white p-[10px] m-[40px] "  sx={{ bgcolor: 'primary.main'}} >
         
                     <HiOutlineUser  className="w-[30px] h-[30px]  mr-[10px] " /><b> <span  className="text-[20px]"> Seleccionar Cliente</span></b>
 
-                </div>
+                </Box>
               
                 <div className="flex  w-full items-center justify-evenly hdmas:flex-wrap-reverse ">
                                 <FormControl sx={{ m: 1, minWidth: 300 }}>
@@ -151,20 +152,20 @@ export default function HorizontalLinearStepper() {
           ):activeStep ===1 ?(  //descarga de folio/instrucciones
           <Box>
             
-            <div className="flex justify-center  bg-pantonerojo  text-white p-[10px] m-[40px] ">
+            <Box className="flex justify-center   text-white p-[10px] m-[40px] "  sx={{ bgcolor: 'primary.main'}} >
         
                 <ListAltOutlinedIcon  className="w-[30px] h-[30px]  mr-[10px] " /><b> <span  className="text-[20px]">Listado de Instrucciones</span></b>
 
-            </div>
+            </Box>
   
           </Box>
           ):(//finalizacion del proceso
             <Box>
-                 <div className="flex justify-center  bg-pantonerojo  text-white p-[10px] m-[40px] ">
+                 <Box className="flex justify-center   text-white p-[10px] m-[40px] "  sx={{ bgcolor: 'primary.main'}} >
         
                     <CheckCircleOutlinedIcon  className="w-[30px] h-[30px]  mr-[10px] " /><b> <span  className="text-[20px]">Finalizar Proceso</span></b>
 
-                </div>
+                </Box>
                 <div  className="flex  w-full items-center justify-evenly m-[10px]  ">
                     <Button
                         className="w-[150px]"
