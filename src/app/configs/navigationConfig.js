@@ -18,12 +18,36 @@ const navigationConfig = [
     translate: "ADMINISTRACIÓN",
     auth: authRoles.admin,
     children: [
+      
       {
-        id: "administracion.crearUsuario",
-        title: "Agregar Usuarios",
-        type: "item",
-        icon: "heroicons-outline:user",
-        url: "/administracion/CreateUser",
+        id: "administracion.GestionUsuarios",
+        title: "Gestión Usuarios",
+        type: "collapse",
+        icon: "heroicons-outline:user-group",
+        children: [
+          {
+            id: "GestionUsuarios.crearUsuario",
+            title: "Agregar Usuarios",
+            type: "item",
+            icon: "heroicons-outline:user-add",
+            url: "/administracion/CreateUser",
+          },
+          {
+            id: "GestionUsuarios.EditarUsuarios",
+            title: "Editar Usuarios",
+            type: "item",
+            icon: "heroicons-outline:pencil-alt",
+            url: "/administracion/EditUserApp",
+          },
+          {
+            id: "GestionUsuarios.ListarUsuarios",
+            title: "Listar Usuarios",
+            type: "item",
+            icon: "heroicons-outline:clipboard-list",
+            url: "/administracion/CreateUser",
+          },
+         
+        ],
       },
     ],
   },
@@ -42,6 +66,7 @@ const navigationConfig = [
         icon: "heroicons-outline:clipboard-check",
         url: "/analisis/Acusete",
       },
+      
     ],
   },
   {

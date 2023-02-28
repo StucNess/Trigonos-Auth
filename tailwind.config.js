@@ -34,6 +34,7 @@ module.exports = {
       hd:'1534px',//minimo
       tvdoskmax: {'max': '2301px'},
       hdmas: {'max': '1535px'},//máximo
+      lgmax:{'max':'1281px'},
       smmax: {'max': '600px'},//máximo
       mdmax: {'max': '960px'},//máximo
       // desktop_full: '1535px',
