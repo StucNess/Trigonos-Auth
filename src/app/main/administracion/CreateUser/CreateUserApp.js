@@ -1,12 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable prettier/prettier */
-import {
-  Autocomplete,
-
-  Stack,
-  
-  Alert,
-} from "@mui/material";
+import { Autocomplete, Stack, Alert } from "@mui/material";
 import { useState, useEffect } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -114,9 +108,10 @@ function CreateUserApp(props) {
     } = event;
     setRolName(value);
   };
-  
+  function timeout(delay: number) {
+    return new Promise((res) => setTimeout(res, delay));
+  }
   useEffect(() => {
-    
     if (alertt === true) {
       setTimeout(() => {
         setAlertt(false);
@@ -136,7 +131,7 @@ function CreateUserApp(props) {
     fetchData().then((value) => {
       setApiResponseProyects(value);
     });
-  },  [alertt, error]);
+  }, [alertt, error]);
   function onSubmit(e) {
     const data = {
       email: e.email,
@@ -146,13 +141,37 @@ function CreateUserApp(props) {
       password: e.password,
       rol: rolName,
     };
-    axios.post(jwtServiceConfig.signUp, data)
-    .then((response) => {
-      setAlertt(true);
-    })
-    .catch((error) => {
-      setError(true);
-    });
+    let timer = 0;
+    axios
+      .post(jwtServiceConfig.signUp, data)
+      .then((response) => {
+        const idUser = response.data.id;
+        for (let x = 0; x < personName.length; x++) {
+          timer = timer + 1000;
+          const dataProyect = {
+            idProyect: personName[x],
+            idUser: idUser,
+          };
+          setTimeout(() => {
+            axios
+              .post(jwtServiceConfig.addProyects, dataProyect)
+              .then((response) => {
+                console.log(
+                  `Se agrego el proyecto ${personName[x]} al usuario creado`
+                );
+              })
+              .catch((error) => {
+                console.log(`Error al agregar el proyecto ${personName[x]}`);
+                return;
+              });
+          }, timer);
+        }
+        setAlertt(true);
+      })
+      .catch((error) => {
+        console.log("entro");
+        setError(true);
+      });
   }
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
@@ -376,7 +395,7 @@ function CreateUserApp(props) {
               </Stack>
             )}
             {error && (
-              <Stack className="mt-[10px]" sx={{ width: "100%"}} spacing={2}>
+              <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
                 <Alert severity="warning">
                   Error!! El usuario no se ha registrado
                 </Alert>
