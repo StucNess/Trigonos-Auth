@@ -38,6 +38,8 @@ module.exports = {
       smmax: {'max': '601px'},//máximo
       ssmmax: {'max':'769px'},
       mdmax: {'max': '960px'},//máximo
+      //Personal EditUserPaper
+      tvxxllg: {'min': '1280px', 'max': '1900px'},
       // desktop_full: '1535px',
       // desktop: '1279px',
       // laptop: '1024px',

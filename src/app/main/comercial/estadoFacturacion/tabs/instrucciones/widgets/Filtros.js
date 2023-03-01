@@ -262,8 +262,8 @@ const Filtros = (props) => {
       sx={{ width: "100%", color: "grey.500" }} 
       // tvxxl:max-w-[78%] tvdosk:max-w-[70%]
       className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full md:max-xl:flex   ">
-      <div className="flex flex-col sm:flex-row items-start justify-between">
-        <Typography className="text-lg font-medium tracking-tight leading-6 truncate">
+      <div className="flex  justify-center">
+        <Typography className="text-lg font-medium tracking-tight leading-6 truncate ">
           Filtros
         </Typography>
       </div>

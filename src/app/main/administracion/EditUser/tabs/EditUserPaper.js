@@ -361,7 +361,7 @@ import {
             <Button
                 variant="contained"
                 color="secondary"
-                className="max-w-[240px] mt-24"
+                className="max-w-[240px] mt-24 mb-24"
                 aria-label="Register"
                 // disabled={_.isEmpty(dirtyFields) || !isValid}
                 type="submit"
@@ -372,7 +372,7 @@ import {
               <Button
                 variant="contained"
                 color="secondary"
-                className="max-w-[240px]  mt-24"
+                className="max-w-[240px]  mt-24 mb-24"
                 aria-label="Register"
                 // disabled={_.isEmpty(dirtyFields) || !isValid}
                 type="submit"
