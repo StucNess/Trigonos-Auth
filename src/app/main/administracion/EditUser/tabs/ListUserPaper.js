@@ -13,7 +13,7 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -25,6 +25,10 @@ import { Button } from '@mui/material';
 import { SiMicrosoftexcel } from "react-icons/si";
 import { HiDownload } from  "react-icons/hi";
 import EditIcon from '@mui/icons-material/Edit';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 function createData(usuario, nombre, apellido, email, contrasenia,clientes,rol) {
   return {
     usuario,
@@ -191,9 +195,14 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props;
+  const [roll, setroll] = React.useState('');
 
+  const handleChange = (event) => {
+    setroll(event.target.value);
+  };
   return (
     <Toolbar
+      className="w-full"
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
@@ -202,11 +211,58 @@ function EnhancedTableToolbar(props) {
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
-    >   <div className="text-center">
-          <Typography className="mt-32 text-4xl font-extrabold   tracking-tight leading-tight">
+    > 
+      <Box className="flex flex-col w-full">
+      <Box className="flex flex-row w-full"> 
+          <Typography className="mt-32 text-4xl font-extrabold text-center  tracking-tight leading-tight w-full">
           Lista de Usuarios
-          </Typography>
-        </div>
+          </Typography>  
+      </Box>
+      
+      <Box className="flex items-end ">
+        <Box>
+        <Typography className="text-2xl">
+          Filtrar por:
+        </Typography>
+        </Box>
+        <Box >
+          <TextField
+            label="Nombre"
+            id="standard-search"
+            className="mr-[20px] ml-[20px]"
+            type="search"
+            variant="standard"
+            // sx={{ width: 300 }}
+          />
+           <FormControl variant="standard" sx={{ minWidth: 120 }}>
+              <InputLabel id="demo-simple-select-standard-label">Rol</InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={roll}
+                onChange={handleChange}
+                
+              >
+                <MenuItem value="">
+                  <em>----</em>
+                </MenuItem>
+                <MenuItem id="1" value="admin">
+                  ADMIN
+                </MenuItem>
+                <MenuItem id="2" value="trgns">
+                  TRGNS
+                </MenuItem>
+                <MenuItem id="3" value="cliente">
+                  CLIENTE
+                </MenuItem>
+              </Select>
+          </FormControl>
+        </Box>
+       
+
+      </Box>
+      </Box>
+
         
       {/* {numSelected > 0 ? (
         <Typography
