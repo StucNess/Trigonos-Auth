@@ -188,8 +188,7 @@ function CreateUserApp(props) {
             name="registerForm"
             noValidate
             className="flex flex-col justify-center w-full mt-32"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+            onSubmit={handleSubmit(onSubmit)}>
             <Controller
               name="user"
               control={control}
@@ -306,8 +305,7 @@ function CreateUserApp(props) {
                   label="project"
                   error={!!errors.project}
                   type="select"
-                  required
-                >
+                  required>
                   <InputLabel id="demo-simple-select-standard-label">
                     Seleccione clientes
                   </InputLabel>
@@ -329,8 +327,7 @@ function CreateUserApp(props) {
                             e.commercial_Business,
                             personName,
                             theme
-                          )}
-                        >
+                          )}>
                           {e.business_Name}
                         </MenuItem>
                       ))
@@ -351,8 +348,7 @@ function CreateUserApp(props) {
                   className="mb-24"
                   label="Rol"
                   type="select"
-                  required
-                >
+                  required>
                   <InputLabel id="demo-simple-select-standard-label">
                     Seleccione rol
                   </InputLabel>
@@ -383,8 +379,7 @@ function CreateUserApp(props) {
               aria-label="Register"
               // disabled={_.isEmpty(dirtyFields) || !isValid}
               type="submit"
-              size="large"
-            >
+              size="large">
               Crear usuario
             </Button>
             {alertt && (

@@ -8,8 +8,10 @@ import axios from "axios";
 export const getProjects = createAsyncThunk(
   "estadoFacturacionApp/projects/getProjects",
   async () => {
+    const idUser = localStorage.getItem("idUser");
+
     const response = await axios.get(
-      "http://164.77.112.10:99/api/Participantes"
+      `http://164.77.112.10:99/api/Participantes?id=${idUser}`
     );
     return response.data.data;
   }
