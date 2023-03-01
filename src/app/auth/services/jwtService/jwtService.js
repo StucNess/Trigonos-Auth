@@ -38,7 +38,7 @@ class JwtService extends FuseUtils.EventEmitter {
 
   handleAuthentication = () => {
     const access_token = this.getAccessToken();
-
+    const idUser = this.getIdUser();
     if (!access_token) {
       this.emit("onNoAccessToken");
 
@@ -46,7 +46,7 @@ class JwtService extends FuseUtils.EventEmitter {
     }
 
     if (this.isAuthTokenValid(access_token)) {
-      this.setSession(access_token);
+      this.setSession(access_token, idUser);
       this.emit("onAutoLogin", true);
     } else {
       this.setSession(null);
@@ -58,7 +58,7 @@ class JwtService extends FuseUtils.EventEmitter {
     return new Promise((resolve, reject) => {
       axios.post(jwtServiceConfig.signUp, data).then((response) => {
         if (response.data.username) {
-          this.setSession(response.data.token);
+          this.setSession(response.data.token, response.data.id);
           resolve(response.data.username);
           this.emit("onLogin", response.data.username);
         } else {
@@ -84,7 +84,7 @@ class JwtService extends FuseUtils.EventEmitter {
                 email: response.data.email,
               },
             };
-            this.setSession(response.data.token);
+            this.setSession(response.data.token, response.data.id);
             resolve(json);
             this.emit("onLogin", json);
           } else {
@@ -104,7 +104,7 @@ class JwtService extends FuseUtils.EventEmitter {
         })
         .then((response) => {
           if (response.data.username) {
-            this.setSession(response.data.token);
+            this.setSession(response.data.token, response.data.id);
             console.log(response);
 
             const json = {
@@ -133,12 +133,14 @@ class JwtService extends FuseUtils.EventEmitter {
     });
   };
 
-  setSession = (access_token) => {
+  setSession = (access_token, idUser) => {
     if (access_token) {
       localStorage.setItem("token", access_token);
+      localStorage.setItem("idUser", idUser);
       axios.defaults.headers.common.Authorization = `Bearer ${access_token}`;
     } else {
       localStorage.removeItem("token");
+      localStorage.removeItem("idUser");
       delete axios.defaults.headers.common.Authorization;
     }
   };
@@ -165,6 +167,11 @@ class JwtService extends FuseUtils.EventEmitter {
   getAccessToken = () => {
     // console.log(window.localStorage.getItem("token"));
     return window.localStorage.getItem("token");
+  };
+
+  getIdUser = () => {
+    // console.log(window.localStorage.getItem("token"));
+    return window.localStorage.getItem("idUser");
   };
 }
 
