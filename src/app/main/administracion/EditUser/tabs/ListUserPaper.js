@@ -39,11 +39,11 @@ function createData(usuario, nombre, apellido, email, contrasenia,clientes,rol) 
 
 const rows = [
   createData('userPrueba1', 'juanito', 'velasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-  createData('userPrueba2', 'Rosamel ',  'Delgado', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+  createData('userPrueba2', 'Rosita ',  'Carrasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
   createData('userPrueba3', 'Como', 'tu', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
   createData('userPrueba4', 'Nose', 'ayuda', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
   createData('userPrueba5', 'Claro', 'Movistar', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-  createData('userPrueba6', 'El', 'bistek', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+  createData('userPrueba6', 'El', 'sadsa', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
   
 ];
 
