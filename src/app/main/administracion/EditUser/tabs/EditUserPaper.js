@@ -155,29 +155,30 @@ import {
       });
     }
     return (
-      <div className="flex flex-col sm:flex-row items-center md:items-start justify-center md:justify-start flex-1 min-w-0">
-        <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full  py-8 px-16 sm:p-48 md:p-64 rounded-2xl  shadow  border-r-1 ">
-          <div className="w-full   mx-auto sm:mx-0">
+      <div className="flex flex-col  items-center md:items-start justify-center md:justify-start flex-1 h-full w-full ">
+        <Paper className=" md:flex md:items-center md:justify-end w-full  h-full   rounded-2xl  shadow  border-r-1 ">
+          <div className="w-full  h-full  mx-auto sm:mx-0">
             {/* <div className="divLogo_">
               <img className="LogoTrgns" src="assets/images/logo/logoTRGNS.png" />
             </div> */}
-            <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
+            <Typography className="mt-32 text-4xl font-extrabold text-center tracking-tight leading-tight">
               Editar Usuario
             </Typography>
   
             <form
               name="EditUserForm"
               noValidate
-              className="flex flex-wrap space-[5px] space-x-[5px]"
+              className="flex flex-wrap ssmmax:flex-col justify-between  ssmmax:p-[20px] w-full"
               onSubmit={handleSubmit(onSubmit)}
             >
+            
               <Controller
                 name="user"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    className="mb-24"
+                    className="m-24 w-auto "
                     label="Usuario"
                     autoFocus
                     type="user"
@@ -195,7 +196,7 @@ import {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    className="mb-24"
+                    className="m-24 w-auto "
                     label="Nombre"
                     autoFocus
                     type="name"
@@ -213,7 +214,7 @@ import {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    className="mb-24"
+                    className="m-24 w-auto"
                     label="Apellido"
                     autoFocus
                     type="apellido"
@@ -231,7 +232,7 @@ import {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    className="mb-24"
+                    className="m-24 w-auto"
                     label="Email"
                     type="email"
                     error={!!errors.email}
@@ -249,7 +250,7 @@ import {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    className="mb-24"
+                    className="m-24 w-auto"
                     label="Contraseña (Antigua)"
                     type="password"
                     error={!!errors.password}
@@ -267,7 +268,7 @@ import {
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    className="mb-24"
+                    className="m-24 w-auto"
                     label="Contraseña (Nueva)"
                     type="password"
                     error={!!errors.passwordConfirm}
@@ -283,7 +284,7 @@ import {
                 control={control}
                 render={({ field }) => (
                   <FormControl
-                    className="mb-24 min-w-[240px]"
+                    className="m-24 min-w-[240px]"
                     label="project"
                     error={!!errors.project}
                     type="select"
@@ -329,7 +330,7 @@ import {
                 control={control}
                 render={({ field }) => (
                   <FormControl
-                    className="mb-24 min-w-[240px]"
+                    className="m-24 min-w-[240px]"
                     label="Rol"
                     type="select"
                     required

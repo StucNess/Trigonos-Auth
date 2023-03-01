@@ -24,6 +24,7 @@ import { visuallyHidden } from '@mui/utils';
 import { Button } from '@mui/material';
 import { SiMicrosoftexcel } from "react-icons/si";
 import { HiDownload } from  "react-icons/hi";
+import EditIcon from '@mui/icons-material/Edit';
 function createData(usuario, nombre, apellido, email, contrasenia,clientes,rol) {
   return {
     usuario,
@@ -80,6 +81,12 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
+    id: 'editar',
+    numeric: false,
+    disablePadding: false,
+    label: 'Editar',
+  },
+  {
     id: 'usuario',
     numeric: false,
     disablePadding: true,
@@ -122,6 +129,7 @@ const headCells = [
     label: 'Rol',
   },
   
+  
 ];
 
 function EnhancedTableHead(props) {
@@ -134,7 +142,7 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -144,11 +152,12 @@ function EnhancedTableHead(props) {
               'aria-label': 'select all desserts',
             }}
           />
-        </TableCell>
+        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
+            align="right"
+            // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -193,11 +202,13 @@ function EnhancedTableToolbar(props) {
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         }),
       }}
-    >
-        <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
-        Lista de Usuarios
-        </Typography>
-      {numSelected > 0 ? (
+    >   <div className="text-center">
+          <Typography className="mt-32 text-4xl font-extrabold   tracking-tight leading-tight">
+          Lista de Usuarios
+          </Typography>
+        </div>
+        
+      {/* {numSelected > 0 ? (
         <Typography
           sx={{ flex: '1 1 100%' }}
           color="inherit"
@@ -212,9 +223,9 @@ function EnhancedTableToolbar(props) {
         >
          
         </Typography>
-      )}
+      )} */}
 
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <DeleteIcon />
@@ -226,7 +237,7 @@ function EnhancedTableToolbar(props) {
             <FilterListIcon />
           </IconButton>
         </Tooltip>
-      )}
+      )} */}
     </Toolbar>
   );
 }
@@ -293,20 +304,22 @@ export default function EnhancedTable() {
 
   const isSelected = (usuario) => selected.indexOf(usuario) !== -1;
 
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
+    <Box className="h-full" sx={{ width: '100%' }}>
+      <Paper className="h-full" sx={{ width: '100%', mb: 2}}>
         
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
+            className="p-[40px]"
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -317,7 +330,7 @@ export default function EnhancedTable() {
               rowCount={rows.length}
               
             />
-            <TableBody>
+            <TableBody  >
               {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.sort(getComparator(order, orderBy)).slice() */}
               {stableSort(rows, getComparator(order, orderBy))
@@ -325,19 +338,21 @@ export default function EnhancedTable() {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.usuario);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  
+                  
                   return (
                     <TableRow
+                   
                       hover
-                      onClick={(event) => handleClick(event, row.usuario)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.usuario}
-                      selected={isItemSelected}
+                      // onClick={(event) => handleClick(event, row.usuario)}
+                      // role="checkbox"
+                      // aria-checked={isItemSelected}
+                      // tabIndex={-1}
+                      // key={row.usuario}
+                      // selected={isItemSelected}
                       align="right"
                     >
-                      <TableCell padding="checkbox">
+                      {/* <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -345,6 +360,31 @@ export default function EnhancedTable() {
                             'aria-labelledby': labelId,
                           }}
                         />
+                      </TableCell> */}
+                      <TableCell align="right">
+                        <Button
+                        startIcon={<EditIcon />}
+                        variant="contained"
+                        color="secondary"
+                        style={{
+                          padding:"0 auto",
+                          width: "auto",
+                          margin: "0 auto",
+                          display: "flex",
+                         
+                          
+                          color: "white",
+                        }}
+                        >
+                          
+                        </Button>
+                        {/* <Checkbox
+                          color="primary"
+                          checked={isItemSelected}
+                          inputProps={{
+                            'aria-labelledby': labelId,
+                          }}
+                        /> */}
                       </TableCell>
                       <TableCell
                         component="th"

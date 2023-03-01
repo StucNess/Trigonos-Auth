@@ -30,7 +30,7 @@ import {
         content={
           <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full ">
           <motion.div
-          className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-24 space-x-10  "
+          className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-24   "
          
           initial="hidden"
           animate="show">
@@ -41,20 +41,20 @@ import {
               <h1 className="border border-b-pantoneazul"></h1>
               <Box   className="flex flex-auto bg-white rounded-sm bg-grey-300 m-[10px] p-[10px]"  >
                 <div>
-                <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
+                  <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
                 </div>
                 <div>
-                <span className="text-grey-700">Selecciona un <b>Usuario</b> desde la tabla adyacente que contiene una <b>lista</b> de los usuarios registrados</span>
+                  <span className="text-grey-700">Selecciona un <b>Usuario</b> desde la tabla adyacente que contiene una <b>lista</b> de los usuarios registrados</span>
                 </div>
                 
               </Box>
             </Box>
           </motion.div>
-          <motion.div className=" lgmax:col-span-12  lg:col-span-6">
+          <motion.div className=" lgmax:col-span-12  lg:col-span-6 lg:mr-[20px]">
             <EditUserPaper/>
           </motion.div>
           
-          <motion.div  className=" lgmax:col-span-12  lg:col-span-6"> 
+          <motion.div  className=" lgmax:col-span-12  lg:col-span-6 lgmax:mt-[20px] lg:ml-[20px] "> 
             <ListUserPaper/>
            
           </motion.div>

@@ -9,13 +9,13 @@ module.exports = {
   theme: {
     screens: {
       sm: '600px',
-      ssm: '769px',
+      ssm: '768px',
       md: '960px',
       
       lg: '1280px',
       xl: '1920px',
       //Rangos
-      phone: {'min': '400px', 'max': '767px'},
+      phone: {'min': '799px', 'max': '767px'},
       // => @media (min-width: 640px and max-width: 767px) { ... }
 
       laptop: {'min': '768px', 'max': '1023px'},
@@ -35,7 +35,8 @@ module.exports = {
       tvdoskmax: {'max': '2301px'},
       hdmas: {'max': '1535px'},//máximo
       lgmax:{'max':'1281px'},
-      smmax: {'max': '600px'},//máximo
+      smmax: {'max': '601px'},//máximo
+      ssmmax: {'max':'769px'},
       mdmax: {'max': '960px'},//máximo
       // desktop_full: '1535px',
       // desktop: '1279px',
