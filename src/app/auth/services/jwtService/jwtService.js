@@ -3,9 +3,8 @@ import history from "@history";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import jwtServiceConfig from "./jwtServiceConfig";
-
 /* eslint-disable camelcase */
-
+let proyectUser;
 class JwtService extends FuseUtils.EventEmitter {
   init() {
     this.setInterceptors();
@@ -77,6 +76,18 @@ class JwtService extends FuseUtils.EventEmitter {
         })
         .then((response) => {
           if (response.data.username) {
+            const url = `http://164.77.112.10:99/api/Participantes?id=${response.data.id}`;
+            let kaka;
+            const prueba = async () => {
+              let pruebaa;
+              await axios.get(url).then((responsee) => {
+                pruebaa = responsee.data.data[0].id;
+              });
+              return pruebaa;
+            };
+            prueba().then((value) => {
+              localStorage.setItem("ProyectUser", value);
+            });
             const json = {
               role: response.data.role,
               data: {
