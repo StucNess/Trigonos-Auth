@@ -145,7 +145,7 @@ function EnhancedTableHead(props) {
 
   return (
     <TableHead>
-      <TableRow>
+      <TableRow >
         {/* <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -160,7 +160,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align="right"
+            align="left"
             // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
@@ -204,8 +204,7 @@ function EnhancedTableToolbar(props) {
     <Toolbar
       className="w-full"
       sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
+        
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
@@ -406,7 +405,8 @@ export default function EnhancedTable() {
                       // tabIndex={-1}
                       // key={row.usuario}
                       // selected={isItemSelected}
-                      align="right"
+                      align="left"
+                      
                     >
                       {/* <TableCell padding="checkbox">
                         <Checkbox
@@ -417,7 +417,7 @@ export default function EnhancedTable() {
                           }}
                         />
                       </TableCell> */}
-                      <TableCell align="right">
+                      <TableCell align="left">
                         <Button
                         startIcon={<EditIcon />}
                         variant="contained"
@@ -447,15 +447,16 @@ export default function EnhancedTable() {
                         id={labelId}
                         scope="row"
                         padding="none"
+                        align="left"
                       >
                         {row.usuario}
                       </TableCell>
-                      <TableCell align="right">{row.nombre}</TableCell>
-                      <TableCell align="right">{row.apellido}</TableCell>
-                      <TableCell align="right">{row.email}</TableCell>
-                      <TableCell align="right">{row.contrasenia}</TableCell>
-                      <TableCell align="right">{row.clientes}</TableCell>
-                      <TableCell align="right">{row.rol}</TableCell>
+                      <TableCell align="left">{row.nombre}</TableCell>
+                      <TableCell align="left">{row.apellido}</TableCell>
+                      <TableCell align="left">{row.email}</TableCell>
+                      <TableCell align="left">{row.contrasenia}</TableCell>
+                      <TableCell align="left">{row.clientes}</TableCell>
+                      <TableCell align="left">{row.rol}</TableCell>
                       
                     </TableRow>
                   );
