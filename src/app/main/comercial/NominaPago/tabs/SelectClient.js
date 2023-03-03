@@ -36,11 +36,15 @@ export default function SelectClientTable(){
 
     const [cliente, setcliente] = React.useState('');
 
-    const handleChange = (event,newValue) => {
+    const handleChange = (event) => {
         setcliente(event.target.value);
+      
+    };
+    const handleChangeDate = (newValue) => {
+        
         setValue(newValue);
     };
-    const [value, setValue] = React.useState(dayjs('2023-02-23T21:11:54'));
+    const [value, setValue] = React.useState(dayjs());
     
 return (
     <Box  sx={{
@@ -65,7 +69,7 @@ return (
             <HiOutlineInformationCircle className="w-[30px] h-[30px] text-red-300" /><span>Es necesario seleccionar <b>Cliente</b>  y <b>Fecha</b> para la Descarga</span>
 
             </div>
-            <div className="flex  w-full items-center justify-evenly   ">
+            <div className="flex  w-full items-center justify-evenly mt-[10px]   ">
                 <FormControl sx={{ m: 1, minWidth: 300 }}>
                     <InputLabel id="demo-simple-select-autowidth-label">Seleccionar Cliente</InputLabel>
                     <Select
@@ -91,9 +95,10 @@ return (
                     <Stack spacing={3}>
                         <DesktopDatePicker
                         label="Seleccione Fecha"
-                        inputFormat="MM/DD/YYYY"
+                        inputFormat="DD/MM/YYYY"
+                        disablePast= {true}
                         value={value}
-                        onChange={handleChange}
+                        onChange={handleChangeDate}
                         renderInput={(params) => <TextField {...params} />}
                         />
                     </Stack>

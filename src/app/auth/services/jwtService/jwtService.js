@@ -93,6 +93,9 @@ class JwtService extends FuseUtils.EventEmitter {
               data: {
                 displayName: response.data.username,
                 email: response.data.email,
+                nombre: response.data.nombre,
+                apellido: response.data.apellido,
+
               },
             };
             this.setSession(response.data.token, response.data.id);
@@ -123,6 +126,8 @@ class JwtService extends FuseUtils.EventEmitter {
               data: {
                 displayName: response.data.username,
                 email: response.data.email,
+                nombre: response.data.nombre,
+                apellido: response.data.apellido,
               },
             };
             resolve(json);

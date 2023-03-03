@@ -39,13 +39,7 @@ const navigationConfig = [
             icon: "heroicons-outline:pencil-alt",
             url: "/administracion/EditUserApp",
           },
-          {
-            id: "GestionUsuarios.ListarUsuarios",
-            title: "Listar Usuarios",
-            type: "item",
-            icon: "heroicons-outline:clipboard-list",
-            url: "/administracion/CreateUser",
-          },
+          
          
         ],
       },

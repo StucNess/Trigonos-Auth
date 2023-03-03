@@ -28,13 +28,13 @@ const NominaPagoApp = () => {
 
   return (
     <Root
-      header={<NominaPagoAppHeader />}
+      // header={<NominaPagoAppHeader />}
       content={
-        <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full">
+        <div className="w-full">
          
            
           <motion.div
-          className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-24 "
+          className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-20 "
          
           initial="hidden"
           animate="show">

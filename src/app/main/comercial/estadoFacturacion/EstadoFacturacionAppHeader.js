@@ -82,8 +82,8 @@ const EstadoFacturacionAppHeader = (props) => {
     );
   }
   return (
-    <div className="flex flex-col w-full px-24 sm:px-32">
-      <div className="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-32 sm:my-48">
+    <div className="flex flex-col w-full px-24 sm:px-32 mt-[10px]">
+      {/* <div className="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-32 sm:my-48">
         <div className="flex flex-auto items-center min-w-0">
           <Avatar className="flex-0 w-64 h-64" alt="user photo" src="">
             ""
@@ -101,7 +101,8 @@ const EstadoFacturacionAppHeader = (props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+     
       <div className="flex items-center">
         <Button
           onClick={handleOpenProjectMenu}

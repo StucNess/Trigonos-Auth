@@ -37,11 +37,15 @@ export default function SelectClientTable(){
 
     const [cliente, setcliente] = React.useState('');
 
-    const handleChange = (event,newValue) => {
+    const handleChange = (event) => {
         setcliente(event.target.value);
+      
+    };
+    const handleChangeDate = (newValue) => {
+        
         setValue(newValue);
     };
-    const [value, setValue] = React.useState(dayjs('2023-02-23T21:11:54'));
+    const [value, setValue] = React.useState(dayjs());
     
 return (
     <Box  sx={{
@@ -72,9 +76,10 @@ return (
                     <Stack spacing={3}>
                         <DesktopDatePicker
                         label="Seleccione Fecha"
-                        inputFormat="MM/DD/YYYY"
+                        inputFormat="DD/MM/YYYY"
+                        disablePast= {true}
                         value={value}
-                        onChange={handleChange}
+                        onChange={handleChangeDate}
                         renderInput={(params) => <TextField {...params} />}
                         />
                     </Stack>

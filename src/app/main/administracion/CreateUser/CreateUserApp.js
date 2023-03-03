@@ -401,7 +401,7 @@ function CreateUserApp(props) {
       </Paper>
 
       <Box
-        className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden"
+        className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden opacity-[.67]"
         id="box_der"
         sx={{ backgroundColor: "secondary.main" }}
       />

@@ -35,13 +35,13 @@ const EstadoFacturacionApp = () => {
   }
   return (
     <Root
-      header={
-        <EstadoFacturacionAppHeader
-          passToken={passToken}
-          clearStates={clearStates}
-          clearFilters={clearFilters}
-        />
-      }
+      // header={
+      //   <EstadoFacturacionAppHeader
+      //     passToken={passToken}
+      //     clearStates={clearStates}
+      //     clearFilters={clearFilters}
+      //   />
+      // }
       content={
         <div className="w-full p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0">
           {/* <Button
