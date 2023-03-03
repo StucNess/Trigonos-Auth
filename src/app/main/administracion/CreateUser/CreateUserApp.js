@@ -156,9 +156,9 @@ function CreateUserApp(props) {
             axios
               .post(jwtServiceConfig.addProyects, dataProyect)
               .then((response) => {
-                console.log(
-                  `Se agrego el proyecto ${personName[x]} al usuario creado`
-                );
+                // console.log(
+                //   `Se agrego el proyecto ${personName[x]} al usuario creado`
+                // );
               })
               .catch((error) => {
                 console.log(`Error al agregar el proyecto ${personName[x]}`);
@@ -169,7 +169,7 @@ function CreateUserApp(props) {
         setAlertt(true);
       })
       .catch((error) => {
-        console.log("entro");
+        // console.log("entro");
         setError(true);
       });
   }

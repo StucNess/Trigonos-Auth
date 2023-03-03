@@ -225,7 +225,7 @@ function GraficosAcusete(props) {
       contador = contador + 1;
     }
   }
-  console.log(dataDay);
+  // console.log(dataDay);
   series = dataDay;
   useEffect(() => {
     const fetchData = async (proyecto) => {

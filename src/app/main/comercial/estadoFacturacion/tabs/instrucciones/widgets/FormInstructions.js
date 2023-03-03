@@ -1,37 +1,25 @@
 import {
   Autocomplete,
-  Input,
   Stack,
   TextField,
   Button,
   Box,
   Alert,
 } from "@mui/material";
-import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 import axios from "axios";
-import EditIcon from "@mui/icons-material/Edit";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
-import InputAdornment from "@mui/material/InputAdornment";
-import dayjs from "dayjs";
-import Dialog from "@mui/material/Dialog";
-import CardHeader from "@mui/material/CardHeader";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
+// eslint-disable-next-line import/no-extraneous-dependencies
 import AdapterDateFns from "@date-io/date-fns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { format } from "date-fns";
 import { es } from "date-fns/locale";
+
 let emisione;
 let buss;
 const ReceptionState = ["Recepcionado", "No Recepcionado", "Rechazado"];
 const AceptationState = ["Aceptado", "Rechazado", "Pendiente"];
 const BillingState = ["No Facturado", "Facturado", "Facturado con Atraso"];
 const PaymentState = ["No Pagado", "Pagado", "Pagado con Atraso"];
-import styleClasses from "./DatePicker.css";
 const FormInstructions = (props) => {
   const [value, setValue] = React.useState(
     new Date("December 01, 1995 03:24:00")
@@ -40,7 +28,7 @@ const FormInstructions = (props) => {
   const [error, setError] = React.useState(false);
   const [errorDp, setErrorDp] = React.useState(false);
   const handleChangeDataPicker = (newValue) => {
-    let fechita = `20${newValue.getYear().toString().slice(1, 3)}/${
+    const fechita = `20${newValue.getYear().toString().slice(1, 3)}/${
       newValue.getMonth() + 1
     }/${newValue.getDate()}`;
 
@@ -84,19 +72,20 @@ const FormInstructions = (props) => {
   const { receptionDate, aceptationDate, billingDate, paymentDate } = dates;
 
   const viendoErrores = () => {
-    console.log(paymentDate > billingDate);
+    // console.log(paymentDate > billingDate);
   };
   const ApiPatch = () => {
-    let billingDateF = `20${billingDate.getYear().toString().slice(1, 3)}/${
+    const billingDateF = `20${billingDate.getYear().toString().slice(1, 3)}/${
       billingDate.getMonth() + 1
     }/${billingDate.getDate()}`;
-    let receptionDateF = `20${receptionDate.getYear().toString().slice(1, 3)}/${
-      receptionDate.getMonth() + 1
-    }/${receptionDate.getDate()}`;
-    let paymentDateF = `20${paymentDate.getYear().toString().slice(1, 3)}/${
+    const receptionDateF = `20${receptionDate
+      .getYear()
+      .toString()
+      .slice(1, 3)}/${receptionDate.getMonth() + 1}/${receptionDate.getDate()}`;
+    const paymentDateF = `20${paymentDate.getYear().toString().slice(1, 3)}/${
       paymentDate.getMonth() + 1
     }/${paymentDate.getDate()}`;
-    let aceptationDateF = `20${aceptationDate
+    const aceptationDateF = `20${aceptationDate
       .getYear()
       .toString()
       .slice(1, 3)}/${
@@ -128,6 +117,7 @@ const FormInstructions = (props) => {
       .then((response) => {
         setAlertt(true);
       })
+      // eslint-disable-next-line no-shadow
       .catch((error) => {
         setError(true);
       });
@@ -149,7 +139,7 @@ const FormInstructions = (props) => {
           disablePortal
           id="combo-box-demo"
           value={reception}
-          disabled={true}
+          disabled
           options={ReceptionState}
           name="reception"
           onChange={(event, newValue) => {
@@ -163,10 +153,9 @@ const FormInstructions = (props) => {
         <Autocomplete
           disablePortal
           id="combo-box-demo"
-          disabled={true}
+          disabled
           value={aceptation}
           options={AceptationState}
-         
           name="aceptation"
           onChange={(event, newValue) => {
             setStates({ ...states, aceptation: newValue });
@@ -180,7 +169,7 @@ const FormInstructions = (props) => {
           disablePortal
           id="combo-box-demo"
           value={billing}
-          disabled={true}
+          disabled
           options={BillingState}
           name="billing"
           onChange={(event, newValue) => {
@@ -199,7 +188,7 @@ const FormInstructions = (props) => {
           id="combo-box-demo"
           value={payment}
           options={PaymentState}
-          disabled={true}
+          disabled
           name="payment"
           onChange={(event, newValue) => {
             setStates({ ...states, payment: newValue });
@@ -225,7 +214,7 @@ const FormInstructions = (props) => {
             )}
           />
           <MobileDatePicker
-            disabled={true}
+            disabled
             label="Fecha Aceptacion"
             inputFormat="dd/MM/yyyy"
             minDate={new Date("2017-01-02")}
@@ -281,7 +270,6 @@ const FormInstructions = (props) => {
           id="outlined"
           value={folio}
           disabled={!props.acreedor && props.fechaRecepcion ? false : true}
-          
           onChange={(event) => {
             setStates({ ...states, folio: event.target.value });
           }}

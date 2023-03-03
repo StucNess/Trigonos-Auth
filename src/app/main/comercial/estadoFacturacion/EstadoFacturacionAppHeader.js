@@ -16,9 +16,10 @@ const EstadoFacturacionAppHeader = (props) => {
   const dispatch = useDispatch();
   const projects = useSelector(selectProjects);
   const idProyecto = window.localStorage.getItem("ProyectUser");
-  console.log(idProyecto);
+  // console.log(idProyecto);
   // console.log(window.localStorage.getItem("ProyectUser"));
   const [selectedProject, setSelectedProject] = useState({
+    // eslint-disable-next-line radix
     id: parseInt(idProyecto) /* Dinamico -  */,
     menuEl: null,
   });
@@ -50,7 +51,7 @@ const EstadoFacturacionAppHeader = (props) => {
     });
   }
   varid = selectedProject.id;
-
+  console.log(projects[0]);
   if (_.isEmpty(projects)) {
     return (
       <div className="flex flex-col w-full px-24 sm:px-32">
@@ -116,24 +117,21 @@ const EstadoFacturacionAppHeader = (props) => {
             <FuseSvgIcon size={20} color="action">
               heroicons-solid:chevron-down
             </FuseSvgIcon>
-          }
-        >
+          }>
           {_.find(projects, ["id", selectedProject.id]).business_Name}
         </Button>
         <Menu
           id="project-menu"
           anchorEl={selectedProject.menuEl}
           open={Boolean(selectedProject.menuEl)}
-          onClose={handleCloseProjectMenu}
-        >
+          onClose={handleCloseProjectMenu}>
           {projects &&
             projects.map((project) => (
               <MenuItem
                 key={project.id}
                 onClick={(ev) => {
                   handleChangeProject(project.id);
-                }}
-              >
+                }}>
                 {project.business_Name}
               </MenuItem>
             ))}
