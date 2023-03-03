@@ -15,6 +15,7 @@ let varid;
 const EstadoFacturacionAppHeader = (props) => {
   const dispatch = useDispatch();
   const projects = useSelector(selectProjects);
+
   const [selectedProject, setSelectedProject] = useState({
     id: 141 /* Dinamico -  */,
     menuEl: null,
@@ -47,7 +48,7 @@ const EstadoFacturacionAppHeader = (props) => {
     });
   }
   varid = selectedProject.id;
-
+  console.log(projects[0]);
   if (_.isEmpty(projects)) {
     return (
       <div className="flex flex-col w-full px-24 sm:px-32">
@@ -98,7 +99,6 @@ const EstadoFacturacionAppHeader = (props) => {
             </div>
           </div>
         </div>
-
       </div>
       <div className="flex items-center">
         <Button

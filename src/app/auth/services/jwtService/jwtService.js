@@ -105,7 +105,7 @@ class JwtService extends FuseUtils.EventEmitter {
         .then((response) => {
           if (response.data.username) {
             this.setSession(response.data.token, response.data.id);
-            console.log(response);
+            // console.log(response);
 
             const json = {
               role: response.data.role,

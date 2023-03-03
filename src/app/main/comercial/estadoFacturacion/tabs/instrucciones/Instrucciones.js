@@ -35,9 +35,7 @@ const Instrucciones = (props) => {
     setFecha(fecha);
   }
   function stateSelected(selected, disabled) {
-    console.log(disabled);
     setSelectedParams(selected);
-    console.log(disabled);
     if (charge === true && disabled === true) {
       setCharge(false);
     } else {
@@ -86,12 +84,14 @@ const Instrucciones = (props) => {
           chargeFilters={disabled}
         />
       </motion.div>
-      
-      <motion.div variants={item} className=" hdmas:col-span-12  hd:col-span-3 "> 
+
+      <motion.div
+        variants={item}
+        className=" hdmas:col-span-12  hd:col-span-3 ">
         {/*
         Cargar la diversificacion de las tablas aca
         */}
-        <Filtros 
+        <Filtros
           idParticipante={props.id}
           fecha={stateFecha}
           selected={stateSelected}
@@ -103,7 +103,9 @@ const Instrucciones = (props) => {
           cargando={charge}
         />
       </motion.div>
-      <motion.div variants={item} className="  hdmas:col-span-12   hd:col-span-9  " >
+      <motion.div
+        variants={item}
+        className="  hdmas:col-span-12   hd:col-span-9  ">
         <TablaInstrucciones
           idParticipante={props.id}
           estadoPar={estadosPar}

@@ -263,14 +263,10 @@ const TablaInstrucciones = (props) => {
                   )
                 )
             );
-            console.log("entra");
-
             setCargando(false);
             props.tokenCharge(cargando);
-            console.log(cargando);
           }
         } catch (error) {
-          console.log('uwu')
           console.log("error", error);
         }
       };
@@ -477,12 +473,12 @@ const TablaInstrucciones = (props) => {
       <Paper className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full  w-full">
         <div className="flex flex-col sm:flex-row items-start justify-between">
           {alert && <AlertDialogSlide />}
-          
+
           {/*  sm: '600px',
                 md: '960px',
                 lg: '1280px',
                 xl: '1920px', */}
-          <Box className="flex  w-full items-center justify-evenly   " >
+          <Box className="flex  w-full items-center justify-evenly   ">
             {/* <Grid container spacing={2}>
               <Grid item xs={8}>
                 <Item sx={{ backgroundColor: "#002553", color: "white" }}>
@@ -505,19 +501,16 @@ const TablaInstrucciones = (props) => {
                 </Item>
               </Grid>
             </Grid> */}
-              <Box className="bg-pantoneazul text-white text-lg w-[300px] smmax:max-w-[200px]  text-center rounded-2xl align-middle p-[10px]" >
+            <Box className="bg-pantoneazul text-white text-lg w-[300px] smmax:max-w-[200px]  text-center rounded-2xl align-middle p-[10px]">
               Instrucciones
-              </Box>
-              <Button  className="sm:w-[150px] w-[150px] lg:w-[150px]"
-                    variant="contained"
-                    color="secondary"
-                    onClick={exportToExcel}
-                    >
-                    <SiMicrosoftexcel className="mr-3 " /> Descargar
-                  </Button>
-            
-           
-
+            </Box>
+            <Button
+              className="sm:w-[150px] w-[150px] lg:w-[150px]"
+              variant="contained"
+              color="secondary"
+              onClick={exportToExcel}>
+              <SiMicrosoftexcel className="mr-3 " /> Descargar
+            </Button>
           </Box>
         </div>
         <div className="flex flex-col flex-auto mt-9">
