@@ -44,12 +44,22 @@ import {
                   <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
                 </div>
                 <div>
-                  <span className="text-grey-700">Selecciona un <b>Usuario</b> desde la tabla adyacente que contiene una <b>lista</b> de los usuarios registrados</span>
+                  <span className="text-grey-700">Filtra o selecciona  un <b>Usuario</b> desde la tabla adyacente que contiene una <b>lista</b> de los usuarios registrados</span>
                 </div>
                 
               </Box>
             </Box>
           </motion.div>
+          {/* <motion.div  className=" col-span-12 mb-[20px] "> 
+          <Box className="  bg-white rounded-sm p-[10px] ">
+              <h1 className="ml-[5px]">Filtros</h1>
+              <Box   className="flex flex-auto bg-white rounded-sm bg-grey-300 m-[10px] p-[10px]"  >
+                
+                
+              </Box>
+            </Box>
+           
+          </motion.div> */}
           <motion.div className=" lgmax:col-span-12  lg:col-span-6 lg:mr-[20px]">
             <EditUserPaper/>
           </motion.div>
