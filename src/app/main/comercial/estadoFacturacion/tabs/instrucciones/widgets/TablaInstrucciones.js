@@ -192,7 +192,8 @@ const TablaInstrucciones = (props) => {
   }, []);
 
   useEffect(() => {
-    if (condicion === 1) {
+    console.log("entrooooooooooooooooooooooooooo");
+    if (condicion != 1) {
       const fetchData = async (
         id = idProyecto,
         PageIndex = pageIndex,
@@ -210,7 +211,9 @@ const TablaInstrucciones = (props) => {
             props.selected,
             orderByList
           );
+          console.log("entrooooooooooooooooooooooooooo");
           setError(response);
+
           if (response.data != [] && response.data != undefined) {
             const json = await response.data;
             pagination = response.count;
