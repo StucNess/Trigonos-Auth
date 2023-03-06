@@ -24,9 +24,9 @@ import {
   
     return (
       <Root
-        header={<div>
-            Header
-        </div>}
+        // header={<div>
+        //     Header
+        // </div>}
         content={
           <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full ">
           <motion.div

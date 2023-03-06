@@ -22,8 +22,8 @@ const NominaPagoApp = () => {
 
   return (
     <Root
-      header={<FacturacionMasivaAppHeader />}
-      content={ <Box className="flex flex-col w-full  m-[20px]">
+      // header={<FacturacionMasivaAppHeader />}
+      content={ <Box className="flex flex-col w-full  p-[20px]">
         <Box className="  bg-white rounded-sm p-[10px] mb-[20px]">
               <h1 className="ml-[5px]">Facturación Masiva</h1>
               <h1 className="border border-b-pantoneazul"></h1>

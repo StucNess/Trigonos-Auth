@@ -417,20 +417,12 @@ export default function EnhancedTable() {
                           }}
                         />
                       </TableCell> */}
-                      <TableCell align="left">
+                      <TableCell align="left" >
                         <Button
                         startIcon={<EditIcon />}
-                        variant="contained"
+                        // variant="contained"
                         color="secondary"
-                        style={{
-                          padding:"0 auto",
-                          width: "auto",
-                          margin: "0 auto",
-                          display: "flex",
-                         
-                          
-                          color: "white",
-                        }}
+                        
                         >
                           
                         </Button>
