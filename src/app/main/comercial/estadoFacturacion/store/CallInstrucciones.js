@@ -1,7 +1,11 @@
+/* eslint-disable no-else-return */
+/* eslint-disable prettier/prettier */
+/* eslint-disable eqeqeq */
 import React from "react";
 import axios from "axios";
 /*import dayjs from "dayjs";*/
 let prueba = [];
+// eslint-disable-next-line import/prefer-default-export
 export const CallInstrucciones = async (
   PageIndex = 1,
   PageSize = 10,

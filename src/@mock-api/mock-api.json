@@ -49,6 +49,8 @@
                       "displayName": "string",
                       "photoURL": "string",
                       "email": "string",
+                      "nombre": "string",
+                      "apellido": "string",
                       "settings": {
                         "layout": {},
                         "theme": {}
@@ -85,6 +87,8 @@
                         "displayName": "string",
                         "photoURL": "string",
                         "email": "string",
+                        "nombre": "string",
+                        "apellido": "string",
                         "settings": {
                           "layout": {},
                           "theme": {}
@@ -126,6 +130,8 @@
                         "displayName": "string",
                         "photoURL": "string",
                         "email": "string",
+                        "nombre": "string",
+                        "apellido": "string",
                         "settings": {
                           "layout": {},
                           "theme": {}
@@ -167,6 +173,8 @@
                         "displayName": "string",
                         "photoURL": "string",
                         "email": "string",
+                        "nombre": "string",
+                        "apellido": "string",
                         "settings": {
                           "layout": {},
                           "theme": {}
@@ -6765,6 +6773,14 @@
               "email": {
                 "type": "string"
               },
+              "nombre": {
+                "type": "string"
+              },
+              "apellido": {
+                "type": "string"
+              },
+
+              
               "settings": {
                 "type": "object",
                 "properties": {
@@ -6797,6 +6813,8 @@
               "displayName": "Abbott Keitch",
               "photoURL": "assets/images/avatars/brian-hughes.jpg",
               "email": "admin@fusetheme.com",
+              "nombre": "ExampleFirstName",
+              "apellido": "ExampleLastName",
               "settings": {
                 "layout": {},
                 "theme": {}
@@ -31490,6 +31508,8 @@
               "displayName": "Abbott Keitch",
               "photoURL": "assets/images/avatars/brian-hughes.jpg",
               "email": "admin@fusetheme.com",
+              "nombre": "ExampleFirstName",
+              "apellido": "ExampleLastName",
               "settings": {
                 "layout": {},
                 "theme": {}
@@ -31506,6 +31526,8 @@
               "displayName": "Arnold Matlock",
               "photoURL": "assets/images/avatars/Arnold.jpg",
               "email": "staff@fusetheme.com",
+              "nombre": "ExampleFirstName",
+              "apellido": "ExampleLastName",
               "settings": {
                 "layout": {
                   "style": "layout2",

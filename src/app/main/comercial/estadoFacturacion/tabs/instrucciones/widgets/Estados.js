@@ -103,11 +103,7 @@ const Estados = (props) => {
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={
-                            props.cargando && !props.cargarFiltros == false
-                              ? true
-                              : false
-                          }
+                          disabled={props.cargando ? true : false}
                           checked={state.estadoEmision}
                           onChange={handleChange}
                           name="estadoEmision"
@@ -131,11 +127,7 @@ const Estados = (props) => {
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={
-                            props.cargando && !props.cargarFiltros == false
-                              ? true
-                              : false
-                          }
+                          disabled={props.cargando ? true : false}
                           checked={state.estadoPago}
                           onChange={handleChange}
                           name="estadoPago"
@@ -153,11 +145,7 @@ const Estados = (props) => {
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={
-                            props.cargando && !props.cargarFiltros == false
-                              ? true
-                              : false
-                          }
+                          disabled={props.cargando ? true : false}
                           checked={state.estadoRecepcion}
                           onChange={handleChange}
                           name="estadoRecepcion"
@@ -181,11 +169,7 @@ const Estados = (props) => {
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={
-                            props.cargando && !props.cargarFiltros == false
-                              ? true
-                              : false
-                          }
+                          disabled={props.cargando ? true : false}
                           checked={state.estadoAceptacion}
                           onChange={handleChange}
                           name="estadoAceptacion"
@@ -207,11 +191,7 @@ const Estados = (props) => {
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={
-                            props.cargando && !props.cargarFiltros == false
-                              ? true
-                              : false
-                          }
+                          disabled={props.cargando ? true : false}
                           checked={state.acreedor}
                           onChange={handleChange}
                           name="acreedor"
@@ -229,11 +209,7 @@ const Estados = (props) => {
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={
-                            props.cargando && !props.cargarFiltros == false
-                              ? true
-                              : false
-                          }
+                          disabled={props.cargando ? true : false}
                           checked={state.deudor}
                           onChange={handleChange}
                           name="deudor"

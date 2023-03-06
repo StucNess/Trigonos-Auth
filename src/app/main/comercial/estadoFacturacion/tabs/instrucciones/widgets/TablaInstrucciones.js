@@ -162,7 +162,10 @@ const TablaInstrucciones = (props) => {
     tableData = [];
     setPage(0);
     pageIndex = 1;
-  }, [props.idParticipante, render1]);
+    // setTimeout(() => {
+    //   setCargando(false);
+    // }, 2000);
+  }, [props.idParticipante]);
 
   const {
     estadoEmision,
@@ -177,7 +180,8 @@ const TablaInstrucciones = (props) => {
     tableData = [];
     setPage(0);
     pageIndex = 1;
-  }, [props.estadoPar, props.selected.buscar, render]);
+  }, [props.estadoPar, props.selected.buscar]);
+
   useEffect(() => {
     (async () => {
       const proyectsResponse = await axios.get(
@@ -653,7 +657,12 @@ const TablaInstrucciones = (props) => {
             getOpenModal={getOpenModal}
             closeModal={() => {
               setModal(false);
-              render1 ? setRender1(false) : setRender1(true);
+
+              // if (render1 === true) {
+              //   setRender1(false);
+              // } else {
+              //   setRender1(true);
+              // }
             }}
             proyects={proyects.data.data}
           />

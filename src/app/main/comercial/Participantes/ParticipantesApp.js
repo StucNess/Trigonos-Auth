@@ -29,7 +29,7 @@ const ParticipantesApp = () => {
  
   return (
     <Root
-      header={<ParticipantesAppHeader passToken={passToken} />}
+      // header={<ParticipantesAppHeader passToken={passToken} />}
       content={<StickyHeadTable />}
       // content={
       //   <div className="w-full p-12 pt-16 sm:pt-24 lg:ltr:pr-0 lg:rtl:pl-0">
