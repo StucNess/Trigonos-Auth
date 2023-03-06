@@ -9,6 +9,7 @@ import TablaInstrucciones from "./widgets/TablaInstrucciones";
 let search = () => {};
 let ClearDebtorAndCreditor;
 let clearStates;
+let cargandoFiltross;
 const Instrucciones = (props) => {
   const container = {
     show: {
@@ -28,6 +29,7 @@ const Instrucciones = (props) => {
   const [charge, setCharge] = useState(false);
   const [render, setRender] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  // console.log(charge);
   function stateToken(state) {
     setEstadosPar(state);
   }
@@ -36,7 +38,7 @@ const Instrucciones = (props) => {
   }
   function stateSelected(selected, disabled) {
     setSelectedParams(selected);
-    if (charge === true && disabled === true) {
+    if (charge === true) {
       setCharge(false);
     } else {
       setCharge(true);
@@ -50,10 +52,11 @@ const Instrucciones = (props) => {
   }
   function stateCharge(params) {
     // setCharge(params);
-    if (params === true && disabled === true) {
+    if (params === false) {
       setCharge(false);
-    } else if (params === false && disabled === true) {
-      setCharge(false);
+      // } else if (params === false && disabled === true) {
+      //   setCharge(false);
+      // } else {
     } else {
       setCharge(true);
     }
@@ -68,6 +71,10 @@ const Instrucciones = (props) => {
   function getClearDebtorAndCreditor(param) {
     ClearDebtorAndCreditor = param;
   }
+  function cargandoFiltros(param) {
+    cargandoFiltross = param;
+  }
+  console.log(`FILTRO -->${cargandoFiltross}`);
   return (
     <motion.div
       className="grid auto-cols-auto smmax:grid-cols-1 sm:grid-cols-12 gap-24 w-full min-w-0 p-24 "
@@ -79,9 +86,10 @@ const Instrucciones = (props) => {
           idParticipante={props.id}
           getClearStates={getClearStates}
           cargando={charge}
+          cargarFiltros={cargandoFiltross}
           stateToken={stateToken}
           clearFilterRutAndName={ClearDebtorAndCreditor}
-          chargeFilters={disabled}
+          // chargeFilters={disabled}
         />
       </motion.div>
 
@@ -101,6 +109,7 @@ const Instrucciones = (props) => {
           stateTokenSetFiltros={setEstadosPar}
           getClearDebtorAndCreditor={getClearDebtorAndCreditor}
           cargando={charge}
+          getCargandoFiltros={cargandoFiltros}
         />
       </motion.div>
       <motion.div

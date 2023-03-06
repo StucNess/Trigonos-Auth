@@ -91,140 +91,160 @@ const Estados = (props) => {
         <FormControl component="fieldset" variant="standard">
           <FormGroup>
             <Box sx={{ flexGrow: 1 }}>
-            <Grid
-                 
-                 container 
-                 direction="row"
-                 spacing={{ xs: 2, md: 3 }} 
-                 columns={{ xs: 4, sm: 8, md: 12 }}
-                 justifyContent="space-evenly"
-                 alignItems="flex-start">
-                 
-                   <Grid  item xs='auto' sm='auto' md='auto'>
-                     <Item>
-                       <FormControlLabel
-                         control={
-                           <Switch
-                             disabled={props.cargando ? true : false}
-                             checked={state.estadoEmision}
-                             onChange={handleChange}
-                             name="estadoEmision"
-                           />
-                         }
-                         label={
-                           state.estadoEmision
-                             ? "Factura Emitida"
-                             : "Factura No Emitida"
-                         }
-                         sx={
-                           state.estadoEmision
-                             ? { color: "green" }
-                             : { color: "red" }
-                         }
-                       />
-                     </Item>
-                   </Grid>
-                   <Grid item xs='auto' sm='auto' md='auto'>
-                     <Item>
-                       <FormControlLabel
-                         control={
-                           <Switch
-                             disabled={props.cargando ? true : false}
-                             checked={state.estadoPago}
-                             onChange={handleChange}
-                             name="estadoPago"
-                           />
-                         }
-                         label={state.estadoPago ? "Pagado" : "No Pagado"}
-                         sx={
-                           state.estadoPago ? { color: "green" } : { color: "red" }
-                         }
-                       />
-                     </Item>
-                   </Grid>
-                   <Grid item xs='auto' sm='auto' md='auto'>
-                     <Item>
-                       <FormControlLabel
-                         control={
-                           <Switch
-                             disabled={props.cargando ? true : false}
-                             checked={state.estadoRecepcion}
-                             onChange={handleChange}
-                             name="estadoRecepcion"
-                           />
-                         }
-                         label={
-                           state.estadoRecepcion
-                             ? "Recepcionado"
-                             : "No Recepcionado"
-                         }
-                         sx={
-                           state.estadoRecepcion
-                             ? { color: "green" }
-                             : { color: "red" }
-                         }
-                       />
-                     </Item>
-                   </Grid>
-                   <Grid item xs='auto' sm='auto' md='auto'>
-                     <Item>
-                       <FormControlLabel
-                         control={
-                           <Switch
-                             disabled={props.cargando ? true : false}
-                             checked={state.estadoAceptacion}
-                             onChange={handleChange}
-                             name="estadoAceptacion"
-                           />
-                         }
-                         label={
-                           state.estadoAceptacion ? "Aceptado" : "No Aceptado"
-                         }
-                         sx={
-                           state.estadoAceptacion
-                             ? { color: "green" }
-                             : { color: "red" }
-                         }
-                       />
-                     </Item>
-                   </Grid>
-                   <Grid item xs='auto' sm='auto' md='auto'>
-                     <Item>
-                       <FormControlLabel
-                         control={
-                           <Switch
-                             disabled={props.cargando ? true : false}
-                             checked={state.acreedor}
-                             onChange={handleChange}
-                             name="acreedor"
-                           />
-                         }
-                         label="Acreedor"
-                         sx={
-                           state.acreedor ? { color: "green" } : { color: "red" }
-                         }
-                       />
-                     </Item>
-                   </Grid>
-                   <Grid item xs='auto' sm='auto' md='auto'>
-                     <Item>
-                       <FormControlLabel
-                         control={
-                           <Switch
-                             disabled={props.cargando ? true : false}
-                             checked={state.deudor}
-                             onChange={handleChange}
-                             name="deudor"
-                           />
-                         }
-                         label="Deudor"
-                         sx={state.deudor ? { color: "green" } : { color: "red" }}
-                       />
-                     </Item>
-                   </Grid>
-                
-                  
-                 </Grid>
+              <Grid
+                container
+                direction="row"
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                justifyContent="space-evenly"
+                alignItems="flex-start">
+                <Grid item xs="auto" sm="auto" md="auto">
+                  <Item>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          disabled={
+                            props.cargando && !props.cargarFiltros == false
+                              ? true
+                              : false
+                          }
+                          checked={state.estadoEmision}
+                          onChange={handleChange}
+                          name="estadoEmision"
+                        />
+                      }
+                      label={
+                        state.estadoEmision
+                          ? "Factura Emitida"
+                          : "Factura No Emitida"
+                      }
+                      sx={
+                        state.estadoEmision
+                          ? { color: "green" }
+                          : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs="auto" sm="auto" md="auto">
+                  <Item>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          disabled={
+                            props.cargando && !props.cargarFiltros == false
+                              ? true
+                              : false
+                          }
+                          checked={state.estadoPago}
+                          onChange={handleChange}
+                          name="estadoPago"
+                        />
+                      }
+                      label={state.estadoPago ? "Pagado" : "No Pagado"}
+                      sx={
+                        state.estadoPago ? { color: "green" } : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs="auto" sm="auto" md="auto">
+                  <Item>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          disabled={
+                            props.cargando && !props.cargarFiltros == false
+                              ? true
+                              : false
+                          }
+                          checked={state.estadoRecepcion}
+                          onChange={handleChange}
+                          name="estadoRecepcion"
+                        />
+                      }
+                      label={
+                        state.estadoRecepcion
+                          ? "Recepcionado"
+                          : "No Recepcionado"
+                      }
+                      sx={
+                        state.estadoRecepcion
+                          ? { color: "green" }
+                          : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs="auto" sm="auto" md="auto">
+                  <Item>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          disabled={
+                            props.cargando && !props.cargarFiltros == false
+                              ? true
+                              : false
+                          }
+                          checked={state.estadoAceptacion}
+                          onChange={handleChange}
+                          name="estadoAceptacion"
+                        />
+                      }
+                      label={
+                        state.estadoAceptacion ? "Aceptado" : "No Aceptado"
+                      }
+                      sx={
+                        state.estadoAceptacion
+                          ? { color: "green" }
+                          : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs="auto" sm="auto" md="auto">
+                  <Item>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          disabled={
+                            props.cargando && !props.cargarFiltros == false
+                              ? true
+                              : false
+                          }
+                          checked={state.acreedor}
+                          onChange={handleChange}
+                          name="acreedor"
+                        />
+                      }
+                      label="Acreedor"
+                      sx={
+                        state.acreedor ? { color: "green" } : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item xs="auto" sm="auto" md="auto">
+                  <Item>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          disabled={
+                            props.cargando && !props.cargarFiltros == false
+                              ? true
+                              : false
+                          }
+                          checked={state.deudor}
+                          onChange={handleChange}
+                          name="deudor"
+                        />
+                      }
+                      label="Deudor"
+                      sx={state.deudor ? { color: "green" } : { color: "red" }}
+                    />
+                  </Item>
+                </Grid>
+              </Grid>
             </Box>
           </FormGroup>
           <FormHelperText>Powered by Trigonos Energy & Api CEN</FormHelperText>

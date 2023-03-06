@@ -148,7 +148,7 @@ let orderByList = {
 const TablaInstrucciones = (props) => {
   const fontStyles = { color: "white", fontSize: "20px" };
   const [page, setPage] = useState(0);
-  const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(true);
   const [alert, setAlert] = useState(false);
   const [error, setError] = useState();
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -172,7 +172,6 @@ const TablaInstrucciones = (props) => {
     acreedor,
     deudor,
   } = props.estadoPar;
-
   useEffect(() => {
     setCargando(true);
     tableData = [];
@@ -264,7 +263,6 @@ const TablaInstrucciones = (props) => {
                 )
             );
             setCargando(false);
-            props.tokenCharge(cargando);
           }
         } catch (error) {
           console.log("error", error);
@@ -290,6 +288,7 @@ const TablaInstrucciones = (props) => {
     render,
     render1,
   ]);
+  props.tokenCharge(cargando);
   useEffect(() => {
     if (error === "ERR_BAD_RESPONSE") {
       setAlert(true);

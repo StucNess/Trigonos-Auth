@@ -91,7 +91,7 @@ const Filtros = (props) => {
       buscar: "",
     });
   };
-  const [disabled, setDisabled] = useState(true);
+  const [disabled, setDisabled] = useState(false);
   const [disabledd, setDisabledd] = useState(false);
   const [limpiar, setLimpiar] = useState(false);
   const [alert, setAlert] = useState(false);
@@ -257,9 +257,12 @@ const Filtros = (props) => {
     currency: "CLP",
     style: "currency",
   });
+  useEffect(() => {
+    props.getCargandoFiltros(disabled);
+  }, [disabled]);
   return (
     <Paper
-      sx={{ width: "100%", color: "grey.500" }} 
+      sx={{ width: "100%", color: "grey.500" }}
       // tvxxl:max-w-[78%] tvdosk:max-w-[70%]
       className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full md:max-xl:flex   ">
       <div className="flex  justify-center">
@@ -269,9 +272,8 @@ const Filtros = (props) => {
       </div>
       <div className="flex flex-col flex-auto mt-6">
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-          <Box className="flex flex-col hd:flex-col  " >
-                {/* sx={{  width: 1000}} */}
-            
+          <Box className="flex flex-col hd:flex-col  ">
+            {/* sx={{  width: 1000}} */}
 
             {!disabled ? (
               <div className="flex items-center">
@@ -281,323 +283,321 @@ const Filtros = (props) => {
                 </Stack>
               </div>
             ) : (
-              < >
-                <Box   className="flex flex-wrap justify-evenly">
-
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      disabled={
-                        props.cargando ||
-                        (!props.stateTokenFiltros.acreedor &&
-                          !props.stateTokenFiltros.deudor)
-                          ? true
-                          : false
-                      }
-                      options={bussN}
-                      value={selected.sBusinessName}
-                      isOptionEqualToValue={(option, value) =>
-                        bussN.label === value.label
-                      }
-                      name="cambio"
-                      sx={{ width: 300,mb: 2 }}
-                      onChange={(event, newValue) => {
-                        if (newValue === null) {
-                          setSelected({ ...selected, sBusinessName: "", sRut: "" });
-                        } else {
-                          apiGet(0, newValue.label);
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Coordinado" />
-                      )}
-                    
-                    />
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      disabled={
-                        props.cargando ||
-                        (!props.stateTokenFiltros.acreedor &&
-                          !props.stateTokenFiltros.deudor)
-                          ? true
-                          : false
-                      }
-                      value={selected.sRut}
-                      options={rutN}
-                      sx={{ width: 300,mb: 2 }}
-                      onChange={(event, newValue) => {
-                        if (newValue === null) {
-                          setSelected({ ...selected, sRut: "", sBusinessName: "" });
-                        } else {
-                          setSelected({ ...selected, sRut: newValue.label });
-                          apiGet(1, newValue.label);
-                        }
-                      }}
-                      isOptionEqualToValue={(option, value) =>
-                        rutN.label === value.label
-                      }
-                      renderInput={(params) => (
-                        <TextField {...params} label="Rut" />
-                      )}
-                    
-                    />
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      value={selected.sConcept}
-                      disabled={props.cargando || !disabled ? true : false}
-                      options={conceptN}
-                      sx={{ width: 300 ,mb: 2}}
-                      onChange={(event, newValue, reason) => {
-                        if (newValue === null) {
-                          setSelected({ ...selected, sConcept: "" });
-                        } else {
-                          setSelected({ ...selected, sConcept: newValue });
-                        }
-                      }}
-                      isOptionEqualToValue={(option, value) => conceptN === value}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Concepto" />
-                      )}
-                    
-                    />
-                    <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      value={selected.sCarta}
-                      disabled={props.cargando || !disabled ? true : false}
-                      options={cart}
-                      sx={{ width: 300,mb: 2 }}
-                      onChange={(event, newValue, reason) => {
-                        if (newValue === null) {
-                          setSelected({ ...selected, sCarta: "" });
-                        } else {
-                          setSelected({ ...selected, sCarta: newValue });
-                        }
-                      }}
-                      isOptionEqualToValue={(option, value) => cart === value}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Carta" />
-                      )}
-                    
-                    />
+              <>
+                <Box className="flex flex-wrap justify-evenly">
                   <Autocomplete
-                      disablePortal
-                      id="combo-box-demo"
-                      value={selected.sCodRef}
-                      disabled={props.cargando || !disabled ? true : false}
-                      options={codRef}
-                      sx={{ width: 300,mb: 2 }}
-                      onChange={(event, newValue, reason) => {
-                        if (newValue === null) {
-                          setSelected({ ...selected, sCodRef: "" });
-                        } else {
-                          setSelected({ ...selected, sCodRef: newValue });
-                        }
-                      }}
-                      isOptionEqualToValue={(option, value) => codRef === value}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Codigo Referencia" />
-                      )}
-                    
-                    />
-                    
-                    <TextField
-                      label="Monto Neto"
-                      id="outlined-start-adornment"
-                      disabled={props.cargando || !disabled ? true : false}
-                      sx={{ width: 300,mb: 2 }}
-                      value={
-                        limpiar || selected.sMontoNeto === ""
-                          ? ""
-                          : chile.format(selected.sMontoNeto).replace("$", "")
+                    disablePortal
+                    id="combo-box-demo"
+                    disabled={
+                      props.cargando ||
+                      (!props.stateTokenFiltros.acreedor &&
+                        !props.stateTokenFiltros.deudor)
+                        ? true
+                        : false
+                    }
+                    options={bussN}
+                    value={selected.sBusinessName}
+                    isOptionEqualToValue={(option, value) =>
+                      bussN.label === value.label
+                    }
+                    name="cambio"
+                    sx={{ width: 300, mb: 2 }}
+                    onChange={(event, newValue) => {
+                      if (newValue === null) {
+                        setSelected({
+                          ...selected,
+                          sBusinessName: "",
+                          sRut: "",
+                        });
+                      } else {
+                        apiGet(0, newValue.label);
                       }
-                      onChange={(event) => {
-                        if (event.target.value === null) {
-                          setSelected({ ...selected, sMontoNeto: null });
-                        } else {
-                          if (
-                            !isLetters(
-                              event.target.value
-                                .replace(".", "")
-                                .replace(".", "")
-                                .replace(".", "")
-                            )
-                          ) {
-                            setSelected({
-                              ...selected,
-                              sMontoNeto: event.target.value
-                                .replace(".", "")
-                                .replace(".", "")
-                                .replace(".", ""),
-                            });
-                          }
-                        }
-                      }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
-                      }}
-                      
-                    />
-                    <TextField
-                      label="Monto Bruto"
-                      id="outlined-start-adornment"
-                      disabled={props.cargando || !disabled ? true : false}
-                      sx={{ width: 300,mb: 2 }}
-                      value={
-                        limpiar || selected.sMontoBruto === ""
-                          ? ""
-                          : chile.format(selected.sMontoBruto).replace("$", "")
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Coordinado" />
+                    )}
+                  />
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    disabled={
+                      props.cargando ||
+                      (!props.stateTokenFiltros.acreedor &&
+                        !props.stateTokenFiltros.deudor)
+                        ? true
+                        : false
+                    }
+                    value={selected.sRut}
+                    options={rutN}
+                    sx={{ width: 300, mb: 2 }}
+                    onChange={(event, newValue) => {
+                      if (newValue === null) {
+                        setSelected({
+                          ...selected,
+                          sRut: "",
+                          sBusinessName: "",
+                        });
+                      } else {
+                        setSelected({ ...selected, sRut: newValue.label });
+                        apiGet(1, newValue.label);
                       }
-                      onChange={(event) => {
-                        if (event.target.value === null) {
-                          setSelected({ ...selected, sMontoBruto: null });
-                        } else {
-                          if (
-                            !isLetters(
-                              event.target.value
-                                .replace(".", "")
-                                .replace(".", "")
-                                .replace(".", "")
-                            )
-                          ) {
-                            setSelected({
-                              ...selected,
-                              sMontoBruto: event.target.value
-                                .replace(".", "")
-                                .replace(".", "")
-                                .replace(".", ""),
-                            });
-                          }
+                    }}
+                    isOptionEqualToValue={(option, value) =>
+                      rutN.label === value.label
+                    }
+                    renderInput={(params) => (
+                      <TextField {...params} label="Rut" />
+                    )}
+                  />
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    value={selected.sConcept}
+                    disabled={props.cargando || !disabled ? true : false}
+                    options={conceptN}
+                    sx={{ width: 300, mb: 2 }}
+                    onChange={(event, newValue, reason) => {
+                      if (newValue === null) {
+                        setSelected({ ...selected, sConcept: "" });
+                      } else {
+                        setSelected({ ...selected, sConcept: newValue });
+                      }
+                    }}
+                    isOptionEqualToValue={(option, value) => conceptN === value}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Concepto" />
+                    )}
+                  />
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    value={selected.sCarta}
+                    disabled={props.cargando || !disabled ? true : false}
+                    options={cart}
+                    sx={{ width: 300, mb: 2 }}
+                    onChange={(event, newValue, reason) => {
+                      if (newValue === null) {
+                        setSelected({ ...selected, sCarta: "" });
+                      } else {
+                        setSelected({ ...selected, sCarta: newValue });
+                      }
+                    }}
+                    isOptionEqualToValue={(option, value) => cart === value}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Carta" />
+                    )}
+                  />
+                  <Autocomplete
+                    disablePortal
+                    id="combo-box-demo"
+                    value={selected.sCodRef}
+                    disabled={props.cargando || !disabled ? true : false}
+                    options={codRef}
+                    sx={{ width: 300, mb: 2 }}
+                    onChange={(event, newValue, reason) => {
+                      if (newValue === null) {
+                        setSelected({ ...selected, sCodRef: "" });
+                      } else {
+                        setSelected({ ...selected, sCodRef: newValue });
+                      }
+                    }}
+                    isOptionEqualToValue={(option, value) => codRef === value}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Codigo Referencia" />
+                    )}
+                  />
+
+                  <TextField
+                    label="Monto Neto"
+                    id="outlined-start-adornment"
+                    disabled={props.cargando || !disabled ? true : false}
+                    sx={{ width: 300, mb: 2 }}
+                    value={
+                      limpiar || selected.sMontoNeto === ""
+                        ? ""
+                        : chile.format(selected.sMontoNeto).replace("$", "")
+                    }
+                    onChange={(event) => {
+                      if (event.target.value === null) {
+                        setSelected({ ...selected, sMontoNeto: null });
+                      } else {
+                        if (
+                          !isLetters(
+                            event.target.value
+                              .replace(".", "")
+                              .replace(".", "")
+                              .replace(".", "")
+                          )
+                        ) {
+                          setSelected({
+                            ...selected,
+                            sMontoNeto: event.target.value
+                              .replace(".", "")
+                              .replace(".", "")
+                              .replace(".", ""),
+                          });
                         }
-                      }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">$</InputAdornment>
-                        ),
-                      }}
-                      
-                    />
-                    <TextField
-                      label="Folio"
-                      id="outlined-start-adornment"
-                      disabled={props.cargando || !disabled ? true : false}
-                      value={selected.sFolio}
-                      onChange={(event) => {
-                        if (event.target.value === null) {
-                          setSelected({ ...selected, sFolio: null });
-                        } else {
-                          setSelected({ ...selected, sFolio: event.target.value });
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">$</InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    label="Monto Bruto"
+                    id="outlined-start-adornment"
+                    disabled={props.cargando || !disabled ? true : false}
+                    sx={{ width: 300, mb: 2 }}
+                    value={
+                      limpiar || selected.sMontoBruto === ""
+                        ? ""
+                        : chile.format(selected.sMontoBruto).replace("$", "")
+                    }
+                    onChange={(event) => {
+                      if (event.target.value === null) {
+                        setSelected({ ...selected, sMontoBruto: null });
+                      } else {
+                        if (
+                          !isLetters(
+                            event.target.value
+                              .replace(".", "")
+                              .replace(".", "")
+                              .replace(".", "")
+                          )
+                        ) {
+                          setSelected({
+                            ...selected,
+                            sMontoBruto: event.target.value
+                              .replace(".", "")
+                              .replace(".", "")
+                              .replace(".", ""),
+                          });
                         }
-                      }}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <ReceiptLongIcon />
-                          </InputAdornment>
-                        ),
-                      }}
-                      sx={{ mb: 2, width: 300 }}
-                    />
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">$</InputAdornment>
+                      ),
+                    }}
+                  />
+                  <TextField
+                    label="Folio"
+                    id="outlined-start-adornment"
+                    disabled={props.cargando || !disabled ? true : false}
+                    value={selected.sFolio}
+                    onChange={(event) => {
+                      if (event.target.value === null) {
+                        setSelected({ ...selected, sFolio: null });
+                      } else {
+                        setSelected({
+                          ...selected,
+                          sFolio: event.target.value,
+                        });
+                      }
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <ReceiptLongIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                    sx={{ mb: 2, width: 300 }}
+                  />
                 </Box>
 
-
-
-                
                 <LocalizationProvider
                   dateAdapter={AdapterDateFns}
                   adapterLocale={es}>
-                <Box  className="flex flex-wrap justify-evenly">
-                <Box>
-                <FormControlLabel
-                    control={<Checkbox />}
-                    label="Desde"
-                    disabled
-                    checked
-                    name="desde"
-                  />
-                  <DatePicker
-                    views={["year", "month"]}
-                    label="Fecha inicio"
-                    openTo="year"
-                    minDate={new Date("2017-02-01")}
-                    maxDate={new Date("2023-01-01")}
-                    value={sInicioPeriodo === "" ? null : sInicioPeriodo}
-                    onChange={(value) => {
-                      value != null &&
-                        setSelected({
-                          ...selected,
-                          sInicioPeriodo: value,
-                        });
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        helperText={null}
-                        sx={{ mb: 2, width: 300 }}
+                  <Box className="flex flex-wrap justify-evenly">
+                    <Box>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Desde"
+                        disabled
+                        checked
+                        name="desde"
                       />
-                    )}
-                  />             
-                </Box>
-                  <Box>
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Hasta"
-                    onChange={(e) => conditionalPeriods(e)}
-                    name="hasta"
-                  />
-                  <DatePicker
-                    views={["year", "month"]}
-                    label="Fecha termino"
-                    openTo="year"
-                    disabled={disabledDateEnd ? true : false}
-                    minDate={new Date("2017-02-01")}
-                    maxDate={new Date("2023-01-01")}
-                    value={sTerminoPeriodo === "" ? null : sTerminoPeriodo}
-                    onChange={(value) => {
-                      value != null &&
-                        setSelected({
-                          ...selected,
-                          sTerminoPeriodo: value,
-                        });
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        helperText={null}
-                        sx={{ width: 300, mb: 2 }}
+                      <DatePicker
+                        views={["year", "month"]}
+                        label="Fecha inicio"
+                        openTo="year"
+                        minDate={new Date("2017-02-01")}
+                        maxDate={new Date("2023-01-01")}
+                        value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+                        onChange={(value) => {
+                          value != null &&
+                            setSelected({
+                              ...selected,
+                              sInicioPeriodo: value,
+                            });
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            helperText={null}
+                            sx={{ mb: 2, width: 300 }}
+                          />
+                        )}
                       />
-                    )}
-                  />
+                    </Box>
+                    <Box>
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Hasta"
+                        onChange={(e) => conditionalPeriods(e)}
+                        name="hasta"
+                      />
+                      <DatePicker
+                        views={["year", "month"]}
+                        label="Fecha termino"
+                        openTo="year"
+                        disabled={disabledDateEnd ? true : false}
+                        minDate={new Date("2017-02-01")}
+                        maxDate={new Date("2023-01-01")}
+                        value={sTerminoPeriodo === "" ? null : sTerminoPeriodo}
+                        onChange={(value) => {
+                          value != null &&
+                            setSelected({
+                              ...selected,
+                              sTerminoPeriodo: value,
+                            });
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            helperText={null}
+                            sx={{ width: 300, mb: 2 }}
+                          />
+                        )}
+                      />
+                    </Box>
                   </Box>
-                </Box>
-                
-                 
                 </LocalizationProvider>
-                <FormLabel className="text-center" component="legend">Limpieza Filtros</FormLabel>
+                <FormLabel className="text-center" component="legend">
+                  Limpieza Filtros
+                </FormLabel>
                 <Box className="flex flex-wrap justify-evenly">
-                
-                <FormGroup>
-                  <FormControlLabel
-                    control={<Checkbox defaultChecked />}
-                    label="Filtros"
-                    disabled
-                    onChange={(e) => conditionFilters(e)}
-                    name="filtros"
-                  />
-                  <FormControlLabel
-                    control={<Checkbox />}
-                    label="Estados"
-                    onChange={(e) => conditionFilters(e)}
-                    name="estados"
-                  />
-                </FormGroup>
-
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Checkbox defaultChecked />}
+                      label="Filtros"
+                      disabled
+                      onChange={(e) => conditionFilters(e)}
+                      name="filtros"
+                    />
+                    <FormControlLabel
+                      control={<Checkbox />}
+                      label="Estados"
+                      onChange={(e) => conditionFilters(e)}
+                      name="estados"
+                    />
+                  </FormGroup>
                 </Box>
-                
+
                 <Button
                   className="w-[150px]"
                   variant="contained"
@@ -619,9 +619,7 @@ const Filtros = (props) => {
                     marginTop: 25,
                     // backgroundColor: "#002553",
                     color: "white",
-                  }
-                  
-                  }>
+                  }}>
                   Limpiar Filtros
                 </Button>
                 <Button
@@ -638,23 +636,17 @@ const Filtros = (props) => {
                           setSelected({ ...selected, buscar: true });
                         }
                   }
-                  
                   style={{
                     m: 1,
                     width: 250,
                     margin: "0 auto",
                     display: "flex",
                     marginTop: 25,
-                    
+
                     color: "white",
-                  }}
-                  >
+                  }}>
                   Buscar
                 </Button>
-              
-
-                    
-  
               </>
             )}
           </Box>
