@@ -35,13 +35,13 @@ const EstadoFacturacionApp = () => {
   }
   return (
     <Root
-      // header={
-      //   <EstadoFacturacionAppHeader
-      //     passToken={passToken}
-      //     clearStates={clearStates}
-      //     clearFilters={clearFilters}
-      //   />
-      // }
+      header={
+        <EstadoFacturacionAppHeader
+          passToken={passToken}
+          clearStates={clearStates}
+          clearFilters={clearFilters}
+        />
+      }
       content={
         <div className="w-full p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0">
           {/* <Button
@@ -68,7 +68,8 @@ const EstadoFacturacionApp = () => {
                   className="w-full h-full rounded-full opacity-20"
                 />
               ),
-            }}>
+            }}
+          >
             <Tab
               className="text-14 font-semibold min-h-40 min-w-64 mx-4 px-12"
               disableRipple

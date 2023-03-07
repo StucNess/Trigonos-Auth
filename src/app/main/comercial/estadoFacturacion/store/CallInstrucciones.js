@@ -147,8 +147,10 @@ export const CallInstrucciones = async (
     `PageIndex=${PageIndex}&PageSize=${PageSize}&InicioPeriodo=${params.inicioPeriodo}&TerminoPeriodo=${params.terminoPeriodo}&Carta=${params.carta}&CodigoRef=${params.codigoReferencia}&OrderByNeto=${params.OrderByNeto}&OrderByBruto=${params.OrderByBruto}` +
     `&OrderByFechaEmision=${params.OrderByFechaEmision}&OrderByFechaPago=${params.OrderByFechaPago}&OrderByFechaCarta=${params.OrderByFechaCarta}&OrderByFolio=${params.OrderByFolio}`;
   if (id === 1444) {
+    console.log("entre aca");
     return prueba;
   } else {
+    console.log("entre aca");
     await axios
       .get(url)
       .then((res) => {

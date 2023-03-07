@@ -192,8 +192,7 @@ const TablaInstrucciones = (props) => {
   }, []);
 
   useEffect(() => {
-    console.log("entrooooooooooooooooooooooooooo");
-    if (condicion != 1) {
+    if (condicion == 1) {
       const fetchData = async (
         id = idProyecto,
         PageIndex = pageIndex,
@@ -211,9 +210,7 @@ const TablaInstrucciones = (props) => {
             props.selected,
             orderByList
           );
-          console.log("entrooooooooooooooooooooooooooo");
           setError(response);
-
           if (response.data != [] && response.data != undefined) {
             const json = await response.data;
             pagination = response.count;
@@ -295,7 +292,7 @@ const TablaInstrucciones = (props) => {
     render,
     render1,
   ]);
-  props.tokenCharge(cargando);
+  // props.tokenCharge(cargando);
   useEffect(() => {
     if (error === "ERR_BAD_RESPONSE") {
       setAlert(true);
@@ -514,7 +511,8 @@ const TablaInstrucciones = (props) => {
               className="sm:w-[150px] w-[150px] lg:w-[150px]"
               variant="contained"
               color="secondary"
-              onClick={exportToExcel}>
+              onClick={exportToExcel}
+            >
               <SiMicrosoftexcel className="mr-3 " /> Descargar
             </Button>
           </Box>
@@ -534,7 +532,8 @@ const TablaInstrucciones = (props) => {
                           columnsHidden.some((e) => e === column.id)
                             ? { display: { xl: "none", xs: "block" } }
                             : {}
-                        }>
+                        }
+                      >
                         <ImportExportIcon
                           onClick={() => {
                             orderBy(column.label);
@@ -551,7 +550,8 @@ const TablaInstrucciones = (props) => {
                           columnsHidden.some((e) => e === column.id)
                             ? { display: { xl: "none", xs: "block" } }
                             : {}
-                        }>
+                        }
+                      >
                         {column.label}
                       </TableCell>
                     )
@@ -567,7 +567,8 @@ const TablaInstrucciones = (props) => {
                         hover
                         role="checkbox"
                         tabIndex={-1}
-                        key={row.id_instruccions}>
+                        key={row.id_instruccions}
+                      >
                         {columns.map((column) => {
                           const value = row[column.id];
                           const dataRow = row;
@@ -583,7 +584,8 @@ const TablaInstrucciones = (props) => {
                               <TableCell
                                 key={column.id}
                                 align={column.align}
-                                sx={{ display: { xl: "none", xs: "block" } }}>
+                                sx={{ display: { xl: "none", xs: "block" } }}
+                              >
                                 {column.format && typeof value === "number"
                                   ? column.format(value)
                                   : value}
@@ -661,11 +663,11 @@ const TablaInstrucciones = (props) => {
             closeModal={() => {
               setModal(false);
 
-              // if (render1 === true) {
-              //   setRender1(false);
-              // } else {
-              //   setRender1(true);
-              // }
+              if (render1 === true) {
+                setRender1(false);
+              } else {
+                setRender1(true);
+              }
             }}
             proyects={proyects.data.data}
           />

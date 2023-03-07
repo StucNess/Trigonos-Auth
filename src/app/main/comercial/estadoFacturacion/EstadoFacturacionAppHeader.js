@@ -103,7 +103,7 @@ const EstadoFacturacionAppHeader = (props) => {
           </div>
         </div>
       </div> */}
-     
+
       <div className="flex items-center">
         <Button
           onClick={handleOpenProjectMenu}
@@ -117,21 +117,24 @@ const EstadoFacturacionAppHeader = (props) => {
             <FuseSvgIcon size={20} color="action">
               heroicons-solid:chevron-down
             </FuseSvgIcon>
-          }>
+          }
+        >
           {_.find(projects, ["id", selectedProject.id]).business_Name}
         </Button>
         <Menu
           id="project-menu"
           anchorEl={selectedProject.menuEl}
           open={Boolean(selectedProject.menuEl)}
-          onClose={handleCloseProjectMenu}>
+          onClose={handleCloseProjectMenu}
+        >
           {projects &&
             projects.map((project) => (
               <MenuItem
                 key={project.id}
                 onClick={(ev) => {
                   handleChangeProject(project.id);
-                }}>
+                }}
+              >
                 {project.business_Name}
               </MenuItem>
             ))}
