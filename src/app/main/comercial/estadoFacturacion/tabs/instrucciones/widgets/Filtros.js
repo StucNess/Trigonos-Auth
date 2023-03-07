@@ -204,6 +204,7 @@ const Filtros = (props) => {
   useEffect(() => {
     props.selected(selected, disabled);
   }, [selected, disabled]);
+  // props.selected(selected, disabled);
   const apiGet = async (numero, parametro) => {
     if (numero === 0) {
       apiResponse = await CallParticipant(0, parametro);
@@ -264,7 +265,8 @@ const Filtros = (props) => {
     <Paper
       sx={{ width: "100%", color: "grey.500" }}
       // tvxxl:max-w-[78%] tvdosk:max-w-[70%]
-      className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full md:max-xl:flex   ">
+      className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full md:max-xl:flex   "
+    >
       <div className="flex  justify-center">
         <Typography className="text-lg font-medium tracking-tight leading-6 truncate ">
           Filtros
@@ -511,7 +513,8 @@ const Filtros = (props) => {
 
                 <LocalizationProvider
                   dateAdapter={AdapterDateFns}
-                  adapterLocale={es}>
+                  adapterLocale={es}
+                >
                   <Box className="flex flex-wrap justify-evenly">
                     <Box>
                       <FormControlLabel
@@ -619,7 +622,8 @@ const Filtros = (props) => {
                     marginTop: 25,
                     // backgroundColor: "#002553",
                     color: "white",
-                  }}>
+                  }}
+                >
                   Limpiar Filtros
                 </Button>
                 <Button
@@ -644,7 +648,8 @@ const Filtros = (props) => {
                     marginTop: 25,
 
                     color: "white",
-                  }}>
+                  }}
+                >
                   Buscar
                 </Button>
               </>

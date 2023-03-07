@@ -9,7 +9,7 @@ import TablaInstrucciones from "./widgets/TablaInstrucciones";
 let search = () => {};
 let ClearDebtorAndCreditor;
 let clearStates;
-let cargandoFiltross;
+// let cargandoFiltross;
 const Instrucciones = (props) => {
   const container = {
     show: {
@@ -29,6 +29,7 @@ const Instrucciones = (props) => {
   const [charge, setCharge] = useState(false);
   const [render, setRender] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [cargandoFiltross, setCargandoFiltross] = useState(false);
   // console.log(charge);
   function stateToken(state) {
     setEstadosPar(state);
@@ -72,7 +73,7 @@ const Instrucciones = (props) => {
     ClearDebtorAndCreditor = param;
   }
   function cargandoFiltros(param) {
-    cargandoFiltross = param;
+    setCargandoFiltross(param);
   }
   console.log(`FILTRO -->${cargandoFiltross}`);
   return (
@@ -80,7 +81,8 @@ const Instrucciones = (props) => {
       className="grid auto-cols-auto smmax:grid-cols-1 sm:grid-cols-12 gap-24 w-full min-w-0 p-24 "
       variants={container}
       initial="hidden"
-      animate="show">
+      animate="show"
+    >
       <motion.div variants={item} className=" col-span-12  ">
         <Estados
           idParticipante={props.id}
@@ -95,7 +97,8 @@ const Instrucciones = (props) => {
 
       <motion.div
         variants={item}
-        className=" hdmas:col-span-12  hd:col-span-3 ">
+        className=" hdmas:col-span-12  hd:col-span-3 "
+      >
         {/*
         Cargar la diversificacion de las tablas aca
         */}
@@ -114,7 +117,8 @@ const Instrucciones = (props) => {
       </motion.div>
       <motion.div
         variants={item}
-        className="  hdmas:col-span-12   hd:col-span-9  ">
+        className="  hdmas:col-span-12   hd:col-span-9  "
+      >
         <TablaInstrucciones
           idParticipante={props.id}
           estadoPar={estadosPar}

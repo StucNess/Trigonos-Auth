@@ -166,6 +166,9 @@ const TablaInstrucciones = (props) => {
     //   setCargando(false);
     // }, 2000);
   }, [props.idParticipante]);
+  useEffect(() => {
+    setCargando(true);
+  }, [render1]);
 
   const {
     estadoEmision,
@@ -292,14 +295,17 @@ const TablaInstrucciones = (props) => {
     render,
     render1,
   ]);
-  // props.tokenCharge(cargando);
-  useEffect(() => {
-    if (error === "ERR_BAD_RESPONSE") {
-      setAlert(true);
-      setCargando(false);
-      tableData = [];
-    }
-  }, [error]);
+  // useEffect(() => {
+  //   props.tokenCharge(cargando);
+  // }, [cargando]);
+  props.tokenCharge(cargando);
+  // useEffect(() => {
+  //   if (error === "ERR_BAD_RESPONSE") {
+  //     setAlert(true);
+  //     setCargando(false);
+  //     tableData = [];
+  //   }
+  // }, [error]);
   const handleChangePage = (event, newPage) => {
     if (pageIndex === newPage) {
       condicion = 1;
@@ -329,9 +335,7 @@ const TablaInstrucciones = (props) => {
   const getOpenModal = (openModal) => {
     tokenOpenModal = openModal;
   };
-  useEffect(() => {
-    props.tokenCharge(cargando);
-  }, [cargando]);
+
   const exportToExcel = () => {
     let wb = XLSX.utils.book_new();
     let ws = XLSX.utils.json_to_sheet(tableData);
