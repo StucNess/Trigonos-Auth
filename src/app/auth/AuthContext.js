@@ -62,7 +62,7 @@ function AuthProvider({ children }) {
         dispatch(setUser(user)),
         // You can receive data in here before app initialization
       ]).then((values) => {
-        history.push("/example");
+        // history.push("/example");
         setWaitAuthCheck(false);
         setIsAuthenticated(true);
       });
