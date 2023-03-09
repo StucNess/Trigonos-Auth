@@ -78,6 +78,13 @@ const navigationConfig = [
         url: "/comercial/Participantes",
       },
       {
+        id: "c1.Participants",
+        title: "Participantes V2",
+        type: "item",
+        icon: "heroicons-outline:clipboard-check",
+        url: "/comercial/Participantesv2",
+      },
+      {
         id: "example-component",
         title: "Example",
         translate: "EXAMPLE",

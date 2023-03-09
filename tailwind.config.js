@@ -15,6 +15,7 @@ module.exports = {
       lg: '1280px',
       xl: '1920px',
       //Rangos
+      zerorange: {'min': '0px', 'max': '1280px'},
       phone: {'min': '799px', 'max': '767px'},
       // => @media (min-width: 640px and max-width: 767px) { ... }
 
