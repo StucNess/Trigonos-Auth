@@ -8,7 +8,7 @@ import FacturacionMasivaAppHeader from "./ParticipantsAppHeader";
 import VerticalStepper from "./tabs/VerticalStepper";
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import FiltrosParticipant from "./tabs/FiltrosParticipant";
-
+import PruebasStepper from "./tabs/PruebasStepper";
 
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
@@ -42,6 +42,10 @@ const NominaPagoApp = () => {
          {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
          <FiltrosParticipant/>
         </Paper>
+        {/* <Paper className="w-full p-[20px] mb-[20px]"> */}
+         {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
+         {/* <PruebasStepper/> */}
+        {/* </Paper> */}
         <Paper className="w-full p-[20px] ">
           <VerticalStepper/>
         </Paper>
