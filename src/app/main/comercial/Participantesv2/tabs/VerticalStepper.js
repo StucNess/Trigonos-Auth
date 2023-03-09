@@ -89,7 +89,7 @@ export default function HorizontalNonLinearStepper() {
               </Box>
                   ;
     } else if (step===1) {
-      return <ManageAccountsIcon/>;
+      return <ManageAccountsIcon />;
     } else if (step===2) {
       return <AssignmentIcon/>;
     } else if (step===3) {
@@ -114,33 +114,29 @@ export default function HorizontalNonLinearStepper() {
             
             <Stepper className="ml-[30px] mt-[30px]" nonLinear activeStep={activeStep} orientation="vertical">
             {steps.map((label, index) => (
-            <Step key={label} completed={completed[index]}
+            <Step key={label} completed={completed[index] } 
             sx={{
               '& .MuiStepLabel-root .Mui-completed': {
-                color: 'secondary.dark', // circle color (COMPLETED)
+                color: 'secondary.dark', 
               },
               '& .MuiStepLabel-label.Mui-completed.MuiStepLabel-alternativeLabel':
                 {
-                  color: 'grey.500', // Just text label (COMPLETED)
+                  color: 'grey.500', 
                 },
               '& .MuiStepLabel-root .Mui-active': {
-                color: 'secondary.main', // circle color (ACTIVE)
+                color: 'secondary.main', 
               },
               '& .MuiStepLabel-label.Mui-active.MuiStepLabel-alternativeLabel':
                 {
-                  color: 'common.white', // Just text label (ACTIVE)
+                  color: 'common.white', 
                 },
-              '& .MuiStepLabel-root .Mui-active .MuiStepIcon-text': {
-                fill: 'black', // circle's number (ACTIVE)
-              },
+              
             }}
             
             >
-              <StepButton className="hover:bg-blue-50" icon={handleIconStep(index)} onClick={handleStep(index)}  >
+              <StepButton focusRipple className="hover:bg-blue-50"  icon={handleIconStep(index)} onClick={handleStep(index)}
+            >
                 {label}
-
-                
-
                 </StepButton>
             </Step>
             ))}
