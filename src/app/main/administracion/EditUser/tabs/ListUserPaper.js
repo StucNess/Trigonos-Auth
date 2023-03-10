@@ -417,10 +417,11 @@ export default function EnhancedTable() {
                           }}
                         />
                       </TableCell> */}
-                      <TableCell align="left" >
+                      <TableCell align="center" sx={ {p: 2}} >
                         <Button
+                        size="small"
                         startIcon={<EditIcon />}
-                        // variant="contained"
+                        variant="outlined"
                         color="secondary"
                         
                         >
