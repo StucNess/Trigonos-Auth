@@ -20,6 +20,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import TablaUltimosCambios from './widgets/TablaUltimosCambios';
+import Paper from '@mui/material/Paper';
+
 const steps = ['Coordinado', 'Datos de Contacto', 'Datos Bancarios','Gestión Trígonos', 'Historificación']; 
 const iconSteps = [<LockOpenIcon/>,<ManageAccountsIcon/>,<AssignmentIcon/>,<AccountBalanceIcon/>,<ManageHistoryIcon/>];
 let LabelSetep ='';
@@ -115,9 +118,10 @@ export default function HorizontalNonLinearStepper() {
                  {label}
                 </Typography> */}
   return (
-    <Box className="flex w-full h-full" sx={{ width: '100%' }}>
-      
-        <Box className="pr-[10px]  md:min-w-[300px] h-full"  >
+    <Box className="w-full h-full">
+       <Box className="flex w-full h-full" sx={{ width: '100%' }}>
+            {/* SECCION VERTICAL IZQUIERDA */}
+            <Box className="pr-[10px]  md:min-w-[300px] h-full"  > 
             <Typography variant="h6" className="mb-4"   color="primary">
                 Gestión de Participantes
             </Typography>
@@ -145,19 +149,10 @@ export default function HorizontalNonLinearStepper() {
                   color:  'blue',
                 },
                 
-                
-                
-              
             }}
             
             >
-              <StepButton focusRipple className="hover:bg-blue-50" StepIconProps={{
-                    classes: {
-                      root: classes.stepIconRoot,
-                      active: classes.stepIconActive,
-                      completed: classes.stepIconCompleted
-                    }
-                  }} icon={handleIconStep(index)} onClick={handleStep(index)}
+              <StepButton focusRipple className="hover:bg-blue-50"  icon={handleIconStep(index)} onClick={handleStep(index)}
             >
                 {label}
                 </StepButton>
@@ -166,11 +161,11 @@ export default function HorizontalNonLinearStepper() {
             
         </Stepper>
         </Box>
-      
-      <Box className="mt-[30px]  border-solid border-l-2 w-full" >
+          {/* SECCION VERTICAL DERECHA */}
+      <Box className="flex mt-[30px]  border-solid border-l-2 w-full h-full" >
         
         {allStepsCompleted() ? (
-          <Box className="w-full">
+          <Box className="w-full h-full">
               <Typography sx={{ mt: 2, mb: 1 }}>
               All steps completed - you&apos;re finished
             </Typography>
@@ -184,12 +179,12 @@ export default function HorizontalNonLinearStepper() {
           // </React.Fragment>
         ) : (
           
-          <Box className="ml-[10px]  ">
+          <Box className="ml-[10px]  h-full">
 
            
-            <Box className=" h-[300px] ">
+            <Box className=" w-full h-full ">
             {activeStep ===0 ?(
-            <Box className="w-full">
+            <Box className="w-full ">
                 <Typography variant="h6" className="mb-4"   color="primary">
                     Coordinado
                 </Typography>
@@ -325,7 +320,7 @@ export default function HorizontalNonLinearStepper() {
                
           </Box >
           ):activeStep ===3 ?(
-          <Box className="w-full">
+          <Box className=" w-full h-full">
                 <Typography variant="h6" className="mb-4"   color="primary">
                     Gestión Trígonos
                 </Typography>
@@ -334,14 +329,14 @@ export default function HorizontalNonLinearStepper() {
                 <Box className="flex flex-wrap justify-between zerorange:justify-center ml-[0 auto]" >
                     
                     <TextField
-                      className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                      className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                       label="Token"
                       type="text"
                       
                       variant="filled"
                     />
                   
-                  <FormControl variant="filled" className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] ">
+                  <FormControl variant="filled" className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] ">
                       <InputLabel id="demo-simple-select-filled-label">ERP</InputLabel>
                       <Select
                         labelId="demo-simple-select-filled-label"
@@ -361,56 +356,73 @@ export default function HorizontalNonLinearStepper() {
                     
                 </Box>
           </Box>
-          ):(
-            <Box className="w-full">
+          ):(//HACER LA HISTORIFICACION TERMINARLA ANTES DE LAS 4 
+            <Box className="Flex flex-col w-full h-full">
                 <Typography variant="h6" className="mb-4"   color="primary">
                     Historificación 
                 </Typography>
-                <Box className="flex flex-wrap justify-between zerorange:justify-center ml-[0 auto] w-full">
-                  Debo ingresar a la bd y consultar estos campos uwu
-                </Box>
+                {/* <Typography variant="h6" className="mb-4 ml-4">
+                        Cambios realizados 
+                    </Typography> */}
+
+                <Paper className=" w-auto w-[40%] md:mr-[20%] md:w-[70%] lg:w-[90%]  tvxl:w-auto">
+                    
+                  {/* Debo ingresar a la bd y consultar estos campos uwu */}
+                  {/* PAPER PARA FIULTROS */}
+                  <TablaUltimosCambios  />
+                  
+                </Paper>
             </Box>
           )}
-            </Box>
-          <Box className=" flex justify-end w-full">
-            
-            <Button
-                className="w-[150px]"
-                variant="contained"
-                color="secondary"
-                // startIcon={<SearchIcon />}
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                >
-                Atrás
-              </Button>
-            <Button
-                className="w-[150px]"
-                variant="contained"
-                color="secondary"
-                // startIcon={<SearchIcon />}
-                onClick={handleNext}
-                >
-                Siguiente
-              </Button>
-            {activeStep !== steps.length &&
-              (completed[activeStep] ? (
-                <Typography variant="caption" sx={{ display: 'inline-block' }}>
-                  Confirmado
-                </Typography>
-              ) : (
-                <Button onClick={handleComplete}>
-                  {completedSteps() === totalSteps() - 1
-                    ? 'Finalizar'
-                    : 'completar'}
-                </Button>
-              ))}
           </Box>
+          
+          
           </Box>
-       
-        
+
+
+
+
+
         )}
       </Box>
+      
+       </Box>
+      {/* SECCION BOTONES OCUPA TODO EL LARGO  */}
+      <Box className=" flex justify-end w-full m-[20px]">
+              
+              <Button
+                  className="w-[100px]"
+                  variant="contained"
+                  color="secondary"
+                  // startIcon={<SearchIcon />}
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  >
+                  Atrás
+                </Button>
+              <Button
+                  className="w-[100px] ml-[10px] mr-[10px]"
+                  variant="contained"
+                  color="secondary"
+                  // startIcon={<SearchIcon />}
+                  onClick={handleNext}
+                  >
+                  Siguiente
+                </Button>
+              {activeStep !== steps.length &&
+                (completed[activeStep] ? (
+                  <Typography variant="caption" sx={{ display: 'inline-block' }}>
+                    Confirmado
+                  </Typography>
+                ) : (
+                  <Button onClick={handleComplete}>
+                    {completedSteps() === totalSteps() - 1
+                      ? 'Finalizar'
+                      : 'completar'}
+                  </Button>
+                ))}
+      </Box>
+   
     </Box>
   );
 }
