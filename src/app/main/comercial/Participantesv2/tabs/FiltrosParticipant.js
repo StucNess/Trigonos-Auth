@@ -26,27 +26,20 @@ const top100Films2 = [
   { business_Name: "The Dark Knight", year: 2008 },
 ];
 let participants;
-export default function FiltrosParticipant() {
+export default function FiltrosParticipant(props) {
   const [render, setRender] = useState(false);
-  const [dataParticipant, setDataParticipant] = useState({
-    name: "",
-    rut: "",
-  });
-  const dataParticipants = async () => {
-    const participantss = await CallApi(1, 10, 0);
-    participants = participantss;
-    if (render === false) {
-      setRender(true);
-    } else {
-      setRender(false);
-    }
-  };
+  const [nameParticipants, setNameParticipants] = useState([]);
+  const [dataParticipant, setDataParticipant] = useState([]);
+  useEffect(() => {
+    props.sendParticipants(dataParticipant);
+  }, [dataParticipant]);
+
   useEffect(() => {
     (async () => {
-      dataParticipants();
+      participants = await CallApi(1, 10, 0);
+      setNameParticipants(participants);
     })();
   }, []);
-  // participants != undefined ?? console.log(participants.data);
   return (
     <Box>
       <Box className="flex flex-col w-full mb-[20px]">
@@ -64,40 +57,32 @@ export default function FiltrosParticipant() {
         /> */}
         <Autocomplete
           disablePortal
-          onChange={(event, newValue) => {
-            console.log(newValue);
-          }}
-          getOptionLabel={(option) => option.business_Name}
+          options={nameParticipants}
+          value={dataParticipant}
+          onChange={(event, newValue) => setDataParticipant(newValue)}
+          getOptionLabel={(option) => option.business_Name || ""}
+          // isOptionEqualToValue={(option, value) =>
+          //   dataParticipant.name == value || ""
+          // }
           id="combo-box-demo"
-          options={participants == undefined ? top100Films : participants.data}
           sx={{ width: 300 }}
           renderInput={(params) => (
             <TextField {...params} label="Nombre Comercial" />
           )}
         />
-        {/* <TextField
-          className=" zerorange:w-[300px]  lg:w-[400px] w-[200px]  mdmax:m-[20px]"
-          label="Ingrese RUT del cliente"
-          type="text"
-          variant="filled"
-        /> */}
         <Autocomplete
           disablePortal
-          onChange={(event, newValue) => {
-            console.log(newValue);
-          }}
-          getOptionLabel={(option) => option.rut}
+          onChange={(event, newValue) => setDataParticipant(newValue)}
+          // isOptionEqualToValue={(option, value) =>
+          //   dataParticipant.name == value || ""
+          // }
+          getOptionLabel={(option) => option.rut || ""}
           id="combo-box-demo"
-          options={participants == undefined ? top100Films1 : participants.data}
+          options={nameParticipants}
+          value={dataParticipant}
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Rut" />}
         />
-        {/* <TextField
-          className="zerorange:w-[300px]  lg:w-[400px] w-[200px]  mdmax:m-[20px]"
-          label="Seleccionar cliente"
-          type="text"
-          variant="filled"
-        /> */}
       </Box>
       <Box className="flex  w-full items-center  mt-[30px]  ">
         <Button

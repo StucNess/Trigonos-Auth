@@ -13,7 +13,7 @@ export const CallApi = async (PageIndex = 1, PageSize = 10, numero = 1) => {
   }
 
   response = await axios.get(url);
-  prueba = await response.data;
+  prueba = await response.data.data;
 
   return prueba;
 };

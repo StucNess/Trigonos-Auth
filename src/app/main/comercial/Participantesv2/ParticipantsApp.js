@@ -18,6 +18,11 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 let participants = [];
 const NominaPagoApp = () => {
+  const [dataParticipant, setDataParticipant] = useState([]);
+
+  const getDataParticipants = (data) => {
+    setDataParticipant(data);
+  };
   return (
     <Root
       // header={<FacturacionMasivaAppHeader />}
@@ -34,21 +39,21 @@ const NominaPagoApp = () => {
                 <span className="text-grey-700">
                   Introducir términos de búsqueda en los <b>filtros</b>{" "}
                   superiores para encontrar al <b>cliente</b> que desee luego
-                  puede proceder a modificar sus datos asociados.
+                  {/* puede proceder a modificar sus datos asociados. */}
                 </span>
               </div>
             </Box>
           </Box>
           <Paper className="w-full p-[20px] mb-[20px]">
             {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
-            <FiltrosParticipant />
+            <FiltrosParticipant sendParticipants={getDataParticipants} />
           </Paper>
           {/* <Paper className="w-full p-[20px] mb-[20px]"> */}
           {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
           {/* <PruebasStepper/> */}
           {/* </Paper> */}
           <Paper className="w-full p-[20px] ">
-            <VerticalStepper />
+            <VerticalStepper dataParticipant={dataParticipant} />
           </Paper>
         </Box>
       }
