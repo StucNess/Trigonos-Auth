@@ -417,7 +417,8 @@ export default function StickyHeadTable({ projects, diccionariop }) {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}>
+                  style={{ minWidth: column.minWidth }}
+                >
                   {column.label}
                 </TableCell>
               ))}
@@ -440,7 +441,8 @@ export default function StickyHeadTable({ projects, diccionariop }) {
                               ? () => getModal(valuee)
                               : () => setTable(true)
                           }
-                          align={column.align}>
+                          align={column.align}
+                        >
                           {column.format && typeof value === "number"
                             ? column.format(value)
                             : value}

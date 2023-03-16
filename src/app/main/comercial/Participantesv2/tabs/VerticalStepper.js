@@ -394,7 +394,9 @@ export default function HorizontalNonLinearStepper(props) {
                     <Paper className=" w-auto w-[40%] md:mr-[20%] md:w-[70%] lg:w-[90%]  tvxl:w-auto">
                       {/* Debo ingresar a la bd y consultar estos campos uwu */}
                       {/* PAPER PARA FIULTROS */}
-                      <TablaUltimosCambios />
+                      <TablaUltimosCambios
+                        idParticipant={props.dataParticipant.id}
+                      />
                     </Paper>
                   </Box>
                 )}
