@@ -84,7 +84,7 @@ export default function FiltrosParticipant(props) {
           renderInput={(params) => <TextField {...params} label="Rut" />}
         />
       </Box>
-      <Box className="flex  w-full items-center  mt-[30px]  ">
+      {/* <Box className="flex  w-full items-center  mt-[30px]  ">
         <Button
           className="w-[150px]"
           variant="contained"
@@ -101,7 +101,7 @@ export default function FiltrosParticipant(props) {
         >
           Buscar
         </Button>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

@@ -39,18 +39,40 @@ const iconSteps = [
 ];
 let LabelSetep = "";
 let dataBank;
+let banks;
 export default function HorizontalNonLinearStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
   const [activeLabel, setActiveLabel] = React.useState("");
   const [grupo, setGrupo] = React.useState("");
   const [erp, setErp] = React.useState("");
-
+  const [bankk, setBankk] = React.useState("");
   useEffect(() => {
     (async () => {
       dataBank = await CallBanks(props.dataParticipant.bank);
+      setBankk(dataBank.name);
     })();
   }, [props.dataParticipant.id]);
+  useEffect(() => {
+    (async () => {
+      banks = await CallBanks(1, 2);
+    })();
+  }, []);
+  // console.log(dataBank);
+  const handleChangee = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setBankk(event.target.value);
+
+    // banks.map((d) => {
+    //   if (d.name === event.target.value) {
+    //     idBank = d.id;
+    //   }
+    // });
+
+    // setFormState({
+    //   ...formState,
+    //   bank: idBank,
+    // });
+  };
   const handleChange = (event) => {
     setGrupo(event.target.value);
   };
@@ -316,14 +338,30 @@ export default function HorizontalNonLinearStepper(props) {
                       Datos Bancarios
                     </Typography>
                     <Box className="flex flex-wrap justify-between zerorange:justify-center ml-[0 auto]">
-                      <TextField
+                      {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Banco"
                         type="text"
                         value={dataBank.name}
                         defaultValue="Vacio"
                         variant="filled"
-                      />
+                      /> */}
+                      <TextField
+                        // disabled={banksName1 ? false : true}
+                        id="standard-select-currency"
+                        select
+                        label="Banco"
+                        value={bankk}
+                        onChange={handleChangee}
+                        variant="standard"
+                        sx={{ marginRight: 5, width: 250 }}
+                      >
+                        {banks.map((data) => (
+                          <MenuItem key={data.id} value={data.name}>
+                            {data.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Cuenta Corriente"
