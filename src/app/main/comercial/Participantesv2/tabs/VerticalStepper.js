@@ -20,6 +20,8 @@ import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import TablaUltimosCambios from "./widgets/TablaUltimosCambios";
 import Paper from "@mui/material/Paper";
+import { CallBanks } from "../store/CallBanks";
+import { useEffect } from "react";
 
 const steps = [
   "Coordinado",
@@ -36,12 +38,19 @@ const iconSteps = [
   <ManageHistoryIcon />,
 ];
 let LabelSetep = "";
+let dataBank;
 export default function HorizontalNonLinearStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [completed, setCompleted] = React.useState({});
   const [activeLabel, setActiveLabel] = React.useState("");
   const [grupo, setGrupo] = React.useState("");
   const [erp, setErp] = React.useState("");
+
+  useEffect(() => {
+    (async () => {
+      dataBank = await CallBanks(props.dataParticipant.bank);
+    })();
+  }, [props.dataParticipant.id]);
   const handleChange = (event) => {
     setGrupo(event.target.value);
   };
@@ -81,7 +90,6 @@ export default function HorizontalNonLinearStepper(props) {
   };
 
   const handleStep = (step) => () => {
-    console.log(step);
     setActiveStep(step);
   };
 
@@ -312,7 +320,7 @@ export default function HorizontalNonLinearStepper(props) {
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Banco"
                         type="text"
-                        value={"Vacio"}
+                        value={dataBank.name}
                         defaultValue="Vacio"
                         variant="filled"
                       />
@@ -320,7 +328,7 @@ export default function HorizontalNonLinearStepper(props) {
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Cuenta Corriente"
                         type="text"
-                        value={"Vacio"}
+                        value={props.dataParticipant.bank_Account}
                         defaultValue="Vacio"
                         variant="filled"
                       />
@@ -328,7 +336,7 @@ export default function HorizontalNonLinearStepper(props) {
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="RUT Cuenta Corriente"
                         type="text"
-                        value={"Vacio"}
+                        value={props.dataParticipant.rut}
                         defaultValue="Vacio"
                         variant="filled"
                       />
