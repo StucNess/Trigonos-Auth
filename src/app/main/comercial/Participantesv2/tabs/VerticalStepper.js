@@ -15,6 +15,10 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ManageHistoryIcon from "@mui/icons-material/ManageHistory";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import EditIcon from "@mui/icons-material/Edit";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
+import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
@@ -47,10 +51,67 @@ export default function HorizontalNonLinearStepper(props) {
   const [grupo, setGrupo] = React.useState("");
   const [erp, setErp] = React.useState("");
   const [bankk, setBankk] = React.useState("");
+  const [formState, setFormState] = React.useState({
+    id: props.dataParticipant.id,
+    name: props.dataParticipant.name,
+    rut: props.dataParticipant.rut,
+    verificationCode: props.dataParticipant.verification_Code,
+    businessName: props.dataParticipant.business_Name,
+    commercialBusiness: props.dataParticipant.commercial_Business,
+    email: props.dataParticipant.dte_Reception_Email,
+    bankAccount: props.dataParticipant.bank_Account,
+    bank: props.dataParticipant.bank,
+    banksName: props.dataParticipant.banksName,
+    commercialAddress: props.dataParticipant.commercial_address,
+    postalAddress: props.dataParticipant.commercial_address, //REVISAR
+    manager: props.dataParticipant.manager,
+    payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
+    payContactLastName: props.dataParticipant.pay_contact_last_name,
+    payContactAddress: props.dataParticipant.pay_contact_address,
+    payContactPhones: props.dataParticipant.pay_contact_phones,
+    payContactEmail: props.dataParticipant.pay_contact_email,
+    billsContactLastName: props.dataParticipant.bills_contact_last_name,
+    billsContactFirstName: props.dataParticipant.bills_contact_first_name,
+    billsContactAddress: props.dataParticipant.bills_contact_address,
+    billsContactPhones: props.dataParticipant.bills_contact_phones,
+    billsContactEmail: props.dataParticipant.bills_contact_email,
+  });
+  const onInputChange = ({ target }) => {
+    const { name, value } = target;
+    setFormState({
+      ...formState,
+      [name]: value,
+    });
+  };
   useEffect(() => {
     (async () => {
       dataBank = await CallBanks(props.dataParticipant.bank);
       setBankk(dataBank.name);
+      setFormState({
+        id: props.dataParticipant.id,
+        name: props.dataParticipant.name,
+        rut: props.dataParticipant.rut,
+        verificationCode: props.dataParticipant.verification_Code,
+        businessName: props.dataParticipant.business_Name,
+        commercialBusiness: props.dataParticipant.commercial_Business,
+        email: props.dataParticipant.dte_Reception_Email,
+        bankAccount: props.dataParticipant.bank_Account,
+        bank: props.dataParticipant.bank,
+        banksName: props.dataParticipant.banksName,
+        commercialAddress: props.dataParticipant.commercial_address,
+        postalAddress: props.dataParticipant.commercial_address, //REVISAR
+        manager: props.dataParticipant.manager,
+        payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
+        payContactLastName: props.dataParticipant.pay_contact_last_name,
+        payContactAddress: props.dataParticipant.pay_contact_address,
+        payContactPhones: props.dataParticipant.pay_contact_phones,
+        payContactEmail: props.dataParticipant.pay_contact_email,
+        billsContactLastName: props.dataParticipant.bills_contact_last_name,
+        billsContactFirstName: props.dataParticipant.bills_contact_first_name,
+        billsContactAddress: props.dataParticipant.bills_contact_address,
+        billsContactPhones: props.dataParticipant.bills_contact_phones,
+        billsContactEmail: props.dataParticipant.bills_contact_email,
+      });
     })();
   }, [props.dataParticipant.id]);
   useEffect(() => {
@@ -58,20 +119,52 @@ export default function HorizontalNonLinearStepper(props) {
       banks = await CallBanks(1, 2);
     })();
   }, []);
-  // console.log(dataBank);
+  const [update, setUpdate] = React.useState({
+    rut: false,
+    name: false,
+    businessName: false,
+    commercialBusiness: false,
+    email: false,
+    bankAccount: false,
+    banksName: false,
+    commercialAddress: false,
+    manager: false,
+    payContactFirstName: false,
+    payContactPhones: false,
+    payContactEmail: false,
+    billsContactFirstName: false,
+    billsContactPhones: false,
+    billsContactEmail: false,
+  });
+  const {
+    rut,
+    name,
+    businessName,
+    commercialBusiness,
+    email,
+    bankAccount,
+    banksName,
+    commercialAddress,
+    manager,
+    payContactFirstName,
+    payContactPhones,
+    payContactEmail,
+    billsContactFirstName,
+    billsContactPhones,
+    billsContactEmail,
+  } = update;
   const handleChangee = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setBankk(event.target.value);
-
-    // banks.map((d) => {
-    //   if (d.name === event.target.value) {
-    //     idBank = d.id;
-    //   }
-    // });
-
-    // setFormState({
-    //   ...formState,
-    //   bank: idBank,
-    // });
+    let idBank;
+    banks.map((d) => {
+      if (d.name === event.target.value) {
+        idBank = d.id;
+      }
+    });
+    setFormState({
+      ...formState,
+      banksName: event.target.value,
+      bank: idBank,
+    });
   };
   const handleChange = (event) => {
     setGrupo(event.target.value);
@@ -165,8 +258,7 @@ export default function HorizontalNonLinearStepper(props) {
             className="ml-[30px] mt-[30px] "
             nonLinear
             activeStep={activeStep}
-            orientation="vertical"
-          >
+            orientation="vertical">
             {steps.map((label, index) => (
               <Step
                 key={label}
@@ -189,14 +281,12 @@ export default function HorizontalNonLinearStepper(props) {
                   "& .MuiStepIcon": {
                     color: "blue",
                   },
-                }}
-              >
+                }}>
                 <StepButton
                   focusRipple
                   className="hover:bg-blue-50"
                   icon={handleIconStep(index)}
-                  onClick={handleStep(index)}
-                >
+                  onClick={handleStep(index)}>
                   {label}
                 </StepButton>
               </Step>
@@ -232,17 +322,102 @@ export default function HorizontalNonLinearStepper(props) {
                         // id="outlined-required"
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Nombre"
+                        onChange={onInputChange}
                         type="text"
+                        name="name"
                         defaultValue="Vacio"
-                        value={props.dataParticipant.name}
+                        disabled={name ? false : true}
+                        value={formState.name}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {name ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        name: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        name: props.dataParticipant.name,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        name: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      name: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         variant="filled"
                       />
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Nombre Comercial"
+                        disabled={businessName ? false : true}
                         type="text"
+                        name="businessName"
+                        onChange={onInputChange}
                         defaultValue="Vacio"
-                        value={props.dataParticipant.business_Name}
+                        value={formState.businessName}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {businessName ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        businessName: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        businessName:
+                                          props.dataParticipant.business_Name,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        businessName: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      businessName: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         variant="filled"
                       />
                       <TextField
@@ -250,7 +425,51 @@ export default function HorizontalNonLinearStepper(props) {
                         label="Giro"
                         type="text"
                         defaultValue="Vacio"
-                        value={props.dataParticipant.commercial_Business}
+                        onChange={onInputChange}
+                        name="commercialBusiness"
+                        disabled={commercialBusiness ? false : true}
+                        value={formState.commercialBusiness}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {commercialBusiness ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        commercialBusiness: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        commercialBusiness:
+                                          props.dataParticipant
+                                            .commercial_Business,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        commercialBusiness: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      commercialBusiness: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         variant="filled"
                       />
                       {/* <FormControl
@@ -279,7 +498,49 @@ export default function HorizontalNonLinearStepper(props) {
                         label="Rut"
                         type="text"
                         defaultValue="Vacio"
-                        value={props.dataParticipant.rut}
+                        onChange={onInputChange}
+                        name="rut"
+                        disabled={rut ? false : true}
+                        value={formState.rut}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {rut ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        rut: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        rut: props.dataParticipant.rut,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        rut: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      rut: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         variant="filled"
                       />
                     </Box>
@@ -294,42 +555,130 @@ export default function HorizontalNonLinearStepper(props) {
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Dirección Comercial"
                         type="text"
+                        name="commercialAddress"
+                        disabled={commercialAddress ? false : true}
                         defaultValue="Vacio"
-                        value={props.dataParticipant.commercial_address}
+                        value={formState.commercialAddress}
+                        onChange={onInputChange}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {commercialAddress ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        commercialAddress: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        commercialAddress:
+                                          props.dataParticipant
+                                            .commercial_address,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        commercialAddress: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      commercialAddress: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         variant="filled"
                       />
-                      <TextField
+                      {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Comuna"
                         type="text"
                         value={"Vacio"}
                         defaultValue="Vacio"
                         variant="filled"
-                      />
-                      <TextField
+                      /> */}
+                      {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Ciudad"
                         type="text"
                         value={"Vacio"}
                         defaultValue="Vacio"
                         variant="filled"
-                      />
+                      /> */}
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Email DTE"
                         type="email"
                         defaultValue="Vacio"
-                        value={props.dataParticipant.dte_Reception_Email}
+                        name="email"
+                        disabled={email ? false : true}
+                        value={formState.email}
+                        onChange={onInputChange}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {email ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        email: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        email:
+                                          props.dataParticipant
+                                            .dte_Reception_Email,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        email: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      email: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         variant="filled"
                       />
-                      <TextField
+                      {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Nómina ID"
                         type="text"
                         defaultValue="Vacio"
                         value={"Vacio"}
                         variant="filled"
-                      />
+                      /> */}
                     </Box>
                   </Box>
                 ) : activeStep === 2 ? (
@@ -351,11 +700,67 @@ export default function HorizontalNonLinearStepper(props) {
                         id="standard-select-currency"
                         select
                         label="Banco"
-                        value={bankk}
+                        value={formState.banksName}
                         onChange={handleChangee}
                         variant="standard"
-                        sx={{ marginRight: 5, width: 250 }}
-                      >
+                        name="banksName"
+                        disabled={banksName ? false : true}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {banksName ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        banksName: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      // setFormState({
+                                      //   ...formState,
+                                      //   email:
+                                      //     props.dataParticipant
+                                      //       .dte_Reception_Email,
+                                      // });
+                                      setFormState({
+                                        ...formState,
+                                        banksName:
+                                          props.dataParticipant.banksName,
+                                        bank: props.dataParticipant.bank,
+                                      });
+                                      setBankk(props.dataParticipant.banksName);
+                                      setUpdate({
+                                        ...update,
+                                        banksName: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      banksName: true,
+                                      // });
+                                      // setFormState({
+                                      //   ...formState,
+                                      //   bank: idBank,
+                                      //   banksName: bankk,
+                                      // });
+                                      // console.log(formState);
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
+                        sx={{ marginRight: 5, width: 250 }}>
                         {banks.map((data) => (
                           <MenuItem key={data.id} value={data.name}>
                             {data.name}
@@ -364,17 +769,117 @@ export default function HorizontalNonLinearStepper(props) {
                       </TextField>
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                        label="Cuenta Corriente"
+                        label="RUT Cuenta Corriente"
                         type="text"
-                        value={props.dataParticipant.bank_Account}
+                        value={formState.rut}
+                        onChange={onInputChange}
+                        variant="standard"
+                        name="rut"
+                        disabled={rut ? false : true}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {rut ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        rut: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      // setFormState({
+                                      //   ...formState,
+                                      //   email:
+                                      //     props.dataParticipant
+                                      //       .dte_Reception_Email,
+                                      // });
+                                      setFormState({
+                                        ...formState,
+                                        rut: props.dataParticipant.rut,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        rut: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      rut: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
                         defaultValue="Vacio"
                         variant="filled"
                       />
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                        label="RUT Cuenta Corriente"
+                        label="Cuenta Corriente"
                         type="text"
-                        value={props.dataParticipant.rut}
+                        value={formState.bankAccount}
+                        onChange={onInputChange}
+                        variant="standard"
+                        name="bankAccount"
+                        disabled={bankAccount ? false : true}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {bankAccount ? (
+                                <>
+                                  <CheckBoxIcon
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        bankAccount: false,
+                                      });
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    onClick={() => {
+                                      // setFormState({
+                                      //   ...formState,
+                                      //   email:
+                                      //     props.dataParticipant
+                                      //       .dte_Reception_Email,
+                                      // });
+                                      setFormState({
+                                        ...formState,
+                                        bankAccount:
+                                          props.dataParticipant.bank_Account,
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        bankAccount: false,
+                                      });
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      bankAccount: true,
+                                    });
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
+                        defaultValue="Vacio"
                         defaultValue="Vacio"
                         variant="filled"
                       />
@@ -451,20 +956,29 @@ export default function HorizontalNonLinearStepper(props) {
           color="secondary"
           // startIcon={<SearchIcon />}
           disabled={activeStep === 0}
-          onClick={handleBack}
-        >
+          onClick={handleBack}>
           Atrás
         </Button>
+
         <Button
           className="w-[100px] ml-[10px] mr-[10px]"
           variant="contained"
           color="secondary"
           // startIcon={<SearchIcon />}
-          onClick={handleNext}
-        >
+          onClick={handleNext}>
           Siguiente
         </Button>
-        {activeStep !== steps.length &&
+        <Button
+          className="w-[100px] mr-[10px]"
+          variant="contained"
+          color="primary"
+          // startIcon={<SearchIcon />}
+          // disabled={activeStep === 0}
+          // onClick={handleBack}
+        >
+          Guardar
+        </Button>
+        {/* {activeStep !== steps.length &&
           (completed[activeStep] ? (
             <Typography variant="caption" sx={{ display: "inline-block" }}>
               Confirmado
@@ -475,7 +989,7 @@ export default function HorizontalNonLinearStepper(props) {
                 ? "Finalizar"
                 : "completar"}
             </Button>
-          ))}
+          ))} */}
       </Box>
     </Box>
   );

@@ -29,7 +29,11 @@ let participants;
 export default function FiltrosParticipant(props) {
   const [render, setRender] = useState(false);
   const [nameParticipants, setNameParticipants] = useState([]);
-  const [dataParticipant, setDataParticipant] = useState([]);
+  const [dataParticipant, setDataParticipant] = useState([
+    {
+      name: "El Pelícano Solar Company SpA",
+    },
+  ]);
   useEffect(() => {
     props.sendParticipants(dataParticipant);
   }, [dataParticipant]);
