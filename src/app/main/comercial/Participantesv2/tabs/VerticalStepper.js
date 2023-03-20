@@ -922,6 +922,86 @@ export default function HorizontalNonLinearStepper(props) {
                         
                         variant="filled"
                       />
+                      <TextField
+                        // disabled={banksName1 ? false : true}
+                        className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                        id="standard-select-currency"
+                        select
+                        label="Nomina de Pago"
+                        value="Sin Nomina"
+                        //onChange={handleChangee}
+                        variant="filled"
+                        name="nominaName"
+                        disabled={true}
+                        // InputProps={{
+                        //   startAdornment: (
+                        //     <InputAdornment position="start">
+                        //       {banksName ? (
+                        //         <>
+                        //           <CheckBoxIcon
+                        //             onClick={() => {
+                        //               setUpdate({
+                        //                 ...update,
+                        //                 banksName: false,
+                        //               });
+                        //               setFormState({
+                        //                 ...formState,
+                        //                 banksName:
+                        //                   props.dataParticipant.banksName,
+                        //                 bank: props.dataParticipant.bank,
+                        //               });
+                        //               setBankk(props.dataParticipant.banksName);
+                        //             }}
+                        //           />
+                        //           <DisabledByDefaultIcon
+                        //             onClick={() => {
+                        //               // setFormState({
+                        //               //   ...formState,
+                        //               //   email:
+                        //               //     props.dataParticipant
+                        //               //       .dte_Reception_Email,
+                        //               // });
+                        //               setFormState({
+                        //                 ...formState,
+                        //                 banksName:
+                        //                   props.dataParticipant.banksName,
+                        //                 bank: props.dataParticipant.bank,
+                        //               });
+                        //               setBankk(props.dataParticipant.banksName);
+                        //               setUpdate({
+                        //                 ...update,
+                        //                 banksName: false,
+                        //               });
+                        //             }}
+                        //           />
+                        //         </>
+                        //       ) : (
+                        //         <EditIcon
+                        //           onClick={() => {
+                        //             setUpdate({
+                        //               ...update,
+                        //               banksName: true,
+                        //               // });
+                        //               // setFormState({
+                        //               //   ...formState,
+                        //               //   bank: idBank,
+                        //               //   banksName: bankk,
+                        //               // });
+                        //               // console.log(formState);
+                        //             });
+                        //           }}
+                        //         />
+                        //       )}
+                        //     </InputAdornment>
+                        //   ),
+                        // }}
+                       >
+                        {banks.map((data) => (
+                          <MenuItem key={data.id} value={data.name}>
+                            {data.name}
+                          </MenuItem>
+                        ))}
+                      </TextField>
                     </Box>
                   </Box>
                 ) : activeStep === 3 ? (
