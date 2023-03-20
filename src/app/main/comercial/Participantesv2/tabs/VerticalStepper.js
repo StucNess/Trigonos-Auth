@@ -1,11 +1,12 @@
 //ORDENAR CODIGO
 
 import * as React from "react";
-import Box from "@mui/material/Box";
+import axios from "axios";
+// import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepButton from "@mui/material/StepButton";
-import Button from "@mui/material/Button";
+// import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import SearchIcon from "@mui/icons-material/Search";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -21,12 +22,19 @@ import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import TextField from "@mui/material/TextField";
+// import TextField from "@mui/material/TextField";
 import TablaUltimosCambios from "./widgets/TablaUltimosCambios";
 import Paper from "@mui/material/Paper";
 import { CallBanks } from "../store/CallBanks";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import {
+  Autocomplete,
+  Stack,
+  TextField,
+  Button,
+  Box,
+  Alert,
+} from "@mui/material";
 const steps = [
   "Coordinado",
   "Datos de Contacto",
@@ -45,13 +53,13 @@ let LabelSetep = "";
 let dataBank;
 let banks;
 export default function HorizontalNonLinearStepper(props) {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [completed, setCompleted] = React.useState({});
-  const [activeLabel, setActiveLabel] = React.useState("");
-  const [grupo, setGrupo] = React.useState("");
-  const [erp, setErp] = React.useState("");
-  const [bankk, setBankk] = React.useState("");
-  const [formState, setFormState] = React.useState({
+  const [activeStep, setActiveStep] = useState(0);
+  const [completed, setCompleted] = useState({});
+  const [activeLabel, setActiveLabel] = useState("");
+  const [grupo, setGrupo] = useState("");
+  const [erp, setErp] = useState("");
+  const [bankk, setBankk] = useState("");
+  const [formState, setFormState] = useState({
     id: props.dataParticipant.id,
     name: props.dataParticipant.name,
     rut: props.dataParticipant.rut,
@@ -75,6 +83,25 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactAddress: props.dataParticipant.bills_contact_address,
     billsContactPhones: props.dataParticipant.bills_contact_phones,
     billsContactEmail: props.dataParticipant.bills_contact_email,
+  });
+  const [alertOk, setAlertOk] = useState(false);
+  const [alertError, setAlertError] = useState(false);
+  const [update, setUpdate] = useState({
+    rut: false,
+    name: false,
+    businessName: false,
+    commercialBusiness: false,
+    email: false,
+    bankAccount: false,
+    banksName: false,
+    commercialAddress: false,
+    manager: false,
+    payContactFirstName: false,
+    payContactPhones: false,
+    payContactEmail: false,
+    billsContactFirstName: false,
+    billsContactPhones: false,
+    billsContactEmail: false,
   });
   const onInputChange = ({ target }) => {
     const { name, value } = target;
@@ -119,23 +146,18 @@ export default function HorizontalNonLinearStepper(props) {
       banks = await CallBanks(1, 2);
     })();
   }, []);
-  const [update, setUpdate] = React.useState({
-    rut: false,
-    name: false,
-    businessName: false,
-    commercialBusiness: false,
-    email: false,
-    bankAccount: false,
-    banksName: false,
-    commercialAddress: false,
-    manager: false,
-    payContactFirstName: false,
-    payContactPhones: false,
-    payContactEmail: false,
-    billsContactFirstName: false,
-    billsContactPhones: false,
-    billsContactEmail: false,
-  });
+  useEffect(() => {
+    if (alertOk === true) {
+      setTimeout(() => {
+        setAlertOk(false);
+      }, 5000);
+    }
+    if (alertError === true) {
+      setTimeout(() => {
+        setAlertError(false);
+      }, 5000);
+    }
+  }, [alertOk, alertError]);
   const {
     rut,
     name,
@@ -166,10 +188,11 @@ export default function HorizontalNonLinearStepper(props) {
       banksName: event.target.value,
       bank: idBank,
     });
+    setBankk(event.target.value);
     // console.log(formState.bank);
   };
   const handleChange = (event) => {
-    setGrupo(event.target.value);
+    etGrupo(event.target.value);
   };
   const handleChangeERP = (event) => {
     setErp(event.target.value);
@@ -248,33 +271,40 @@ export default function HorizontalNonLinearStepper(props) {
                 </Typography> */
   }
   const ApiPatch = () => {
-    // const apiPatchParticipante =
-    //   `http://164.77.112.10:99/api/Participantes?` +
-    //   `id=${formState.id}&` +
-    //   `Name=${formState.name}&` +
-    //   `Rut=${formState.rut}&` +
-    //   `Verification_Code=${formState.verificationCode}&` +
-    //   `Business_Name=${formState.businessName}&` +
-    //   `Commercial_Business=${formState.commercialBusiness}&` +
-    //   `Dte_Reception_Email=${formState.email}&` +
-    //   `Bank_Account=${formState.bankAccount}&` +
-    //   `bank=${formState.bank}&` +
-    //   `Commercial_address=${formState.commercialAddress}&` +
-    //   `Postal_address=${formState.postalAddress}&` +
-    //   `Manager=${formState.manager}&` +
-    //   `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
-    //   `Pay_contact_last_name=${formState.payContactLastName}&` +
-    //   `Pay_contact_address=${formState.payContactAddress}&` +
-    //   `Pay_contact_phones=${formState.payContactPhones}&` +
-    //   `Pay_contact_email=${formState.payContactEmail}&` +
-    //   `Bills_contact_first_name=${formState.billsContactFirstName}&` +
-    //   `Bills_contact_last_name=${formState.billsContactLastName}&` +
-    //   `Bills_contact_address=${formState.billsContactAddress}&` +
-    //   `Bills_contact_phones=${formState.billsContactPhones}&` +
-    //   `Bills_contact_email=${formState.billsContactEmail}`;
-
-    // const res = axios.patch(apiPatchParticipante);
-    console.log(formState.bank);
+    console.log(formState);
+    const apiPatchParticipante =
+      `http://164.77.112.10:99/api/Participantes?` +
+      `id=${formState.id}&` +
+      `Name=${formState.name}&` +
+      `Rut=${formState.rut}&` +
+      `Verification_Code=${formState.verificationCode}&` +
+      `Business_Name=${formState.businessName}&` +
+      `Commercial_Business=${formState.commercialBusiness}&` +
+      `Dte_Reception_Email=${formState.email}&` +
+      `Bank_Account=${formState.bankAccount}&` +
+      `bank=${formState.bank}&` +
+      `Commercial_address=${formState.commercialAddress}&` +
+      `Postal_address=${formState.postalAddress}&` +
+      `Manager=${formState.manager}&` +
+      `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
+      `Pay_contact_last_name=${formState.payContactLastName}&` +
+      `Pay_contact_address=${formState.payContactAddress}&` +
+      `Pay_contact_phones=${formState.payContactPhones}&` +
+      `Pay_contact_email=${formState.payContactEmail}&` +
+      `Bills_contact_first_name=${formState.billsContactFirstName}&` +
+      `Bills_contact_last_name=${formState.billsContactLastName}&` +
+      `Bills_contact_address=${formState.billsContactAddress}&` +
+      `Bills_contact_phones=${formState.billsContactPhones}&` +
+      `Bills_contact_email=${formState.billsContactEmail}`;
+    const res = axios
+      .patch(apiPatchParticipante)
+      .then((response) => {
+        setAlertOk(true);
+      })
+      .catch((error) => {
+        setAlertError(true);
+      });
+    //
   };
   return (
     <Box className="w-full h-full">
@@ -748,13 +778,13 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         banksName: false,
                                       });
-                                      setFormState({
-                                        ...formState,
-                                        banksName:
-                                          props.dataParticipant.banksName,
-                                        bank: props.dataParticipant.bank,
-                                      });
-                                      setBankk(props.dataParticipant.banksName);
+                                      // setFormState({
+                                      //   ...formState,
+                                      //   banksName:
+                                      //     props.dataParticipant.banksName,
+                                      //   bank: props.dataParticipant.bank,
+                                      // });
+                                      // setBankk(props.dataParticipant.banksName);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
@@ -1072,6 +1102,20 @@ export default function HorizontalNonLinearStepper(props) {
       </Box>
       {/* SECCION BOTONES OCUPA TODO EL LARGO  */}
       <Box className=" flex justify-end w-full m-[20px]">
+        {alertOk && (
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="success">
+              Se actualizo la instruccion correctamente
+            </Alert>
+          </Stack>
+        )}
+        {alertError && (
+          <Stack sx={{ width: "100%" }} spacing={2}>
+            <Alert severity="warning">
+              Error!! No se actualizo la instruccion
+            </Alert>
+          </Stack>
+        )}
         <Button
           className="w-[100px]"
           variant="contained"
