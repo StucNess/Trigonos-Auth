@@ -44,7 +44,7 @@ export default function FiltrosParticipant(props) {
   }, []);
   useEffect(() => {
     (async () => {
-      participants = await CallApi(1, 10, 0);
+      participants = await CallApi(1, 1000, 1);
       setNameParticipants(participants);
       props.sendParticipants(participants[0]);
     })();
@@ -78,7 +78,6 @@ export default function FiltrosParticipant(props) {
           //   dataParticipant.name == value || ""
           // }
           id="combo-box-demo"
-       
           renderInput={(params) => (
             <TextField {...params} label="Nombre Comercial" />
           )}
@@ -94,8 +93,6 @@ export default function FiltrosParticipant(props) {
           id="combo-box-demo"
           options={nameParticipants}
           value={dataParticipant}
-          
-          
           renderInput={(params) => <TextField {...params} label="Rut" />}
         />
       </Box>
