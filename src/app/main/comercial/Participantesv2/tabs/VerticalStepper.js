@@ -828,8 +828,7 @@ export default function HorizontalNonLinearStepper(props) {
                               )}
                             </InputAdornment>
                           ),
-                        }}
-                       >
+                        }}>
                         {banks.map((data) => (
                           <MenuItem key={data.id} value={data.name}>
                             {data.name}
@@ -842,7 +841,6 @@ export default function HorizontalNonLinearStepper(props) {
                         type="text"
                         value={formState.rut}
                         onChange={onInputChange}
-                       
                         name="rut"
                         disabled={rut ? false : true}
                         InputProps={{
@@ -899,7 +897,6 @@ export default function HorizontalNonLinearStepper(props) {
                         type="text"
                         value={formState.bankAccount}
                         onChange={onInputChange}
-                        
                         name="bankAccount"
                         disabled={bankAccount ? false : true}
                         InputProps={{
@@ -949,7 +946,6 @@ export default function HorizontalNonLinearStepper(props) {
                           ),
                         }}
                         defaultValue="Vacio"
-                        
                         variant="filled"
                       />
                     </Box>
@@ -997,19 +993,19 @@ export default function HorizontalNonLinearStepper(props) {
                   //HACER LA HISTORIFICACION TERMINARLA ANTES DE LAS 4
                   <Box>
                     <Box className="Flex flex-col w-full h-full">
-                    <Typography variant="h6" className="mb-4" color="primary">
-                      Historificación
-                    </Typography>
+                      <Typography variant="h6" className="mb-4" color="primary">
+                        Historificación
+                      </Typography>
                     </Box>
-                    
+
                     {/* <Typography variant="h6" className="mb-4 ml-4">
                         Cambios realizados 
                     </Typography> */}
 
-                      <Paper >
+                    <Paper>
                       {/* Debo ingresar a la bd y consultar estos campos uwu */}
                       {/* PAPER PARA FIULTROS */}
-                      <TablaUltimosCambios 
+                      <TablaUltimosCambios
                         idParticipant={props.dataParticipant.id}
                       />
                     </Paper>
