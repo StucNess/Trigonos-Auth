@@ -7,24 +7,24 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { CallApi } from "../store/CallApi";
-const top100Films = [
-  { business_Name: "The Shawshank Redemption", year: 1994 },
-  { business_Name: "The Godfather", year: 1972 },
-  { business_Name: "The Godfather: Part II", year: 1974 },
-  { business_Name: "The Dark Knight", year: 2008 },
-];
-const top100Films1 = [
-  { rut: "The Shawshank Redemption", year: 1994 },
-  { rut: "The Godfather", year: 1972 },
-  { rut: "The Godfather: Part II", year: 1974 },
-  { rut: "The Dark Knight", year: 2008 },
-];
-const top100Films2 = [
-  { business_Name: "The Shawshank Redemption", year: 1994 },
-  { business_Name: "The Godfather", year: 1972 },
-  { business_Name: "The Godfather: Part II", year: 1974 },
-  { business_Name: "The Dark Knight", year: 2008 },
-];
+// const top100Films = [
+//   { business_Name: "The Shawshank Redemption", year: 1994 },
+//   { business_Name: "The Godfather", year: 1972 },
+//   { business_Name: "The Godfather: Part II", year: 1974 },
+//   { business_Name: "The Dark Knight", year: 2008 },
+// ];
+// const top100Films1 = [
+//   { rut: "The Shawshank Redemption", year: 1994 },
+//   { rut: "The Godfather", year: 1972 },
+//   { rut: "The Godfather: Part II", year: 1974 },
+//   { rut: "The Dark Knight", year: 2008 },
+// ];
+// const top100Films2 = [
+//   { business_Name: "The Shawshank Redemption", year: 1994 },
+//   { business_Name: "The Godfather", year: 1972 },
+//   { business_Name: "The Godfather: Part II", year: 1974 },
+//   { business_Name: "The Dark Knight", year: 2008 },
+// ];
 let participants;
 export default function FiltrosParticipant(props) {
   const [render, setRender] = useState(false);
@@ -32,18 +32,24 @@ export default function FiltrosParticipant(props) {
   const [dataParticipant, setDataParticipant] = useState([
     {
       name: "El Pelícano Solar Company SpA",
+      rut: "76337599",
     },
   ]);
   useEffect(() => {
     props.sendParticipants(dataParticipant);
   }, [dataParticipant]);
-
+  useEffect(() => {
+    // props.sendParticipants();
+    // console.log(nameParticipants[0]);
+  }, []);
   useEffect(() => {
     (async () => {
       participants = await CallApi(1, 10, 0);
       setNameParticipants(participants);
+      props.sendParticipants(participants[0]);
     })();
   }, []);
+  // console.log(dataParticipant.name);
   return (
     <Box>
       <Box className="flex flex-col w-full mb-[20px]">
@@ -64,7 +70,9 @@ export default function FiltrosParticipant(props) {
           options={nameParticipants}
           value={dataParticipant}
           onChange={(event, newValue) => setDataParticipant(newValue)}
-          getOptionLabel={(option) => option.business_Name || ""}
+          getOptionLabel={(option) =>
+            option.business_Name || dataParticipant[0].name
+          }
           // isOptionEqualToValue={(option, value) =>
           //   dataParticipant.name == value || ""
           // }
@@ -80,9 +88,10 @@ export default function FiltrosParticipant(props) {
           // isOptionEqualToValue={(option, value) =>
           //   dataParticipant.name == value || ""
           // }
-          getOptionLabel={(option) => option.rut || ""}
+          getOptionLabel={(option) => option.rut || dataParticipant[0].rut}
           id="combo-box-demo"
           options={nameParticipants}
+          value={dataParticipant}
           value={dataParticipant}
           sx={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Rut" />}

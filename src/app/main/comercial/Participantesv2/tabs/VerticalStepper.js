@@ -160,11 +160,13 @@ export default function HorizontalNonLinearStepper(props) {
         idBank = d.id;
       }
     });
+
     setFormState({
       ...formState,
       banksName: event.target.value,
       bank: idBank,
     });
+    // console.log(formState.bank);
   };
   const handleChange = (event) => {
     setGrupo(event.target.value);
@@ -245,6 +247,35 @@ export default function HorizontalNonLinearStepper(props) {
                  {label}
                 </Typography> */
   }
+  const ApiPatch = () => {
+    // const apiPatchParticipante =
+    //   `http://164.77.112.10:99/api/Participantes?` +
+    //   `id=${formState.id}&` +
+    //   `Name=${formState.name}&` +
+    //   `Rut=${formState.rut}&` +
+    //   `Verification_Code=${formState.verificationCode}&` +
+    //   `Business_Name=${formState.businessName}&` +
+    //   `Commercial_Business=${formState.commercialBusiness}&` +
+    //   `Dte_Reception_Email=${formState.email}&` +
+    //   `Bank_Account=${formState.bankAccount}&` +
+    //   `bank=${formState.bank}&` +
+    //   `Commercial_address=${formState.commercialAddress}&` +
+    //   `Postal_address=${formState.postalAddress}&` +
+    //   `Manager=${formState.manager}&` +
+    //   `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
+    //   `Pay_contact_last_name=${formState.payContactLastName}&` +
+    //   `Pay_contact_address=${formState.payContactAddress}&` +
+    //   `Pay_contact_phones=${formState.payContactPhones}&` +
+    //   `Pay_contact_email=${formState.payContactEmail}&` +
+    //   `Bills_contact_first_name=${formState.billsContactFirstName}&` +
+    //   `Bills_contact_last_name=${formState.billsContactLastName}&` +
+    //   `Bills_contact_address=${formState.billsContactAddress}&` +
+    //   `Bills_contact_phones=${formState.billsContactPhones}&` +
+    //   `Bills_contact_email=${formState.billsContactEmail}`;
+
+    // const res = axios.patch(apiPatchParticipante);
+    console.log(formState.bank);
+  };
   return (
     <Box className="w-full h-full">
       <Box className="flex w-full h-full" sx={{ width: "100%" }}>
@@ -716,6 +747,13 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         banksName: false,
                                       });
+                                      setFormState({
+                                        ...formState,
+                                        banksName:
+                                          props.dataParticipant.banksName,
+                                        bank: props.dataParticipant.bank,
+                                      });
+                                      setBankk(props.dataParticipant.banksName);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
@@ -974,8 +1012,7 @@ export default function HorizontalNonLinearStepper(props) {
           color="primary"
           // startIcon={<SearchIcon />}
           // disabled={activeStep === 0}
-          // onClick={handleBack}
-        >
+          onClick={ApiPatch}>
           Guardar
         </Button>
         {/* {activeStep !== steps.length &&
