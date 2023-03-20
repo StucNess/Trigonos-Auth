@@ -965,18 +965,21 @@ export default function HorizontalNonLinearStepper(props) {
                   </Box>
                 ) : (
                   //HACER LA HISTORIFICACION TERMINARLA ANTES DE LAS 4
-                  <Box className="Flex flex-col w-full h-full">
+                  <Box>
+                    <Box className="Flex flex-col w-full h-full">
                     <Typography variant="h6" className="mb-4" color="primary">
                       Historificación
                     </Typography>
+                    </Box>
+                    
                     {/* <Typography variant="h6" className="mb-4 ml-4">
                         Cambios realizados 
                     </Typography> */}
 
-                    <Paper className=" w-auto w-[40%] md:mr-[20%] md:w-[70%] lg:w-[90%]  tvxl:w-auto">
+                      <Paper >
                       {/* Debo ingresar a la bd y consultar estos campos uwu */}
                       {/* PAPER PARA FIULTROS */}
-                      <TablaUltimosCambios
+                      <TablaUltimosCambios 
                         idParticipant={props.dataParticipant.id}
                       />
                     </Paper>
