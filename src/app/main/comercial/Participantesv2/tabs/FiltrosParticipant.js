@@ -52,13 +52,13 @@ export default function FiltrosParticipant(props) {
   // console.log(dataParticipant.name);
   return (
     <Box>
-      <Box className="flex flex-col w-full mb-[20px]">
+      <Box className="flex flex-col w-full mb-[20px] ">
         <Typography variant="h6" className="mb-4" color="primary">
           Búsqueda de Participante
         </Typography>
         <span>Introducir términos de búsqueda</span>
       </Box>
-      <Box className="flex  w-full justify-between  mdmax:flex-wrap mdmax:justify-center">
+      <Box className="flex  w-full   mdmax:flex-wrap justify-evenly   lg:justify-start">
         {/* <TextField
           className="zerorange:w-[300px]  lg:w-[400px] w-[200px]  mdmax:m-[20px]"
           label="Ingrese nombre comercial"
@@ -66,6 +66,7 @@ export default function FiltrosParticipant(props) {
           variant="filled"
         /> */}
         <Autocomplete
+          className="m-[10px] w-[300px] md:w-[500px]"
           disablePortal
           options={nameParticipants}
           value={dataParticipant}
@@ -77,12 +78,13 @@ export default function FiltrosParticipant(props) {
           //   dataParticipant.name == value || ""
           // }
           id="combo-box-demo"
-          sx={{ width: 300 }}
+       
           renderInput={(params) => (
             <TextField {...params} label="Nombre Comercial" />
           )}
         />
         <Autocomplete
+          className="m-[10px] w-[300px] md:w-[500px]"
           disablePortal
           onChange={(event, newValue) => setDataParticipant(newValue)}
           // isOptionEqualToValue={(option, value) =>
@@ -92,8 +94,8 @@ export default function FiltrosParticipant(props) {
           id="combo-box-demo"
           options={nameParticipants}
           value={dataParticipant}
-          value={dataParticipant}
-          sx={{ width: 300 }}
+          
+          
           renderInput={(params) => <TextField {...params} label="Rut" />}
         />
       </Box>

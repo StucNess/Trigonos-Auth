@@ -643,7 +643,7 @@ export default function TablaUltimosCambios(props) {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Paper className="p-[30px]">
+    <Box className=" relative mdmax:max-w-[500px] p-[30px]">
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -699,6 +699,6 @@ export default function TablaUltimosCambios(props) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-    </Paper>
+    </Box>
   );
 }
