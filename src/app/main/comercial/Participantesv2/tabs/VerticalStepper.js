@@ -728,12 +728,13 @@ export default function HorizontalNonLinearStepper(props) {
                       /> */}
                       <TextField
                         // disabled={banksName1 ? false : true}
+                        className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         id="standard-select-currency"
                         select
                         label="Banco"
                         value={formState.banksName}
                         onChange={handleChangee}
-                        variant="standard"
+                        variant="filled"
                         name="banksName"
                         disabled={banksName ? false : true}
                         InputProps={{
@@ -798,7 +799,7 @@ export default function HorizontalNonLinearStepper(props) {
                             </InputAdornment>
                           ),
                         }}
-                        sx={{ marginRight: 5, width: 250 }}>
+                       >
                         {banks.map((data) => (
                           <MenuItem key={data.id} value={data.name}>
                             {data.name}
@@ -811,7 +812,7 @@ export default function HorizontalNonLinearStepper(props) {
                         type="text"
                         value={formState.rut}
                         onChange={onInputChange}
-                        variant="standard"
+                       
                         name="rut"
                         disabled={rut ? false : true}
                         InputProps={{
@@ -868,7 +869,7 @@ export default function HorizontalNonLinearStepper(props) {
                         type="text"
                         value={formState.bankAccount}
                         onChange={onInputChange}
-                        variant="standard"
+                        
                         name="bankAccount"
                         disabled={bankAccount ? false : true}
                         InputProps={{
@@ -918,7 +919,7 @@ export default function HorizontalNonLinearStepper(props) {
                           ),
                         }}
                         defaultValue="Vacio"
-                        defaultValue="Vacio"
+                        
                         variant="filled"
                       />
                     </Box>
