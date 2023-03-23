@@ -21,14 +21,14 @@ import HistoryIcon from '@mui/icons-material/History';
 import { visuallyHidden } from '@mui/utils';
 
 
-function createData(fecha,antiguo,nuevo,revertir) {
+function createData(campo,antiguo,nuevo,revertir) {
   return {
-    fecha, antiguo, nuevo,revertir
+    campo, antiguo, nuevo,revertir
   };
 }
 
 const rows = [
-  createData('23/03/2023', 	'Prueba@gmail.com','Prueba2@gmail.com',<Button ><HistoryIcon/></Button>),
+  createData('Email', 	'Prueba@gmail.com','Prueba2@gmail.com',<Button ><HistoryIcon/></Button>),
   
   
 ];
@@ -65,10 +65,10 @@ function stableSort(array, comparator) {
 const headCells = [
 
   {
-    id: 'fecha',
+    id: 'campo',
     numeric: true,
     disablePadding: true,
-    label: 'Fecha',
+    label: 'Nombre Campo',
   },
   {
     id: 'antiguo',
@@ -223,19 +223,19 @@ export default function ModalTablaCampo() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.fecha);
+      const newSelected = rows.map((n) => n.campo);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, fecha) => {
-    const selectedIndex = selected.indexOf(fecha);
+  const handleClick = (event, campo) => {
+    const selectedIndex = selected.indexOf(campo);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, fecha);
+      newSelected = newSelected.concat(selected, campo);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -263,7 +263,7 @@ export default function ModalTablaCampo() {
     setDense(event.target.checked);
   };
 
-  const isSelected = (fecha) => selected.indexOf(fecha) !== -1;
+  const isSelected = (campo) => selected.indexOf(campo) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -295,7 +295,7 @@ export default function ModalTablaCampo() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.fecha);
+                  const isItemSelected = isSelected(row.campo);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
@@ -324,7 +324,7 @@ export default function ModalTablaCampo() {
                         padding="none"
                         align="left"
                       >
-                        {row.fecha}
+                        {row.campo}
                       </TableCell>
                       <TableCell align="left">{row.antiguo}</TableCell>
                       <TableCell align="left">{row.nuevo}</TableCell>

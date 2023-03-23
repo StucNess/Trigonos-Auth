@@ -5,6 +5,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ModalTablaCampo from './ModalTablaCampo';
 import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import TextField from '@mui/material/TextField';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -17,30 +19,59 @@ const style = {
   p: 4,
 };
 
-export default function ModalCampo() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
+export default function ModalCampo({valueId,hide = true,
+    setTable}) {
+  const [open, setOpen] = React.useState(hide);
+  const [idHist, setIdHist] = React.useState(9602);
+  const handleClose = () => {
+    setOpen(false);
+    setTable();
+  };
   return (
     <div>
-      <Button onClick={handleOpen}><KeyboardDoubleArrowRightIcon/></Button>
+      
       <Modal
-        keepMounted
+        
         open={open}
-        onClose={handleClose}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
+        onClose={ () =>handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
-            Historial de cambios del campo seleccionado
-          </Typography>
+        <Box >
             
-            <ModalTablaCampo/>
+            <Box sx={style}>
+            <Box className="flex justify-end">
+                    <Button
+                        
+                        onClick={handleClose}
+                        variant="contained"
+                        color="error">
+                       <HighlightOffIcon/>
+                    </Button>
+            </Box>
+            <Typography id="" variant="h6" component="h2">
+                Cambios realizados el "Traer fecha por prop"
+            </Typography>
 
-          
+            <Box className="inline-block align-middle">
+            Listado de cambios asociados al <b>ID {idHist}</b>
+            {/* <TextField
+                className="w-[100px]"
+                disabled
+               
+                defaultValue="9612"
+                /> */}
+            </Box>
+           
+                <ModalTablaCampo/>
+                
+
+            
+            </Box>
         </Box>
+
+
+        
       </Modal>
     </div>
   );

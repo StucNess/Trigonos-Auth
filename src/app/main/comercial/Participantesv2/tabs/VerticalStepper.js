@@ -1090,7 +1090,7 @@ export default function HorizontalNonLinearStepper(props) {
                         idParticipant={props.dataParticipant.id}
                       /> */}
 
-                      <TablaHistorificacion/>
+                      <TablaHistorificacion idParticipant={props.dataParticipant.id} />
 
                     </Paper>
                   </Box>
