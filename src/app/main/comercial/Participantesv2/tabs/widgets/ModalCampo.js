@@ -4,7 +4,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import ModalTablaCampo from './ModalTablaCampo';
-
+import KeyboardDoubleArrowRightIcon from '@mui/icons-material/KeyboardDoubleArrowRight';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -24,7 +24,7 @@ export default function ModalCampo() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      <Button onClick={handleOpen}><KeyboardDoubleArrowRightIcon/></Button>
       <Modal
         keepMounted
         open={open}
@@ -36,7 +36,7 @@ export default function ModalCampo() {
           <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
             Historial de cambios del campo seleccionado
           </Typography>
-
+            
             <ModalTablaCampo/>
 
           
