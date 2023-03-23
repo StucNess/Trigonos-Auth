@@ -38,7 +38,8 @@ const NominaPagoApp = () => {
               <div>
                 <span className="text-grey-700">
                   Introducir términos de búsqueda en los <b>filtros</b>{" "}
-                  superiores para encontrar al <b>cliente</b> que desee luego
+                  superiores para encontrar al <b>cliente</b> que requiera{" "}
+                   gestionar su información, luego en la parte inferior se cargaran los datos asociados.
                   {/* puede proceder a modificar sus datos asociados. */}
                 </span>
               </div>
