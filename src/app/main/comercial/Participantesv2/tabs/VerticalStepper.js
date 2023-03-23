@@ -35,6 +35,7 @@ import {
   Box,
   Alert,
 } from "@mui/material";
+import TablaHistorificacion from "./TablaHistorificacion";
 const steps = [
   "Coordinado",
   "Datos de Contacto",
@@ -1085,9 +1086,12 @@ export default function HorizontalNonLinearStepper(props) {
                     <Paper>
                       {/* Debo ingresar a la bd y consultar estos campos uwu */}
                       {/* PAPER PARA FIULTROS */}
-                      <TablaUltimosCambios
+                      {/* <TablaUltimosCambios
                         idParticipant={props.dataParticipant.id}
-                      />
+                      /> */}
+
+                      <TablaHistorificacion/>
+
                     </Paper>
                   </Box>
                 )}

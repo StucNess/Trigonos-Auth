@@ -6,7 +6,7 @@ import FacturacionMasivaAppHeader from "./ParticipantsAppHeader";
 import VerticalStepper from "./tabs/VerticalStepper";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import FiltrosParticipant from "./tabs/FiltrosParticipant";
-import PruebasStepper from "./tabs/PruebasStepper";
+
 import { CallApi } from "./store/CallApi";
 import { useEffect, useState } from "react";
 
