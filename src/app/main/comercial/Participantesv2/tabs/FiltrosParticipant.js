@@ -31,9 +31,9 @@ export default function FiltrosParticipant(props) {
   const [nameParticipants, setNameParticipants] = useState([]);
   const [dataParticipant, setDataParticipant] = useState([
     {
-      name: "El Pelícano Solar Company SpA",
-      rut: "76337599",
-      id: 141,
+      name: "EcoMetales Limited, Agencia en Chile",
+      rut: "59087530",
+      id: 1,
     },
   ]);
   useEffect(() => {
@@ -97,7 +97,6 @@ export default function FiltrosParticipant(props) {
           renderInput={(params) => <TextField {...params} label="Rut" />}
         />
       </Box>
-      
     </Box>
   );
 }
