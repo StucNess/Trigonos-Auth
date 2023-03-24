@@ -71,7 +71,9 @@ export default function FiltrosParticipant(props) {
           disablePortal
           options={nameParticipants}
           value={dataParticipant}
-          onChange={(event, newValue) => setDataParticipant(newValue)}
+          onChange={(event, newValue) =>
+            newValue != undefined && setDataParticipant(newValue)
+          }
           getOptionLabel={(option) =>
             option.business_Name || dataParticipant[0].name
           }
@@ -86,7 +88,9 @@ export default function FiltrosParticipant(props) {
         <Autocomplete
           className="m-[10px] w-[300px] md:w-[500px]"
           disablePortal
-          onChange={(event, newValue) => setDataParticipant(newValue)}
+          onChange={(event, newValue) =>
+            newValue != undefined && setDataParticipant(newValue)
+          }
           // isOptionEqualToValue={(option, value) =>
           //   dataParticipant.name == value || ""
           // }
