@@ -97,24 +97,7 @@ export default function FiltrosParticipant(props) {
           renderInput={(params) => <TextField {...params} label="Rut" />}
         />
       </Box>
-      {/* <Box className="flex  w-full items-center  mt-[30px]  ">
-        <Button
-          className="w-[150px]"
-          variant="contained"
-          color="secondary"
-          startIcon={<SearchIcon />}
-          style={{
-            m: 1,
-            width: 200,
-            margin: "0 auto",
-            display: "flex",
-
-            color: "white",
-          }}
-        >
-          Buscar
-        </Button>
-      </Box> */}
+      
     </Box>
   );
 }

@@ -13,6 +13,9 @@ import SortingSelectingTable from "./tabs/SortingSelectingTable";
 import SelectClient from "./tabs/SelectClient";
 import UploadFile from "./tabs/UploadFile";
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
+import TablaNominaBCI from "./tabs/widgets/TablaNominaBCI";
+import TablaNominaSantander from "./tabs/widgets/TablaNominaSantander";
+import TablaNominaSecurity from "./tabs/widgets/TablaNominaSecurity";
 
 
 
@@ -24,7 +27,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 const NominaPagoApp = () => {
-  
+   let tablaSelect = 1;
 
   return (
     <Root
@@ -62,9 +65,22 @@ const NominaPagoApp = () => {
             Cargar la diversificacion de las tablas aca
             */} 
            <UploadFile/>
+
+            {/*
+            HAY QUE DIFERENCIAR CUAL TABLA LE PERTENECE AL CLIENTE
+            */} 
+
           </motion.div>
           <motion.div className="  col-span-12 " >
-              <SortingSelectingTable/>
+            <TablaNominaBCI/>
+          </motion.div>
+          <motion.div className="  col-span-12 " >
+            <TablaNominaSantander/>
+          </motion.div>
+          <motion.div className="  col-span-12 " >
+          <TablaNominaSecurity/>
+              
+             
           </motion.div>
         </motion.div>
           
