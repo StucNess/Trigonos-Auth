@@ -322,7 +322,7 @@ export default function TablaUltimosCambios(props) {
       />
        {!table && (
         <ModalCampo
-          rows ={rows}
+          rows ={data}
           valueId= {histId}
           setTable={() => setTable(true)}
         />

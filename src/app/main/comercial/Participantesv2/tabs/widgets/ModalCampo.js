@@ -21,14 +21,14 @@ const style = {
 
 export default function ModalCampo({ valueId, hide = true, setTable, rows }) {
   const [open, setOpen] = React.useState(hide);
-  const [idHist, setIdHist] = React.useState(9602);
+  
   const handleClose = () => {
     setOpen(false);
     setTable();
   };
   const prueba = rows.find((p) => p.id === valueId);
-  console.log(valueId);
-  console.log(prueba);
+  
+
   return (
     <div>
       <Modal
@@ -57,7 +57,7 @@ export default function ModalCampo({ valueId, hide = true, setTable, rows }) {
                 /> */}
             </Box>
 
-            <ModalTablaCampo />
+            <ModalTablaCampo prueba={prueba} />
           </Box>
         </Box>
       </Modal>

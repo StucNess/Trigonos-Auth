@@ -22,13 +22,18 @@ import { visuallyHidden } from '@mui/utils';
 
 
 function createData(campo,antiguo,nuevo,revertir) {
-  return {
-    campo, antiguo, nuevo,revertir
-  };
+  if (nuevo != "0" && antiguo != "0" ){
+    return{
+      campo, antiguo, nuevo,revertir
+    }
+  }else{
+    return;
+  }
+  
 }
 
-const rows = [
-  createData('Email', 	'Prueba@gmail.com','Prueba2@gmail.com',<Button ><HistoryIcon/></Button>),
+let rows = [
+  // createData('Email', 	'Prueba@gmail.com','Prueba2@gmail.com',<Button ><HistoryIcon/></Button>),
   
   
 ];
@@ -66,7 +71,7 @@ const headCells = [
 
   {
     id: 'campo',
-    numeric: true,
+    numeric: false,
     disablePadding: true,
     label: 'Nombre Campo',
   },
@@ -207,13 +212,95 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function ModalTablaCampo() {
+export default function ModalTablaCampo({prueba}) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('nro_documento');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  
+  const { id,
+    editor,
+    date,
+    name_old,
+    name_new,
+    rut_old,
+    rut_new,
+    verification_code_old,
+    verification_code_new,
+    business_name_old,
+    business_name_new,
+    commercial_business_old,
+    commercial_business_new,
+    dte_reception_email_old,
+    dte_reception_email_new,
+    bank_account_old,
+    bank_account_new,
+    bank_old,
+    bank_new,
+    commercial_address_old,
+    commercial_address_new,
+    postal_address_old,
+    postal_address_new,
+    manager_old,
+    manager_new,
+    pay_contact_first_name_old,
+    pay_contact_first_name_new,
+    pay_contact_last_name_old,
+    pay_contact_last_name_new,
+    pay_contact_address_old,
+    pay_contact_address_new,
+    pay_contact_phones_old,
+    pay_contact_phones_new,
+    pay_contact_email_old,
+    pay_contact_email_new,
+    bills_contact_first_name_old,
+    bills_contact_first_name_new,
+    bills_contact_last_name_old,
+    bills_contact_last_name_new,
+    bills_contact_address_old,
+    bills_contact_address_new,
+    bills_contact_phones_old,
+    bills_contact_phones_new,
+    bills_contact_email_old,
+    bills_contact_email_new,
+    created_ts_old,
+    created_ts_new,
+    updated_ts_old,
+    updated_ts_new } = prueba;
+    // console.log(bank_account_new,bank_account_old);
+    rows = [
+
+      createData('Nombre', 	name_old,name_new,<Button ><HistoryIcon/></Button>),
+      createData('Rut', 	rut_old,rut_new,<Button ><HistoryIcon/></Button>),
+      createData('Código de verificación', 	verification_code_old,verification_code_new,<Button ><HistoryIcon/></Button>),
+      createData('Nombre Negocio', 	business_name_old,business_name_new,<Button ><HistoryIcon/></Button>),
+      createData('Nombre Comercial', 	commercial_business_old,commercial_business_new,<Button ><HistoryIcon/></Button>),
+      createData('Email recepcion dte', 	dte_reception_email_old,dte_reception_email_new,<Button ><HistoryIcon/></Button>),
+      createData('Cuenta de banco', 	bank_account_old,bank_account_new,<Button ><HistoryIcon/></Button>),
+      createData('Banco', 	bank_old,bank_new,<Button ><HistoryIcon/></Button>),
+      createData('Dirección Comercial', 	commercial_address_old,commercial_address_new,<Button ><HistoryIcon/></Button>),
+      createData('Dirección Postal', 	postal_address_old,postal_address_new,<Button ><HistoryIcon/></Button>),
+      createData('Manager', 	manager_old,manager_new,<Button ><HistoryIcon/></Button>),
+      createData('Nombre Contacto Pago ', 	pay_contact_first_name_old,pay_contact_first_name_new,<Button ><HistoryIcon/></Button>),
+      createData('Apellido Contacto Pago', 	pay_contact_last_name_old,pay_contact_last_name_new,<Button ><HistoryIcon/></Button>),
+      createData('Direccion Contacto Pago', 	pay_contact_address_old,pay_contact_address_new,<Button ><HistoryIcon/></Button>),
+      createData('Telefono Contacto Pago', 	pay_contact_phones_old,pay_contact_phones_new,<Button ><HistoryIcon/></Button>),
+      createData('Email Contacto Pago', 	pay_contact_email_old,pay_contact_email_new,<Button ><HistoryIcon/></Button>),
+      createData('Nombre Contacto Factura', 	bills_contact_first_name_old,bills_contact_first_name_new,<Button ><HistoryIcon/></Button>),
+      createData('Apellido Contacto Factura', 	bills_contact_last_name_old,bills_contact_last_name_new,<Button ><HistoryIcon/></Button>),
+      createData('Direccion Contacto Factura', 	bills_contact_address_old,bills_contact_address_new,<Button ><HistoryIcon/></Button>),
+      createData('Telefono Contacto Factura', 	bills_contact_phones_old,bills_contact_phones_new,<Button ><HistoryIcon/></Button>),
+      createData('Email Contacto Factura', 	bills_contact_email_old,bills_contact_email_new,<Button ><HistoryIcon/></Button>),
+      
+
+      
+    ]
+    rows = rows.filter(x => x!==undefined);
+
+  
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
