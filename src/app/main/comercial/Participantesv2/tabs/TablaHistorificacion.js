@@ -172,7 +172,7 @@ export default function TablaUltimosCambios(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  console.log(props.idParticipant);
+  // console.log(props.idParticipant);
   let url = `http://164.77.112.10:99/Historificacion?id=${props.idParticipant}`;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   let rows = [];
@@ -254,11 +254,16 @@ export default function TablaUltimosCambios(props) {
   };
 
   const isSelected = (codigo) => selected.indexOf(codigo) !== -1;
-
+  const historificacion_values = {
+    id: 0}
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  const getModal = () => {
+  let valueid = 0;
+  const getModal = (value) => {
+
+    console.log(value);
+    valueid = value
     setTable(false);
     }
   return (
@@ -292,7 +297,7 @@ export default function TablaUltimosCambios(props) {
                           key={column.id}
                           onClick={
                             table
-                            ? () => getModal()
+                            ? () => getModal(valuee.id)
                             : () => setTable(true)
                           }
                           align={column.align}
@@ -320,7 +325,7 @@ export default function TablaUltimosCambios(props) {
       />
        {!table && (
         <ModalCampo
-        
+          valueId = {valueid}
           setTable={() => setTable(true)}
         />
       )}

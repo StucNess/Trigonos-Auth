@@ -54,7 +54,7 @@ export default function ModalCampo({valueId,hide = true,
             </Typography>
 
             <Box className="inline-block align-middle">
-            Listado de cambios asociados al <b>ID {idHist}</b>
+            Listado de cambios asociados al <b>ID {valueId}</b>
             {/* <TextField
                 className="w-[100px]"
                 disabled
