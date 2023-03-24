@@ -33,6 +33,7 @@ export default function FiltrosParticipant(props) {
     {
       name: "El Pelícano Solar Company SpA",
       rut: "76337599",
+      id: 141,
     },
   ]);
   useEffect(() => {
