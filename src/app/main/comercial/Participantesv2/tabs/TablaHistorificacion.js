@@ -172,7 +172,8 @@ export default function TablaUltimosCambios(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [histId, setHistId] = useState(0)
+  const [histId, setHistId] = useState(0);
+  const [histDate, setHistDate] = useState('')
   console.log(props.idParticipant);
   let url = `http://164.77.112.10:99/Historificacion?id=${props.idParticipant}`;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -259,12 +260,13 @@ export default function TablaUltimosCambios(props) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  const getModal = (rows) => {
+  const getModal = (rows,date) => {
     setHistId(rows);
+    setHistDate(date);
     setTable(false);
     }
   return (
-    <Box className=" relative mdmax:max-w-[500px] p-[30px]">
+    <Box className=" relative lfmax:w-[600px] p-[30px]">
       <TableContainer>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -294,7 +296,7 @@ export default function TablaUltimosCambios(props) {
                           key={column.id}
                           onClick={
                             table
-                            ? () => getModal(valuee.id)
+                            ? () => getModal(valuee.id,valuee.date)
                             : () => setTable(true)
                           }
                           align={column.align}
@@ -324,6 +326,7 @@ export default function TablaUltimosCambios(props) {
         <ModalCampo
           rows ={data}
           valueId= {histId}
+          date={histDate}
           setTable={() => setTable(true)}
         />
       )}

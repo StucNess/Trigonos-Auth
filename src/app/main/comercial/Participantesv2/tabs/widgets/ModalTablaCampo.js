@@ -19,6 +19,7 @@ import { Button } from '@mui/material';
 import { HiDownload } from  "react-icons/hi";
 import HistoryIcon from '@mui/icons-material/History';
 import { visuallyHidden } from '@mui/utils';
+import { padding } from '@mui/system';
 
 
 function createData(campo,antiguo,nuevo,revertir) {
@@ -107,7 +108,8 @@ function EnhancedTableHead(props) {
 
   return (
     <TableHead>
-      <TableRow>
+      <TableRow  >
+     
         {/* <TableCell padding="checkbox">
           <Checkbox
             color="primary"
@@ -121,6 +123,7 @@ function EnhancedTableHead(props) {
         </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
+            sx={{paddingLeft:5}}
             key={headCell.id}
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
@@ -361,7 +364,7 @@ export default function ModalTablaCampo({prueba}) {
       <Paper sx={{ width: '100%', mb: 2 }}>
      
         
-        <EnhancedTableToolbar numSelected={selected.length} />
+        
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -369,6 +372,7 @@ export default function ModalTablaCampo({prueba}) {
             size={dense ? 'small' : 'medium'}
           >
             <EnhancedTableHead
+             
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
@@ -387,6 +391,8 @@ export default function ModalTablaCampo({prueba}) {
 
                   return (
                     <TableRow
+                    
+                    
                     //   hover
                     //   onClick={(event) => handleClick(event, row.fecha)}
                     //   role="checkbox"
@@ -395,27 +401,21 @@ export default function ModalTablaCampo({prueba}) {
                     //   key={row.fecha}
                     //   selected={isItemSelected}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell> */}
+                      
                       <TableCell
+                         sx={{paddingLeft:5}}
                         component="th"
                         id={labelId}
                         scope="row"
                         padding="none"
                         align="left"
+                        
                       >
                         {row.campo}
                       </TableCell>
-                      <TableCell align="left">{row.antiguo}</TableCell>
-                      <TableCell align="left">{row.nuevo}</TableCell>
-                      <TableCell align="left">{row.revertir}</TableCell>
+                      <TableCell align="left" sx={{paddingLeft:5}}>{row.antiguo}</TableCell>
+                      <TableCell align="left" sx={{paddingLeft:5}}>{row.nuevo}</TableCell>
+                      <TableCell align="left" sx={{paddingLeft:5}}>{row.revertir}</TableCell>
                      
                     </TableRow>
                   );
