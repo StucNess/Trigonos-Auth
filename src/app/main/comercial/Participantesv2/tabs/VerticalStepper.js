@@ -127,7 +127,7 @@ export default function HorizontalNonLinearStepper(props) {
         bank: props.dataParticipant.bank,
         banksName: props.dataParticipant.banksName,
         commercialAddress: props.dataParticipant.commercial_address,
-        postalAddress: props.dataParticipant.commercial_address, //REVISAR
+        postalAddress: props.dataParticipant.postal_address, //REVISAR
         manager: props.dataParticipant.manager,
         payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
         payContactLastName: props.dataParticipant.pay_contact_last_name,
