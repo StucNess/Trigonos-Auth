@@ -19,13 +19,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ModalCampo from "./widgets/ModalCampo";
 
-function createData(
-  id,
-  editor,
-  date,
-  updated_ts_old,
-  updated_ts_new
-) {
+function createData(id, editor, date, updated_ts_old, updated_ts_new) {
   return {
     id,
     editor,
@@ -72,7 +66,6 @@ const columns = [
   { id: "date", label: "date", minWidth: 40 },
   { id: "updated_ts_old", label: "Fecha Actualización Antigua", minWidth: 40 },
   { id: "updated_ts_new", label: "Fecha Actualización Nueva", minWidth: 40 },
-  
 ];
 
 function EnhancedTableHead(props) {
@@ -92,19 +85,16 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align="left"
             padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
+            sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
+              onClick={createSortHandler(headCell.id)}>
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -146,8 +136,7 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}
-    >
+      }}>
       <Box className="flex flex-col w-full">
         <Box className="flex flex-row w-full">
           <Typography className=" text-4xl font-extrabold text-center  tracking-tight leading-tight w-full">
@@ -155,8 +144,6 @@ function EnhancedTableToolbar(props) {
           </Typography>
         </Box>
       </Box>
-
-     
     </Toolbar>
   );
 }
@@ -172,8 +159,7 @@ export default function TablaUltimosCambios(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [histId, setHistId] = useState(0)
-  console.log(props.idParticipant);
+  const [histId, setHistId] = useState(0);
   let url = `http://164.77.112.10:99/Historificacion?id=${props.idParticipant}`;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   let rows = [];
@@ -183,7 +169,6 @@ export default function TablaUltimosCambios(props) {
     (async () => {
       const dataHist = await axios.get(url);
       setData(dataHist.data);
-      console.log(dataHist.data);
     })();
   }, [props.idParticipant]);
   data.map(
@@ -191,7 +176,7 @@ export default function TablaUltimosCambios(props) {
       id,
       editor,
       date,
-      
+
       updated_ts_old,
       updated_ts_new,
     }) =>
@@ -200,7 +185,7 @@ export default function TablaUltimosCambios(props) {
           id,
           editor,
           date,
-          
+
           updated_ts_old,
           updated_ts_new
         )
@@ -262,7 +247,7 @@ export default function TablaUltimosCambios(props) {
   const getModal = (rows) => {
     setHistId(rows);
     setTable(false);
-    }
+  };
   return (
     <Box className=" relative mdmax:max-w-[500px] p-[30px]">
       <TableContainer>
@@ -273,8 +258,7 @@ export default function TablaUltimosCambios(props) {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
+                  style={{ minWidth: column.minWidth }}>
                   {column.label}
                 </TableCell>
               ))}
@@ -294,11 +278,10 @@ export default function TablaUltimosCambios(props) {
                           key={column.id}
                           onClick={
                             table
-                            ? () => getModal(valuee.id)
-                            : () => setTable(true)
+                              ? () => getModal(valuee.id)
+                              : () => setTable(true)
                           }
-                          align={column.align}
-                        >
+                          align={column.align}>
                           {column.format && typeof value === "number"
                             ? column.format(value)
                             : value}
@@ -320,14 +303,13 @@ export default function TablaUltimosCambios(props) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-       {!table && (
+      {!table && (
         <ModalCampo
-          rows ={rows}
-          valueId= {histId}
+          rows={data}
+          valueId={histId}
           setTable={() => setTable(true)}
         />
       )}
     </Box>
-    
   );
 }

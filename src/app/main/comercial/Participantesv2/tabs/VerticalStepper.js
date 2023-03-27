@@ -272,7 +272,6 @@ export default function HorizontalNonLinearStepper(props) {
                 </Typography> */
   }
   const ApiPatch = () => {
-    console.log(formState);
     const apiPatchParticipante =
       `http://164.77.112.10:99/api/Participantes?` +
       `id=${formState.id}&` +
@@ -1022,7 +1021,7 @@ export default function HorizontalNonLinearStepper(props) {
                         //     </InputAdornment>
                         //   ),
                         // }}
-                       >
+                      >
                         {banks.map((data) => (
                           <MenuItem key={data.id} value={data.name}>
                             {data.name}
@@ -1090,8 +1089,9 @@ export default function HorizontalNonLinearStepper(props) {
                         idParticipant={props.dataParticipant.id}
                       /> */}
 
-                      <TablaHistorificacion idParticipant={props.dataParticipant.id} />
-
+                      <TablaHistorificacion
+                        idParticipant={props.dataParticipant.id}
+                      />
                     </Paper>
                   </Box>
                 )}

@@ -27,8 +27,7 @@ export default function ModalCampo({ valueId, hide = true, setTable, rows }) {
     setTable();
   };
   const prueba = rows.find((p) => p.id === valueId);
-  console.log(valueId);
-  console.log(prueba);
+
   return (
     <div>
       <Modal
@@ -57,7 +56,7 @@ export default function ModalCampo({ valueId, hide = true, setTable, rows }) {
                 /> */}
             </Box>
 
-            <ModalTablaCampo />
+            <ModalTablaCampo data={prueba} />
           </Box>
         </Box>
       </Modal>

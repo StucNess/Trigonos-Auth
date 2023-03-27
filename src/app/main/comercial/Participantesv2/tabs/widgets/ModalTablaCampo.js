@@ -1,37 +1,32 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { alpha } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { Button } from '@mui/material';
-import { HiDownload } from  "react-icons/hi";
-import HistoryIcon from '@mui/icons-material/History';
-import { visuallyHidden } from '@mui/utils';
+import { Button } from "@mui/material";
+import { HiDownload } from "react-icons/hi";
+import HistoryIcon from "@mui/icons-material/History";
+import { visuallyHidden } from "@mui/utils";
 
-
-function createData(campo,antiguo,nuevo,revertir) {
+function createData(campo, antiguo, nuevo, revertir) {
   return {
-    campo, antiguo, nuevo,revertir
+    campo,
+    antiguo,
+    nuevo,
   };
 }
-
-const rows = [
-  createData('Email', 	'Prueba@gmail.com','Prueba2@gmail.com',<Button ><HistoryIcon/></Button>),
-  
-  
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -44,7 +39,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -63,39 +58,34 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 const headCells = [
-
   {
-    id: 'campo',
+    id: "campo",
     numeric: true,
     disablePadding: true,
-    label: 'Nombre Campo',
+    label: "Nombre Campo",
   },
   {
-    id: 'antiguo',
+    id: "antiguo",
     numeric: false,
     disablePadding: false,
-    label: 'Antiguo',
+    label: "Antiguo",
   },
   {
-    id: 'nuevo',
+    id: "nuevo",
     numeric: false,
     disablePadding: false,
-    label: 'Nuevo',
+    label: "Nuevo",
   },
-  {
-    id: 'revertir',
-    numeric: false,
-    disablePadding: false,
-    label: 'Revertir',
-  },
-  
-  
-  
-  
 ];
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -119,18 +109,16 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
+            padding={headCell.disablePadding ? "none" : "normal"}
+            sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}>
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -145,7 +133,7 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
@@ -161,44 +149,33 @@ function EnhancedTableToolbar(props) {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
         }),
-      }}
-    >
-      
+      }}>
       {numSelected > 1 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div"
-        >
-         {numSelected} selecionados
+          component="div">
+          {numSelected} selecionados
         </Typography>
-      ):numSelected ===1 ? (
+      ) : numSelected === 1 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div"
-        >
-         {numSelected} seleccionado
+          component="div">
+          {numSelected} seleccionado
         </Typography>
       ) : (
-      
-          <Typography
-           
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            {/* TITULO POSIBLE */}
-          </Typography>
-      
-        
+        <Typography variant="h6" id="tableTitle" component="div">
+          {/* TITULO POSIBLE */}
+        </Typography>
       )}
-
-      
     </Toolbar>
   );
 }
@@ -206,18 +183,98 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-
-export default function ModalTablaCampo() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('nro_documento');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+// let rows;
+let columnsNames = [
+  "name",
+  "rut",
+  "verification_code",
+  "business_name",
+  "commercial_business",
+  "dte_reception_email",
+  "bank_account",
+  "bank",
+  "commercial_address",
+  "postal_address",
+  "manager",
+  "pay_contact_first_name",
+  "pay_contact_last_name",
+  "pay_contact_address",
+  "pay_contact_phones",
+  "pay_contact_email",
+  "bills_contact_first_name",
+  "bills_contact_last_name",
+  "bills_contact_address",
+  "bills_contact_phones",
+  "bills_contact_email",
+];
+let columnsNameReal = [
+  "name_old",
+  "name_new",
+  "rut_old",
+  "rut_new",
+  "verification_code_old",
+  "verification_code_new",
+  "business_name_old",
+  "business_name_new",
+  "commercial_business_old",
+  "commercial_business_new",
+  "dte_reception_email_old",
+  "dte_reception_email_new",
+  "bank_account_old",
+  "bank_account_new",
+  "bank_old",
+  "bank_new",
+  "commercial_address_old",
+  "commercial_address_new",
+  "postal_address_old",
+  "postal_address_new",
+  "manager_old",
+  "manager_new",
+  "pay_contact_first_name_old",
+  "pay_contact_first_name_new",
+  "pay_contact_last_name_old",
+  "pay_contact_last_name_new",
+  "pay_contact_address_old",
+  "pay_contact_address_new",
+  "pay_contact_phones_old",
+  "pay_contact_phones_new",
+  "pay_contact_email_old",
+  "pay_contact_email_new",
+  "bills_contact_first_name_old",
+  "bills_contact_first_name_new",
+  "bills_contact_last_name_old",
+  "bills_contact_last_name_new",
+  "bills_contact_address_old",
+  "bills_contact_address_new",
+  "bills_contact_phones_old",
+  "bills_contact_phones_new",
+  "bills_contact_email_old",
+  "bills_contact_email_new",
+];
+export default function ModalTablaCampo(props) {
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("nro_documento");
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const rows = [createData("Email", "Prueba@gmail.com", "Prueba2@gmail.com")];
+  let arrysito = [];
+  for (let i in props.data) {
+    console.log(`${i},`);
+    if (props.data[i] != "0" && props.data[i] != 0) {
+      // console.log(`CAMPO = ${i}  DATO = ${props.data[i]}`);
+      //
+      if (!columnsNameReal.includes(i)) {
+        arrysito.push(i);
+      }
+      console.log(arrysito);
+    }
+  }
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -243,7 +300,7 @@ export default function ModalTablaCampo() {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -270,17 +327,14 @@ export default function ModalTablaCampo() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-     
-        
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-          >
+            size={dense ? "small" : "medium"}>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -322,14 +376,12 @@ export default function ModalTablaCampo() {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        align="left"
-                      >
+                        align="left">
                         {row.campo}
                       </TableCell>
                       <TableCell align="left">{row.antiguo}</TableCell>
                       <TableCell align="left">{row.nuevo}</TableCell>
                       <TableCell align="left">{row.revertir}</TableCell>
-                     
                     </TableRow>
                   );
                 })}
@@ -337,8 +389,7 @@ export default function ModalTablaCampo() {
                 <TableRow
                   style={{
                     height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
+                  }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
@@ -347,7 +398,7 @@ export default function ModalTablaCampo() {
         </TableContainer>
         <TablePagination
           labelRowsPerPage="Filas por página"
-          rowsPerPageOptions={[5, 10, 25 ]}
+          rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
