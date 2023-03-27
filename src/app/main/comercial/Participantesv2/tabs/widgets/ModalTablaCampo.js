@@ -19,14 +19,27 @@ import { Button } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
 import HistoryIcon from "@mui/icons-material/History";
 import { visuallyHidden } from "@mui/utils";
+import { padding } from "@mui/system";
 
 function createData(campo, antiguo, nuevo, revertir) {
   return {
     campo,
     antiguo,
     nuevo,
+    revertir,
   };
 }
+
+const rows = [
+  createData(
+    "Email",
+    "Prueba@gmail.com",
+    "Prueba2@gmail.com",
+    <Button>
+      <HistoryIcon />
+    </Button>
+  ),
+];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -106,6 +119,7 @@ function EnhancedTableHead(props) {
         </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
+            sx={{ paddingLeft: 5 }}
             key={headCell.id}
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
@@ -183,94 +197,14 @@ function EnhancedTableToolbar(props) {
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-// let rows;
-let columnsNames = [
-  "name",
-  "rut",
-  "verification_code",
-  "business_name",
-  "commercial_business",
-  "dte_reception_email",
-  "bank_account",
-  "bank",
-  "commercial_address",
-  "postal_address",
-  "manager",
-  "pay_contact_first_name",
-  "pay_contact_last_name",
-  "pay_contact_address",
-  "pay_contact_phones",
-  "pay_contact_email",
-  "bills_contact_first_name",
-  "bills_contact_last_name",
-  "bills_contact_address",
-  "bills_contact_phones",
-  "bills_contact_email",
-];
-let columnsNameReal = [
-  "name_old",
-  "name_new",
-  "rut_old",
-  "rut_new",
-  "verification_code_old",
-  "verification_code_new",
-  "business_name_old",
-  "business_name_new",
-  "commercial_business_old",
-  "commercial_business_new",
-  "dte_reception_email_old",
-  "dte_reception_email_new",
-  "bank_account_old",
-  "bank_account_new",
-  "bank_old",
-  "bank_new",
-  "commercial_address_old",
-  "commercial_address_new",
-  "postal_address_old",
-  "postal_address_new",
-  "manager_old",
-  "manager_new",
-  "pay_contact_first_name_old",
-  "pay_contact_first_name_new",
-  "pay_contact_last_name_old",
-  "pay_contact_last_name_new",
-  "pay_contact_address_old",
-  "pay_contact_address_new",
-  "pay_contact_phones_old",
-  "pay_contact_phones_new",
-  "pay_contact_email_old",
-  "pay_contact_email_new",
-  "bills_contact_first_name_old",
-  "bills_contact_first_name_new",
-  "bills_contact_last_name_old",
-  "bills_contact_last_name_new",
-  "bills_contact_address_old",
-  "bills_contact_address_new",
-  "bills_contact_phones_old",
-  "bills_contact_phones_new",
-  "bills_contact_email_old",
-  "bills_contact_email_new",
-];
-export default function ModalTablaCampo(props) {
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("nro_documento");
-  const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
-  const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const rows = [createData("Email", "Prueba@gmail.com", "Prueba2@gmail.com")];
-  let arrysito = [];
-  for (let i in props.data) {
-    console.log(`${i},`);
-    if (props.data[i] != "0" && props.data[i] != 0) {
-      // console.log(`CAMPO = ${i}  DATO = ${props.data[i]}`);
-      //
-      if (!columnsNameReal.includes(i)) {
-        arrysito.push(i);
-      }
-      console.log(arrysito);
-    }
-  }
+
+export default function ModalTablaCampo() {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("nro_documento");
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -354,6 +288,7 @@ export default function ModalTablaCampo(props) {
 
                   return (
                     <TableRow
+
                     //   hover
                     //   onClick={(event) => handleClick(event, row.fecha)}
                     //   role="checkbox"
@@ -362,16 +297,8 @@ export default function ModalTablaCampo(props) {
                     //   key={row.fecha}
                     //   selected={isItemSelected}
                     >
-                      {/* <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell> */}
                       <TableCell
+                        sx={{ paddingLeft: 5 }}
                         component="th"
                         id={labelId}
                         scope="row"

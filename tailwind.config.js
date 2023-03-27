@@ -11,7 +11,7 @@ module.exports = {
       sm: '600px',
       ssm: '768px',
       md: '960px',
-      
+      lf: '1100px',
       lg: '1280px',
       xl: '1920px',
       //Rangos
@@ -35,6 +35,7 @@ module.exports = {
       hd:'1534px',//minimo
       tvdoskmax: {'max': '2301px'},
       hdmas: {'max': '1535px'},//máximo
+      lfmax:{'max': '1100px'},
       lgmax:{'max':'1281px'},
       smmax: {'max': '601px'},//máximo
       ssmmax: {'max':'769px'},

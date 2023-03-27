@@ -7,6 +7,7 @@ import ModalTablaCampo from "./ModalTablaCampo";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import TextField from "@mui/material/TextField";
+import { Paper } from "@mui/material";
 const style = {
   position: "absolute",
   top: "50%",
@@ -19,9 +20,15 @@ const style = {
   p: 4,
 };
 
-export default function ModalCampo({ valueId, hide = true, setTable, rows }) {
+export default function ModalCampo({
+  valueId,
+  date,
+  hide = true,
+  setTable,
+  rows,
+}) {
   const [open, setOpen] = React.useState(hide);
-  const [idHist, setIdHist] = React.useState(9602);
+
   const handleClose = () => {
     setOpen(false);
     setTable();
@@ -42,11 +49,11 @@ export default function ModalCampo({ valueId, hide = true, setTable, rows }) {
                 <HighlightOffIcon />
               </Button>
             </Box>
-            <Typography id="" variant="h6" component="h2">
-              Cambios realizados el "Traer fecha por prop"
-            </Typography>
 
-            <Box className="inline-block align-middle">
+            <Typography variant="h6" className="mb-[10px]" color="primary">
+              Cambios realizados el <b>{date}</b>
+            </Typography>
+            <Box className="inline-block align-middle mb-[10px]">
               Listado de cambios asociados al <b>ID {valueId}</b>
               {/* <TextField
                 className="w-[100px]"
@@ -56,7 +63,8 @@ export default function ModalCampo({ valueId, hide = true, setTable, rows }) {
                 /> */}
             </Box>
 
-            <ModalTablaCampo data={prueba} />
+            {/* <ModalTablaCampo data={prueba} /> */}
+            <ModalTablaCampo prueba={prueba} />
           </Box>
         </Box>
       </Modal>
