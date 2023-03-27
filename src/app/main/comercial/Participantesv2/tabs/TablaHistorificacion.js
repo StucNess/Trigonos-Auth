@@ -174,6 +174,7 @@ export default function TablaUltimosCambios(props) {
   const [dense, setDense] = React.useState(false);
   const [histId, setHistId] = useState(0);
   const [histDate, setHistDate] = useState('')
+
   console.log(props.idParticipant);
   let url = `http://164.77.112.10:99/Historificacion?id=${props.idParticipant}`;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -266,8 +267,11 @@ export default function TablaUltimosCambios(props) {
     setTable(false);
     }
   return (
-    <Box className=" relative lfmax:w-[600px] p-[30px]">
-      <TableContainer>
+    <Box className=" relative lfmax:w-[600px] p-[30px] ">
+      <TableContainer >
+        <Box sx={{ maxHeight: 360 }} overflow-y-auto >
+
+      
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -312,9 +316,11 @@ export default function TablaUltimosCambios(props) {
               })}
           </TableBody>
         </Table>
+        </Box>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[6, 10, 25]}
+        labelRowsPerPage="Filas por página"
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
