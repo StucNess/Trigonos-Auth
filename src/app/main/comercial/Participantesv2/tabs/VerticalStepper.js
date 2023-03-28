@@ -21,6 +21,11 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Select from "@mui/material/Select";
 // import TextField from "@mui/material/TextField";
 import TablaUltimosCambios from "./widgets/TablaUltimosCambios";
@@ -36,6 +41,7 @@ import {
   Alert,
 } from "@mui/material";
 import TablaHistorificacion from "./TablaHistorificacion";
+import AlertCambios from "./widgets/AlertCambios";
 const steps = [
   "Coordinado",
   "Datos de Contacto",
@@ -133,7 +139,22 @@ export default function HorizontalNonLinearStepper(props) {
   });
   const [activeButton, setActiveButton] = useState(false)
   const [countActive, setCountActive] = useState(0)
+  const [open, setOpen] = useState(false);
 
+  const handleClickOpen = () => {
+    setOpen(true);
+   
+  };
+  
+  const handleCloseAlert = () => {
+    setOpen(false);
+  };
+  
+  const handleCloseAlertSubmit = () => {
+    ApiPatch();
+    setOpen(false);
+
+  };
   const onInputChange = ({ target }) => {
     const { name, value } = target;
     setFormState({
@@ -1418,9 +1439,31 @@ useEffect(() => {
           color="primary"
           // startIcon={<SearchIcon />}
           // disabled={activeStep === 0}
-          onClick={ApiPatch}>
+          onClick={handleClickOpen}>
           Guardar
         </Button>
+        
+        <Dialog
+          open={open}
+          onClose={handleCloseAlert}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"¿Estas seguro de guardar estos cambios?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Mostrar listado de cambios
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAlert}>Cancelar</Button>
+            <Button onClick={handleCloseAlertSubmit} autoFocus>
+              Guardar
+            </Button>
+          </DialogActions>
+        </Dialog>
         {/* {activeStep !== steps.length &&
           (completed[activeStep] ? (
             <Typography variant="caption" sx={{ display: "inline-block" }}>
