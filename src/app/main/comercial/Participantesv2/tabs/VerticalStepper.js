@@ -21,6 +21,11 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Select from "@mui/material/Select";
 // import TextField from "@mui/material/TextField";
 import TablaUltimosCambios from "./widgets/TablaUltimosCambios";
@@ -36,6 +41,7 @@ import {
   Alert,
 } from "@mui/material";
 import TablaHistorificacion from "./TablaHistorificacion";
+import AlertCambios from "./widgets/AlertCambios";
 const steps = [
   "Coordinado",
   "Datos de Contacto",
@@ -53,6 +59,7 @@ const iconSteps = [
 let LabelSetep = "";
 let dataBank;
 let banks;
+
 export default function HorizontalNonLinearStepper(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
@@ -60,6 +67,7 @@ export default function HorizontalNonLinearStepper(props) {
   const [grupo, setGrupo] = useState("");
   const [erp, setErp] = useState("");
   const [bankk, setBankk] = useState("");
+
   const [formState, setFormState] = useState({
     id: props.dataParticipant.id,
     name: props.dataParticipant.name,
@@ -104,13 +112,60 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactPhones: false,
     billsContactEmail: false,
   });
+  const [dataConfirm, setDataConfirm] = useState({
+    id: props.dataParticipant.id,
+    name: props.dataParticipant.name,
+    rut: props.dataParticipant.rut,
+    verificationCode: props.dataParticipant.verification_Code,
+    businessName: props.dataParticipant.business_Name,
+    commercialBusiness: props.dataParticipant.commercial_Business,
+    email: props.dataParticipant.dte_Reception_Email,
+    bankAccount: props.dataParticipant.bank_Account,
+    bank: props.dataParticipant.bank,
+    banksName: props.dataParticipant.banksName,
+    commercialAddress: props.dataParticipant.commercial_address,
+    postalAddress: props.dataParticipant.postal_address, //REVISAR
+    manager: props.dataParticipant.manager,
+    payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
+    payContactLastName: props.dataParticipant.pay_contact_last_name,
+    payContactAddress: props.dataParticipant.pay_contact_address,
+    payContactPhones: props.dataParticipant.pay_contact_phones,
+    payContactEmail: props.dataParticipant.pay_contact_email,
+    billsContactLastName: props.dataParticipant.bills_contact_last_name,
+    billsContactFirstName: props.dataParticipant.bills_contact_first_name,
+    billsContactAddress: props.dataParticipant.bills_contact_address,
+    billsContactPhones: props.dataParticipant.bills_contact_phones,
+    billsContactEmail: props.dataParticipant.bills_contact_email,
+  });
+  const [activeButton, setActiveButton] = useState(false)
+  const [countActive, setCountActive] = useState(0)
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+   
+  };
+  
+  const handleCloseAlert = () => {
+    setOpen(false);
+  };
+  
+  const handleCloseAlertSubmit = () => {
+    ApiPatch();
+    setOpen(false);
+
+  };
   const onInputChange = ({ target }) => {
     const { name, value } = target;
     setFormState({
       ...formState,
       [name]: value,
     });
+    console.log(formState.verificationCode);
   };
+  
+  
+  
   useEffect(() => {
     (async () => {
       dataBank = await CallBanks(props.dataParticipant.bank);
@@ -132,14 +187,42 @@ export default function HorizontalNonLinearStepper(props) {
         payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
         payContactLastName: props.dataParticipant.pay_contact_last_name,
         payContactAddress: props.dataParticipant.pay_contact_address,
-        payContactPhones: props.dataParticipant.pay_contact_phones,
+        payContactPhones: props.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g, ''),
         payContactEmail: props.dataParticipant.pay_contact_email,
         billsContactLastName: props.dataParticipant.bills_contact_last_name,
         billsContactFirstName: props.dataParticipant.bills_contact_first_name,
         billsContactAddress: props.dataParticipant.bills_contact_address,
-        billsContactPhones: props.dataParticipant.bills_contact_phones,
+        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g, ''),
         billsContactEmail: props.dataParticipant.bills_contact_email,
       });
+      setDataConfirm({
+        id: props.dataParticipant.id,
+        name: props.dataParticipant.name,
+        rut: props.dataParticipant.rut,
+        verificationCode: props.dataParticipant.verification_Code,
+        businessName: props.dataParticipant.business_Name,
+        commercialBusiness: props.dataParticipant.commercial_Business,
+        email: props.dataParticipant.dte_Reception_Email,
+        bankAccount: props.dataParticipant.bank_Account,
+        bank: props.dataParticipant.bank,
+        banksName: props.dataParticipant.banksName,
+        commercialAddress: props.dataParticipant.commercial_address,
+        postalAddress: props.dataParticipant.postal_address, //REVISAR
+        manager: props.dataParticipant.manager,
+        payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
+        payContactLastName: props.dataParticipant.pay_contact_last_name,
+        payContactAddress: props.dataParticipant.pay_contact_address,
+        payContactPhones: props.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g, ''),
+        payContactEmail: props.dataParticipant.pay_contact_email,
+        billsContactLastName: props.dataParticipant.bills_contact_last_name,
+        billsContactFirstName: props.dataParticipant.bills_contact_first_name,
+        billsContactAddress: props.dataParticipant.bills_contact_address,
+        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g, ''),
+        billsContactEmail: props.dataParticipant.bills_contact_email,
+      });
+    
+      console.log(props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g, ''));
+      
     })();
   }, [props.dataParticipant.id]);
   useEffect(() => {
@@ -159,6 +242,7 @@ export default function HorizontalNonLinearStepper(props) {
       }, 5000);
     }
   }, [alertOk, alertError]);
+
   const {
     rut,
     name,
@@ -271,44 +355,80 @@ export default function HorizontalNonLinearStepper(props) {
                  {label}
                 </Typography> */
   }
+  const FetchDatas = ()=>{
+    var encuentra = false;
+    for(var i =0; i < p.tags.length;i++){
+        encuentra = false;
+        for(var j =0; j < tags.length;j++){
+            if(p.tags[i] == tags[j]){
+                encuentra = true;
+                break;
+            }
+        }
+        if(!encuenta){
+          alert("los arreglos no son iguales");
+          break;
+        }
+    }
+    if(encuentra){
+        alert("si son iguales");
+    }
+  }
+
   const ApiPatch = () => {
-    const apiPatchParticipante =
-      `http://164.77.112.10:99/api/Participantes?` +
-      `id=${formState.id}&` +
-      `Name=${formState.name}&` +
-      `Rut=${formState.rut}&` +
-      `Verification_Code=${formState.verificationCode}&` +
-      `Business_Name=${formState.businessName}&` +
-      `Commercial_Business=${formState.commercialBusiness}&` +
-      `Dte_Reception_Email=${formState.email}&` +
-      `Bank_Account=${formState.bankAccount}&` +
-      `bank=${formState.bank}&` +
-      `Commercial_address=${formState.commercialAddress}&` +
-      `Postal_address=${formState.postalAddress}&` +
-      `Manager=${formState.manager}&` +
-      `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
-      `Pay_contact_last_name=${formState.payContactLastName}&` +
-      `Pay_contact_address=${formState.payContactAddress}&` +
-      `Pay_contact_phones=${formState.payContactPhones}&` +
-      `Pay_contact_email=${formState.payContactEmail}&` +
-      `Bills_contact_first_name=${formState.billsContactFirstName}&` +
-      `Bills_contact_last_name=${formState.billsContactLastName}&` +
-      `Bills_contact_address=${formState.billsContactAddress}&` +
-      `Bills_contact_phones=${formState.billsContactPhones}&` +
-      `Bills_contact_email=${formState.billsContactEmail}`;
-    const res = axios
-      .patch(apiPatchParticipante)
-      .then((response) => {
-        setAlertOk(true);
-      })
-      .catch((error) => {
-        setAlertError(true);
-      });
-    //
+    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
+    if(isEqual){
+      console.log('No se realiza envio a API');
+      setAlertError(true);
+    }else{
+      let formatBillsContactPhones = "[\""+formState.billsContactPhones.replace(/,/g, '","')+ "\"]";
+      let formatpayContactPhones = "[\""+formState.payContactPhones.replace(/,/g, '","')+ "\"]";
+        // console.log(pruebabillsContactPhones);
+      const apiPatchParticipante =
+        `http://164.77.112.10:99/api/Participantes?` +
+        `id=${formState.id}&` +
+        `Name=${formState.name}&` +
+        `Rut=${formState.rut}&` +
+        `Verification_Code=${formState.verificationCode}&` +
+        `Business_Name=${formState.businessName}&` +
+        `Commercial_Business=${formState.commercialBusiness}&` +
+        `Dte_Reception_Email=${formState.email}&` +
+        `Bank_Account=${formState.bankAccount}&` +
+        `bank=${formState.bank}&` +
+        `Commercial_address=${formState.commercialAddress}&` +
+        `Postal_address=${formState.postalAddress}&` +
+        `Manager=${formState.manager}&` +
+        `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
+        `Pay_contact_last_name=${formState.payContactLastName}&` +
+        `Pay_contact_address=${formState.payContactAddress}&` +
+        `Pay_contact_phones=${formatpayContactPhones}&` +
+        `Pay_contact_email=${formState.payContactEmail}&` +
+        `Bills_contact_first_name=${formState.billsContactFirstName}&` +
+        `Bills_contact_last_name=${formState.billsContactLastName}&` +
+        `Bills_contact_address=${formState.billsContactAddress}&` +
+        `Bills_contact_phones=${formatBillsContactPhones}&` +
+        `Bills_contact_email=${formState.billsContactEmail}`;
+      const res = axios
+        .patch(apiPatchParticipante)
+        .then((response) => {
+          setAlertOk(true);
+        })
+        .catch((error) => {
+          setAlertError(true);
+        });
+      
+    }
+    
+    
   };
+useEffect(() => {
+  countActive ===0?setActiveButton(false):setActiveButton(true);
+}, [countActive])
+
+  
   return (
     <Box className="w-full h-full">
-      <Box className="flex w-full h-full" sx={{ width: "100%" }}>
+      <Box  className="flex w-full h-full" sx={{ width: "100%" }} >
         {/* SECCION VERTICAL IZQUIERDA */}
         <Box className="pr-[10px]  md:min-w-[300px] h-full">
           <Typography variant="h6" className="mb-4" color="primary">
@@ -395,14 +515,19 @@ export default function HorizontalNonLinearStepper(props) {
                               {name ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         name: false,
                                       });
+                                     
+                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -412,16 +537,23 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         name: false,
                                       });
+                                 
+                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       name: true,
+                                      
                                     });
+                                    setCountActive(countActive+1);
+                                    
                                   }}
                                 />
                               )}
@@ -445,14 +577,17 @@ export default function HorizontalNonLinearStepper(props) {
                               {businessName ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         businessName: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -463,16 +598,19 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         businessName: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       businessName: true,
                                     });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -496,14 +634,17 @@ export default function HorizontalNonLinearStepper(props) {
                               {commercialBusiness ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         commercialBusiness: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -515,16 +656,19 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         commercialBusiness: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       commercialBusiness: true,
                                     });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -569,14 +713,17 @@ export default function HorizontalNonLinearStepper(props) {
                               {rut ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         rut: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -586,16 +733,19 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         rut: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       rut: true,
                                     });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -627,14 +777,17 @@ export default function HorizontalNonLinearStepper(props) {
                               {commercialAddress ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         commercialAddress: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -646,16 +799,19 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         commercialAddress: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       commercialAddress: true,
                                     });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -695,14 +851,17 @@ export default function HorizontalNonLinearStepper(props) {
                               {email ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         email: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -714,16 +873,136 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         email: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       email: true,
                                     });
+                                    setCountActive(countActive+1);
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
+                        variant="filled"
+                      />
+                      <TextField
+                        className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                        label="Teléfono de Contacto Pago"
+                        type="text"
+                        defaultValue="Vacio"
+                        name="payContactPhones"
+                        disabled={payContactPhones ? false : true}
+                        value={formState.payContactPhones}
+                        onChange={onInputChange}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {payContactPhones ? (
+                                <>
+                                  <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        payContactPhones: false,
+                                      });
+                                      setCountActive(countActive>0?countActive-1:countActive);
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        payContactPhones:
+                                          props.dataParticipant
+                                            .pay_contact_phones.replace(/["\[\]"]/g, ''),
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        payContactPhones: false,
+                                      });
+                                      setCountActive(countActive>0?countActive-1:countActive);
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      payContactPhones: true,
+                                    });
+                                    setCountActive(countActive+1);
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                          ),
+                        }}
+                        variant="filled"
+                      />
+                      <TextField
+                        className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                        label="Teléfono de Contacto Factura"
+                        type="text"
+                        defaultValue="Vacio"
+                        name="billsContactPhones"
+                        disabled={billsContactPhones ? false : true}
+                        value={formState.billsContactPhones}
+                        onChange={onInputChange}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              {billsContactPhones ? (
+                                <>
+                                  <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        billsContactPhones: false,
+                                      });
+                                      
+                                      setCountActive(countActive>0?countActive-1:countActive);
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
+                                    onClick={() => {
+                                      setFormState({
+                                        ...formState,
+                                        billsContactPhones:
+                                          props.dataParticipant
+                                            .bills_contact_phones.replace(/["\[\]"]/g, ''),
+                                      });
+                                      setUpdate({
+                                        ...update,
+                                        billsContactPhones: false,
+                                      });
+                                      setCountActive(countActive>0?countActive-1:countActive);
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  style={{ cursor: 'pointer' }}
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      billsContactPhones: true ,
+                                    });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -773,6 +1052,7 @@ export default function HorizontalNonLinearStepper(props) {
                               {banksName ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
@@ -785,9 +1065,11 @@ export default function HorizontalNonLinearStepper(props) {
                                       //   bank: props.dataParticipant.bank,
                                       // });
                                       // setBankk(props.dataParticipant.banksName);
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       // setFormState({
                                       //   ...formState,
@@ -806,11 +1088,13 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         banksName: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
@@ -823,6 +1107,7 @@ export default function HorizontalNonLinearStepper(props) {
                                       // });
                                       // console.log(formState);
                                     });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -849,14 +1134,17 @@ export default function HorizontalNonLinearStepper(props) {
                               {rut ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         rut: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       // setFormState({
                                       //   ...formState,
@@ -872,16 +1160,19 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         rut: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       rut: true,
                                     });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -905,14 +1196,17 @@ export default function HorizontalNonLinearStepper(props) {
                               {bankAccount ? (
                                 <>
                                   <CheckBoxIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         bankAccount: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                   <DisabledByDefaultIcon
+                                    style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       // setFormState({
                                       //   ...formState,
@@ -929,16 +1223,19 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         bankAccount: false,
                                       });
+                                      setCountActive(countActive>0?countActive-1:countActive);
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
+                                  style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       bankAccount: true,
                                     });
+                                    setCountActive(countActive+1);
                                   }}
                                 />
                               )}
@@ -1105,14 +1402,14 @@ export default function HorizontalNonLinearStepper(props) {
         {alertOk && (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="success">
-              Se actualizo la instruccion correctamente
+              Se actualizo la instrucción correctamente..
             </Alert>
           </Stack>
         )}
         {alertError && (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="warning">
-              Error!! No se actualizo la instruccion
+              Error!! debe modificar alguna instrucción para guardar..
             </Alert>
           </Stack>
         )}
@@ -1135,14 +1432,38 @@ export default function HorizontalNonLinearStepper(props) {
           Siguiente
         </Button>
         <Button
+          disabled ={activeButton}
+       
           className="w-[100px] mr-[10px]"
           variant="contained"
           color="primary"
           // startIcon={<SearchIcon />}
           // disabled={activeStep === 0}
-          onClick={ApiPatch}>
+          onClick={handleClickOpen}>
           Guardar
         </Button>
+        
+        <Dialog
+          open={open}
+          onClose={handleCloseAlert}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"¿Estas seguro de guardar estos cambios?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Mostrar listado de cambios
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAlert}>Cancelar</Button>
+            <Button onClick={handleCloseAlertSubmit} autoFocus>
+              Guardar
+            </Button>
+          </DialogActions>
+        </Dialog>
         {/* {activeStep !== steps.length &&
           (completed[activeStep] ? (
             <Typography variant="caption" sx={{ display: "inline-block" }}>
