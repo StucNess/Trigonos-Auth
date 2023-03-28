@@ -204,7 +204,7 @@ const FormInstructions = (props) => {
             label="Fecha Recepcion"
             inputFormat="dd/MM/yyyy"
             minDate={new Date("2017-01-02")}
-            maxDate={new Date("2023-01-01")}
+            maxDate={new Date("2024-01-01")}
             value={receptionDate}
             onChange={(newValue) => {
               setDates({ ...dates, receptionDate: new Date(newValue) });
@@ -218,7 +218,7 @@ const FormInstructions = (props) => {
             label="Fecha Aceptacion"
             inputFormat="dd/MM/yyyy"
             minDate={new Date("2017-01-02")}
-            maxDate={new Date("2023-01-01")}
+            maxDate={new Date("2024-01-01")}
             value={aceptationDate}
             onChange={(newValue) => {
               setDates({ ...dates, aceptationDate: new Date(newValue) });
@@ -243,7 +243,7 @@ const FormInstructions = (props) => {
             inputFormat="dd/MM/yyyy"
             value={paymentDate}
             minDate={new Date("2017-01-02")}
-            maxDate={new Date("2023-01-01")}
+            maxDate={new Date("2024-01-01")}
             onChange={(newValue) => {
               setDates({ ...dates, paymentDate: new Date(newValue) });
             }}
@@ -257,7 +257,7 @@ const FormInstructions = (props) => {
             inputFormat="dd/MM/yyyy"
             value={billingDate}
             minDate={new Date("2017-01-02")}
-            maxDate={new Date("2023-01-01")}
+            maxDate={new Date("2024-01-01")}
             onChange={(newValue) => {
               setDates({ ...dates, billingDate: new Date(newValue) });
             }}
@@ -307,7 +307,8 @@ const FormInstructions = (props) => {
           color="success"
           onClick={() => {
             ApiPatch();
-          }}>
+          }}
+        >
           {" "}
           Modificar
         </Button>
@@ -316,7 +317,8 @@ const FormInstructions = (props) => {
           sx={{ width: 200 }}
           onClick={props.onClose}
           variant="contained"
-          color="error">
+          color="error"
+        >
           {" "}
           Atras{" "}
         </Button>

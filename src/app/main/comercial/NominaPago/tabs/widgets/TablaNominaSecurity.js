@@ -1,40 +1,102 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+import * as React from "react";
+import PropTypes from "prop-types";
+import { alpha } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { Button } from '@mui/material';
-import { HiDownload } from  "react-icons/hi";
+import { Button } from "@mui/material";
+import { HiDownload } from "react-icons/hi";
 
-import { visuallyHidden } from '@mui/utils';
+import { visuallyHidden } from "@mui/utils";
 
-function createData(rut, razon_social,tipo_cuenta,cod_banco,email,detalle,monto) {
+function createData(
+  rut,
+  razon_social,
+  tipo_cuenta,
+  cod_banco,
+  email,
+  detalle,
+  monto,
+  id
+) {
   return {
-    rut,razon_social,tipo_cuenta,cod_banco,email,detalle,monto
+    rut,
+    razon_social,
+    tipo_cuenta,
+    cod_banco,
+    email,
+    detalle,
+    monto,
   };
 }
 
-const rows = [
-  createData('76000976K', 'Acciona Energía Chile Holdings S.A', 1, 	37, 	'correo@gmail.com',	'PAGO FACTURA 0','$232,11'),
-  createData('78004976K', 'Corporación Nacional del Cobre de Chile', 1, 	37, 	'correo@gmail.com',	'PAGO FACTURA 0','$232,11'),
-  createData('71004976K', 'Corporación Nacional del Cobre de Chile',1 ,	37, 	'correo@gmail.com',	'PAGO FACTURA 0','$232,11'),
-  createData('76404976K', 'Acciona Energía Chile Holdings S.A', 1, 	37, 	'correo@gmail.com',	'PAGO FACTURA 0','$232,11'),
-  createData('76504976K', 'Corporación Nacional del Cobre de Chile', 1, 	37, 	'correo@gmail.com',	'PAGO FACTURA 0','$232,11'),
-  createData('76604976K', 'Corporación Nacional del Cobre de Chile', 1, 	37, 	'correo@gmail.com',	'PAGO FACTURA 0','$232,11'),
-  
-];
+// const rows = [
+//   createData(
+//     "76000976K",
+//     "Acciona Energía Chile Holdings S.A",
+//     1,
+//     37,
+//     "correo@gmail.com",
+//     "PAGO FACTURA 0",
+//     "$232,11"
+//   ),
+//   createData(
+//     "78004976K",
+//     "Corporación Nacional del Cobre de Chile",
+//     1,
+//     37,
+//     "correo@gmail.com",
+//     "PAGO FACTURA 0",
+//     "$232,11"
+//   ),
+//   createData(
+//     "71004976K",
+//     "Corporación Nacional del Cobre de Chile",
+//     1,
+//     37,
+//     "correo@gmail.com",
+//     "PAGO FACTURA 0",
+//     "$232,11"
+//   ),
+//   createData(
+//     "76404976K",
+//     "Acciona Energía Chile Holdings S.A",
+//     1,
+//     37,
+//     "correo@gmail.com",
+//     "PAGO FACTURA 0",
+//     "$232,11"
+//   ),
+//   createData(
+//     "76504976K",
+//     "Corporación Nacional del Cobre de Chile",
+//     1,
+//     37,
+//     "correo@gmail.com",
+//     "PAGO FACTURA 0",
+//     "$232,11"
+//   ),
+//   createData(
+//     "76604976K",
+//     "Corporación Nacional del Cobre de Chile",
+//     1,
+//     37,
+//     "correo@gmail.com",
+//     "PAGO FACTURA 0",
+//     "$232,11"
+//   ),
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,7 +109,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -66,57 +128,59 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 const headCells = [
-
   {
-    id: 'rut',
+    id: "rut",
     numeric: false,
     disablePadding: true,
-    label: 'Rut Beneficiario',
+    label: "Rut Beneficiario",
   },
- 
+
   {
-    id: 'razon_social',
+    id: "razon_social",
     numeric: false,
     disablePadding: false,
-    label: 'Razon Social',
+    label: "Razon Social",
   },
   {
-    id: 'tipo_cuenta',
+    id: "tipo_cuenta",
     numeric: true,
     disablePadding: false,
-    label: 'Tipo Cuenta',
+    label: "Tipo Cuenta",
   },
   {
-    id: 'cod_banco',
+    id: "cod_banco",
     numeric: true,
     disablePadding: false,
-    label: 'Cod Banco',
+    label: "Cod Banco",
   },
   {
-    id: 'email',
+    id: "email",
     numeric: false,
     disablePadding: false,
-    label: 'Email',
+    label: "Email",
   },
   {
-    id: 'detalle',
+    id: "detalle",
     numeric: false,
     disablePadding: false,
-    label: 'Detalle',
+    label: "Detalle",
   },
   {
-    id: 'monto',
+    id: "monto",
     numeric: false,
     disablePadding: false,
-    label: 'Monto',
+    label: "Monto",
   },
-  
-  
-  
 ];
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -131,7 +195,7 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              'aria-label': 'select all desserts',
+              "aria-label": "select all desserts",
             }}
           />
         </TableCell>
@@ -140,18 +204,18 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -166,7 +230,7 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
@@ -182,44 +246,36 @@ function EnhancedTableToolbar(props) {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
         }),
       }}
     >
-      
       {numSelected > 1 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
-         {numSelected} selecionados
+          {numSelected} selecionados
         </Typography>
-      ):numSelected ===1 ? (
+      ) : numSelected === 1 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
-         {numSelected} seleccionado
+          {numSelected} seleccionado
         </Typography>
       ) : (
-      
-          <Typography
-           
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            Listado de nominas
-          </Typography>
-      
-        
+        <Typography variant="h6" id="tableTitle" component="div">
+          Listado de nominas
+        </Typography>
       )}
-
-      
     </Toolbar>
   );
 }
@@ -228,17 +284,39 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TablaNominaSecurity() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('cod_banco');
+export default function TablaNominaSecurity(props) {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("cod_banco");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const rows = [];
+  const chile = new Intl.NumberFormat("es-CL", {
+    currency: "CLP",
+    style: "currency",
+  });
+  props.payRollData.map((p) =>
+    createData(
+      p.rutAcreedor,
+      p.nombreAcreedor,
+      3,
+      p.sBifAcreedor,
+      p.correoDteAcreedor,
+      "PAGO FACTURA 0",
+      chile.format(p.valorNeto)
+    )
+  );
+  React.useEffect(() => {
+    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
+    console.log(prueba);
+    let pruebaValor = 0;
+    prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
+    setTotal(pruebaValor);
+  }, [selected]);
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -251,12 +329,12 @@ export default function TablaNominaSecurity() {
     setSelected([]);
   };
 
-  const handleClick = (event, rut) => {
-    const selectedIndex = selected.indexOf(rut);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, rut);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -264,7 +342,7 @@ export default function TablaNominaSecurity() {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -291,9 +369,9 @@ export default function TablaNominaSecurity() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-      <Box  className="w-full text-center  p-[20px]">
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <Box className="w-full text-center  p-[20px]">
           <Typography
             className="bg-grey-50"
             variant="h6"
@@ -305,20 +383,21 @@ export default function TablaNominaSecurity() {
           <h1 className="border border-b-pantoneazul"></h1>
         </Box>
         <Box className="flex  w-full items-center justify-evenly  ">
-              <Button  className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
-                      variant="contained"
-                      color="secondary"
-                  
-                      >
-                      <SiMicrosoftexcel className="mr-3 " />Nomina de pago <HiDownload />
-              </Button>
-          </Box>
+          <Button
+            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+            variant="contained"
+            color="secondary"
+          >
+            <SiMicrosoftexcel className="mr-3 " />
+            Nomina de pago <HiDownload />
+          </Button>
+        </Box>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size={dense ? "small" : "medium"}
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -352,7 +431,7 @@ export default function TablaNominaSecurity() {
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{
-                            'aria-labelledby': labelId,
+                            "aria-labelledby": labelId,
                           }}
                         />
                       </TableCell>
@@ -383,12 +462,16 @@ export default function TablaNominaSecurity() {
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
+              <TableRow>
+                <TableCell colSpan={2}>Total a pagar</TableCell>
+                <TableCell align="left">{chile.format(total)}</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
           labelRowsPerPage="Filas por página"
-          rowsPerPageOptions={[5, 10, 25 ]}
+          rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}

@@ -33,7 +33,7 @@ const NominaPagoApp = () => {
     // axios.get('http://164.77.112.10:99/api/Nominas?id=141');
     callApiPayroll(data.id);
   };
-  const callApiPayroll = (id, pageSize = 10) => {
+  const callApiPayroll = (id, pageSize = 100) => {
     let prueba;
     axios
       .get(`http://164.77.112.10:99/api/Nominas?id=${id}&PageSize=${pageSize}`)
@@ -49,7 +49,8 @@ const NominaPagoApp = () => {
           <motion.div
             className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-20 "
             initial="hidden"
-            animate="show">
+            animate="show"
+          >
             <motion.div className="  col-span-12 mb-[20px]">
               <Box className="  bg-white rounded-sm p-[10px] ">
                 <h1 className="ml-[5px]">Nominas de Pago &#40;Deudor&#41;</h1>

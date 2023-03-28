@@ -26,7 +26,8 @@ function createData(
   nro_documento,
   monto_pago,
   fecha_acept,
-  glosa
+  glosa,
+  id
 ) {
   return {
     rut,
@@ -35,59 +36,9 @@ function createData(
     monto_pago,
     fecha_acept,
     glosa,
+    id,
   };
 }
-
-// const rows = [
-//   createData(
-//     "6170400K",
-//     "Corporación Nacional del Cobre de Chile",
-//     1023649,
-//     "$34003,34",
-//     "29-07-2022",
-//     "SEN_[PTN_][Ene21][L][V01]"
-//   ),
-//   createData(
-//     "6172400K",
-//     "Corporación Nacional del Cobre de Chile",
-//     1223049,
-//     "$34003,34",
-//     "29-07-2022",
-//     "SEN_[CUN_][Feb2][L][V01]"
-//   ),
-//   createData(
-//     "6173400K",
-//     "Corporación Nacional del Cobre de Chile",
-//     1023049,
-//     "$120031,34",
-//     "29-07-2022",
-//     "SEN_[PTN_][Mar2][L][V01]"
-//   ),
-//   createData(
-//     "6174400K",
-//     "Corporación Nacional del Cobre de Chile",
-//     1523049,
-//     "$3368232443,34",
-//     "29-07-2022",
-//     "SEN_[CUN_][May21][L][V01]"
-//   ),
-//   createData(
-//     "6175400K",
-//     "Corporación Nacional del Cobre de Chile",
-//     1025049,
-//     "$3003243243,34",
-//     "29-07-2022",
-//     "SEN_[CUN_][Abr2][L][V01]"
-//   ),
-//   createData(
-//     "6176400K",
-//     "Corporación Nacional del Cobre de Chile",
-//     1027849,
-//     "$326593443,34",
-//     "29-07-2022",
-//     "SEN_[PTN_][Jun21][L][V01]"
-//   ),
-// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -189,11 +140,13 @@ function EnhancedTableHead(props) {
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -233,13 +186,15 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}>
+      }}
+    >
       {numSelected > 1 ? (
         <Typography
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div">
+          component="div"
+        >
           {numSelected} selecionados
         </Typography>
       ) : numSelected === 1 ? (
@@ -247,7 +202,8 @@ function EnhancedTableToolbar(props) {
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div">
+          component="div"
+        >
           {numSelected} seleccionado
         </Typography>
       ) : (
@@ -269,20 +225,34 @@ export default function EnhancedTable(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [total, setTotal] = React.useState(0);
   const rows = [];
+  const chile = new Intl.NumberFormat("es-CL", {
+    currency: "CLP",
+    style: "currency",
+  });
   props.payRollData.map((p) =>
     rows.push(
       createData(
         p.rutAcreedor,
         p.nombreAcreedor,
         p.folio,
-        p.valorNeto,
+        chile.format(p.valorNeto),
         "29-07-2022",
-        p.glosa
+        p.glosa,
+        p.id
       )
     )
   );
+  React.useEffect(() => {
+    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
+    console.log(prueba);
+    let pruebaValor = 0;
+    prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
+    setTotal(pruebaValor);
+  }, [selected]);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -298,12 +268,12 @@ export default function EnhancedTable(props) {
     setSelected([]);
   };
 
-  const handleClick = (event, rut) => {
-    const selectedIndex = selected.indexOf(rut);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, rut);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -336,7 +306,7 @@ export default function EnhancedTable(props) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  console.log(props.payRollData);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -345,7 +315,8 @@ export default function EnhancedTable(props) {
             className="bg-grey-50"
             variant="h6"
             id="tableTitle"
-            component="div">
+            component="div"
+          >
             Tabla de Nominas "BCI"
           </Typography>
           <h1 className="border border-b-pantoneazul"></h1>
@@ -354,7 +325,8 @@ export default function EnhancedTable(props) {
           <Button
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
-            color="secondary">
+            color="secondary"
+          >
             <SiMicrosoftexcel className="mr-3 " />
             Nomina de pago <HiDownload />
           </Button>
@@ -364,7 +336,8 @@ export default function EnhancedTable(props) {
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}>
+            size={dense ? "small" : "medium"}
+          >
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -379,18 +352,18 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.rut);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.rut)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.rut}
-                      selected={isItemSelected}>
+                      key={row.id}
+                      selected={isItemSelected}
+                    >
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
@@ -405,7 +378,8 @@ export default function EnhancedTable(props) {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        align="left">
+                        align="left"
+                      >
                         {row.rut}
                       </TableCell>
                       <TableCell align="left">{row.nombre}</TableCell>
@@ -420,14 +394,20 @@ export default function EnhancedTable(props) {
                 <TableRow
                   style={{
                     height: (dense ? 33 : 53) * emptyRows,
-                  }}>
+                  }}
+                >
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
+              <TableRow>
+                <TableCell colSpan={2}>Total a pagar</TableCell>
+                <TableCell align="left">{chile.format(total)}</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
+          // label="prueba"
           labelRowsPerPage="Filas por página"
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
