@@ -412,6 +412,7 @@ export default function HorizontalNonLinearStepper(props) {
         .patch(apiPatchParticipante)
         .then((response) => {
           setAlertOk(true);
+          
         })
         .catch((error) => {
           setAlertError(true);
@@ -425,7 +426,9 @@ useEffect(() => {
   countActive ===0?setActiveButton(false):setActiveButton(true);
 }, [countActive])
 
-  
+useEffect(()=>{
+  props.sendChange(alertOk);
+},[alertOk])
   return (
     <Box className="w-full h-full">
       <Box  className="flex w-full h-full" sx={{ width: "100%" }} >
