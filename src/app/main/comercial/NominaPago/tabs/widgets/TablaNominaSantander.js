@@ -1,40 +1,54 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
+import * as React from "react";
+import PropTypes from "prop-types";
+import { alpha } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { Button } from '@mui/material';
-import { HiDownload } from  "react-icons/hi";
+import { Button } from "@mui/material";
+import { HiDownload } from "react-icons/hi";
 
-import { visuallyHidden } from '@mui/utils';
+import { visuallyHidden } from "@mui/utils";
 
-function createData(rut, nombre, cod_modalidad, cod_banco, n_factura_uno,monto_uno, monto_total) {
+function createData(
+  rut,
+  nombre,
+  cod_modalidad,
+  cod_banco,
+  n_factura_uno,
+  monto_uno,
+  monto_total
+) {
   return {
-    rut,nombre, cod_modalidad, cod_banco, n_factura_uno,monto_uno, monto_total
+    rut,
+    nombre,
+    cod_modalidad,
+    cod_banco,
+    n_factura_uno,
+    monto_uno,
+    monto_total,
   };
 }
 
-const rows = [
-  createData('76000976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-  createData('78004976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-  createData('71004976K', 'Corporación Nacional del Cobre de Chile', 3 ,	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-  createData('76404976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-  createData('76504976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-  createData('76604976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-  
-];
+// const rows = [
+//   createData('76000976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
+//   createData('78004976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
+//   createData('71004976K', 'Corporación Nacional del Cobre de Chile', 3 ,	'16', 	'10148931',	'1044676','$232,11','$232,11'),
+//   createData('76404976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
+//   createData('76504976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
+//   createData('76604976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
+
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,7 +61,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -66,56 +80,58 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 const headCells = [
-
   {
-    id: 'rut',
+    id: "rut",
     numeric: false,
     disablePadding: true,
-    label: 'Rut Beneficiario',
+    label: "Rut Beneficiario",
   },
   {
-    id: 'nombre',
+    id: "nombre",
     numeric: false,
     disablePadding: false,
-    label: 'Nombre Beneficiario',
+    label: "Nombre Beneficiario",
   },
   {
-    id: 'cod_modalidad',
+    id: "cod_modalidad",
     numeric: true,
     disablePadding: false,
-    label: 'Cod. Modalidad',
+    label: "Cod. Modalidad",
   },
   {
-    id: 'cod_banco',
+    id: "cod_banco",
     numeric: false,
     disablePadding: false,
-    label: 'Cod. Banco',
+    label: "Cod. Banco",
   },
   {
-    id: 'n_factura_uno',
+    id: "n_factura_uno",
     numeric: false,
     disablePadding: false,
-    label: 'N° Factura 1',
+    label: "N° Factura 1",
   },
   {
-    id: 'monto_uno',
+    id: "monto_uno",
     numeric: false,
     disablePadding: false,
-    label: 'Monto 1',
+    label: "Monto 1",
   },
   {
-    id: 'monto_total',
+    id: "monto_total",
     numeric: false,
     disablePadding: false,
-    label: 'Monto Total',
+    label: "Monto Total",
   },
-  
-  
-  
 ];
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
-    props;
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -130,7 +146,7 @@ function EnhancedTableHead(props) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              'aria-label': 'select all desserts',
+              "aria-label": "select all desserts",
             }}
           />
         </TableCell>
@@ -139,18 +155,18 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
@@ -165,7 +181,7 @@ EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
   onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
@@ -181,44 +197,36 @@ function EnhancedTableToolbar(props) {
         pr: { xs: 1, sm: 1 },
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
         }),
       }}
     >
-      
       {numSelected > 1 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
-         {numSelected} selecionados
+          {numSelected} selecionados
         </Typography>
-      ):numSelected ===1 ? (
+      ) : numSelected === 1 ? (
         <Typography
-          sx={{ flex: '1 1 100%' }}
+          sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
-         {numSelected} seleccionado
+          {numSelected} seleccionado
         </Typography>
       ) : (
-      
-          <Typography
-           
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            Listado de nominas
-          </Typography>
-      
-        
+        <Typography variant="h6" id="tableTitle" component="div">
+          Listado de nominas
+        </Typography>
       )}
-
-      
     </Toolbar>
   );
 }
@@ -227,17 +235,34 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function TablaNominaSantander() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('nro_documento');
+export default function TablaNominaSantander(props) {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("nro_documento");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const rows = [];
+  const chile = new Intl.NumberFormat("es-CL", {
+    currency: "CLP",
+    style: "currency",
+  });
+  props.payRollData.map((p) =>
+    rows.push(
+      createData(
+        p.rutAcreedor,
+        p.nombreAcreedor,
+        3,
+        p.sBifAcreedor,
+        p.folio,
+        chile.format(p.valorNeto)
+      )
+    )
+  );
 
   const handleRequestSort = (event, property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
@@ -263,7 +288,7 @@ export default function TablaNominaSantander() {
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
+        selected.slice(selectedIndex + 1)
       );
     }
 
@@ -290,9 +315,9 @@ export default function TablaNominaSantander() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-      <Box  className="w-full text-center  p-[20px]">
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <Box className="w-full text-center  p-[20px]">
           <Typography
             className="bg-grey-50"
             variant="h6"
@@ -304,20 +329,21 @@ export default function TablaNominaSantander() {
           <h1 className="border border-b-pantoneazul"></h1>
         </Box>
         <Box className="flex  w-full items-center justify-evenly  ">
-              <Button  className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
-                      variant="contained"
-                      color="secondary"
-                  
-                      >
-                      <SiMicrosoftexcel className="mr-3 " />Nomina de pago <HiDownload />
-              </Button>
-          </Box>
+          <Button
+            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+            variant="contained"
+            color="secondary"
+          >
+            <SiMicrosoftexcel className="mr-3 " />
+            Nomina de pago <HiDownload />
+          </Button>
+        </Box>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size={dense ? "small" : "medium"}
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -351,7 +377,7 @@ export default function TablaNominaSantander() {
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{
-                            'aria-labelledby': labelId,
+                            "aria-labelledby": labelId,
                           }}
                         />
                       </TableCell>
@@ -387,7 +413,7 @@ export default function TablaNominaSantander() {
         </TableContainer>
         <TablePagination
           labelRowsPerPage="Filas por página"
-          rowsPerPageOptions={[5, 10, 25 ]}
+          rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
