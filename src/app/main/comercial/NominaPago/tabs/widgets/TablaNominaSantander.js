@@ -27,7 +27,8 @@ function createData(
   cod_banco,
   n_factura_uno,
   monto_uno,
-  monto_total
+  monto_total,
+  id
 ) {
   return {
     rut,
@@ -259,6 +260,13 @@ export default function TablaNominaSantander(props) {
       )
     )
   );
+  React.useEffect(() => {
+    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
+    console.log(prueba);
+    let pruebaValor = 0;
+    prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
+    setTotal(pruebaValor);
+  }, [selected]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -274,13 +282,12 @@ export default function TablaNominaSantander(props) {
     }
     setSelected([]);
   };
-
-  const handleClick = (event, rut) => {
-    const selectedIndex = selected.indexOf(rut);
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, rut);
+      newSelected = newSelected.concat(selected, id);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -294,7 +301,6 @@ export default function TablaNominaSantander(props) {
 
     setSelected(newSelected);
   };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -409,6 +415,10 @@ export default function TablaNominaSantander(props) {
                 </TableRow>
               )}
             </TableBody>
+            <TableRow>
+              <TableCell colSpan={2}>Total a pagar</TableCell>
+              <TableCell align="left">{chile.format(total)}</TableCell>
+            </TableRow>
           </Table>
         </TableContainer>
         <TablePagination
