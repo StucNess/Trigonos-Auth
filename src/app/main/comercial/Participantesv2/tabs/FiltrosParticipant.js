@@ -38,7 +38,7 @@ export default function FiltrosParticipant(props) {
   ]);
   useEffect(() => {
     props.sendParticipants(dataParticipant);
-  }, [dataParticipant]);
+  }, [dataParticipant,props.change]);
   useEffect(() => {
     // props.sendParticipants();
     // console.log(nameParticipants[0]);
@@ -49,7 +49,7 @@ export default function FiltrosParticipant(props) {
       setNameParticipants(participants);
       props.sendParticipants(participants[0]);
     })();
-  }, []);
+  }, [props.change]);
   // console.log(dataParticipant.name);
   return (
     <Box>

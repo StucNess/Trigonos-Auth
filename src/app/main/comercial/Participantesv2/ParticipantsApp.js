@@ -19,10 +19,14 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 let participants = [];
 const NominaPagoApp = () => {
   const [dataParticipant, setDataParticipant] = useState([]);
-
+  const [change, setChange] = useState(false);
   const getDataParticipants = (data) => {
     setDataParticipant(data);
   };
+  const getChange = (data) =>{
+    setChange(data)
+    // console.log(`AQUI -- ${data}`) 
+  }
   return (
     <Root
       // header={<FacturacionMasivaAppHeader />}
@@ -47,14 +51,14 @@ const NominaPagoApp = () => {
           </Box>
           <Paper className="w-full p-[20px] mb-[20px]">
             {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
-            <FiltrosParticipant sendParticipants={getDataParticipants} />
+            <FiltrosParticipant change={change} sendParticipants={getDataParticipants} />
           </Paper>
           {/* <Paper className="w-full p-[20px] mb-[20px]"> */}
           {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
           {/* <PruebasStepper/> */}
           {/* </Paper> */}
           <Paper className="w-full p-[20px] ">
-            <VerticalStepper dataParticipant={dataParticipant} />
+            <VerticalStepper dataParticipant={dataParticipant} sendChange={getChange} />
           </Paper>
         </Box>
       }
