@@ -17,7 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { Button } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
-
+import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 
 function createData(
@@ -227,6 +227,7 @@ export default function EnhancedTable(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [total, setTotal] = React.useState(0);
+  const [dataExport, setDataExport] = React.useState([]);
   const rows = [];
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
@@ -247,7 +248,7 @@ export default function EnhancedTable(props) {
   );
   React.useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    console.log(prueba);
+    setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
     setTotal(pruebaValor);
@@ -302,10 +303,54 @@ export default function EnhancedTable(props) {
   };
 
   const isSelected = (rut) => selected.indexOf(rut) !== -1;
-
+  let headersExcel = [
+    [
+      "id",
+      "id_instruccions",
+      "glosa",
+      "rutDeudor",
+      "rutAcreedor",
+      "nombreAcreedor",
+      "nombreDeudor",
+      "cuentaBancoAcreedor",
+      "correoDteAcreedor",
+      "valorNeto",
+      "folio",
+      "sBifAcreedor",
+    ],
+  ];
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  function convertToSheet(data) {
+    const wb = XLSX.utils.book_new();
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(ws, headersExcel);
+    const sheet = XLSX.utils.sheet_add_json(ws, data, {
+      origin: "A2",
+      skipHeader: true,
+    });
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    XLSX.writeFile(wb, "filename.xlsx");
+    // const sheet = XLSX.utils.json_to_sheet(ws, data, {
+    //   origin: "A2",
+    //   skipHeader: true, // we don't want to see object properties as our headers
+    // });
+    // const range = XLSX.utils.decode_range(sheet["!ref"]);
+
+    // for (let i = 0; i <= range.e.c; i++) {
+    //   const cell = XLSX.utils.encode_cell({ r: 0, c: i });
+
+    //   sheet[cell].v = data[0][Object.keys(data[0])[i]];
+    //   console.log(sheet[cell].v);
+    // }
+    // return sheet;
+  }
+  function downloadExcelFile(filename, data) {
+    convertToSheet(data);
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -326,6 +371,7 @@ export default function EnhancedTable(props) {
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
             color="secondary"
+            onClick={() => downloadExcelFile("mydata", dataExport)}
           >
             <SiMicrosoftexcel className="mr-3 " />
             Nomina de pago <HiDownload />
