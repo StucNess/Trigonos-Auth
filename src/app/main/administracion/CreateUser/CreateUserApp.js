@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable prettier/prettier */
 import { Autocomplete, Stack, Alert } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
@@ -92,7 +92,17 @@ function CreateUserApp(props) {
   const [rolName, setRolName] = useState("");
   const [alertt, setAlertt] = useState(false);
   const [error, setError] = useState(false);
+  const [emailUser, setEmailUser] = useState('');
   const { isValid, dirtyFields, errors } = formState;
+
+  
+ 
+ const handleSetEmail = (event) => {
+  const {
+    target: { value },
+  } = event;
+  setEmailUser(value);
+}
   const handleChangeProyect = (event) => {
     const {
       target: { value },
@@ -195,6 +205,8 @@ function CreateUserApp(props) {
               render={({ field }) => (
                 <TextField
                   {...field}
+                  value={emailUser}
+                  
                   className="mb-24"
                   label="Usuario"
                   autoFocus
@@ -204,6 +216,7 @@ function CreateUserApp(props) {
                   variant="outlined"
                   required
                   fullWidth
+                  disabled
                 />
               )}
             />
@@ -246,6 +259,7 @@ function CreateUserApp(props) {
             <Controller
               name="email"
               control={control}
+              
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -257,6 +271,10 @@ function CreateUserApp(props) {
                   variant="outlined"
                   required
                   fullWidth
+                  onChange={e => {
+                    field.onChange(e);
+                    handleSetEmail(e);
+                  }}
                 />
               )}
             />
@@ -269,7 +287,7 @@ function CreateUserApp(props) {
                   {...field}
                   className="mb-24"
                   label="Contraseña"
-                  type="password"
+                  type="text"
                   error={!!errors.password}
                   helperText={errors?.password?.message}
                   variant="outlined"
@@ -287,7 +305,7 @@ function CreateUserApp(props) {
                   {...field}
                   className="mb-24"
                   label="Contraseña (Confirmar)"
-                  type="password"
+                  type="text"
                   error={!!errors.passwordConfirm}
                   helperText={errors?.passwordConfirm?.message}
                   variant="outlined"

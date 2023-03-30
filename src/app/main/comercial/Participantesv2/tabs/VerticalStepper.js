@@ -26,6 +26,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Select from "@mui/material/Select";
 // import TextField from "@mui/material/TextField";
 import TablaUltimosCambios from "./widgets/TablaUltimosCambios";
@@ -141,6 +143,8 @@ export default function HorizontalNonLinearStepper(props) {
   const [countActive, setCountActive] = useState(0)
   const [open, setOpen] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
+  const [checkedBlue, setCheckedBlue] = React.useState(true);
+  const [checkedExt, setCheckedExt] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
    
@@ -262,6 +266,9 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactPhones,
     billsContactEmail,
   } = update;
+  const handleChangeCheck = (event)=>{
+    setChecked(event.target.checked);
+  };
   const handleChangee = (event: React.ChangeEvent<HTMLInputElement>) => {
     let idBank;
     banks.map((d) => {
@@ -503,7 +510,7 @@ useEffect(()=>{
                       Coordinado
                     </Typography>
 
-                    <Box className="flex flex-wrap justify-between zerorange:justify-center  ">
+                    <Box className="flex flex-wrap justify-start zerorange:justify-center  ">
                       <TextField
                         // id="outlined-required"
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
@@ -569,7 +576,7 @@ useEffect(()=>{
                       />
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                        label="Nombre Comercial"
+                        label="Razón Social"
                         disabled={businessName ? false : true}
                         type="text"
                         name="businessName"
@@ -710,19 +717,75 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         onChange={onInputChange}
                         name="rut"
-                        disabled={rut ? false : true}
+                        disabled
                         value={formState.rut}
+                        // InputProps={{
+                        //   startAdornment: (
+                        //     <InputAdornment position="start">
+                        //       {rut ? (
+                        //         <>
+                        //           <CheckBoxIcon
+                        //             style={{ cursor: 'pointer' }}
+                        //             onClick={() => {
+                        //               setUpdate({
+                        //                 ...update,
+                        //                 rut: false,
+                        //               });
+                        //               setCountActive(countActive>0?countActive-1:countActive);
+                        //             }}
+                        //           />
+                        //           <DisabledByDefaultIcon
+                        //             style={{ cursor: 'pointer' }}
+                        //             onClick={() => {
+                        //               setFormState({
+                        //                 ...formState,
+                        //                 rut: props.dataParticipant.rut,
+                        //               });
+                        //               setUpdate({
+                        //                 ...update,
+                        //                 rut: false,
+                        //               });
+                        //               setCountActive(countActive>0?countActive-1:countActive);
+                        //             }}
+                        //           />
+                        //         </>
+                        //       ) : (
+                        //         <EditIcon
+                        //           style={{ cursor: 'pointer' }}
+                        //           onClick={() => {
+                        //             setUpdate({
+                        //               ...update,
+                        //               rut: true,
+                        //             });
+                        //             setCountActive(countActive+1);
+                        //           }}
+                        //         />
+                        //       )}
+                        //     </InputAdornment>
+                        //   ),
+                        // }}
+                        variant="filled"
+                      />
+                       <TextField
+                        className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                        label="Gerente General"
+                        type="text"
+                        defaultValue="Vacio"
+                        onChange={onInputChange}
+                        name="manager"
+                        disabled={manager ? false : true}
+                        value={formState.manager}
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
-                              {rut ? (
+                              {manager ? (
                                 <>
                                   <CheckBoxIcon
                                     style={{ cursor: 'pointer' }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
-                                        rut: false,
+                                        manager: false,
                                       });
                                       setCountActive(countActive>0?countActive-1:countActive);
                                     }}
@@ -732,11 +795,13 @@ useEffect(()=>{
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
-                                        rut: props.dataParticipant.rut,
+                                        manager:
+                                          props.dataParticipant
+                                            .manager,
                                       });
                                       setUpdate({
                                         ...update,
-                                        rut: false,
+                                        manager: false,
                                       });
                                       setCountActive(countActive>0?countActive-1:countActive);
                                     }}
@@ -748,7 +813,7 @@ useEffect(()=>{
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
-                                      rut: true,
+                                      manager: true,
                                     });
                                     setCountActive(countActive+1);
                                   }}
@@ -766,7 +831,7 @@ useEffect(()=>{
                     <Typography variant="h6" className="mb-4" color="primary">
                       Datos de Contacto
                     </Typography>
-                    <Box className="flex flex-wrap justify-between zerorange:justify-center ml-[0 auto]">
+                    <Box className="flex flex-wrap justify-start  zerorange:justify-center ml-[0 auto]">
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Dirección Comercial"
@@ -1031,7 +1096,7 @@ useEffect(()=>{
                     <Typography variant="h6" className="mb-4" color="primary">
                       Datos Bancarios
                     </Typography>
-                    <Box className="flex flex-wrap justify-between zerorange:justify-center ml-[0 auto]">
+                    <Box className="flex flex-wrap justify-start  zerorange:justify-center ml-[0 auto]">
                       {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Banco"
@@ -1338,7 +1403,7 @@ useEffect(()=>{
                       Gestión Trígonos
                     </Typography>
 
-                    <Box className="flex flex-wrap justify-between zerorange:justify-center ml-[0 auto]">
+                    <Box className="flex flex-wrap justify-start  zerorange:justify-center ml-[0 auto] ">
                       <TextField
                         className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Token"
@@ -1347,6 +1412,36 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         variant="filled"
                       />
+                      <Box className="flex flex-row content-center">
+                      <Typography variant="subtitle1" className="mb-4" color="primary">
+                      Tipo de cliente
+                    </Typography>
+                        <Box className="flex flex-col">
+
+                        <Box >
+                        
+                        
+                        <FormControlLabel
+                                  label="Bluetree"
+                                  control={<Checkbox checked={checkedBlue} onChange={event => {setCheckedBlue(event.target.checked);
+                                                                                                setCheckedExt(false);}} />}
+                                />
+                        </Box>
+                        <Box>
+                        
+
+                          <FormControlLabel
+                                  label="Externo"
+                                  control={<Checkbox checked={checkedExt} onChange={event => {setCheckedExt(event.target.checked);
+                                                                                                setCheckedBlue(false);}} />}
+                                />
+                        </Box>
+
+
+                        </Box>
+                                              </Box>
+                      
+                      
 
                       {/* <FormControl
                         variant="filled"

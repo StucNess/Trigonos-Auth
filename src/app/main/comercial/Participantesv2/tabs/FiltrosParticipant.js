@@ -87,7 +87,7 @@ export default function FiltrosParticipant(props) {
           // }
           id="combo-box-demo"
           renderInput={(params) => (
-            <TextField {...params} label="Nombre Comercial" />
+            <TextField {...params} label="Razón Social" />
           )}
         />
         <Autocomplete

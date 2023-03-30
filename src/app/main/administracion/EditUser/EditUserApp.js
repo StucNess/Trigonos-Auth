@@ -61,11 +61,12 @@ import {
            
           </motion.div> */}
           <motion.div className=" lgmax:col-span-12  lg:col-span-6 lg:mr-[20px]">
-            <EditUserPaper/>
+            <ListUserPaper/>
+           
           </motion.div>
           
           <motion.div  className=" lgmax:col-span-12  lg:col-span-6 lgmax:mt-[20px] lg:ml-[20px] "> 
-            <ListUserPaper/>
+            <EditUserPaper/>
            
           </motion.div>
          
