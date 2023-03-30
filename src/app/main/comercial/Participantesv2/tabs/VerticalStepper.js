@@ -1403,24 +1403,13 @@ useEffect(()=>{
                       Gestión Trígonos
                     </Typography>
 
-                    <Box className="flex flex-wrap justify-start  zerorange:justify-center ml-[0 auto] ">
-                      <TextField
-                        className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                        label="Token"
-                        type="text"
-                        value={"Vacio"}
-                        defaultValue="Vacio"
-                        variant="filled"
-                      />
-                      <Box className="flex flex-row content-center">
-                      <Typography variant="subtitle1" className="mb-4" color="primary">
-                      Tipo de cliente
-                    </Typography>
-                        <Box className="flex flex-col">
-
+                    <Box className="flex flex-wrap justify-between  zerorange:justify-center ml-[0 auto] ">
+                    <Box className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px]">
+                        <Typography variant="subtitle1"  color="primary">
+                          Tipo de cliente
+                        </Typography>
+                        <Box>
                         <Box >
-                        
-                        
                         <FormControlLabel
                                   label="Bluetree"
                                   control={<Checkbox checked={checkedBlue} onChange={event => {setCheckedBlue(event.target.checked);
@@ -1436,11 +1425,19 @@ useEffect(()=>{
                                                                                                 setCheckedBlue(false);}} />}
                                 />
                         </Box>
-
-
                         </Box>
-                                              </Box>
-                      
+                        </Box>
+                      <TextField
+                        className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                        label="Token"
+                        type="text"
+                        value={"Vacio"}
+                        defaultValue="Vacio"
+                        variant="filled"
+                      />
+                  
+                        
+                        
                       
 
                       {/* <FormControl
