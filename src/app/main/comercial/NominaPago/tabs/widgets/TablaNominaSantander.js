@@ -26,7 +26,6 @@ function createData(
   cod_modalidad,
   cod_banco,
   n_factura_uno,
-  monto_uno,
   monto_total,
   id
 ) {
@@ -36,20 +35,10 @@ function createData(
     cod_modalidad,
     cod_banco,
     n_factura_uno,
-    monto_uno,
     monto_total,
+    id,
   };
 }
-
-// const rows = [
-//   createData('76000976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-//   createData('78004976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-//   createData('71004976K', 'Corporación Nacional del Cobre de Chile', 3 ,	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-//   createData('76404976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-//   createData('76504976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-//   createData('76604976K', 'Corporación Nacional del Cobre de Chile', 3, 	'16', 	'10148931',	'1044676','$232,11','$232,11'),
-
-// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -242,6 +231,7 @@ export default function TablaNominaSantander(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
+  const [total, setTotal] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = [];
   const chile = new Intl.NumberFormat("es-CL", {
@@ -256,7 +246,8 @@ export default function TablaNominaSantander(props) {
         3,
         p.sBifAcreedor,
         p.folio,
-        chile.format(p.valorNeto)
+        chile.format(p.valorNeto),
+        p.id
       )
     )
   );
@@ -365,17 +356,17 @@ export default function TablaNominaSantander(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.rut);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  console.log(row);
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.rut)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.rut}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -414,11 +405,11 @@ export default function TablaNominaSantander(props) {
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
+              <TableRow>
+                <TableCell colSpan={2}>Total a pagar</TableCell>
+                <TableCell align="left">{chile.format(total)}</TableCell>
+              </TableRow>
             </TableBody>
-            <TableRow>
-              <TableCell colSpan={2}>Total a pagar</TableCell>
-              <TableCell align="left">{chile.format(total)}</TableCell>
-            </TableRow>
           </Table>
         </TableContainer>
         <TablePagination

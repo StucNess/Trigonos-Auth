@@ -38,6 +38,7 @@ function createData(
     email,
     detalle,
     monto,
+    id,
   };
 }
 
@@ -290,6 +291,7 @@ export default function TablaNominaSecurity(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
+  const [total, setTotal] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = [];
   const chile = new Intl.NumberFormat("es-CL", {
@@ -304,7 +306,8 @@ export default function TablaNominaSecurity(props) {
       p.sBifAcreedor,
       p.correoDteAcreedor,
       "PAGO FACTURA 0",
-      chile.format(p.valorNeto)
+      chile.format(p.valorNeto),
+      p.id
     )
   );
   React.useEffect(() => {
@@ -413,17 +416,17 @@ export default function TablaNominaSecurity(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.rut);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.rut)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.rut}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

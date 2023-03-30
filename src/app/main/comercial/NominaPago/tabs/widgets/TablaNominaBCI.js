@@ -17,7 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { Button } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
-
+import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 
 function createData(
@@ -140,13 +140,11 @@ function EnhancedTableHead(props) {
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
+            sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
+              onClick={createSortHandler(headCell.id)}>
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -186,15 +184,13 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}
-    >
+      }}>
       {numSelected > 1 ? (
         <Typography
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div"
-        >
+          component="div">
           {numSelected} selecionados
         </Typography>
       ) : numSelected === 1 ? (
@@ -202,8 +198,7 @@ function EnhancedTableToolbar(props) {
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div"
-        >
+          component="div">
           {numSelected} seleccionado
         </Typography>
       ) : (
@@ -227,6 +222,7 @@ export default function EnhancedTable(props) {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [total, setTotal] = React.useState(0);
+  const [dataExport, setDataExport] = React.useState([]);
   const rows = [];
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
@@ -247,7 +243,7 @@ export default function EnhancedTable(props) {
   );
   React.useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    console.log(prueba);
+    setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
     setTotal(pruebaValor);
@@ -302,10 +298,70 @@ export default function EnhancedTable(props) {
   };
 
   const isSelected = (rut) => selected.indexOf(rut) !== -1;
-
+  let headersExcel = [
+    [
+      "Rut",
+      "Nombre Beneficiario",
+      "FP",
+      "BCO",
+      "N° Cuenta Cte.",
+      "N° Documento",
+      "Monto a pago",
+      "Of BCI",
+      "Fecha",
+      "Ap. Paterno",
+      "Ap. Materno",
+      "Nombre",
+      "Rut Retirador",
+      "Tipo",
+      "Glosa",
+      "CONVENIO",
+      "EMAIL",
+    ],
+  ];
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  function convertToSheet(data) {
+    const wb = XLSX.utils.book_new();
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(ws, headersExcel);
+    const sheet = XLSX.utils.sheet_add_json(ws, data, {
+      origin: "A2",
+      skipHeader: true,
+    });
+
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    XLSX.writeFile(wb, "filename.xlsx");
+  }
+  function downloadExcelFile(filename, data) {
+    let dataPrueba = [];
+    for (let i in data) {
+      let obj = new Object();
+
+      obj.Rut = data[i].rutAcreedor;
+      obj.Nombre_Beneficiario = data[i].nombreAcreedor;
+      obj.Fp = "CCT";
+      obj.Bco = data[i].sBifAcreedor;
+      obj.NumeroCuenta = data[i].cuentaBancoAcreedor;
+      obj.NumeroDocumento = data[i].folio;
+      obj.MontoPago = data[i].valorNeto;
+      obj.OfBci = "";
+      obj.Fecha = "23/03/2023";
+      obj.ApPaterno = "";
+      obj.ApMaterno = "";
+      obj.Nombre = data[i].cuentaBancoAcreedor;
+      obj.RutRetirador = "";
+      obj.Tipo = "FAC";
+      obj.Glosa = data[i].glosa;
+      obj.Convenio = "";
+      obj.Email = data[i].correoDteAcreedor;
+      dataPrueba.push(obj);
+    }
+    convertToSheet(dataPrueba);
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -315,8 +371,7 @@ export default function EnhancedTable(props) {
             className="bg-grey-50"
             variant="h6"
             id="tableTitle"
-            component="div"
-          >
+            component="div">
             Tabla de Nominas "BCI"
           </Typography>
           <h1 className="border border-b-pantoneazul"></h1>
@@ -326,7 +381,7 @@ export default function EnhancedTable(props) {
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
             color="secondary"
-          >
+            onClick={() => downloadExcelFile("mydata", dataExport)}>
             <SiMicrosoftexcel className="mr-3 " />
             Nomina de pago <HiDownload />
           </Button>
@@ -336,8 +391,7 @@ export default function EnhancedTable(props) {
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
+            size={dense ? "small" : "medium"}>
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -362,8 +416,7 @@ export default function EnhancedTable(props) {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.id}
-                      selected={isItemSelected}
-                    >
+                      selected={isItemSelected}>
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
@@ -378,8 +431,7 @@ export default function EnhancedTable(props) {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        align="left"
-                      >
+                        align="left">
                         {row.rut}
                       </TableCell>
                       <TableCell align="left">{row.nombre}</TableCell>
@@ -394,8 +446,7 @@ export default function EnhancedTable(props) {
                 <TableRow
                   style={{
                     height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
+                  }}>
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
