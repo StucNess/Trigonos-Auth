@@ -140,7 +140,7 @@ export default function HorizontalNonLinearStepper(props) {
   const [activeButton, setActiveButton] = useState(false)
   const [countActive, setCountActive] = useState(0)
   const [open, setOpen] = useState(false);
-
+  const [refreshData, setRefreshData] = useState(false);
   const handleClickOpen = () => {
     setOpen(true);
    
@@ -153,7 +153,7 @@ export default function HorizontalNonLinearStepper(props) {
   const handleCloseAlertSubmit = () => {
     ApiPatch();
     setOpen(false);
-
+    refreshData(true);
   };
   const onInputChange = ({ target }) => {
     const { name, value } = target;
@@ -224,7 +224,8 @@ export default function HorizontalNonLinearStepper(props) {
       console.log(props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g, ''));
       
     })();
-  }, [props.dataParticipant.id]);
+   
+  }, [props.dataParticipant.id,refreshData]);
   useEffect(() => {
     (async () => {
       banks = await CallBanks(1, 2);
@@ -235,6 +236,7 @@ export default function HorizontalNonLinearStepper(props) {
       setTimeout(() => {
         setAlertOk(false);
       }, 5000);
+      
     }
     if (alertError === true) {
       setTimeout(() => {

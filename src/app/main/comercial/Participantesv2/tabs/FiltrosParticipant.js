@@ -36,6 +36,11 @@ export default function FiltrosParticipant(props) {
       id: 1,
     },
   ]);
+
+
+
+
+  
   useEffect(() => {
     props.sendParticipants(dataParticipant);
   }, [dataParticipant,props.change]);
