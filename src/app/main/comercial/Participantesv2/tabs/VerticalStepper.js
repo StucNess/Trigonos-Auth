@@ -1470,6 +1470,7 @@ useEffect(()=>{
                       <Typography variant="h6" className="mb-4" color="primary">
                         Historificación
                       </Typography>
+                     
                     </Box>
 
                     {/* <Typography variant="h6" className="mb-4 ml-4">
