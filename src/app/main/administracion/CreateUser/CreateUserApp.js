@@ -201,7 +201,7 @@ function CreateUserApp(props) {
             className="flex flex-col justify-center w-full mt-32"
             onSubmit={handleSubmit(onSubmit)}>
             <div >
-            <AdviceModule classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} textwidth={200}/>
+            <AdviceModule classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} textwidth={300}/>
             <Controller
               name="user"
               control={control}
@@ -288,7 +288,7 @@ function CreateUserApp(props) {
             />
 
            
-            <AdviceModule classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."} textwidth={300} />
+            <AdviceModule classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."} textwidth={350} />
             <Controller
               name="password"
               control={control}
