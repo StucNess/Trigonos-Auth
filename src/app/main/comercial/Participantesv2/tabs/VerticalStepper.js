@@ -142,7 +142,7 @@ export default function HorizontalNonLinearStepper(props) {
   const [activeButton, setActiveButton] = useState(false)
   const [countActive, setCountActive] = useState(0)
   const [open, setOpen] = useState(false);
-  const [refreshData, setRefreshData] = useState(false);
+
   const [checkedBlue, setCheckedBlue] = React.useState(true);
   const [checkedExt, setCheckedExt] = React.useState(false);
   const handleClickOpen = () => {
@@ -157,7 +157,7 @@ export default function HorizontalNonLinearStepper(props) {
   const handleCloseAlertSubmit = () => {
     ApiPatch();
     setOpen(false);
-    refreshData(true);
+    
   };
   const onInputChange = ({ target }) => {
     const { name, value } = target;
@@ -165,7 +165,7 @@ export default function HorizontalNonLinearStepper(props) {
       ...formState,
       [name]: value,
     });
-    console.log(formState.verificationCode);
+    
   };
   
   
@@ -229,7 +229,7 @@ export default function HorizontalNonLinearStepper(props) {
       
     })();
    
-  }, [props.dataParticipant.id,refreshData]);
+  }, [props.dataParticipant.id, alertOk]);
   useEffect(() => {
     (async () => {
       banks = await CallBanks(1, 2);
@@ -237,8 +237,10 @@ export default function HorizontalNonLinearStepper(props) {
   }, []);
   useEffect(() => {
     if (alertOk === true) {
+      setActiveButton(true);
       setTimeout(() => {
         setAlertOk(false);
+        setActiveButton(false);
       }, 5000);
       
     }
@@ -437,6 +439,8 @@ useEffect(() => {
 
 useEffect(()=>{
   props.sendChange(alertOk);
+  // console.log(formState.id);
+  props.sendIdParticipant(formState.id);
 },[alertOk])
   return (
     <Box className="w-full h-full">

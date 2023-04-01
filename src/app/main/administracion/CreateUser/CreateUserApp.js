@@ -119,7 +119,7 @@ function CreateUserApp(props) {
     } = event;
     setRolName(value);
   };
-  function timeout(delay: number) {
+  function timeout(delay = number) {
     return new Promise((res) => setTimeout(res, delay));
   }
   useEffect(() => {

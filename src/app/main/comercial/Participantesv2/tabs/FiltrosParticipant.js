@@ -7,24 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { CallApi } from "../store/CallApi";
-// const top100Films = [
-//   { business_Name: "The Shawshank Redemption", year: 1994 },
-//   { business_Name: "The Godfather", year: 1972 },
-//   { business_Name: "The Godfather: Part II", year: 1974 },
-//   { business_Name: "The Dark Knight", year: 2008 },
-// ];
-// const top100Films1 = [
-//   { rut: "The Shawshank Redemption", year: 1994 },
-//   { rut: "The Godfather", year: 1972 },
-//   { rut: "The Godfather: Part II", year: 1974 },
-//   { rut: "The Dark Knight", year: 2008 },
-// ];
-// const top100Films2 = [
-//   { business_Name: "The Shawshank Redemption", year: 1994 },
-//   { business_Name: "The Godfather", year: 1972 },
-//   { business_Name: "The Godfather: Part II", year: 1974 },
-//   { business_Name: "The Dark Knight", year: 2008 },
-// ];
+
 let participants;
 export default function FiltrosParticipant(props) {
   const [render, setRender] = useState(false);
@@ -43,18 +26,31 @@ export default function FiltrosParticipant(props) {
   
   useEffect(() => {
     props.sendParticipants(dataParticipant);
-  }, [dataParticipant,props.change]);
+  }, [dataParticipant]);
   useEffect(() => {
-    // props.sendParticipants();
-    // console.log(nameParticipants[0]);
-  }, []);
+    if(props.change){
+      console.log(props.change);
+      console.log(`ID DEL REFRESH: ${props.idParticipant}`);
+      callAsyncApi(props.idParticipant);
+    }
+    
+  }, [props.change]);
+  let callAsyncApi = (refreshValue)=>{
+    (async () => {
+      participants = await CallApi(1, 1000, 1);
+      setNameParticipants(participants);
+      setDataParticipant(participants[parseInt(refreshValue-1)]);
+      props.sendParticipants(participants[parseInt(refreshValue-1)]);
+      // props.sendParticipants(participants[parseInt(refreshValue-1)]);
+    })();
+  }
   useEffect(() => {
     (async () => {
       participants = await CallApi(1, 1000, 1);
       setNameParticipants(participants);
       props.sendParticipants(participants[0]);
     })();
-  }, [props.change]);
+  }, []);
   // console.log(dataParticipant.name);
   return (
     <Box>
