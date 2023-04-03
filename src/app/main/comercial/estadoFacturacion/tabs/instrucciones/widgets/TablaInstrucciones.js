@@ -294,6 +294,7 @@ const TablaInstrucciones = (props) => {
     props.idParticipante,
     render,
     render1,
+    cargando
   ]);
   // useEffect(() => {
   //   props.tokenCharge(cargando);
