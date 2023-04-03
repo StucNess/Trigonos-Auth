@@ -113,6 +113,7 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactFirstName: false,
     billsContactPhones: false,
     billsContactEmail: false,
+    typeClient: false,
   });
   const [dataConfirm, setDataConfirm] = useState({
     id: props.dataParticipant.id,
@@ -143,7 +144,7 @@ export default function HorizontalNonLinearStepper(props) {
   const [countActive, setCountActive] = useState(0)
   const [open, setOpen] = useState(false);
 
-  const [checkedBlue, setCheckedBlue] = React.useState(true);
+  const [checkedBlue, setCheckedBlue] = React.useState(false);
   const [checkedExt, setCheckedExt] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -267,6 +268,7 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactFirstName,
     billsContactPhones,
     billsContactEmail,
+    typeClient,
   } = update;
   const handleChangeCheck = (event)=>{
     setChecked(event.target.checked);
@@ -1408,29 +1410,6 @@ useEffect(()=>{
                     </Typography>
 
                     <Box className="flex flex-wrap justify-between  zerorange:justify-center ml-[0 auto] ">
-                    <Box className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px]">
-                        <Typography variant="subtitle1"  color="primary">
-                          Tipo de cliente
-                        </Typography>
-                        <Box>
-                        <Box >
-                        <FormControlLabel
-                                  label="Bluetree"
-                                  control={<Checkbox checked={checkedBlue} onChange={event => {setCheckedBlue(event.target.checked);
-                                                                                                setCheckedExt(false);}} />}
-                                />
-                        </Box>
-                        <Box>
-                        
-
-                          <FormControlLabel
-                                  label="Externo"
-                                  control={<Checkbox checked={checkedExt} onChange={event => {setCheckedExt(event.target.checked);
-                                                                                                setCheckedBlue(false);}} />}
-                                />
-                        </Box>
-                        </Box>
-                        </Box>
                       <TextField
                         className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Token"
@@ -1439,32 +1418,71 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         variant="filled"
                       />
-                  
-                        
-                        
-                      
+                      <Box className="flex flex-col">
 
-                      {/* <FormControl
-                        variant="filled"
-                        className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                      >
-                        <InputLabel id="demo-simple-select-filled-label">
-                          ERP
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="demo-simple-select-filled"
-                          value={erp}
-                          onChange={handleChangeERP}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl> */}
+
+                      <InputAdornment className="mb-[10px]">
+                        {typeClient ? (
+                            <>
+                              <CheckBoxIcon
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    typeClient: false,
+                                  });
+                                }}
+                              />
+                              <DisabledByDefaultIcon
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    typeClient: false,
+                                  });
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <EditIcon
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                setUpdate({
+                                  ...update,
+                                  typeClient: true,
+                                
+                                });
+                              }}
+                            />
+                          )}
+                      </InputAdornment>
+                      <Box>
+                        <Typography variant="subtitle1"  color="primary" className="mb-[40px]">
+                          Tipo de cliente
+                        </Typography>
+                        <Box>
+                             <InputAdornment  disablePointerEvents = {!typeClient}>
+                              <Box>
+                                <Box>
+                                  <FormControlLabel
+                                    label="Bluetree"
+                                    control={<Checkbox checked={checkedBlue} onChange={event => {setCheckedBlue(event.target.checked);
+                                                                                                  setCheckedExt(false);}} />}
+                                  />
+                                </Box>
+                                <Box>
+                                    <FormControlLabel
+                                      label="Externo"
+                                      control={<Checkbox checked={checkedExt} onChange={event => {setCheckedExt(event.target.checked);
+                                                                                                    setCheckedBlue(false);}} />}
+                                    />
+                                </Box>
+                              </Box>
+                             </InputAdornment>
+                            </Box>
+                      </Box>
+                      </Box>
+                      
                     </Box>
                   </Box>
                 ) : (
@@ -1511,7 +1529,7 @@ useEffect(()=>{
         {alertError && (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="warning">
-              Error!! debe modificar alguna instrucción para guardar..
+              Error!! debe modificar uno o más campos para guardar..
             </Alert>
           </Stack>
         )}
