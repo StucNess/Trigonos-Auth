@@ -599,6 +599,7 @@ const TablaInstrucciones = (props) => {
                             return (
                               <TableCell key={column.id} align={column.align}>
                                 <EditIcon
+                                style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     showModal(dataRow);
                                   }}

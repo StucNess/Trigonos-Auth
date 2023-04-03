@@ -454,7 +454,7 @@ useEffect(()=>{
           </Typography>
 
           <Stepper
-            className="ml-[30px] mt-[30px] "
+            className="ml-[30px] mt-[30px]  mdmax:ml-[0px]"
             nonLinear
             activeStep={activeStep}
             orientation="vertical">
@@ -517,7 +517,8 @@ useEffect(()=>{
                     </Typography>
 
                     <Box className="flex flex-wrap justify-start zerorange:justify-center  ">
-                      <TextField
+                    <Box className="flex flex-col"> 
+                    <TextField
                         // id="outlined-required"
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Nombre"
@@ -580,6 +581,20 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {name ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Razón Social"
@@ -637,6 +652,21 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
+                        <div className="absolute ">
+                          {businessName ? (
+                                    <>
+                                      <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      
+                                    </>
+                                  )}
+                          
+                        </div>
+                      </Box>
+                      
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Giro"
@@ -695,27 +725,21 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
-                      {/* <FormControl
-                        variant="filled"
-                        className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                      >
-                        <InputLabel id="demo-simple-select-filled-label">
-                          Grupo Coordinado
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="demo-simple-select-filled"
-                          value={grupo}
-                          onChange={handleChange}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl> */}
+                      <div className="absolute ">
+                        {commercialBusiness ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      
+                   
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Rut"
@@ -772,7 +796,8 @@ useEffect(()=>{
                         // }}
                         variant="filled"
                       />
-                       <TextField
+                      <Box className="flex flex-col"> 
+                      <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Gerente General"
                         type="text"
@@ -830,6 +855,20 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {manager ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                       
                     </Box>
                   </Box>
                 ) : activeStep === 1 ? (
@@ -838,6 +877,7 @@ useEffect(()=>{
                       Datos de Contacto
                     </Typography>
                     <Box className="flex flex-wrap justify-start  zerorange:justify-center ml-[0 auto]">
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Dirección Comercial"
@@ -896,6 +936,20 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
+                          <div className="absolute ">
+                            {commercialAddress ? (
+                                      <>
+                                        <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        
+                                      </>
+                                    )}
+                            
+                          </div>
+                        </Box>
+                      
                       {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Comuna"
@@ -912,6 +966,8 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         variant="filled"
                       /> */}
+                      
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Email DTE"
@@ -970,6 +1026,21 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
+                        <div className="absolute ">
+                          {email ? (
+                                    <>
+                                      <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      
+                                    </>
+                                  )}
+                          
+                        </div>
+                      </Box>
+                      
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Teléfono de Contacto Pago"
@@ -1028,6 +1099,20 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
+                        <div className="absolute ">
+                          {payContactPhones ? (
+                                    <>
+                                      <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      
+                                    </>
+                                  )}
+                          
+                        </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Teléfono de Contacto Factura"
@@ -1087,6 +1172,20 @@ useEffect(()=>{
                         }}
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {billsContactPhones ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                     
                       {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Nómina ID"
@@ -1111,6 +1210,7 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         variant="filled"
                       /> */}
+                      <Box className="flex flex-col"> 
                       <TextField
                         // disabled={banksName1 ? false : true}
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
@@ -1196,6 +1296,20 @@ useEffect(()=>{
                           </MenuItem>
                         ))}
                       </TextField>
+                      <div className="absolute ">
+                        {banksName ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="RUT Cuenta Corriente"
@@ -1258,6 +1372,20 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {rut ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Cuenta Corriente"
@@ -1321,6 +1449,20 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {bankAccount ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      
                       <TextField
                         // disabled={banksName1 ? false : true}
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
@@ -1408,8 +1550,9 @@ useEffect(()=>{
                     <Typography variant="h6" className="mb-4" color="primary">
                       Gestión Trígonos
                     </Typography>
-
+                   
                     <Box className="flex flex-wrap justify-between  zerorange:justify-center ml-[0 auto] ">
+                    <Box className="flex flex-col"> 
                     <Box className="flex flex-col zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px]">
                       <Box className="flex flex-row">
                       <Typography variant="subtitle1"  color="primary" className="mb-[40px]">
@@ -1479,6 +1622,20 @@ useEffect(()=>{
                             </Box>
                       </Box>
                       </Box>
+                    <div className="absolute ">
+                        {typeClient ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                   
                       <TextField
                         className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Token"
