@@ -1425,6 +1425,7 @@ useEffect(()=>{
                                     ...update,
                                     typeClient: false,
                                   });
+                                  setCountActive(countActive>0?countActive-1:countActive);
                                 }}
                               />
                               <DisabledByDefaultIcon
@@ -1434,6 +1435,7 @@ useEffect(()=>{
                                     ...update,
                                     typeClient: false,
                                   });
+                                  setCountActive(countActive>0?countActive-1:countActive);
                                 }}
                               />
                             </>
@@ -1446,6 +1448,7 @@ useEffect(()=>{
                                   typeClient: true,
                                 
                                 });
+                                setCountActive(countActive+1);
                               }}
                             />
                           )}
