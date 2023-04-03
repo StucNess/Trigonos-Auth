@@ -295,7 +295,7 @@ const Filtros = (props) => {
     props.getCargandoFiltros(disabled);
   }, [disabled]);
   return (
-    
+  
     <Paper
       sx={{ width: "100%", color: "grey.500" }}
       // tvxxl:max-w-[78%] tvdosk:max-w-[70%]

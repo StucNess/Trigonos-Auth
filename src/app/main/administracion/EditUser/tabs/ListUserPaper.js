@@ -1,4 +1,4 @@
-import * as React from 'react';
+import {useEffect,useState} from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -29,28 +29,31 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-function createData(usuario, nombre, apellido, email, contrasenia,clientes,rol) {
+import {CallApiUsers} from '../store/CallApiUsers'
+function createData(   id,
+  email,
+  username,
+  nombre,
+  apellido) {
   return {
-    usuario,
+    id,
+    email,
+    username,
     nombre,
     apellido,
-    email,
-    contrasenia,
-    clientes,
-    rol
     
   };
 }
 
-const rows = [
-  createData('userPrueba1', 'juanito', 'velasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-  createData('userPrueba2', 'Rosita ',  'Carrasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-  createData('userPrueba3', 'Como', 'tu', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-  createData('userPrueba4', 'Nose', 'ayuda', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-  createData('userPrueba5', 'Claro', 'Movistar', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-  createData('userPrueba6', 'El', 'sadsa', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+// const rows = [
+//   createData('userPrueba1', 'juanito', 'velasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+//   createData('userPrueba2', 'Rosita ',  'Carrasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+//   createData('userPrueba3', 'Como', 'tu', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+//   createData('userPrueba4', 'Nose', 'ayuda', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+//   createData('userPrueba5', 'Claro', 'Movistar', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+//   createData('userPrueba6', 'El', 'sadsa', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
   
-];
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -195,7 +198,7 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar(props) {
   const { numSelected } = props;
-  const [roll, setroll] = React.useState('');
+  const [roll, setroll] = useState('');
 
   const handleChange = (event) => {
     setroll(event.target.value);
@@ -302,13 +305,20 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable() {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('usuario');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('usuario');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [users, setUsers] = useState([]);
+  useEffect(()=>{
+    (async () =>{
+      let users = await CallApiUsers();
+      console.log(users);
 
+    })
+  })
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');

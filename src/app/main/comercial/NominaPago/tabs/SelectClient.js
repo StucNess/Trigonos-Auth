@@ -42,7 +42,7 @@ export default function SelectClientTable(props) {
     setValue(newValue);
   };
   const [value, setValue] = useState(dayjs());
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState([])
   const [payrollTable, setPayrollTable] = useState(0);
   useEffect(() => {
     (async () => {
