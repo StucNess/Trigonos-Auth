@@ -1410,18 +1410,12 @@ useEffect(()=>{
                     </Typography>
 
                     <Box className="flex flex-wrap justify-between  zerorange:justify-center ml-[0 auto] ">
-                      <TextField
-                        className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                        label="Token"
-                        type="text"
-                        value={"Vacio"}
-                        defaultValue="Vacio"
-                        variant="filled"
-                      />
-                      <Box className="flex flex-col">
-
-
-                      <InputAdornment className="mb-[10px]">
+                    <Box className="flex flex-col zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px]">
+                      <Box className="flex flex-row">
+                      <Typography variant="subtitle1"  color="primary" className="mb-[40px]">
+                          Tipo de cliente
+                        </Typography>
+                      <InputAdornment className="m-[10px]">
                         {typeClient ? (
                             <>
                               <CheckBoxIcon
@@ -1456,12 +1450,12 @@ useEffect(()=>{
                             />
                           )}
                       </InputAdornment>
+                      </Box>
+                     
                       <Box>
-                        <Typography variant="subtitle1"  color="primary" className="mb-[40px]">
-                          Tipo de cliente
-                        </Typography>
+                        
                         <Box>
-                             <InputAdornment  disablePointerEvents = {!typeClient}>
+                            <InputAdornment  disablePointerEvents = {!typeClient}>
                               <Box>
                                 <Box>
                                   <FormControlLabel
@@ -1478,10 +1472,19 @@ useEffect(()=>{
                                     />
                                 </Box>
                               </Box>
-                             </InputAdornment>
+                            </InputAdornment>
                             </Box>
                       </Box>
                       </Box>
+                      <TextField
+                        className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                        label="Token"
+                        type="text"
+                        value={"Vacio"}
+                        defaultValue="Vacio"
+                        variant="filled"
+                      />
+                    
                       
                     </Box>
                   </Box>
