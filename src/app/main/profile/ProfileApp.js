@@ -5,6 +5,15 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/store/userSlice';
+//Tabs
+import PropTypes from 'prop-types';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Typography from '@mui/material/Typography';
+import { useState } from "react";
+import ActivityProfile from "./tabs/ActivityProfile";
+import ConfigProfile from "./tabs/ConfigProfile";
+import InfoProfile from "./tabs/InfoProfile";
 // import React from 'react'
 function capitalize(word) {
   const lower = word.toLowerCase();
@@ -22,9 +31,41 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
     "& .FusePageSimple-sidebarHeader": {},
     "& .FusePageSimple-sidebarContent": {},
   }));
+
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+  
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
+          </Box>
+        )}
+      </div>
+    );
+  }
+
+function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`,
+    };
+  }
 const ProfileApp = () => {
   const user = useSelector(selectUser);
+  const [value, setValue] = useState(0);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   return (
     <Root
     header={
@@ -55,17 +96,28 @@ const ProfileApp = () => {
                   
               <Box className="hidden lg:flex h-32 mx-32 border-l-2"></Box>
               Pequeña descripcion aqui
+              
+              <Box className="flex flex-1 justify-end my-16 lg:my-0">
+              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Actividad" {...a11yProps(0)} />
+                <Tab label="Información" {...a11yProps(1)} />
+                <Tab label="Configuración" {...a11yProps(2)} />
+              </Tabs>
+              </Box>
               </Box>
               </Box>
           </header  >
      
     }
       content={
-        <div >
-            <Container>
-              container
+      
+            <Container >
+            {value === 0 && ( <ActivityProfile value={value} index={value}/> )}
+            {value === 1 && (  <ConfigProfile value={value} index={value}/> )}
+            {value === 2 && (  <InfoProfile value={value} index={value}/> )}
+          
             </Container>
-        </div>
+        
       }
       scroll="content"
     />
