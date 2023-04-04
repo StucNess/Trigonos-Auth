@@ -37,21 +37,14 @@ const ProfileApp = () => {
                 <Box  style={{
                   transform: "none"
                 }}>
-                  
                   <Avatar
                   className="w-128 h-128 border-4"
                     alt="Photo" 
-                    src="assets\images\avatars\female-03.jpg"
-                   
+                    src=""
                   />
-                  
-                    
                 </Box>
-                
-                  
               </Box>
               <Box className="flex flex-col items-center lg:items-start mt-16 lg:mt-0 lg:ml-32">
-                 
                   <p className="text-lg font-bold leading-none">
                   {user.data.nombre} {user.data.apellido}
                   </p>
@@ -63,7 +56,6 @@ const ProfileApp = () => {
               <Box className="hidden lg:flex h-32 mx-32 border-l-2"></Box>
               Pequeña descripcion aqui
               </Box>
-              
               </Box>
           </header  >
      
