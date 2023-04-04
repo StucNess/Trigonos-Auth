@@ -242,13 +242,13 @@ export default function HorizontalNonLinearStepper(props) {
       setTimeout(() => {
         setAlertOk(false);
         setActiveButton(false);
-      }, 5000);
+      }, 1000);
       
     }
     if (alertError === true) {
       setTimeout(() => {
         setAlertError(false);
-      }, 5000);
+      }, 1000);
     }
   }, [alertOk, alertError]);
 
