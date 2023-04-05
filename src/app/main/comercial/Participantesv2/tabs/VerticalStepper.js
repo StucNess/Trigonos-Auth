@@ -21,13 +21,13 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import InputAdornment from "@mui/material/InputAdornment";
 import MenuItem from "@mui/material/MenuItem";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import Select from "@mui/material/Select";
 // import TextField from "@mui/material/TextField";
 import TablaUltimosCambios from "./widgets/TablaUltimosCambios";
@@ -139,21 +139,20 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactPhones: props.dataParticipant.bills_contact_phones,
     billsContactEmail: props.dataParticipant.bills_contact_email,
   });
-  const [activeButton, setActiveButton] = useState(false)
-  const [countActive, setCountActive] = useState(0)
+  const [activeButton, setActiveButton] = useState(false);
+  const [countActive, setCountActive] = useState(0);
   const [open, setOpen] = useState(false);
   const [refreshData, setRefreshData] = useState(false);
   const [checkedBlue, setCheckedBlue] = React.useState(true);
   const [checkedExt, setCheckedExt] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
-   
   };
-  
+
   const handleCloseAlert = () => {
     setOpen(false);
   };
-  
+
   const handleCloseAlertSubmit = () => {
     ApiPatch();
     setOpen(false);
@@ -165,11 +164,8 @@ export default function HorizontalNonLinearStepper(props) {
       ...formState,
       [name]: value,
     });
-    console.log(formState.verificationCode);
   };
-  
-  
-  
+
   useEffect(() => {
     (async () => {
       dataBank = await CallBanks(props.dataParticipant.bank);
@@ -191,12 +187,18 @@ export default function HorizontalNonLinearStepper(props) {
         payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
         payContactLastName: props.dataParticipant.pay_contact_last_name,
         payContactAddress: props.dataParticipant.pay_contact_address,
-        payContactPhones: props.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g, ''),
+        payContactPhones: props.dataParticipant.pay_contact_phones.replace(
+          /["\[\]"]/g,
+          ""
+        ),
         payContactEmail: props.dataParticipant.pay_contact_email,
         billsContactLastName: props.dataParticipant.bills_contact_last_name,
         billsContactFirstName: props.dataParticipant.bills_contact_first_name,
         billsContactAddress: props.dataParticipant.bills_contact_address,
-        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g, ''),
+        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(
+          /["\[\]"]/g,
+          ""
+        ),
         billsContactEmail: props.dataParticipant.bills_contact_email,
       });
       setDataConfirm({
@@ -216,20 +218,22 @@ export default function HorizontalNonLinearStepper(props) {
         payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
         payContactLastName: props.dataParticipant.pay_contact_last_name,
         payContactAddress: props.dataParticipant.pay_contact_address,
-        payContactPhones: props.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g, ''),
+        payContactPhones: props.dataParticipant.pay_contact_phones.replace(
+          /["\[\]"]/g,
+          ""
+        ),
         payContactEmail: props.dataParticipant.pay_contact_email,
         billsContactLastName: props.dataParticipant.bills_contact_last_name,
         billsContactFirstName: props.dataParticipant.bills_contact_first_name,
         billsContactAddress: props.dataParticipant.bills_contact_address,
-        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g, ''),
+        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(
+          /["\[\]"]/g,
+          ""
+        ),
         billsContactEmail: props.dataParticipant.bills_contact_email,
       });
-    
-      console.log(props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g, ''));
-      
     })();
-   
-  }, [props.dataParticipant.id,refreshData]);
+  }, [props.dataParticipant.id, refreshData]);
   useEffect(() => {
     (async () => {
       banks = await CallBanks(1, 2);
@@ -240,7 +244,6 @@ export default function HorizontalNonLinearStepper(props) {
       setTimeout(() => {
         setAlertOk(false);
       }, 5000);
-      
     }
     if (alertError === true) {
       setTimeout(() => {
@@ -266,7 +269,7 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactPhones,
     billsContactEmail,
   } = update;
-  const handleChangeCheck = (event)=>{
+  const handleChangeCheck = (event) => {
     setChecked(event.target.checked);
   };
   const handleChangee = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -364,35 +367,37 @@ export default function HorizontalNonLinearStepper(props) {
                  {label}
                 </Typography> */
   }
-  const FetchDatas = ()=>{
+  const FetchDatas = () => {
     var encuentra = false;
-    for(var i =0; i < p.tags.length;i++){
-        encuentra = false;
-        for(var j =0; j < tags.length;j++){
-            if(p.tags[i] == tags[j]){
-                encuentra = true;
-                break;
-            }
-        }
-        if(!encuenta){
-          alert("los arreglos no son iguales");
+    for (var i = 0; i < p.tags.length; i++) {
+      encuentra = false;
+      for (var j = 0; j < tags.length; j++) {
+        if (p.tags[i] == tags[j]) {
+          encuentra = true;
           break;
         }
+      }
+      if (!encuenta) {
+        alert("los arreglos no son iguales");
+        break;
+      }
     }
-    if(encuentra){
-        alert("si son iguales");
+    if (encuentra) {
+      alert("si son iguales");
     }
-  }
+  };
 
   const ApiPatch = () => {
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    if(isEqual){
-      console.log('No se realiza envio a API');
+    if (isEqual) {
+      console.log("No se realiza envio a API");
       setAlertError(true);
-    }else{
-      let formatBillsContactPhones = "[\""+formState.billsContactPhones.replace(/,/g, '","')+ "\"]";
-      let formatpayContactPhones = "[\""+formState.payContactPhones.replace(/,/g, '","')+ "\"]";
-        // console.log(pruebabillsContactPhones);
+    } else {
+      let formatBillsContactPhones =
+        '["' + formState.billsContactPhones.replace(/,/g, '","') + '"]';
+      let formatpayContactPhones =
+        '["' + formState.payContactPhones.replace(/,/g, '","') + '"]';
+      // console.log(pruebabillsContactPhones);
       const apiPatchParticipante =
         `http://164.77.112.10:99/api/Participantes?` +
         `id=${formState.id}&` +
@@ -421,26 +426,22 @@ export default function HorizontalNonLinearStepper(props) {
         .patch(apiPatchParticipante)
         .then((response) => {
           setAlertOk(true);
-          
         })
         .catch((error) => {
           setAlertError(true);
         });
-      
     }
-    
-    
   };
-useEffect(() => {
-  countActive ===0?setActiveButton(false):setActiveButton(true);
-}, [countActive])
+  useEffect(() => {
+    countActive === 0 ? setActiveButton(false) : setActiveButton(true);
+  }, [countActive]);
 
-useEffect(()=>{
-  props.sendChange(alertOk);
-},[alertOk])
+  useEffect(() => {
+    props.sendChange(alertOk);
+  }, [alertOk]);
   return (
     <Box className="w-full h-full">
-      <Box  className="flex w-full h-full" sx={{ width: "100%" }} >
+      <Box className="flex w-full h-full" sx={{ width: "100%" }}>
         {/* SECCION VERTICAL IZQUIERDA */}
         <Box className="pr-[10px]  md:min-w-[300px] h-full">
           <Typography variant="h6" className="mb-4" color="primary">
@@ -451,7 +452,8 @@ useEffect(()=>{
             className="ml-[30px] mt-[30px] "
             nonLinear
             activeStep={activeStep}
-            orientation="vertical">
+            orientation="vertical"
+          >
             {steps.map((label, index) => (
               <Step
                 key={label}
@@ -474,12 +476,14 @@ useEffect(()=>{
                   "& .MuiStepIcon": {
                     color: "blue",
                   },
-                }}>
+                }}
+              >
                 <StepButton
                   focusRipple
                   className="hover:bg-blue-50"
                   icon={handleIconStep(index)}
-                  onClick={handleStep(index)}>
+                  onClick={handleStep(index)}
+                >
                   {label}
                 </StepButton>
               </Step>
@@ -527,19 +531,22 @@ useEffect(()=>{
                               {name ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         name: false,
                                       });
-                                     
-                                      setCountActive(countActive>0?countActive-1:countActive);
-                                      
+
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -549,23 +556,24 @@ useEffect(()=>{
                                         ...update,
                                         name: false,
                                       });
-                                 
-                                      setCountActive(countActive>0?countActive-1:countActive);
-                                      
+
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       name: true,
-                                      
                                     });
-                                    setCountActive(countActive+1);
-                                    
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -589,17 +597,21 @@ useEffect(()=>{
                               {businessName ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         businessName: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -610,19 +622,23 @@ useEffect(()=>{
                                         ...update,
                                         businessName: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       businessName: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -646,17 +662,21 @@ useEffect(()=>{
                               {commercialBusiness ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         commercialBusiness: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -668,19 +688,23 @@ useEffect(()=>{
                                         ...update,
                                         commercialBusiness: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       commercialBusiness: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -766,7 +790,7 @@ useEffect(()=>{
                         // }}
                         variant="filled"
                       />
-                       <TextField
+                      <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Gerente General"
                         type="text"
@@ -781,41 +805,47 @@ useEffect(()=>{
                               {manager ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         manager: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
-                                        manager:
-                                          props.dataParticipant
-                                            .manager,
+                                        manager: props.dataParticipant.manager,
                                       });
                                       setUpdate({
                                         ...update,
                                         manager: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       manager: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -847,17 +877,21 @@ useEffect(()=>{
                               {commercialAddress ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         commercialAddress: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -869,19 +903,23 @@ useEffect(()=>{
                                         ...update,
                                         commercialAddress: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       commercialAddress: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -921,17 +959,21 @@ useEffect(()=>{
                               {email ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         email: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
@@ -943,19 +985,23 @@ useEffect(()=>{
                                         ...update,
                                         email: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       email: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -979,41 +1025,51 @@ useEffect(()=>{
                               {payContactPhones ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         payContactPhones: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
                                         payContactPhones:
-                                          props.dataParticipant
-                                            .pay_contact_phones.replace(/["\[\]"]/g, ''),
+                                          props.dataParticipant.pay_contact_phones.replace(
+                                            /["\[\]"]/g,
+                                            ""
+                                          ),
                                       });
                                       setUpdate({
                                         ...update,
                                         payContactPhones: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       payContactPhones: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -1037,42 +1093,52 @@ useEffect(()=>{
                               {billsContactPhones ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         billsContactPhones: false,
                                       });
-                                      
-                                      setCountActive(countActive>0?countActive-1:countActive);
+
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setFormState({
                                         ...formState,
                                         billsContactPhones:
-                                          props.dataParticipant
-                                            .bills_contact_phones.replace(/["\[\]"]/g, ''),
+                                          props.dataParticipant.bills_contact_phones.replace(
+                                            /["\[\]"]/g,
+                                            ""
+                                          ),
                                       });
                                       setUpdate({
                                         ...update,
                                         billsContactPhones: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
-                                      billsContactPhones: true ,
+                                      billsContactPhones: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -1122,7 +1188,7 @@ useEffect(()=>{
                               {banksName ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
@@ -1135,11 +1201,15 @@ useEffect(()=>{
                                       //   bank: props.dataParticipant.bank,
                                       // });
                                       // setBankk(props.dataParticipant.banksName);
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       // setFormState({
                                       //   ...formState,
@@ -1158,13 +1228,17 @@ useEffect(()=>{
                                         ...update,
                                         banksName: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
@@ -1177,13 +1251,14 @@ useEffect(()=>{
                                       // });
                                       // console.log(formState);
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
                             </InputAdornment>
                           ),
-                        }}>
+                        }}
+                      >
                         {banks.map((data) => (
                           <MenuItem key={data.id} value={data.name}>
                             {data.name}
@@ -1204,17 +1279,21 @@ useEffect(()=>{
                               {rut ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         rut: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       // setFormState({
                                       //   ...formState,
@@ -1230,19 +1309,23 @@ useEffect(()=>{
                                         ...update,
                                         rut: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       rut: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -1266,17 +1349,21 @@ useEffect(()=>{
                               {bankAccount ? (
                                 <>
                                   <CheckBoxIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       setUpdate({
                                         ...update,
                                         bankAccount: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                   <DisabledByDefaultIcon
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                     onClick={() => {
                                       // setFormState({
                                       //   ...formState,
@@ -1293,19 +1380,23 @@ useEffect(()=>{
                                         ...update,
                                         bankAccount: false,
                                       });
-                                      setCountActive(countActive>0?countActive-1:countActive);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
                                     }}
                                   />
                                 </>
                               ) : (
                                 <EditIcon
-                                  style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     setUpdate({
                                       ...update,
                                       bankAccount: true,
                                     });
-                                    setCountActive(countActive+1);
+                                    setCountActive(countActive + 1);
                                   }}
                                 />
                               )}
@@ -1413,35 +1504,44 @@ useEffect(()=>{
                         variant="filled"
                       />
                       <Box className="flex flex-row content-center">
-                      <Typography variant="subtitle1" className="mb-4" color="primary">
-                      Tipo de cliente
-                    </Typography>
+                        <Typography
+                          variant="subtitle1"
+                          className="mb-4"
+                          color="primary"
+                        >
+                          Tipo de cliente
+                        </Typography>
                         <Box className="flex flex-col">
-
-                        <Box >
-                        
-                        
-                        <FormControlLabel
-                                  label="Bluetree"
-                                  control={<Checkbox checked={checkedBlue} onChange={event => {setCheckedBlue(event.target.checked);
-                                                                                                setCheckedExt(false);}} />}
+                          <Box>
+                            <FormControlLabel
+                              label="Bluetree"
+                              control={
+                                <Checkbox
+                                  checked={checkedBlue}
+                                  onChange={(event) => {
+                                    setCheckedBlue(event.target.checked);
+                                    setCheckedExt(false);
+                                  }}
                                 />
-                        </Box>
-                        <Box>
-                        
-
-                          <FormControlLabel
-                                  label="Externo"
-                                  control={<Checkbox checked={checkedExt} onChange={event => {setCheckedExt(event.target.checked);
-                                                                                                setCheckedBlue(false);}} />}
+                              }
+                            />
+                          </Box>
+                          <Box>
+                            <FormControlLabel
+                              label="Externo"
+                              control={
+                                <Checkbox
+                                  checked={checkedExt}
+                                  onChange={(event) => {
+                                    setCheckedExt(event.target.checked);
+                                    setCheckedBlue(false);
+                                  }}
                                 />
+                              }
+                            />
+                          </Box>
                         </Box>
-
-
-                        </Box>
-                                              </Box>
-                      
-                      
+                      </Box>
 
                       {/* <FormControl
                         variant="filled"
@@ -1519,7 +1619,8 @@ useEffect(()=>{
           color="secondary"
           // startIcon={<SearchIcon />}
           disabled={activeStep === 0}
-          onClick={handleBack}>
+          onClick={handleBack}
+        >
           Atrás
         </Button>
 
@@ -1528,21 +1629,22 @@ useEffect(()=>{
           variant="contained"
           color="secondary"
           // startIcon={<SearchIcon />}
-          onClick={handleNext}>
+          onClick={handleNext}
+        >
           Siguiente
         </Button>
         <Button
-          disabled ={activeButton}
-       
+          disabled={activeButton}
           className="w-[100px] mr-[10px]"
           variant="contained"
           color="primary"
           // startIcon={<SearchIcon />}
           // disabled={activeStep === 0}
-          onClick={handleClickOpen}>
+          onClick={handleClickOpen}
+        >
           Guardar
         </Button>
-        
+
         <Dialog
           open={open}
           onClose={handleCloseAlert}

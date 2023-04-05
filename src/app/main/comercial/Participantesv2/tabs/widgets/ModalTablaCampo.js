@@ -272,7 +272,7 @@ export default function ModalTablaCampo({prueba}) {
     created_ts_new,
     updated_ts_old,
     updated_ts_new } = prueba;
-    // console.log(bank_account_new,bank_account_old);
+    // (bank_account_new,bank_account_old);
     rows = [
 
       createData('Nombre', 	name_old,name_new,<Button ><HistoryIcon/></Button>),

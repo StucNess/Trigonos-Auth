@@ -17,7 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { Button } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
-
+import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 
 function createData(
@@ -292,6 +292,7 @@ export default function TablaNominaSecurity(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [total, setTotal] = React.useState(0);
+  const [dataExport, setDataExport] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = [];
   const chile = new Intl.NumberFormat("es-CL", {
@@ -299,20 +300,22 @@ export default function TablaNominaSecurity(props) {
     style: "currency",
   });
   props.payRollData.map((p) =>
-    createData(
-      p.rutAcreedor,
-      p.nombreAcreedor,
-      3,
-      p.sBifAcreedor,
-      p.correoDteAcreedor,
-      "PAGO FACTURA 0",
-      chile.format(p.valorNeto),
-      p.id
+    rows.push(
+      createData(
+        p.rutAcreedor,
+        p.nombreAcreedor,
+        3,
+        p.sBifAcreedor,
+        p.correoDteAcreedor,
+        `PAGO FACTURA ${p.folio}`,
+        chile.format(p.valorNeto),
+        p.id
+      )
     )
   );
   React.useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    console.log(prueba);
+    setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
     setTotal(pruebaValor);
@@ -367,10 +370,51 @@ export default function TablaNominaSecurity(props) {
 
   const isSelected = (rut) => selected.indexOf(rut) !== -1;
 
+  let headersExcel = [
+    [
+      "Fijo",
+      "Rut",
+      "RAZON SOCIAL",
+      "MONTO",
+      "TIPO CUENTA",
+      "CODIGO BANCO",
+      "EMAIL",
+      "DETALLE",
+    ],
+  ];
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  function convertToSheet(data) {
+    const wb = XLSX.utils.book_new();
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(ws, headersExcel);
+    const sheet = XLSX.utils.sheet_add_json(ws, data, {
+      origin: "A2",
+      skipHeader: true,
+    });
 
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    XLSX.writeFile(wb, "filename.xlsx");
+  }
+  function downloadExcelFile(filename, data) {
+    let dataPrueba = [];
+    for (let i in data) {
+      let obj = new Object();
+      obj.Fijo = 2;
+      obj.Rut = data[i].rutAcreedor;
+      obj.RazonSocial = data[i].nombreAcreedor;
+      obj.Monto = data[i].valorNeto;
+      obj.TipoCuenta = 1;
+      obj.CodigoBanco = data[i].sBifAcreedor;
+      obj.Email = data[i].correoDteAcreedor;
+      obj.Detalle = `PAGO FACTURA ${data[i].folio}`;
+      dataPrueba.push(obj);
+    }
+    convertToSheet(dataPrueba);
+  }
+  console.log(props.payRollData);
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -389,6 +433,7 @@ export default function TablaNominaSecurity(props) {
           <Button
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
+            onClick={() => downloadExcelFile("mydata", dataExport)}
             color="secondary"
           >
             <SiMicrosoftexcel className="mr-3 " />

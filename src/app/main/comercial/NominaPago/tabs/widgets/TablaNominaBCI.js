@@ -140,11 +140,13 @@ function EnhancedTableHead(props) {
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -184,13 +186,15 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}>
+      }}
+    >
       {numSelected > 1 ? (
         <Typography
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div">
+          component="div"
+        >
           {numSelected} selecionados
         </Typography>
       ) : numSelected === 1 ? (
@@ -198,7 +202,8 @@ function EnhancedTableToolbar(props) {
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div">
+          component="div"
+        >
           {numSelected} seleccionado
         </Typography>
       ) : (
@@ -371,7 +376,8 @@ export default function EnhancedTable(props) {
             className="bg-grey-50"
             variant="h6"
             id="tableTitle"
-            component="div">
+            component="div"
+          >
             Tabla de Nominas "BCI"
           </Typography>
           <h1 className="border border-b-pantoneazul"></h1>
@@ -381,7 +387,8 @@ export default function EnhancedTable(props) {
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
             color="secondary"
-            onClick={() => downloadExcelFile("mydata", dataExport)}>
+            onClick={() => downloadExcelFile("mydata", dataExport)}
+          >
             <SiMicrosoftexcel className="mr-3 " />
             Nomina de pago <HiDownload />
           </Button>
@@ -391,7 +398,8 @@ export default function EnhancedTable(props) {
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}>
+            size={dense ? "small" : "medium"}
+          >
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -416,7 +424,8 @@ export default function EnhancedTable(props) {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.id}
-                      selected={isItemSelected}>
+                      selected={isItemSelected}
+                    >
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
@@ -431,7 +440,8 @@ export default function EnhancedTable(props) {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        align="left">
+                        align="left"
+                      >
                         {row.rut}
                       </TableCell>
                       <TableCell align="left">{row.nombre}</TableCell>
@@ -446,7 +456,8 @@ export default function EnhancedTable(props) {
                 <TableRow
                   style={{
                     height: (dense ? 33 : 53) * emptyRows,
-                  }}>
+                  }}
+                >
                   <TableCell colSpan={6} />
                 </TableRow>
               )}

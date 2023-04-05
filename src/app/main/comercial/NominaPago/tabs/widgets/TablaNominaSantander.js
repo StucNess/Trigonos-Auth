@@ -17,7 +17,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
 import { Button } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
-
+import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 
 function createData(
@@ -232,6 +232,7 @@ export default function TablaNominaSantander(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [total, setTotal] = React.useState(0);
+  const [dataExport, setDataExport] = React.useState([]);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = [];
   const chile = new Intl.NumberFormat("es-CL", {
@@ -253,7 +254,7 @@ export default function TablaNominaSantander(props) {
   );
   React.useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    console.log(prueba);
+    setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
     setTotal(pruebaValor);
@@ -306,10 +307,89 @@ export default function TablaNominaSantander(props) {
   };
 
   const isSelected = (rut) => selected.indexOf(rut) !== -1;
-
+  let headersExcel = [
+    [
+      "Rut Beneficiario",
+      "Nombre Beneficiario",
+      "Cod. Modalidad",
+      "Cod Banco",
+      "Cta Abono",
+      "N Factura 1",
+      "Monto 1",
+      "N Factura 2",
+      "Monto 2",
+      "N Factura 3",
+      "N Factura 4",
+      "Monto 4",
+      "N Factura 5",
+      "Monto 5",
+      "N Factura 6",
+      "Monto 6",
+      "N Factura 7",
+      "Monto 7",
+      "N Factura 8",
+      "Monto 8",
+      "N Factura 9",
+      "Monto 9",
+      "N Factura 10",
+      "Monto 10",
+      "N Factura 11",
+      "Monto 11",
+      "Monto Total",
+    ],
+  ];
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  function convertToSheet(data) {
+    const wb = XLSX.utils.book_new();
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(ws, headersExcel);
+    const sheet = XLSX.utils.sheet_add_json(ws, data, {
+      origin: "A2",
+      skipHeader: true,
+    });
+
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+    XLSX.writeFile(wb, "filename.xlsx");
+  }
+  function downloadExcelFile(filename, data) {
+    let dataPrueba = [];
+    for (let i in data) {
+      let obj = new Object();
+
+      obj.Rut = data[i].rutAcreedor;
+      obj.Nombre_Beneficiario = data[i].nombreAcreedor;
+      obj.CodModalidad = 3;
+      obj.CodBanco = data[i].sBifAcreedor;
+      obj.CtaAbono = data[i].cuentaBancoAcreedor;
+      obj.NFactura1 = data[i].folio;
+      obj.MontoFactura1 = data[i].valorNeto;
+      obj.NFactura2 = "";
+      obj.MontoFactura2 = "";
+      obj.NFactura3 = "";
+      obj.MontoFactura3 = "";
+      obj.NFactura4 = "";
+      obj.MontoFactura4 = "";
+      obj.NFactura5 = "";
+      obj.MontoFactura6 = "";
+      obj.NFactura7 = "";
+      obj.MontoFactura7 = "";
+      obj.NFactura8 = "";
+      obj.MontoFactura8 = "";
+      obj.NFactura9 = "";
+      obj.MontoFactura9 = "";
+      obj.NFactura10 = "";
+      obj.MontoFactura10 = "";
+      obj.NFactura11 = "";
+      obj.MontoFactura11 = "";
+      obj.MontoTotal = data[i].valorNeto;
+
+      dataPrueba.push(obj);
+    }
+    convertToSheet(dataPrueba);
+  }
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -330,6 +410,7 @@ export default function TablaNominaSantander(props) {
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
             color="secondary"
+            onClick={() => downloadExcelFile("mydata", dataExport)}
           >
             <SiMicrosoftexcel className="mr-3 " />
             Nomina de pago <HiDownload />
@@ -358,7 +439,7 @@ export default function TablaNominaSantander(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  console.log(row);
+
                   return (
                     <TableRow
                       hover
