@@ -253,7 +253,7 @@ export default function TablaNominaSantander(props) {
   );
   React.useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    console.log(prueba);
+
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
     setTotal(pruebaValor);
@@ -358,7 +358,7 @@ export default function TablaNominaSantander(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  console.log(row);
+
                   return (
                     <TableRow
                       hover

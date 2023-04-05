@@ -34,7 +34,7 @@ import { callParticipants } from "../store/callParticipants";
 let participants;
 export default function SelectClientTable(props) {
   const [cliente, setcliente] = useState("");
-
+  const [render, setRender] = useState(false);
   const handleChange = (event) => {
     setcliente(event.target.value);
   };
@@ -42,7 +42,7 @@ export default function SelectClientTable(props) {
     setValue(newValue);
   };
   const [value, setValue] = useState(dayjs());
-  const [participants, setParticipants] = useState([])
+  const [participants, setParticipants] = useState([]);
   const [payrollTable, setPayrollTable] = useState(0);
   useEffect(() => {
     (async () => {
@@ -55,9 +55,12 @@ export default function SelectClientTable(props) {
     })();
   }, []);
   const searchPayroll = () => {
+    // render == true ? setRender(true) : setRender(false);
     let prueba = participants.find((p) => p.id == cliente);
     props.sendClientData(prueba);
+    props.changeDisc(searchPayroll);
   };
+
   return (
     <Box
       sx={{
@@ -68,7 +71,8 @@ export default function SelectClientTable(props) {
           height: "100%",
           minHeight: 300,
         },
-      }}>
+      }}
+    >
       <Paper variant="outlined">
         <div className="flex justify-center  bg-pantonerojo  text-white p-[10px] ">
           <HiOutlineUser className="w-[30px] h-[30px]  mr-[10px] " />
@@ -95,7 +99,8 @@ export default function SelectClientTable(props) {
               value={cliente}
               onChange={handleChange}
               autoWidth
-              label="Seleccionar Cliente">
+              label="Seleccionar Cliente"
+            >
               {participants.map(({ business_Name, id }) => (
                 <MenuItem key={id} value={id}>
                   {business_Name}
@@ -105,10 +110,11 @@ export default function SelectClientTable(props) {
           </FormControl>
         </div>
 
-        <div className="flex  w-full items-center justify-evenly   ">
+        <div className="flex  w-fulsearchPayrolll items-center justify-evenly   ">
           <LocalizationProvider
             dateAdapter={AdapterDayjs}
-            sx={{ m: 1, minWidth: 350 }}>
+            sx={{ m: 1, minWidth: 350 }}
+          >
             <Stack spacing={3}>
               <DesktopDatePicker
                 label="Seleccione Fecha"
@@ -135,7 +141,8 @@ export default function SelectClientTable(props) {
               display: "flex",
 
               color: "white",
-            }}>
+            }}
+          >
             Buscar
           </Button>
         </div>

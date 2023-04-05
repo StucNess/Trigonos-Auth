@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import withReducer from "app/store/withReducer";
 import FusePageSimple from "@fuse/core/FusePageSimple";
@@ -23,23 +23,50 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
     boxShadow: `inset 0 0 0 1px  ${theme.palette.divider}`,
   },
 }));
-
+let changeDisc;
+let ldata;
 const NominaPagoApp = () => {
   let tablaSelect = 1;
+
   const [clientData, setClienteData] = useState([]);
   const [payRollData, setPayRollData] = useState([]);
+  const [disc, setDisc] = useState(false);
+  // useEffect(() => {
+  // }, []);
   const getClientData = (data) => {
     setClienteData(data);
-    // axios.get('http://164.77.112.10:99/api/Nominas?id=141');
     callApiPayroll(data.id);
+    ldata = data;
+  };
+  const getDiscData = (data) => {
+    setDisc(data);
+
+    getClientData(ldata);
   };
   const callApiPayroll = (id, pageSize = 100) => {
     let prueba;
-    axios
-      .get(`http://164.77.112.10:99/api/Nominas?id=${id}&PageSize=${pageSize}`)
-      .then((response) => {
-        setPayRollData(response.data.data);
-      });
+    if (disc == false) {
+      axios
+        .get(
+          `http://164.77.112.10:99/api/Nominas?id=${id}&PageSize=${pageSize}`
+        )
+        .then((response) => {
+          setPayRollData(response.data.data);
+        });
+    } else {
+      axios
+        .get(
+          `http://164.77.112.10:99/api/Nominas?id=${id}&PageSize=${pageSize}&Disc=si`
+        )
+        .then((response) => {
+          setPayRollData(response.data.data);
+        });
+    }
+  };
+  const getChangeDisc = (param) => {
+    changeDisc = param;
+
+    disc ? setDisc(false) : setDisc(true);
   };
   return (
     <Root
@@ -69,7 +96,11 @@ const NominaPagoApp = () => {
               </Box>
             </motion.div>
             <motion.div className=" mdmax:col-span-12  md:col-span-6">
-              <SelectClient sendClientData={getClientData} />
+              <SelectClient
+                sendClientData={getClientData}
+                disc={disc}
+                changeDisc={getChangeDisc}
+              />
             </motion.div>
 
             <motion.div className=" mdmax:col-span-12  md:col-span-6">
@@ -85,7 +116,11 @@ const NominaPagoApp = () => {
 
             {clientData.bank == 4 && (
               <motion.div className="  col-span-12 ">
-                <TablaNominaBCI payRollData={payRollData} />
+                <TablaNominaBCI
+                  payRollData={payRollData}
+                  sendDiscData={getDiscData}
+                  changedDisc={changeDisc}
+                />
               </motion.div>
             )}
             {clientData.bank == 9 && (

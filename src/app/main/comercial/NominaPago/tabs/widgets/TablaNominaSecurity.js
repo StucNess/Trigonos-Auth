@@ -312,7 +312,7 @@ export default function TablaNominaSecurity(props) {
   );
   React.useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    console.log(prueba);
+
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
     setTotal(pruebaValor);

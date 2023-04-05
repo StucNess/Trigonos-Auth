@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -19,6 +19,9 @@ import { Button } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
 import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 function createData(
   rut,
@@ -27,7 +30,8 @@ function createData(
   monto_pago,
   fecha_acept,
   glosa,
-  id
+  id,
+  disc
 ) {
   return {
     rut,
@@ -37,6 +41,7 @@ function createData(
     fecha_acept,
     glosa,
     id,
+    disc,
   };
 }
 
@@ -106,6 +111,12 @@ const headCells = [
     disablePadding: false,
     label: "Glosa",
   },
+  {
+    id: "Disconformidad",
+    numeric: false,
+    disablePadding: false,
+    label: "Fecha Disconformidad",
+  },
 ];
 function EnhancedTableHead(props) {
   const {
@@ -140,11 +151,13 @@ function EnhancedTableHead(props) {
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -184,13 +197,15 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}>
+      }}
+    >
       {numSelected > 1 ? (
         <Typography
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div">
+          component="div"
+        >
           {numSelected} selecionados
         </Typography>
       ) : numSelected === 1 ? (
@@ -198,7 +213,8 @@ function EnhancedTableToolbar(props) {
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
-          component="div">
+          component="div"
+        >
           {numSelected} seleccionado
         </Typography>
       ) : (
@@ -215,15 +231,17 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable(props) {
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("nro_documento");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [total, setTotal] = React.useState(0);
-  const [dataExport, setDataExport] = React.useState([]);
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("nro_documento");
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [total, setTotal] = useState(0);
+  const [dataExport, setDataExport] = useState([]);
   const rows = [];
+  const [checked, setChecked] = useState(true);
+  // const [disc, setDisc] = useState(false);
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
     style: "currency",
@@ -237,11 +255,12 @@ export default function EnhancedTable(props) {
         chile.format(p.valorNeto),
         "29-07-2022",
         p.glosa,
-        p.id
+        p.id,
+        p.fechaDesconformidad
       )
     )
   );
-  React.useEffect(() => {
+  useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
     setDataExport(prueba);
     let pruebaValor = 0;
@@ -362,6 +381,11 @@ export default function EnhancedTable(props) {
     }
     convertToSheet(dataPrueba);
   }
+  const activarDisc = (param) => {
+    setChecked(param.target.checked);
+    props.changedDisc();
+    props.sendDiscData(param.target.checked);
+  };
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -371,17 +395,26 @@ export default function EnhancedTable(props) {
             className="bg-grey-50"
             variant="h6"
             id="tableTitle"
-            component="div">
+            component="div"
+          >
             Tabla de Nominas "BCI"
           </Typography>
           <h1 className="border border-b-pantoneazul"></h1>
+
+          <Switch
+            checked={checked}
+            onChange={activarDisc}
+            inputProps={{ "aria-label": "controlled" }}
+          />
         </Box>
+
         <Box className="flex  w-full items-center justify-evenly  ">
           <Button
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
             color="secondary"
-            onClick={() => downloadExcelFile("mydata", dataExport)}>
+            onClick={() => downloadExcelFile("mydata", dataExport)}
+          >
             <SiMicrosoftexcel className="mr-3 " />
             Nomina de pago <HiDownload />
           </Button>
@@ -391,7 +424,8 @@ export default function EnhancedTable(props) {
           <Table
             sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}>
+            size={dense ? "small" : "medium"}
+          >
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -408,6 +442,7 @@ export default function EnhancedTable(props) {
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
+                  console.log(row);
                   return (
                     <TableRow
                       hover
@@ -416,13 +451,14 @@ export default function EnhancedTable(props) {
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.id}
-                      selected={isItemSelected}>
+                      selected={isItemSelected}
+                    >
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{
-                            "aria-labelledby": labelId,
+                            "aria-labelledby": "Disconformidad",
                           }}
                         />
                       </TableCell>
@@ -431,7 +467,8 @@ export default function EnhancedTable(props) {
                         id={labelId}
                         scope="row"
                         padding="none"
-                        align="left">
+                        align="left"
+                      >
                         {row.rut}
                       </TableCell>
                       <TableCell align="left">{row.nombre}</TableCell>
@@ -439,6 +476,7 @@ export default function EnhancedTable(props) {
                       <TableCell align="left">{row.monto_pago}</TableCell>
                       <TableCell align="left">{row.fecha_acept}</TableCell>
                       <TableCell align="left">{row.glosa}</TableCell>
+                      <TableCell align="left">{row.disc}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -446,7 +484,8 @@ export default function EnhancedTable(props) {
                 <TableRow
                   style={{
                     height: (dense ? 33 : 53) * emptyRows,
-                  }}>
+                  }}
+                >
                   <TableCell colSpan={6} />
                 </TableRow>
               )}
