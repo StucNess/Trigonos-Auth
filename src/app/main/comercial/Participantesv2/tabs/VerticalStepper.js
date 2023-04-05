@@ -165,10 +165,6 @@ export default function HorizontalNonLinearStepper(props) {
       ...formState,
       [name]: value,
     });
-<<<<<<< HEAD
-=======
-    
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   };
 
   useEffect(() => {
@@ -238,12 +234,8 @@ export default function HorizontalNonLinearStepper(props) {
         billsContactEmail: props.dataParticipant.bills_contact_email,
       });
     })();
-<<<<<<< HEAD
-  }, [props.dataParticipant.id, refreshData]);
-=======
    
   }, [props.dataParticipant.id, alertOk]);
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   useEffect(() => {
     (async () => {
       banks = await CallBanks(1, 2);
@@ -254,13 +246,9 @@ export default function HorizontalNonLinearStepper(props) {
       setActiveButton(true);
       setTimeout(() => {
         setAlertOk(false);
-<<<<<<< HEAD
-      }, 5000);
-=======
         setActiveButton(false);
       }, 1000);
       
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
     }
     if (alertError === true) {
       setTimeout(() => {
@@ -454,17 +442,11 @@ export default function HorizontalNonLinearStepper(props) {
     countActive === 0 ? setActiveButton(false) : setActiveButton(true);
   }, [countActive]);
 
-<<<<<<< HEAD
-  useEffect(() => {
-    props.sendChange(alertOk);
-  }, [alertOk]);
-=======
 useEffect(()=>{
   props.sendChange(alertOk);
   // console.log(formState.id);
   props.sendIdParticipant(formState.id);
 },[alertOk])
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   return (
     <Box className="w-full h-full">
       <Box className="flex w-full h-full" sx={{ width: "100%" }}>
@@ -840,10 +822,7 @@ useEffect(()=>{
                         // }}
                         variant="filled"
                       />
-<<<<<<< HEAD
-=======
                       <Box className="flex flex-col"> 
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Gerente General"
@@ -1758,72 +1737,8 @@ useEffect(()=>{
                         defaultValue="Vacio"
                         variant="filled"
                       />
-<<<<<<< HEAD
-                      <Box className="flex flex-row content-center">
-                        <Typography
-                          variant="subtitle1"
-                          className="mb-4"
-                          color="primary"
-                        >
-                          Tipo de cliente
-                        </Typography>
-                        <Box className="flex flex-col">
-                          <Box>
-                            <FormControlLabel
-                              label="Bluetree"
-                              control={
-                                <Checkbox
-                                  checked={checkedBlue}
-                                  onChange={(event) => {
-                                    setCheckedBlue(event.target.checked);
-                                    setCheckedExt(false);
-                                  }}
-                                />
-                              }
-                            />
-                          </Box>
-                          <Box>
-                            <FormControlLabel
-                              label="Externo"
-                              control={
-                                <Checkbox
-                                  checked={checkedExt}
-                                  onChange={(event) => {
-                                    setCheckedExt(event.target.checked);
-                                    setCheckedBlue(false);
-                                  }}
-                                />
-                              }
-                            />
-                          </Box>
-                        </Box>
-                      </Box>
-
-                      {/* <FormControl
-                        variant="filled"
-                        className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                      >
-                        <InputLabel id="demo-simple-select-filled-label">
-                          ERP
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="demo-simple-select-filled"
-                          value={erp}
-                          onChange={handleChangeERP}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl> */}
-=======
                     
                       
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
                     </Box>
                   </Box>
                 ) : (

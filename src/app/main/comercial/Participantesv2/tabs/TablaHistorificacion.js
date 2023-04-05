@@ -19,9 +19,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ModalCampo from "./widgets/ModalCampo";
 
-<<<<<<< HEAD
-function createData(id, editor, date, updated_ts_old, updated_ts_new) {
-=======
 function createData(
   id,
   editor,
@@ -29,7 +26,6 @@ function createData(
   updated_ts_old,
   updated_ts_new,coleccion_campos
 ) {
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   return {
     id,
     editor,
@@ -84,11 +80,8 @@ const columns = [
   { id: "date", label: "date", minWidth: 40 },
   { id: "updated_ts_old", label: "Fecha Actualización Antigua", minWidth: 40 },
   { id: "updated_ts_new", label: "Fecha Actualización Nueva", minWidth: 40 },
-<<<<<<< HEAD
-=======
   { id: "coleccion_campos", label: "Campos Modificados", minWidth: 40 },
   
->>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
 ];
 
 function EnhancedTableHead(props) {
