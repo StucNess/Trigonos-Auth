@@ -89,7 +89,7 @@ function UserMenu(props) {
           <>
             <MenuItem
               component={Link}
-              to="/apps/profile"
+              to="/ProfileApp"
               onClick={userMenuClose}
               role="button">
               <ListItemIcon className="min-w-40">

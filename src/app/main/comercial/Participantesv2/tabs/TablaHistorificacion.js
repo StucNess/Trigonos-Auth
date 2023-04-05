@@ -101,7 +101,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -164,8 +163,6 @@ function EnhancedTableToolbar(props) {
           </Typography>
         </Box>
       </Box>
-
-     
     </Toolbar>
   );
 }
@@ -182,9 +179,8 @@ export default function TablaUltimosCambios(props) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [histId, setHistId] = useState(0);
-  const [histDate, setHistDate] = useState('')
+  const [histDate, setHistDate] = useState("");
 
-  console.log(props.idParticipant);
   let url = `http://164.77.112.10:99/Historificacion?id=${props.idParticipant}`;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   let rows = [];
@@ -194,7 +190,6 @@ export default function TablaUltimosCambios(props) {
     (async () => {
       const dataHist = await axios.get(url);
       setData(dataHist.data);
-      console.log(dataHist.data);
     })();
   }, [props.idParticipant]);
 
@@ -203,7 +198,7 @@ export default function TablaUltimosCambios(props) {
       id,
       editor,
       date,
-      
+
       updated_ts_old,
       updated_ts_new,name_old,rut_old,verification_code_old,business_name_old,commercial_business_old,dte_reception_email_old
       ,bank_account_old,bank_old,commercial_address_old,postal_address_old,manager_old,pay_contact_first_name_old,pay_contact_last_name_old,
@@ -215,7 +210,7 @@ export default function TablaUltimosCambios(props) {
           id,
           editor,
           date,
-          
+
           updated_ts_old,
           updated_ts_new,
           (name_old !=0 || name_old !='0' ? '[ Nombre ] ':'')
@@ -298,61 +293,59 @@ export default function TablaUltimosCambios(props) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  const getModal = (rows,date) => {
+  const getModal = (rows, date) => {
     setHistId(rows);
     setHistDate(date);
     setTable(false);
-    }
+  };
   return (
     <Box className=" relative lfmax:w-[600px] p-[30px] ">
-      <TableContainer >
-        <Box sx={{ maxHeight: 360 }} overflow-y-auto >
-
-      
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      const valuee = row;
-                      return (
-                        <TableCell
-                          key={column.id}
-                          onClick={
-                            table
-                            ? () => getModal(valuee.id,valuee.date)
-                            : () => setTable(true)
-                          }
-                          align={column.align}
-                        >
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
+      <TableContainer>
+        <Box sx={{ maxHeight: 360 }} overflow-y-auto>
+          <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        const valuee = row;
+                        return (
+                          <TableCell
+                            key={column.id}
+                            onClick={
+                              table
+                                ? () => getModal(valuee.id, valuee.date)
+                                : () => setTable(true)
+                            }
+                            align={column.align}
+                          >
+                            {column.format && typeof value === "number"
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
         </Box>
       </TableContainer>
       <TablePagination
@@ -365,15 +358,14 @@ export default function TablaUltimosCambios(props) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-       {!table && (
+      {!table && (
         <ModalCampo
-          rows ={data}
-          valueId= {histId}
+          rows={data}
+          valueId={histId}
           date={histDate}
           setTable={() => setTable(true)}
         />
       )}
     </Box>
-    
   );
 }
