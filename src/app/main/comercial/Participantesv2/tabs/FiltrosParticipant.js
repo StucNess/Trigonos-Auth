@@ -7,6 +7,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import { CallApi } from "../store/CallApi";
+import AdviceModule from "../../AdviceModule";
 
 let participants;
 export default function FiltrosParticipant(props) {
@@ -55,6 +56,13 @@ export default function FiltrosParticipant(props) {
   return (
     <Box>
       <Box className="flex flex-col w-full mb-[20px] ">
+      <AdviceModule 
+                  direction={"ltr"}  
+                  textwidth={500} 
+                  msg={"Mediante los siguientes listas \"Razón Social\", \"Rut\" usted podrá buscar al participante deseado, ya sea desplazandose por la lista o escribiendo directamente en el campo."} 
+                  className={"relative h-32 w-32 "} 
+                  classnamesegund={"absolute h-14 w-14 -right-[230px] -bottom-[5px]"}
+                  classPopover={"ml-[20px] mr-[100px]" }  />
         <Typography variant="h6" className="mb-4" color="primary">
           Búsqueda de Participante
         </Typography>

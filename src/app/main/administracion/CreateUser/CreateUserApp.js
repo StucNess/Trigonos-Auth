@@ -201,7 +201,7 @@ function CreateUserApp(props) {
             className="flex flex-col justify-center w-full mt-32"
             onSubmit={handleSubmit(onSubmit)}>
             <div >
-            <AdviceModule textwidth={350} classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} />
+            <AdviceModule textwidth={350}  msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} />
             <Controller
               name="user"
               control={control}
@@ -288,7 +288,7 @@ function CreateUserApp(props) {
             />
 
            
-            <AdviceModule textwidth={350} classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
+            <AdviceModule textwidth={350} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
             <Controller
               name="password"
               control={control}
@@ -325,7 +325,7 @@ function CreateUserApp(props) {
               )}
             />
               <div className="w-full" >
-              <AdviceModule textwidth={300} classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"Para asignar los clientes al usuario debe desplegar la lista y podrá seleccionar uno por uno los clientes que requiera asignar."} />
+              <AdviceModule textwidth={300}msg={"Para asignar los clientes al usuario debe desplegar la lista y podrá seleccionar uno por uno los clientes que requiera asignar."} />
               <Controller
                 
                 name="project"

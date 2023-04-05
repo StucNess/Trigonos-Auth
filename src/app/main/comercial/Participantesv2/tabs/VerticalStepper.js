@@ -44,6 +44,7 @@ import {
 } from "@mui/material";
 import TablaHistorificacion from "./TablaHistorificacion";
 import AlertCambios from "./widgets/AlertCambios";
+import AdviceModule from "../../AdviceModule";
 const steps = [
   "Coordinado",
   "Datos de Contacto",
@@ -451,10 +452,20 @@ useEffect(()=>{
     <Box className="w-full h-full">
       <Box className="flex w-full h-full" sx={{ width: "100%" }}>
         {/* SECCION VERTICAL IZQUIERDA */}
+        
         <Box className="pr-[10px]  md:min-w-[300px] h-full">
-          <Typography variant="h6" className="mb-4" color="primary">
+       
+          <Typography variant="h6" className="mb-4 flex flex-row" color="primary">
             Gestión de Participantes
+              <AdviceModule 
+                  direction={"rtl"}  
+                  textwidth={500} 
+                  msg={"Al costado izquierdo podrá desplazarse en las distintas opciones para administrar la información asociada a un participante, al costado derecho podrá realizar uno o más cambios en un solo guardado presionando el icono de edición \"Lapíz\"."} 
+                  className={"relative bottom-[8px]"} 
+                  // classnamesegund={"absolute h-14 w-14 right-[230px] -bottom-[5px]"}
+                  classPopover={"ml-[20px] mr-[100px] mt-[-10px]" }  />
           </Typography>
+          
 
           <Stepper
             className="ml-[30px] mt-[30px]  mdmax:ml-[0px]"
