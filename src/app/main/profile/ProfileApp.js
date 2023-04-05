@@ -5,6 +5,14 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/store/userSlice';
+
+//Button edition
+import * as React from 'react';
+import Button from '@mui/material/Button';
+
+import BrushIcon from '@mui/icons-material/Brush';
+import AddAPhotoRoundedIcon from '@mui/icons-material/AddAPhotoRounded';
+import IconButton from '@mui/material/IconButton';
 //Tabs
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -14,6 +22,7 @@ import { useState } from "react";
 import ActivityProfile from "./tabs/ActivityProfile";
 import ConfigProfile from "./tabs/ConfigProfile";
 import InfoProfile from "./tabs/InfoProfile";
+import ModalSelectImage from "./widgets/ModalSelectImage";
 // import React from 'react'
 function capitalize(word) {
   const lower = word.toLowerCase();
@@ -60,29 +69,48 @@ function a11yProps(index) {
     };
   }
 const ProfileApp = () => {
+  
   const user = useSelector(selectUser);
   const [value, setValue] = useState(0);
-
+  const [table, setTable] = React.useState(true);
+  
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+ 
   return (
     <Root
     header={
       
           <header>
               <Box className="flex flex-col">
-                <img className="h-160 lg:h-320 object-cover w-full" src="assets\images\pages\profile\cover.jpg" alt="Profile Cover"/>
+              
+              <Box className="relative">
+              <img className="h-160 lg:h-320 object-cover w-full" src="assets\images\pages\profile\cover.jpg" alt="Profile Cover"/>
+                <Box className="absolute bottom-0 right-0 ">
+
+              
+                <Button className="m-[10px]" size="small" variant="contained" startIcon={<BrushIcon />}>
+                  Editar portada
+                </Button>
+                </Box>
+              </Box>
+              
               <Box className="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-32 lg:h-72">
               <Box className="-mt-96 lg:-mt-88 rounded-full">
-                <Box  style={{
-                  transform: "none"
-                }}>
+                <Box className="relative" >
                   <Avatar
                   className="w-128 h-128 border-4"
                     alt="Photo" 
-                    src=""
+                    src="assets\images\pages\profile\cover.jpg"
                   />
+                  <IconButton className="bg-grey-300 absolute top-0 right-0" title="Agregar foto de perfil" sx={{}} onClick={
+                    table
+                    ? () => setTable(false)
+                    : () => setTable(true)
+                  }>
+                        <AddAPhotoRoundedIcon  />
+                  </IconButton>
                 </Box>
               </Box>
               <Box className="flex flex-col items-center lg:items-start mt-16 lg:mt-0 lg:ml-32">
@@ -106,6 +134,7 @@ const ProfileApp = () => {
               </Box>
               </Box>
               </Box>
+             
           </header  >
      
     }
@@ -115,7 +144,12 @@ const ProfileApp = () => {
             {value === 0 && ( <ActivityProfile value={value} index={value}/> )}
             {value === 1 && (  <ConfigProfile value={value} index={value}/> )}
             {value === 2 && (  <InfoProfile value={value} index={value}/> )}
-          
+            {!table && (
+                <ModalSelectImage
+                  
+                  setTable={() => setTable(true)}
+                />
+              )}
             </Container>
         
       }
