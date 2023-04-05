@@ -11,7 +11,7 @@ import ExampleConfig from "../main/example/ExampleConfig";
 import ComercialConfigs from "../main/comercial/ComercialConfigs";
 import AnalisisConfig from "../main/analisis/AnalisisConfig";
 import AdministracionConfig from "../main/administracion/AdministracionConfig";
-
+import ProfileAppConfig from "../main/profile/ProfileAppConfig";
 const routeConfigs = [
   ExampleConfig,
   SignOutConfig,
@@ -21,6 +21,7 @@ const routeConfigs = [
   ...ComercialConfigs,
   ...AnalisisConfig,
   ...AdministracionConfig,
+  ProfileAppConfig,
 ];
 
 const routes = [

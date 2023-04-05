@@ -1,6 +1,6 @@
-import { lazy } from 'react';
+import { lazy } from "react";
 
-const EstadoFacturacionApp = lazy(() => import('./EstadoFacturacionApp'));
+const EstadoFacturacionApp = lazy(() => import("./EstadoFacturacionApp"));
 
 const EstadoFacturacionAppConfig = {
   settings: {
@@ -10,7 +10,7 @@ const EstadoFacturacionAppConfig = {
   },
   routes: [
     {
-      path: 'comercial/estadoFacturacion',
+      path: "comercial/estadoFacturacion",
       element: <EstadoFacturacionApp />,
     },
   ],

@@ -20,6 +20,10 @@ let participants = [];
 const NominaPagoApp = () => {
   const [dataParticipant, setDataParticipant] = useState([]);
   const [change, setChange] = useState(false);
+  const [idParticipant, setIdParticipant] = useState()
+  const getIdParticipant = (data) => {
+    setIdParticipant(data);
+  };
   const getDataParticipants = (data) => {
     setDataParticipant(data);
   };
@@ -51,14 +55,14 @@ const NominaPagoApp = () => {
           </Box>
           <Paper className="w-full p-[20px] mb-[20px]">
             {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
-            <FiltrosParticipant change={change} sendParticipants={getDataParticipants} />
+            <FiltrosParticipant change={change} sendParticipants={getDataParticipants} idParticipant={idParticipant}  />
           </Paper>
           {/* <Paper className="w-full p-[20px] mb-[20px]"> */}
           {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
           {/* <PruebasStepper/> */}
           {/* </Paper> */}
           <Paper className="w-full p-[20px] ">
-            <VerticalStepper dataParticipant={dataParticipant} sendChange={getChange} />
+            <VerticalStepper dataParticipant={dataParticipant} sendChange={getChange} sendIdParticipant={getIdParticipant} />
           </Paper>
         </Box>
       }

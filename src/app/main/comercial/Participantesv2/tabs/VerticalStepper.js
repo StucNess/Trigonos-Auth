@@ -113,6 +113,7 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactFirstName: false,
     billsContactPhones: false,
     billsContactEmail: false,
+    typeClient: false,
   });
   const [dataConfirm, setDataConfirm] = useState({
     id: props.dataParticipant.id,
@@ -142,8 +143,8 @@ export default function HorizontalNonLinearStepper(props) {
   const [activeButton, setActiveButton] = useState(false);
   const [countActive, setCountActive] = useState(0);
   const [open, setOpen] = useState(false);
-  const [refreshData, setRefreshData] = useState(false);
-  const [checkedBlue, setCheckedBlue] = React.useState(true);
+
+  const [checkedBlue, setCheckedBlue] = React.useState(false);
   const [checkedExt, setCheckedExt] = React.useState(false);
   const handleClickOpen = () => {
     setOpen(true);
@@ -156,7 +157,7 @@ export default function HorizontalNonLinearStepper(props) {
   const handleCloseAlertSubmit = () => {
     ApiPatch();
     setOpen(false);
-    refreshData(true);
+    
   };
   const onInputChange = ({ target }) => {
     const { name, value } = target;
@@ -164,6 +165,10 @@ export default function HorizontalNonLinearStepper(props) {
       ...formState,
       [name]: value,
     });
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   };
 
   useEffect(() => {
@@ -233,7 +238,12 @@ export default function HorizontalNonLinearStepper(props) {
         billsContactEmail: props.dataParticipant.bills_contact_email,
       });
     })();
+<<<<<<< HEAD
   }, [props.dataParticipant.id, refreshData]);
+=======
+   
+  }, [props.dataParticipant.id, alertOk]);
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   useEffect(() => {
     (async () => {
       banks = await CallBanks(1, 2);
@@ -241,14 +251,21 @@ export default function HorizontalNonLinearStepper(props) {
   }, []);
   useEffect(() => {
     if (alertOk === true) {
+      setActiveButton(true);
       setTimeout(() => {
         setAlertOk(false);
+<<<<<<< HEAD
       }, 5000);
+=======
+        setActiveButton(false);
+      }, 1000);
+      
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
     }
     if (alertError === true) {
       setTimeout(() => {
         setAlertError(false);
-      }, 5000);
+      }, 1000);
     }
   }, [alertOk, alertError]);
 
@@ -268,6 +285,7 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactFirstName,
     billsContactPhones,
     billsContactEmail,
+    typeClient,
   } = update;
   const handleChangeCheck = (event) => {
     setChecked(event.target.checked);
@@ -436,9 +454,17 @@ export default function HorizontalNonLinearStepper(props) {
     countActive === 0 ? setActiveButton(false) : setActiveButton(true);
   }, [countActive]);
 
+<<<<<<< HEAD
   useEffect(() => {
     props.sendChange(alertOk);
   }, [alertOk]);
+=======
+useEffect(()=>{
+  props.sendChange(alertOk);
+  // console.log(formState.id);
+  props.sendIdParticipant(formState.id);
+},[alertOk])
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   return (
     <Box className="w-full h-full">
       <Box className="flex w-full h-full" sx={{ width: "100%" }}>
@@ -449,7 +475,7 @@ export default function HorizontalNonLinearStepper(props) {
           </Typography>
 
           <Stepper
-            className="ml-[30px] mt-[30px] "
+            className="ml-[30px] mt-[30px]  mdmax:ml-[0px]"
             nonLinear
             activeStep={activeStep}
             orientation="vertical"
@@ -515,7 +541,8 @@ export default function HorizontalNonLinearStepper(props) {
                     </Typography>
 
                     <Box className="flex flex-wrap justify-start zerorange:justify-center  ">
-                      <TextField
+                    <Box className="flex flex-col"> 
+                    <TextField
                         // id="outlined-required"
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Nombre"
@@ -582,6 +609,20 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {name ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Razón Social"
@@ -647,6 +688,21 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
+                        <div className="absolute ">
+                          {businessName ? (
+                                    <>
+                                      <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      
+                                    </>
+                                  )}
+                          
+                        </div>
+                      </Box>
+                      
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Giro"
@@ -713,27 +769,21 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
-                      {/* <FormControl
-                        variant="filled"
-                        className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                      >
-                        <InputLabel id="demo-simple-select-filled-label">
-                          Grupo Coordinado
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="demo-simple-select-filled"
-                          value={grupo}
-                          onChange={handleChange}
-                        >
-                          <MenuItem value="">
-                            <em>None</em>
-                          </MenuItem>
-                          <MenuItem value={10}>Ten</MenuItem>
-                          <MenuItem value={20}>Twenty</MenuItem>
-                          <MenuItem value={30}>Thirty</MenuItem>
-                        </Select>
-                      </FormControl> */}
+                      <div className="absolute ">
+                        {commercialBusiness ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      
+                   
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Rut"
@@ -790,6 +840,10 @@ export default function HorizontalNonLinearStepper(props) {
                         // }}
                         variant="filled"
                       />
+<<<<<<< HEAD
+=======
+                      <Box className="flex flex-col"> 
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
                       <TextField
                         className="zerorange:w-[300px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Gerente General"
@@ -854,6 +908,20 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {manager ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                       
                     </Box>
                   </Box>
                 ) : activeStep === 1 ? (
@@ -862,6 +930,7 @@ export default function HorizontalNonLinearStepper(props) {
                       Datos de Contacto
                     </Typography>
                     <Box className="flex flex-wrap justify-start  zerorange:justify-center ml-[0 auto]">
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Dirección Comercial"
@@ -928,6 +997,20 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
+                          <div className="absolute ">
+                            {commercialAddress ? (
+                                      <>
+                                        <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        
+                                      </>
+                                    )}
+                            
+                          </div>
+                        </Box>
+                      
                       {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Comuna"
@@ -944,6 +1027,8 @@ export default function HorizontalNonLinearStepper(props) {
                         defaultValue="Vacio"
                         variant="filled"
                       /> */}
+                      
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Email DTE"
@@ -1010,6 +1095,21 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
+                        <div className="absolute ">
+                          {email ? (
+                                    <>
+                                      <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      
+                                    </>
+                                  )}
+                          
+                        </div>
+                      </Box>
+                      
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Teléfono de Contacto Pago"
@@ -1078,6 +1178,20 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
+                        <div className="absolute ">
+                          {payContactPhones ? (
+                                    <>
+                                      <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      
+                                    </>
+                                  )}
+                          
+                        </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Teléfono de Contacto Factura"
@@ -1147,6 +1261,20 @@ export default function HorizontalNonLinearStepper(props) {
                         }}
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {billsContactPhones ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                     
                       {/* <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Nómina ID"
@@ -1171,6 +1299,7 @@ export default function HorizontalNonLinearStepper(props) {
                         defaultValue="Vacio"
                         variant="filled"
                       /> */}
+                      <Box className="flex flex-col"> 
                       <TextField
                         // disabled={banksName1 ? false : true}
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
@@ -1265,6 +1394,20 @@ export default function HorizontalNonLinearStepper(props) {
                           </MenuItem>
                         ))}
                       </TextField>
+                      <div className="absolute ">
+                        {banksName ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="RUT Cuenta Corriente"
@@ -1335,6 +1478,20 @@ export default function HorizontalNonLinearStepper(props) {
                         defaultValue="Vacio"
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {rut ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      <Box className="flex flex-col"> 
                       <TextField
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Cuenta Corriente"
@@ -1406,6 +1563,20 @@ export default function HorizontalNonLinearStepper(props) {
                         defaultValue="Vacio"
                         variant="filled"
                       />
+                      <div className="absolute ">
+                        {bankAccount ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                      
                       <TextField
                         // disabled={banksName1 ? false : true}
                         className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
@@ -1493,8 +1664,92 @@ export default function HorizontalNonLinearStepper(props) {
                     <Typography variant="h6" className="mb-4" color="primary">
                       Gestión Trígonos
                     </Typography>
-
-                    <Box className="flex flex-wrap justify-start  zerorange:justify-center ml-[0 auto] ">
+                   
+                    <Box className="flex flex-wrap justify-between  zerorange:justify-center ml-[0 auto] ">
+                    <Box className="flex flex-col"> 
+                    <Box className="flex flex-col zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px]">
+                      <Box className="flex flex-row">
+                      <Typography variant="subtitle1"  color="primary" className="mb-[40px]">
+                          Tipo de cliente
+                        </Typography>
+                      <InputAdornment className="m-[10px]">
+                        {typeClient ? (
+                            <>
+                              <CheckBoxIcon
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    typeClient: false,
+                                  });
+                                  setCountActive(countActive>0?countActive-1:countActive);
+                                }}
+                              />
+                              <DisabledByDefaultIcon
+                                style={{ cursor: 'pointer' }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    typeClient: false,
+                                  });
+                                  setCountActive(countActive>0?countActive-1:countActive);
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <EditIcon
+                              style={{ cursor: 'pointer' }}
+                              onClick={() => {
+                                setUpdate({
+                                  ...update,
+                                  typeClient: true,
+                                
+                                });
+                                setCountActive(countActive+1);
+                              }}
+                            />
+                          )}
+                      </InputAdornment>
+                      </Box>
+                     
+                      <Box>
+                        
+                        <Box>
+                            <InputAdornment  disablePointerEvents = {!typeClient}>
+                              <Box>
+                                <Box>
+                                  <FormControlLabel
+                                    label="Bluetree"
+                                    control={<Checkbox checked={checkedBlue} onChange={event => {setCheckedBlue(event.target.checked);
+                                                                                                  setCheckedExt(false);}} />}
+                                  />
+                                </Box>
+                                <Box>
+                                    <FormControlLabel
+                                      label="Externo"
+                                      control={<Checkbox checked={checkedExt} onChange={event => {setCheckedExt(event.target.checked);
+                                                                                                    setCheckedBlue(false);}} />}
+                                    />
+                                </Box>
+                              </Box>
+                            </InputAdornment>
+                            </Box>
+                      </Box>
+                      </Box>
+                    <div className="absolute ">
+                        {typeClient ? (
+                                  <>
+                                    <span className="ml-[20px] text-red-500">Recuerde aceptar o cancelar el cambio realizado</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    
+                                  </>
+                                )}
+                        
+                      </div>
+                      </Box>
+                   
                       <TextField
                         className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                         label="Token"
@@ -1503,6 +1758,7 @@ export default function HorizontalNonLinearStepper(props) {
                         defaultValue="Vacio"
                         variant="filled"
                       />
+<<<<<<< HEAD
                       <Box className="flex flex-row content-center">
                         <Typography
                           variant="subtitle1"
@@ -1564,6 +1820,10 @@ export default function HorizontalNonLinearStepper(props) {
                           <MenuItem value={30}>Thirty</MenuItem>
                         </Select>
                       </FormControl> */}
+=======
+                    
+                      
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
                     </Box>
                   </Box>
                 ) : (
@@ -1573,6 +1833,7 @@ export default function HorizontalNonLinearStepper(props) {
                       <Typography variant="h6" className="mb-4" color="primary">
                         Historificación
                       </Typography>
+                     
                     </Box>
 
                     {/* <Typography variant="h6" className="mb-4 ml-4">
@@ -1609,7 +1870,7 @@ export default function HorizontalNonLinearStepper(props) {
         {alertError && (
           <Stack sx={{ width: "100%" }} spacing={2}>
             <Alert severity="warning">
-              Error!! debe modificar alguna instrucción para guardar..
+              Error!! debe modificar uno o más campos para guardar..
             </Alert>
           </Stack>
         )}

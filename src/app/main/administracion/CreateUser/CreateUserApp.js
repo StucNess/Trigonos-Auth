@@ -23,6 +23,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FusePageSimple from "@fuse/core/FusePageSimple";
 import jwtServiceConfig from "../../../auth/services/jwtService/jwtServiceConfig";
 import { CallApiParticipants } from "../store/CallApiParticipants";
+import AdviceModule from "../../comercial/AdviceModule";
 
 const schema = yup.object().shape({
   user: yup.string().required("Debe ingresar su nombre completo"),
@@ -118,7 +119,7 @@ function CreateUserApp(props) {
     } = event;
     setRolName(value);
   };
-  function timeout(delay: number) {
+  function timeout(delay = number) {
     return new Promise((res) => setTimeout(res, delay));
   }
   useEffect(() => {
@@ -199,6 +200,8 @@ function CreateUserApp(props) {
             noValidate
             className="flex flex-col justify-center w-full mt-32"
             onSubmit={handleSubmit(onSubmit)}>
+            <div >
+            <AdviceModule textwidth={350} classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} />
             <Controller
               name="user"
               control={control}
@@ -220,6 +223,8 @@ function CreateUserApp(props) {
                 />
               )}
             />
+            </div>
+            
             <Controller
               name="firstName"
               control={control}
@@ -256,6 +261,9 @@ function CreateUserApp(props) {
                 />
               )}
             />
+           
+
+         
             <Controller
               name="email"
               control={control}
@@ -279,6 +287,8 @@ function CreateUserApp(props) {
               )}
             />
 
+           
+            <AdviceModule textwidth={350} classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
             <Controller
               name="password"
               control={control}
@@ -314,50 +324,59 @@ function CreateUserApp(props) {
                 />
               )}
             />
-            <Controller
-              name="project"
-              control={control}
-              render={({ field }) => (
-                <FormControl
-                  className="mb-24"
-                  label="project"
-                  error={!!errors.project}
-                  type="select"
-                  required>
-                  <InputLabel id="demo-simple-select-standard-label">
-                    Seleccione clientes
-                  </InputLabel>
-                  <Select
-                    labelId="demo-multiple-name-label"
-                    id="demo-multiple-name"
-                    multiple
-                    value={personName}
-                    onChange={handleChangeProyect}
-                    input={<OutlinedInput label="Name" />}
-                    // MenuProps={MenuProps}
-                  >
-                    {apiResponseProyects.data != undefined ? (
-                      apiResponseProyects.data.map((e) => (
-                        <MenuItem
-                          key={e.id}
-                          value={e.id}
-                          style={getStyles(
-                            e.commercial_Business,
-                            personName,
-                            theme
-                          )}>
-                          {e.business_Name}
+              <div className="w-full" >
+              <AdviceModule textwidth={300} classnamesegund={"absolute h-14 w-14 -right-[50px] -bottom-[15px]"} msg={"Para asignar los clientes al usuario debe desplegar la lista y podrá seleccionar uno por uno los clientes que requiera asignar."} />
+              <Controller
+                
+                name="project"
+                control={control}
+                render={({ field }) => (
+                  <FormControl
+                    
+                    className="mb-24 w-320"
+                    label="project"
+                    error={!!errors.project}
+                    type="select"
+                    required>
+                    <InputLabel id="demo-simple-select-standard-label">
+                      Seleccione clientes
+                    </InputLabel>
+                    <Select
+                      labelId="demo-multiple-name-label"
+                      id="demo-multiple-name"
+                      multiple
+                      value={personName}
+                      onChange={handleChangeProyect}
+                      input={<OutlinedInput label="Name" />}
+                      // MenuProps={MenuProps}
+                    >
+                      {apiResponseProyects.data != undefined ? (
+                        apiResponseProyects.data.map((e) => (
+                          <MenuItem
+                            key={e.id}
+                            value={e.id}
+                            style={getStyles(
+                              e.commercial_Business,
+                              personName,
+                              theme
+                            )}>
+                            {e.business_Name}
+                          </MenuItem>
+                        ))
+                      ) : (
+                        <MenuItem id="1" value="1">
+                          Proyecto 1
                         </MenuItem>
-                      ))
-                    ) : (
-                      <MenuItem id="1" value="1">
-                        Proyecto 1
-                      </MenuItem>
-                    )}
-                  </Select>
-                </FormControl>
-              )}
-            />
+                      )}
+                    </Select>
+                  </FormControl>
+                )}
+              />
+              </div>
+             
+         
+           
+           
             <Controller
               name="rol"
               control={control}

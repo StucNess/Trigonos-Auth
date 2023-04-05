@@ -294,6 +294,7 @@ const TablaInstrucciones = (props) => {
     props.idParticipante,
     render,
     render1,
+    cargando
   ]);
   // useEffect(() => {
   //   props.tokenCharge(cargando);
@@ -599,6 +600,7 @@ const TablaInstrucciones = (props) => {
                             return (
                               <TableCell key={column.id} align={column.align}>
                                 <EditIcon
+                                style={{ cursor: 'pointer' }}
                                   onClick={() => {
                                     showModal(dataRow);
                                   }}

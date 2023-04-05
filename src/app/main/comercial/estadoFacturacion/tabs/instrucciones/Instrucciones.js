@@ -126,6 +126,7 @@ const Instrucciones = (props) => {
           cargando={charge}
           selected={selectedParams}
           tokenCharge={stateCharge}
+          
         />
       </motion.div>
     </motion.div>

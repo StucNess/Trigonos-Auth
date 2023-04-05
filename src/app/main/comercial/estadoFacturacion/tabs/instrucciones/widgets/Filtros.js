@@ -45,7 +45,7 @@ import AdapterDateFns from "@date-io/date-fns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
-
+import Modal from '@mui/material/Modal';
 let buss;
 let concept;
 let ruts;
@@ -53,6 +53,19 @@ let apiResponse;
 let condicion = 1;
 const isLetters = (str) => /[^0-9]/.test(str);
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
 const Filtros = (props) => {
   let condicionFilters = 0;
   let conditionPeriods = 0;
@@ -75,7 +88,7 @@ const Filtros = (props) => {
     sTerminoPeriodo: "",
     buscar: "",
   });
-
+   const [open, setOpen] = useState(false);
   const clearFilters = () => {
     setSelected({
       sBusinessName: "",
@@ -109,6 +122,12 @@ const Filtros = (props) => {
     buscar,
   } = selected;
   const [disabledDateEnd, setDisabledDateEnd] = useState(true);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     props.getClearDebtorAndCreditor(clearDebtorAndCreditor);
   }, [selected]);
@@ -124,7 +143,7 @@ const Filtros = (props) => {
   useEffect(() => {
     (async () => {
       setDisabled(false);
-
+      let probando = false;
       if (
         props.stateTokenFiltros.acreedor === true ||
         props.stateTokenFiltros.deudor === true
@@ -134,20 +153,27 @@ const Filtros = (props) => {
         setBusinessName(buss);
         setRutName(ruts);
       }
-
-      concept = await CallConceptoFilter(
-        props.idParticipante,
-        props.stateTokenFiltros,
-        selected
-      );
-
-      setDisabled(true);
+        concept = await CallConceptoFilter(
+          props.idParticipante,
+          props.stateTokenFiltros,
+          selected
+        );
+          
+      if (concept == 'ERR_BAD_REQUEST'){
+        setOpen(true)
+        return
+      }
+     else{
+     
+       setDisabled(true);
 
       setCodRef(concept.codRef);
       setCart(concept.carta);
       setConceptName(concept.label);
 
       condicion = 2;
+     }
+     
     })();
   }, []);
   useEffect(() => {
@@ -187,23 +213,30 @@ const Filtros = (props) => {
           setRutName(ruts);
         }
 
-        concept = await CallConceptoFilter(
-          props.idParticipante,
-          props.stateTokenFiltros,
-          selected
-        );
+          concept = await CallConceptoFilter(
+            props.idParticipante,
+            props.stateTokenFiltros,
+            selected )
+
+            if (concept == 'ERR_BAD_REQUEST'){
+              setOpen(true)
+              return
+            }
+       else{
         setConceptName(concept.label);
         setCodRef(concept.codRef);
         setCart(concept.carta);
 
         setDisabled(true);
-        setDisabledd(false);
+        setDisabledd(false);}
       }
     })();
   }, [props.stateTokenFiltros, buscar]);
   useEffect(() => {
     props.selected(selected, disabled);
   }, [selected, disabled]);
+
+  
   // props.selected(selected, disabled);
   const apiGet = async (numero, parametro) => {
     if (numero === 0) {
@@ -262,14 +295,17 @@ const Filtros = (props) => {
     props.getCargandoFiltros(disabled);
   }, [disabled]);
   return (
+  
     <Paper
       sx={{ width: "100%", color: "grey.500" }}
       // tvxxl:max-w-[78%] tvdosk:max-w-[70%]
       className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full md:max-xl:flex   "
     >
+      
       <div className="flex  justify-center">
         <Typography className="text-lg font-medium tracking-tight leading-6 truncate ">
           Filtros
+          
         </Typography>
       </div>
       <div className="flex flex-col flex-auto mt-6">
@@ -277,12 +313,31 @@ const Filtros = (props) => {
           <Box className="flex flex-col hd:flex-col  ">
             {/* sx={{  width: 1000}} */}
 
-            {!disabled ? (
+            {!disabled  ? (
               <div className="flex items-center">
                 <Stack sx={{ width: "80%", color: "grey.500" }} spacing={1}>
                   <p>Cargando Filtros .....</p>
                   <LinearProgress color="success" />
                 </Stack>
+              <>
+              
+              
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 400 }}>
+          <h2 id="parent-modal-title">Se ha producido un error a la API</h2>
+          <p id="parent-modal-description">
+            Se recargara la pagina
+          </p>
+          <Button variant="outlined" onClick={() => window.location.reload(true)}>Cerrar</Button>
+        </Box>
+      </Modal>
+      </>
               </div>
             ) : (
               <>
@@ -656,8 +711,11 @@ const Filtros = (props) => {
             )}
           </Box>
         </Box>
+
       </div>
+
     </Paper>
+    
   );
 };
 

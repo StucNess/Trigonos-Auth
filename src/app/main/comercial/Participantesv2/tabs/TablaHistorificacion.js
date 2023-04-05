@@ -19,13 +19,23 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ModalCampo from "./widgets/ModalCampo";
 
+<<<<<<< HEAD
 function createData(id, editor, date, updated_ts_old, updated_ts_new) {
+=======
+function createData(
+  id,
+  editor,
+  date,
+  updated_ts_old,
+  updated_ts_new,coleccion_campos
+) {
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
   return {
     id,
     editor,
     date,
     updated_ts_old,
-    updated_ts_new,
+    updated_ts_new,coleccion_campos
   };
 }
 
@@ -59,6 +69,14 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
+function CleanArray(value) {
+  if(value !=0 ||value !='0'){
+    return value + ' ,';
+  }else{
+    return '';
+  }
+
+}
 
 const columns = [
   { id: "id", label: "ID", minWidth: 20 },
@@ -66,6 +84,11 @@ const columns = [
   { id: "date", label: "date", minWidth: 40 },
   { id: "updated_ts_old", label: "Fecha Actualización Antigua", minWidth: 40 },
   { id: "updated_ts_new", label: "Fecha Actualización Nueva", minWidth: 40 },
+<<<<<<< HEAD
+=======
+  { id: "coleccion_campos", label: "Campos Modificados", minWidth: 40 },
+  
+>>>>>>> 6dcdefdaec33e74fd973aa2534aee1fed364b1a8
 ];
 
 function EnhancedTableHead(props) {
@@ -176,6 +199,7 @@ export default function TablaUltimosCambios(props) {
       setData(dataHist.data);
     })();
   }, [props.idParticipant]);
+
   data.map(
     ({
       id,
@@ -183,7 +207,10 @@ export default function TablaUltimosCambios(props) {
       date,
 
       updated_ts_old,
-      updated_ts_new,
+      updated_ts_new,name_old,rut_old,verification_code_old,business_name_old,commercial_business_old,dte_reception_email_old
+      ,bank_account_old,bank_old,commercial_address_old,postal_address_old,manager_old,pay_contact_first_name_old,pay_contact_last_name_old,
+      pay_contact_address_old,pay_contact_phones_old,pay_contact_email_old,bills_contact_first_name_old,bills_contact_last_name_old,
+      bills_contact_address_old,bills_contact_phones_old,bills_contact_email_old
     }) =>
       rows.push(
         createData(
@@ -192,9 +219,33 @@ export default function TablaUltimosCambios(props) {
           date,
 
           updated_ts_old,
-          updated_ts_new
+          updated_ts_new,
+          (name_old !=0 || name_old !='0' ? '[ Nombre ] ':'')
+          +(rut_old !=0 || rut_old !='0' ?' [ Rut ] ':'')
+          +(verification_code_old !=0 || verification_code_old !='0' ?'[ Token ]':'')
+          +(business_name_old !=0 || business_name_old !='0' ?'[ Razón Social ]':'')
+          +(commercial_business_old !=0 || commercial_business_old !='0' ?'[ Giro ]':'')
+          +(dte_reception_email_old !=0 || dte_reception_email_old !='0' ?'[ Email DTE ]':'')
+          +(bank_account_old !=0 || bank_account_old !='0' ?'[ Cuenta de Banco ]':'')
+          +(bank_old !=0 || bank_old !='0' ?'[ Banco ]':'')
+          +(commercial_address_old !=0 || commercial_address_old !='0' ?'[ Dirección Comercial ]':'')
+          +(postal_address_old !=0 || postal_address_old !='0' ?'[ Dirección Postal ]':'')
+          +(manager_old !=0 || manager_old !='0' ?'[ Gerente General ]':'')
+          +(pay_contact_first_name_old !=0 || pay_contact_first_name_old !='0' ?'[ Nombre Contacto Pago ]':'')
+          +(pay_contact_last_name_old !=0 || pay_contact_last_name_old !='0' ?'[ Apellido Contacto Pago ]':'')
+          +(pay_contact_address_old !=0 || pay_contact_address_old !='0' ?'[ Dirección Contacto Pago ]':'')
+          +(pay_contact_phones_old !=0 || pay_contact_phones_old !='0' ?'[ Teléfono Contacto Pago ]':'')
+          +(pay_contact_email_old !=0 || pay_contact_email_old !='0' ?'[ Email Contacto Pago ]':'')
+          +(bills_contact_first_name_old !=0 || bills_contact_first_name_old !='0' ?'[ Nombre Contacto Factura ]':'')
+          +(bills_contact_last_name_old !=0 || bills_contact_last_name_old !='0' ?'[ Apellido Contacto Factura ]':'')
+          +(bills_contact_address_old !=0 || bills_contact_address_old !='0' ?'[ Direccion Contacto Factura ]':'')
+          +(bills_contact_phones_old !=0 || bills_contact_phones_old !='0' ?'[ Teléfono Contacto Factura ]':'')
+          +(bills_contact_email_old !=0 || bills_contact_email_old !='0' ?'[ Email Contacto Factura ]':'')
+         
+          
         )
       )
+      // (name_old !=0 || name_old !='0' ?'Nombre':'')+','+(rut_old !=0 || rut_old !='0' ?'Rut ,':'')+','+(verification_code_old !=0 || verification_code_old !='0' ?'C':'')
   );
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
