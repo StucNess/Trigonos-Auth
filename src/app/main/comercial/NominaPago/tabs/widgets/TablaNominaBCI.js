@@ -261,7 +261,7 @@ export default function EnhancedTable(props) {
     )
   );
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
+    let prueba = props.payRollData.filter((p) => selected.includes(p.rut));
     setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
@@ -453,17 +453,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row.rut);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   console.log(row);
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row.rut)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={row.rut}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
