@@ -45,15 +45,15 @@ function createData(   id,
   };
 }
 
-// const rows = [
-//   createData('userPrueba1', 'juanito', 'velasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-//   createData('userPrueba2', 'Rosita ',  'Carrasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-//   createData('userPrueba3', 'Como', 'tu', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-//   createData('userPrueba4', 'Nose', 'ayuda', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-//   createData('userPrueba5', 'Claro', 'Movistar', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
-//   createData('userPrueba6', 'El', 'sadsa', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+const rows = [
+  createData('userPrueba1', 'juanito', 'velasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+  createData('userPrueba2', 'Rosita ',  'Carrasco', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+  createData('userPrueba3', 'Como', 'tu', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+  createData('userPrueba4', 'Nose', 'ayuda', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+  createData('userPrueba5', 'Claro', 'Movistar', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
+  createData('userPrueba6', 'El', 'sadsa', 	'arroba@gmail.com', 	'Colocolo$',	'Debe poner arreglo','ADM'),
   
-// ];
+];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
