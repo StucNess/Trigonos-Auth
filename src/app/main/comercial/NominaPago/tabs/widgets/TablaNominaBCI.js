@@ -400,13 +400,23 @@ export default function EnhancedTable(props) {
             Tabla de Nominas "BCI"
           </Typography>
           <h1 className="border border-b-pantoneazul"></h1>
-            <div className="flex flex-row justify-center">
-              Disconformidad
-              <Switch
-                checked={checked}
-                onChange={activarDisc}
-                inputProps={{ "aria-label": "controlled" }}
-              />
+            <div className="flex flex-row justify-center align-middle  ">
+              <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
+                <Typography
+                  className="mt-[4px]"
+                  variant="subtitle1"
+                  id="tableTitle"
+                  component="div"
+                >
+                Disconformidad
+                </Typography>
+                <Switch
+                  checked={checked}
+                  onChange={activarDisc}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </div>
+              
             </div>
           
         </Box>
