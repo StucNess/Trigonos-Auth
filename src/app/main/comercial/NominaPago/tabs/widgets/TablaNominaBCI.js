@@ -15,14 +15,31 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
 import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 
+import { DatePicker } from "@mui/x-date-pickers";
+import {
+  Autocomplete,
+  
+  Divider,
+  FormControlLabel,
+  
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  
+
+
+  FormLabel,
+} from "@mui/material";
 function createData(
   rut,
   nombre,
@@ -416,7 +433,44 @@ export default function EnhancedTable(props) {
                   inputProps={{ "aria-label": "controlled" }}
                 />
               </div>
-              
+              <TextField
+                  className="w-[200px] m-[10px]"
+                  id="outlined-select-currency"
+                  select
+                  label="Coordinado"
+                  defaultValue="EUR"
+                  
+                >
+                  {/* {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))} */}
+                </TextField>
+                <TextField
+                  className="w-[200px] m-[10px]"
+                  id="outlined-basic"
+                  select
+                  label="Fecha inicio"
+                  defaultValue="EUR"
+                  
+                >
+                  
+                  {/* {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))} */}
+                </TextField>
+                <TextField
+                  className="w-[200px] m-[10px]"
+                  id="outlined-basic"
+                  select
+                  label="Fecha termino"
+                  defaultValue="EUR"
+                  
+                ></TextField>
+               
             </div>
           
         </Box>
