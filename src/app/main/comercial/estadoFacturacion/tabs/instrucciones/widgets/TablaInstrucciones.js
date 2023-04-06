@@ -196,7 +196,7 @@ const TablaInstrucciones = (props) => {
 
   useEffect(() => {
     if (condicion == 1) {
-      const fetchData = async (
+      let fetchData = async (
         id = idProyecto,
         PageIndex = pageIndex,
         PageSize = rowsPerPage,
@@ -205,7 +205,8 @@ const TablaInstrucciones = (props) => {
         orderByList = orderByList
       ) => {
         try {
-          const response = await CallInstrucciones(
+          console.log("ENTRA EN ESTE METODO");
+          let response = await CallInstrucciones(
             PageIndex,
             PageSize,
             id,
@@ -215,7 +216,7 @@ const TablaInstrucciones = (props) => {
           );
           setError(response);
           if (response.data != [] && response.data != undefined) {
-            const json = await response.data;
+            let json = await response.data;
             pagination = response.count;
             json.map(
               ({
@@ -294,7 +295,7 @@ const TablaInstrucciones = (props) => {
     props.idParticipante,
     render,
     render1,
-    cargando
+    cargando,
   ]);
   // useEffect(() => {
   //   props.tokenCharge(cargando);
@@ -600,7 +601,7 @@ const TablaInstrucciones = (props) => {
                             return (
                               <TableCell key={column.id} align={column.align}>
                                 <EditIcon
-                                style={{ cursor: 'pointer' }}
+                                  style={{ cursor: "pointer" }}
                                   onClick={() => {
                                     showModal(dataRow);
                                   }}
@@ -667,6 +668,7 @@ const TablaInstrucciones = (props) => {
             data={dataInstruction}
             getOpenModal={getOpenModal}
             closeModal={() => {
+              tableData = [];
               setModal(false);
 
               if (render1 === true) {

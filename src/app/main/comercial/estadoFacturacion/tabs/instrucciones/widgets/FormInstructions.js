@@ -35,6 +35,7 @@ const FormInstructions = (props) => {
     setValue(fechita);
   };
   const [render, setRender] = React.useState(false);
+  const [disabledChange, setDisabledChanged] = React.useState(true);
   React.useEffect(() => {
     if (alertt === true) {
       setTimeout(() => {
@@ -60,9 +61,6 @@ const FormInstructions = (props) => {
     folio: props.data.folio,
   });
   const { reception, aceptation, payment, billing, folio } = states;
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setRecepcion(event.target.value);
-  // };
   const [dates, setDates] = React.useState({
     receptionDate: new Date(props.data.fecha_recepcion),
     aceptationDate: new Date(props.data.fecha_aceptacion),
@@ -70,7 +68,6 @@ const FormInstructions = (props) => {
     paymentDate: new Date(props.data.fecha_pago),
   });
   const { receptionDate, aceptationDate, billingDate, paymentDate } = dates;
-
   const viendoErrores = () => {
     // console.log(paymentDate > billingDate);
   };
@@ -235,6 +232,7 @@ const FormInstructions = (props) => {
           <MobileDatePicker
             label="Fecha Pago"
             disabled={
+              !disabledChange ||
               (props.emisione && props.acreedor) ||
               (!props.acreedor && props.fechaRecepcion)
                 ? false
@@ -311,6 +309,15 @@ const FormInstructions = (props) => {
         >
           {" "}
           Modificar
+        </Button>
+        <Button
+          sx={{ ml: 32, mr: 3, width: 200 }}
+          variant="contained"
+          color="success"
+          onClick={() => {}}
+        >
+          {" "}
+          Prueba
         </Button>
 
         <Button
