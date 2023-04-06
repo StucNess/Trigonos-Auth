@@ -15,14 +15,31 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
 import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 
+import { DatePicker } from "@mui/x-date-pickers";
+import {
+  Autocomplete,
+  
+  Divider,
+  FormControlLabel,
+  
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  
+
+
+  FormLabel,
+} from "@mui/material";
 function createData(
   rut,
   nombre,
@@ -261,7 +278,7 @@ export default function EnhancedTable(props) {
     )
   );
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
+    let prueba = props.payRollData.filter((p) => selected.includes(p.rut));
     setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
@@ -400,12 +417,62 @@ export default function EnhancedTable(props) {
             Tabla de Nominas "BCI"
           </Typography>
           <h1 className="border border-b-pantoneazul"></h1>
-
-          <Switch
-            checked={checked}
-            onChange={activarDisc}
-            inputProps={{ "aria-label": "controlled" }}
-          />
+            <div className="flex flex-row justify-center align-middle  ">
+              <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
+                <Typography
+                  className="mt-[4px]"
+                  variant="subtitle1"
+                  id="tableTitle"
+                  component="div"
+                >
+                Disconformidad
+                </Typography>
+                <Switch
+                  checked={checked}
+                  onChange={activarDisc}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </div>
+              <TextField
+                  className="w-[200px] m-[10px]"
+                  id="outlined-select-currency"
+                  select
+                  label="Coordinado"
+                  defaultValue="EUR"
+                  
+                >
+                  {/* {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))} */}
+                </TextField>
+                <TextField
+                  className="w-[200px] m-[10px]"
+                  id="outlined-basic"
+                  select
+                  label="Fecha inicio"
+                  defaultValue="EUR"
+                  
+                >
+                  
+                  {/* {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))} */}
+                </TextField>
+                <TextField
+                  className="w-[200px] m-[10px]"
+                  id="outlined-basic"
+                  select
+                  label="Fecha termino"
+                  defaultValue="EUR"
+                  
+                ></TextField>
+               
+            </div>
+          
         </Box>
 
         <Box className="flex  w-full items-center justify-evenly  ">
@@ -440,17 +507,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row.rut);
                   const labelId = `enhanced-table-checkbox-${index}`;
                   console.log(row);
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row.rut)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={row.rut}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
