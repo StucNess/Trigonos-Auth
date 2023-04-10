@@ -258,9 +258,15 @@ export default function EnhancedTable(props) {
   const [total, setTotal] = useState(0);
   const [dataExport, setDataExport] = useState([]);
   const [disabledDateEnd, setDisabledDateEnd] = useState(true);
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
+  const [render, setRender] = useState(false);
+  const [glosa, setGlosa] = useState("");
+  const [inputValue, setInputValue] = useState("");
   let rows = [];
-
+  let glosas = [];
+  function onlyUnique(value, index, array) {
+    return array.indexOf(value) === index;
+  }
   // const [disc, setDisc] = useState(false);
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
@@ -276,7 +282,7 @@ export default function EnhancedTable(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) =>
+  props.payRollData.map((p) => {
     rows.push(
       createData(
         p.rutAcreedor,
@@ -288,8 +294,10 @@ export default function EnhancedTable(props) {
         p.id,
         p.fechaDesconformidad
       )
-    )
-  );
+    );
+    glosas.push(p.glosa);
+  });
+
   useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
     setDataExport(prueba);
@@ -411,14 +419,20 @@ export default function EnhancedTable(props) {
     }
     convertToSheet(dataPrueba);
   }
-  const activarDisc = (param) => {
+  const activarDisc = (param, glosa = "") => {
     rows = [];
-    setChecked(param.target.checked);
 
-    props.changedDisc();
-    props.sendDiscData(param.target.checked);
+    if (param.target != undefined) {
+      setGlosa("");
+      setChecked(param.target.checked);
+      props.sendDiscData(param.target.checked, glosa);
+      props.changedDisc();
+      return;
+    }
+    render ? setRender(false) : setRender(true);
+    props.sendDiscData(checked, glosa);
   };
-
+  // console.log(glosas.filter(onlyUnique));
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -444,15 +458,22 @@ export default function EnhancedTable(props) {
               </Typography>
               <Switch
                 checked={checked}
-                onChange={activarDisc}
+                onChange={(e) => activarDisc(e, "")}
                 inputProps={{ "aria-label": "controlled" }}
                 sx={{ mt: 1 }}
               />
             </div>
             <Autocomplete
               disablePortal
+              value={glosa}
               id="combo-box-demo"
-              options={[]}
+              options={glosas.filter(onlyUnique)}
+              onChange={(event, newValue) =>
+                newValue != undefined && setGlosa(newValue)
+              }
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
               sx={{ width: 300, mt: 2 }}
               renderInput={(params) => (
                 <TextField {...params} label="Concepto" />
@@ -540,6 +561,15 @@ export default function EnhancedTable(props) {
               defaultValue="EUR"
             ></TextField> */}
           </div>
+          <Button
+            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+            variant="contained"
+            color="secondary"
+            onClick={() => activarDisc(checked, glosa)}
+          >
+            {/* <SiMicrosoftexcel className="mr-3 " /> */}
+            Buscar
+          </Button>
         </Box>
 
         <Box className="flex  w-full items-center justify-evenly  ">
