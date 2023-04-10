@@ -205,7 +205,6 @@ const TablaInstrucciones = (props) => {
         orderByList = orderByList
       ) => {
         try {
-          console.log("ENTRA EN ESTE METODO");
           let response = await CallInstrucciones(
             PageIndex,
             PageSize,

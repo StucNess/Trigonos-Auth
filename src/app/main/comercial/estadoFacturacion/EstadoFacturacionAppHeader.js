@@ -16,8 +16,7 @@ const EstadoFacturacionAppHeader = (props) => {
   const dispatch = useDispatch();
   const projects = useSelector(selectProjects);
   const idProyecto = window.localStorage.getItem("ProyectUser");
-  // console.log(idProyecto);
-  // console.log(window.localStorage.getItem("ProyectUser"));
+
   const [selectedProject, setSelectedProject] = useState({
     // eslint-disable-next-line radix
     id: parseInt(idProyecto) /* Dinamico -  */,
@@ -51,7 +50,7 @@ const EstadoFacturacionAppHeader = (props) => {
     });
   }
   varid = selectedProject.id;
-  console.log(projects[0]);
+
   if (_.isEmpty(projects)) {
     return (
       <div className="flex flex-col w-full px-24 sm:px-32">

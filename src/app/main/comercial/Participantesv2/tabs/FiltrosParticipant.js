@@ -21,30 +21,25 @@ export default function FiltrosParticipant(props) {
     },
   ]);
 
-
-
-
-  
   useEffect(() => {
     props.sendParticipants(dataParticipant);
   }, [dataParticipant]);
   useEffect(() => {
-    if(props.change){
+    if (props.change) {
       console.log(props.change);
-      console.log(`ID DEL REFRESH: ${props.idParticipant}`);
+      `ID DEL REFRESH: ${props.idParticipant}`;
       callAsyncApi(props.idParticipant);
     }
-    
   }, [props.change]);
-  let callAsyncApi = (refreshValue)=>{
+  let callAsyncApi = (refreshValue) => {
     (async () => {
       participants = await CallApi(1, 1000, 1);
       setNameParticipants(participants);
-      setDataParticipant(participants[parseInt(refreshValue-1)]);
-      props.sendParticipants(participants[parseInt(refreshValue-1)]);
+      setDataParticipant(participants[parseInt(refreshValue - 1)]);
+      props.sendParticipants(participants[parseInt(refreshValue - 1)]);
       // props.sendParticipants(participants[parseInt(refreshValue-1)]);
     })();
-  }
+  };
   useEffect(() => {
     (async () => {
       participants = await CallApi(1, 1000, 1);
@@ -52,17 +47,20 @@ export default function FiltrosParticipant(props) {
       props.sendParticipants(participants[0]);
     })();
   }, []);
-  // console.log(dataParticipant.name);
+  // (dataParticipant.name);
   return (
     <Box>
       <Box className="flex flex-col w-full mb-[20px] ">
-      <AdviceModule 
-                  direction={"ltr"}  
-                  textwidth={500} 
-                  msg={"Mediante los siguientes listas \"Razón Social\", \"Rut\" usted podrá buscar al participante deseado, ya sea desplazandose por la lista o escribiendo directamente en el campo."} 
-                  className={"relative h-32 w-32 "} 
-                  classnamesegund={"absolute h-14 w-14 -right-[230px] -bottom-[5px]"}
-                  classPopover={"ml-[20px] mr-[100px]" }  />
+        <AdviceModule
+          direction={"ltr"}
+          textwidth={500}
+          msg={
+            'Mediante los siguientes listas "Razón Social", "Rut" usted podrá buscar al participante deseado, ya sea desplazandose por la lista o escribiendo directamente en el campo.'
+          }
+          className={"relative h-32 w-32 "}
+          classnamesegund={"absolute h-14 w-14 -right-[230px] -bottom-[5px]"}
+          classPopover={"ml-[20px] mr-[100px]"}
+        />
         <Typography variant="h6" className="mb-4" color="primary">
           Búsqueda de Participante
         </Typography>

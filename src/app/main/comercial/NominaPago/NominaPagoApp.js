@@ -62,6 +62,7 @@ const NominaPagoApp = () => {
           setPayRollData(response.data.data);
         });
     }
+    console.log(payRollData);
   };
   const getChangeDisc = (param) => {
     changeDisc = param;
@@ -125,12 +126,20 @@ const NominaPagoApp = () => {
             )}
             {clientData.bank == 9 && (
               <motion.div className="  col-span-12 ">
-                <TablaNominaSecurity payRollData={payRollData} />
+                <TablaNominaSecurity
+                  payRollData={payRollData}
+                  sendDiscData={getDiscData}
+                  changedDisc={changeDisc}
+                />
               </motion.div>
             )}
             {clientData.bank == 7 && (
               <motion.div className="  col-span-12 ">
-                <TablaNominaSantander payRollData={payRollData} />
+                <TablaNominaSantander
+                  payRollData={payRollData}
+                  sendDiscData={getDiscData}
+                  changedDisc={changeDisc}
+                />
               </motion.div>
             )}
           </motion.div>

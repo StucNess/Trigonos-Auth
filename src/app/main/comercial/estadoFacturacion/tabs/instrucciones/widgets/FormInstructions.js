@@ -68,9 +68,7 @@ const FormInstructions = (props) => {
     paymentDate: new Date(props.data.fecha_pago),
   });
   const { receptionDate, aceptationDate, billingDate, paymentDate } = dates;
-  const viendoErrores = () => {
-    // console.log(paymentDate > billingDate);
-  };
+  const viendoErrores = () => {};
   const ApiPatch = () => {
     const billingDateF = `20${billingDate.getYear().toString().slice(1, 3)}/${
       billingDate.getMonth() + 1

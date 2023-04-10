@@ -20,17 +20,16 @@ let participants = [];
 const NominaPagoApp = () => {
   const [dataParticipant, setDataParticipant] = useState([]);
   const [change, setChange] = useState(false);
-  const [idParticipant, setIdParticipant] = useState()
+  const [idParticipant, setIdParticipant] = useState();
   const getIdParticipant = (data) => {
     setIdParticipant(data);
   };
   const getDataParticipants = (data) => {
     setDataParticipant(data);
   };
-  const getChange = (data) =>{
-    setChange(data)
-    // console.log(`AQUI -- ${data}`) 
-  }
+  const getChange = (data) => {
+    setChange(data);
+  };
   return (
     <Root
       // header={<FacturacionMasivaAppHeader />}
@@ -47,7 +46,8 @@ const NominaPagoApp = () => {
                 <span className="text-grey-700">
                   Introducir términos de búsqueda en los <b>filtros</b>{" "}
                   superiores para encontrar al <b>cliente</b> que requiera{" "}
-                   gestionar su información, luego en la parte inferior se cargaran los datos asociados.
+                  gestionar su información, luego en la parte inferior se
+                  cargaran los datos asociados.
                   {/* puede proceder a modificar sus datos asociados. */}
                 </span>
               </div>
@@ -55,14 +55,22 @@ const NominaPagoApp = () => {
           </Box>
           <Paper className="w-full p-[20px] mb-[20px]">
             {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
-            <FiltrosParticipant change={change} sendParticipants={getDataParticipants} idParticipant={idParticipant}  />
+            <FiltrosParticipant
+              change={change}
+              sendParticipants={getDataParticipants}
+              idParticipant={idParticipant}
+            />
           </Paper>
           {/* <Paper className="w-full p-[20px] mb-[20px]"> */}
           {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
           {/* <PruebasStepper/> */}
           {/* </Paper> */}
           <Paper className="w-full p-[20px] ">
-            <VerticalStepper dataParticipant={dataParticipant} sendChange={getChange} sendIdParticipant={getIdParticipant} />
+            <VerticalStepper
+              dataParticipant={dataParticipant}
+              sendChange={getChange}
+              sendIdParticipant={getIdParticipant}
+            />
           </Paper>
         </Box>
       }

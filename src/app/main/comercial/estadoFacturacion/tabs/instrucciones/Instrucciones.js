@@ -30,7 +30,7 @@ const Instrucciones = (props) => {
   const [render, setRender] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [cargandoFiltross, setCargandoFiltross] = useState(false);
-  // console.log(charge);
+
   function stateToken(state) {
     setEstadosPar(state);
   }
@@ -75,7 +75,7 @@ const Instrucciones = (props) => {
   function cargandoFiltros(param) {
     setCargandoFiltross(param);
   }
-  console.log(`FILTRO -->${cargandoFiltross}`);
+
   return (
     <motion.div
       className="grid auto-cols-auto smmax:grid-cols-1 sm:grid-cols-12 gap-24 w-full min-w-0 p-24 "
@@ -126,7 +126,6 @@ const Instrucciones = (props) => {
           cargando={charge}
           selected={selectedParams}
           tokenCharge={stateCharge}
-          
         />
       </motion.div>
     </motion.div>

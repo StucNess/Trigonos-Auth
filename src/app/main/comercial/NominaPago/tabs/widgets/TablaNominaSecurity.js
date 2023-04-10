@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -15,11 +15,31 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { SiMicrosoftexcel } from "react-icons/si";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { HiDownload } from "react-icons/hi";
 import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
-
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+//IMPORTACIONES PARA LOS DATAPICKER
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import AdapterDateFns from "@date-io/date-fns";
+import { DatePicker } from "@mui/x-date-pickers";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+//
+import {
+  Autocomplete,
+  Divider,
+  FormControlLabel,
+  InputAdornment,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  FormLabel,
+} from "@mui/material";
 function createData(
   rut,
   razon_social,
@@ -286,19 +306,32 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function TablaNominaSecurity(props) {
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("cod_banco");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [total, setTotal] = React.useState(0);
-  const [dataExport, setDataExport] = React.useState([]);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  let conditionPeriods = 0;
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("cod_banco");
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [dense, setDense] = useState(false);
+  const [total, setTotal] = useState(0);
+  const [dataExport, setDataExport] = useState([]);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [disabledDateEnd, setDisabledDateEnd] = useState(true);
+  const [checked, setChecked] = useState(true);
   const rows = [];
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
     style: "currency",
   });
+  const conditionalPeriods = (e) => {
+    if (e.target.name === "hasta" && e.target.checked === true) {
+      conditionPeriods = 1;
+      setDisabledDateEnd(false);
+    }
+    if (e.target.name === "hasta" && e.target.checked === false) {
+      conditionPeriods = 0;
+      setDisabledDateEnd(true);
+    }
+  };
   props.payRollData.map((p) =>
     rows.push(
       createData(
@@ -313,7 +346,7 @@ export default function TablaNominaSecurity(props) {
       )
     )
   );
-  React.useEffect(() => {
+  useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
     setDataExport(prueba);
     let pruebaValor = 0;
@@ -328,13 +361,12 @@ export default function TablaNominaSecurity(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.rut);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
-
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
@@ -414,7 +446,13 @@ export default function TablaNominaSecurity(props) {
     }
     convertToSheet(dataPrueba);
   }
-  console.log(props.payRollData);
+  const activarDisc = (param) => {
+    rows = [];
+    setChecked(param.target.checked);
+
+    props.changedDisc();
+    props.sendDiscData(param.target.checked);
+  };
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -428,13 +466,122 @@ export default function TablaNominaSecurity(props) {
             Tabla de Nominas "Security"
           </Typography>
           <h1 className="border border-b-pantoneazul"></h1>
+          <div className="flex flex-row justify-center align-middle  ">
+            <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
+              <Typography
+                className="mt-[11px]"
+                variant="subtitle1"
+                id="tableTitle"
+                component="div"
+              >
+                Disconformidad
+              </Typography>
+              <Switch
+                checked={checked}
+                onChange={activarDisc}
+                inputProps={{ "aria-label": "controlled" }}
+                sx={{ mt: 1 }}
+              />
+            </div>
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={[]}
+              sx={{ width: 300, mt: 2 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Concepto" />
+              )}
+            />
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              adapterLocale={es}
+            >
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Desde"
+                disabled
+                checked
+                name="desde"
+                sx={{ ml: 2, mt: 1 }}
+              />
+              <DatePicker
+                views={["year", "month"]}
+                label="Fecha inicio"
+                openTo="year"
+                minDate={new Date("2017-02-01")}
+                maxDate={new Date("2023-01-01")}
+                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+                // onChange={(value) => {
+                //   value != null &&
+                //     setSelected({
+                //       ...selected,
+                //       sInicioPeriodo: value,
+                //     });
+                // }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={null}
+                    sx={{ mt: 2, width: 300 }}
+                  />
+                )}
+              />
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Hasta"
+                onChange={(e) => conditionalPeriods(e)}
+                name="hasta"
+                sx={{ ml: 2, mt: 1 }}
+              />
+              <DatePicker
+                views={["year", "month"]}
+                label="Fecha termino"
+                openTo="year"
+                disabled={disabledDateEnd ? true : false}
+                minDate={new Date("2017-02-01")}
+                maxDate={new Date("2023-01-01")}
+                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+                // onChange={(value) => {
+                //   value != null &&
+                //     setSelected({
+                //       ...selected,
+                //       sInicioPeriodo: value,
+                //     });
+                // }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={null}
+                    sx={{ mt: 2, width: 300 }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+            {/*
+            <TextField
+              className="w-[200px] m-[10px]"
+              id="outlined-basic"
+              select
+              label="Fecha inicio"
+            >
+
+            </TextField>
+            <TextField
+              className="w-[200px] m-[10px]"
+              id="outlined-basic"
+              select
+              label="Fecha termino"
+              defaultValue="EUR"
+            ></TextField> */}
+          </div>
         </Box>
+
         <Box className="flex  w-full items-center justify-evenly  ">
           <Button
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
             variant="contained"
-            onClick={() => downloadExcelFile("mydata", dataExport)}
             color="secondary"
+            onClick={() => downloadExcelFile("mydata", dataExport)}
           >
             <SiMicrosoftexcel className="mr-3 " />
             Nomina de pago <HiDownload />
