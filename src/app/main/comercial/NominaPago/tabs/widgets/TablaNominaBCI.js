@@ -21,13 +21,8 @@ import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
-//IMPORTACIONES PARA LOS DATAPICKER
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import AdapterDateFns from "@date-io/date-fns";
+
 import { DatePicker } from "@mui/x-date-pickers";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
-//
 import {
   Autocomplete,
   Divider,
@@ -248,7 +243,6 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable(props) {
-  let conditionPeriods = 0;
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("nro_documento");
   const [selected, setSelected] = useState([]);
@@ -257,25 +251,13 @@ export default function EnhancedTable(props) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [total, setTotal] = useState(0);
   const [dataExport, setDataExport] = useState([]);
-  const [disabledDateEnd, setDisabledDateEnd] = useState(true);
+  const rows = [];
   const [checked, setChecked] = useState(true);
-  let rows = [];
-
   // const [disc, setDisc] = useState(false);
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
     style: "currency",
   });
-  const conditionalPeriods = (e) => {
-    if (e.target.name === "hasta" && e.target.checked === true) {
-      conditionPeriods = 1;
-      setDisabledDateEnd(false);
-    }
-    if (e.target.name === "hasta" && e.target.checked === false) {
-      conditionPeriods = 0;
-      setDisabledDateEnd(true);
-    }
-  };
   props.payRollData.map((p) =>
     rows.push(
       createData(
@@ -291,7 +273,7 @@ export default function EnhancedTable(props) {
     )
   );
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
+    let prueba = props.payRollData.filter((p) => selected.includes(p.rut));
     setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
@@ -306,7 +288,7 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.id);
+      const newSelected = rows.map((n) => n.rut);
       setSelected(newSelected);
       return;
     }
@@ -412,13 +394,11 @@ export default function EnhancedTable(props) {
     convertToSheet(dataPrueba);
   }
   const activarDisc = (param) => {
-    rows = [];
     setChecked(param.target.checked);
-
     props.changedDisc();
     props.sendDiscData(param.target.checked);
   };
-
+  console.log(rows);
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -435,7 +415,7 @@ export default function EnhancedTable(props) {
           <div className="flex flex-row justify-center align-middle  ">
             <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
               <Typography
-                className="mt-[11px]"
+                className="mt-[4px]"
                 variant="subtitle1"
                 id="tableTitle"
                 component="div"
@@ -446,91 +426,33 @@ export default function EnhancedTable(props) {
                 checked={checked}
                 onChange={activarDisc}
                 inputProps={{ "aria-label": "controlled" }}
-                sx={{ mt: 1 }}
               />
             </div>
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={[]}
-              sx={{ width: 300, mt: 2 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Concepto" />
-              )}
-            />
-            <LocalizationProvider
-              dateAdapter={AdapterDateFns}
-              adapterLocale={es}
+            <TextField
+              className="w-[200px] m-[10px]"
+              id="outlined-select-currency"
+              select
+              label="Coordinado"
+              defaultValue="EUR"
             >
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Desde"
-                disabled
-                checked
-                name="desde"
-                sx={{ ml: 2, mt: 1 }}
-              />
-              <DatePicker
-                views={["year", "month"]}
-                label="Fecha inicio"
-                openTo="year"
-                minDate={new Date("2017-02-01")}
-                maxDate={new Date("2023-01-01")}
-                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
-                // onChange={(value) => {
-                //   value != null &&
-                //     setSelected({
-                //       ...selected,
-                //       sInicioPeriodo: value,
-                //     });
-                // }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    helperText={null}
-                    sx={{ mt: 2, width: 300 }}
-                  />
-                )}
-              />
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Hasta"
-                onChange={(e) => conditionalPeriods(e)}
-                name="hasta"
-                sx={{ ml: 2, mt: 1 }}
-              />
-              <DatePicker
-                views={["year", "month"]}
-                label="Fecha termino"
-                openTo="year"
-                disabled={disabledDateEnd ? true : false}
-                minDate={new Date("2017-02-01")}
-                maxDate={new Date("2023-01-01")}
-                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
-                // onChange={(value) => {
-                //   value != null &&
-                //     setSelected({
-                //       ...selected,
-                //       sInicioPeriodo: value,
-                //     });
-                // }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    helperText={null}
-                    sx={{ mt: 2, width: 300 }}
-                  />
-                )}
-              />
-            </LocalizationProvider>
-            {/*
+              {/* {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))} */}
+            </TextField>
             <TextField
               className="w-[200px] m-[10px]"
               id="outlined-basic"
               select
               label="Fecha inicio"
+              defaultValue="EUR"
             >
-
+              {/* {currencies.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))} */}
             </TextField>
             <TextField
               className="w-[200px] m-[10px]"
@@ -538,7 +460,7 @@ export default function EnhancedTable(props) {
               select
               label="Fecha termino"
               defaultValue="EUR"
-            ></TextField> */}
+            ></TextField>
           </div>
         </Box>
 
@@ -574,17 +496,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row.rut);
                   const labelId = `enhanced-table-checkbox-${index}`;
-
+                  console.log(row);
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row.rut)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={row.rut}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

@@ -16,7 +16,7 @@ export default function FiltrosParticipant(props) {
   const [dataParticipant, setDataParticipant] = useState([
     {
       name: "EcoMetales Limited, Agencia en Chile",
-      rut: "59087530",
+      rutCompleto: "59087530-9",
       id: 1,
     },
   ]);
@@ -101,7 +101,9 @@ export default function FiltrosParticipant(props) {
           // isOptionEqualToValue={(option, value) =>
           //   dataParticipant.name == value || ""
           // }
-          getOptionLabel={(option) => option.rut || dataParticipant[0].rut}
+          getOptionLabel={(option) =>
+            option.rutCompleto || dataParticipant[0].rutCompleto
+          }
           id="combo-box-demo"
           options={nameParticipants}
           value={dataParticipant}
