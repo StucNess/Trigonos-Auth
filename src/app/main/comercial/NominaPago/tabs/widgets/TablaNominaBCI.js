@@ -479,6 +479,15 @@ export default function EnhancedTable(props) {
                 <TextField {...params} label="Concepto" />
               )}
             />
+            <Autocomplete
+              disablePortal
+              id="combo-box-demo"
+              options={[]}
+              sx={{ width: 300, mt: 2 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Concepto" />
+              )}
+            />
             <LocalizationProvider
               dateAdapter={AdapterDateFns}
               adapterLocale={es}
