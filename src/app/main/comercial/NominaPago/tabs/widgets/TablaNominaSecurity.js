@@ -48,7 +48,8 @@ function createData(
   email,
   detalle,
   monto,
-  id
+  id,
+  disc
 ) {
   return {
     rut,
@@ -59,6 +60,7 @@ function createData(
     detalle,
     monto,
     id,
+    disc,
   };
 }
 
@@ -316,8 +318,14 @@ export default function TablaNominaSecurity(props) {
   const [dataExport, setDataExport] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [disabledDateEnd, setDisabledDateEnd] = useState(true);
-  const [checked, setChecked] = useState(true);
-  const rows = [];
+  const [checked, setChecked] = useState(false);
+  const [glosa, setGlosa] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  let rows = [];
+  let glosas = [];
+  function onlyUnique(value, index, array) {
+    return array.indexOf(value) === index;
+  }
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
     style: "currency",
@@ -332,20 +340,22 @@ export default function TablaNominaSecurity(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) =>
+  props.payRollData.map((p) => {
     rows.push(
       createData(
         p.rutAcreedor,
         p.nombreAcreedor,
-        3,
-        p.sBifAcreedor,
-        p.correoDteAcreedor,
-        `PAGO FACTURA ${p.folio}`,
+        p.folio,
         chile.format(p.valorNeto),
-        p.id
+        "29-07-2022",
+        p.glosa,
+        p.id,
+        p.fechaDesconformidad
       )
-    )
-  );
+    );
+    glosas.push(p.glosa);
+  });
+
   useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
     setDataExport(prueba);
@@ -353,6 +363,7 @@ export default function TablaNominaSecurity(props) {
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
     setTotal(pruebaValor);
   }, [selected]);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -446,12 +457,18 @@ export default function TablaNominaSecurity(props) {
     }
     convertToSheet(dataPrueba);
   }
-  const activarDisc = (param) => {
+  const activarDisc = (param, glosa = "") => {
     rows = [];
-    setChecked(param.target.checked);
 
-    props.changedDisc();
-    props.sendDiscData(param.target.checked);
+    if (param.target != undefined) {
+      setGlosa("");
+      setChecked(param.target.checked);
+      props.sendDiscData(param.target.checked, glosa);
+      props.changedDisc();
+      return;
+    }
+    render ? setRender(false) : setRender(true);
+    props.sendDiscData(checked, glosa);
   };
   return (
     <Box sx={{ width: "100%" }}>
@@ -478,11 +495,27 @@ export default function TablaNominaSecurity(props) {
               </Typography>
               <Switch
                 checked={checked}
-                onChange={activarDisc}
+                onChange={(e) => activarDisc(e, "")}
                 inputProps={{ "aria-label": "controlled" }}
                 sx={{ mt: 1 }}
               />
             </div>
+            <Autocomplete
+              disablePortal
+              value={glosa}
+              id="combo-box-demo"
+              options={glosas.filter(onlyUnique)}
+              onChange={(event, newValue) =>
+                newValue != undefined && setGlosa(newValue)
+              }
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
+              sx={{ width: 300, mt: 2 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Concepto" />
+              )}
+            />
             <Autocomplete
               disablePortal
               id="combo-box-demo"
@@ -557,23 +590,16 @@ export default function TablaNominaSecurity(props) {
                 )}
               />
             </LocalizationProvider>
-            {/*
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha inicio"
-            >
-
-            </TextField>
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha termino"
-              defaultValue="EUR"
-            ></TextField> */}
           </div>
+          <Button
+            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+            variant="contained"
+            color="secondary"
+            onClick={() => activarDisc(checked, glosa)}
+          >
+            {/* <SiMicrosoftexcel className="mr-3 " /> */}
+            Buscar
+          </Button>
         </Box>
 
         <Box className="flex  w-full items-center justify-evenly  ">
@@ -626,7 +652,7 @@ export default function TablaNominaSecurity(props) {
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{
-                            "aria-labelledby": labelId,
+                            "aria-labelledby": "Disconformidad",
                           }}
                         />
                       </TableCell>
@@ -645,6 +671,7 @@ export default function TablaNominaSecurity(props) {
                       <TableCell align="left">{row.email}</TableCell>
                       <TableCell align="left">{row.detalle}</TableCell>
                       <TableCell align="left">{row.monto}</TableCell>
+                      <TableCell align="left">{row.disc}</TableCell>
                     </TableRow>
                   );
                 })}

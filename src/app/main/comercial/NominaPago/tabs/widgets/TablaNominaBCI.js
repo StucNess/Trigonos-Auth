@@ -553,22 +553,6 @@ export default function EnhancedTable(props) {
                 )}
               />
             </LocalizationProvider>
-            {/*
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha inicio"
-            >
-
-            </TextField>
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha termino"
-              defaultValue="EUR"
-            ></TextField> */}
           </div>
           <Button
             className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
@@ -681,10 +665,6 @@ export default function EnhancedTable(props) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </Box>
   );
 }
