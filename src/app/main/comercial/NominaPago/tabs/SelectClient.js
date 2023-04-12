@@ -73,6 +73,7 @@ export default function SelectClientTable(props) {
     let prueba = participants.find((p) => p.id == cliente);
     
     if (prueba!=undefined){
+      console.log(prueba);
       props.sendClientData(prueba);
       props.changeDisc(searchPayroll);
     }else{
@@ -143,7 +144,7 @@ export default function SelectClientTable(props) {
           </FormControl>
         </div>
 
-        <div className="flex  w-fulsearchPayrolll items-center justify-evenly   ">
+        <div className="flex  w-full items-center justify-evenly   ">
           <LocalizationProvider
             dateAdapter={AdapterDayjs}
             sx={{ m: 1, minWidth: 350 }}

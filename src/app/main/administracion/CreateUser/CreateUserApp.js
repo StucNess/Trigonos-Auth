@@ -241,7 +241,7 @@ function CreateUserApp(props) {
              <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
            </div>
            <div>
-             <span className="text-grey-700">Filtra o selecciona  un <b>Usuario</b> desde la tabla adyacente que contiene una <b>lista</b> de los usuarios registrados</span>
+             <span className="text-grey-700">Debe ingresar los datos del <b>Usuario</b> en la sección izquierda luego presionar <b>Crear Usuario</b> debe aceptar o reachazar y posteriormente se actualizará la lista de la izquierda</span>
            </div>
            
          </Box>
