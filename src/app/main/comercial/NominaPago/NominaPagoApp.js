@@ -52,7 +52,7 @@ const NominaPagoApp = () => {
       axios
         .get(`http://164.77.112.10:99/api/Nominas?id=${id}&Glosa=${glosa}`)
         .then((response) => {
-          setPayRollData(response.data.data);
+          setPayRollData(response.data);
         });
     } else {
       axios
@@ -60,7 +60,7 @@ const NominaPagoApp = () => {
           `http://164.77.112.10:99/api/Nominas?id=${id}&Disc=si&Glosa=${glosa}`
         )
         .then((response) => {
-          setPayRollData(response.data.data);
+          setPayRollData(response.data);
         });
     }
     // console.log(payRollData);

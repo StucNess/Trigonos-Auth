@@ -282,6 +282,7 @@ export default function EnhancedTable(props) {
       setDisabledDateEnd(true);
     }
   };
+  console.log(props.payRollData);
   props.payRollData.map((p) => {
     rows.push(
       createData(
