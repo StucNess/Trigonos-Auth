@@ -264,6 +264,7 @@ export default function EnhancedTable(props) {
   const [inputValue, setInputValue] = useState("");
   let rows = [];
   let glosas = [];
+  let pruebaaa = [];
   function onlyUnique(value, index, array) {
     return array.indexOf(value) === index;
   }
