@@ -254,7 +254,11 @@ export default function EnhancedTable(props) {
   const [disabledDateEnd, setDisabledDateEnd] = useState(true);
   const [checked, setChecked] = useState(true);
   let rows = [];
-
+  let glosas = [];
+  let pruebaaa = [];
+  function onlyUnique(value, index, array) {
+    return array.indexOf(value) === index;
+  }
   // const [disc, setDisc] = useState(false);
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
