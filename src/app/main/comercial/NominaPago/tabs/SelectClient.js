@@ -131,7 +131,7 @@ export default function SelectClientTable(props) {
           <Button
             className="w-[150px]"
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={searchPayroll}
             startIcon={<SearchIcon />}
             style={{
