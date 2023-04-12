@@ -14,7 +14,7 @@ import {
   Tabs,
   Typography,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -22,6 +22,7 @@ import Select from "@mui/material/Select";
 import { HiOutlineInformationCircle, HiOutlineUser } from "react-icons/hi";
 import dayjs from "dayjs";
 import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -31,6 +32,17 @@ import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import SearchIcon from "@mui/icons-material/Search";
 import { callParticipants } from "../store/callParticipants";
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Slide from '@mui/material/Slide';
+import ReportIcon from '@mui/icons-material/Report';
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 let participants;
 export default function SelectClientTable(props) {
   const [cliente, setcliente] = useState("");
@@ -44,6 +56,8 @@ export default function SelectClientTable(props) {
   const [value, setValue] = useState(dayjs());
   const [participants, setParticipants] = useState([]);
   const [payrollTable, setPayrollTable] = useState(0);
+  const [alertt, setAlertt] = useState(false);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     (async () => {
       let participantFilter = await callParticipants();
@@ -57,10 +71,29 @@ export default function SelectClientTable(props) {
   const searchPayroll = () => {
     // render == true ? setRender(true) : setRender(false);
     let prueba = participants.find((p) => p.id == cliente);
-    props.sendClientData(prueba);
-    props.changeDisc(searchPayroll);
+    
+    if (prueba!=undefined){
+      props.sendClientData(prueba);
+      props.changeDisc(searchPayroll);
+    }else{
+      setAlertt(true);
+    }
   };
-
+  const OpenDialogAlert = ()=>{
+    return(<div>
+      Debe seleccionar el loco
+    </div>)
+  }
+  useEffect(() => {
+    if (alertt === true) {
+      setOpen(true);
+      setTimeout(() => {
+        setAlertt(false);
+        setOpen(false);
+      }, 1500);
+    }
+   
+  }, [alertt]);
   return (
     <Box
       sx={{
@@ -145,8 +178,28 @@ export default function SelectClientTable(props) {
           >
             Buscar
           </Button>
+          
         </div>
       </Paper>
+     
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        // onClose={}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle sx={{ color: "#FF5733" }} >{"Error"}<ReportIcon sx={{ color: "#FF5733" }}/></DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            <h2>Debe seleccionar un Cliente</h2> 
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          {/* <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleClose}>Agree</Button> */}
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

@@ -117,12 +117,12 @@ function CreateUserApp(props) {
   const { isValid, dirtyFields, errors } = formState;
 
   
-  const url = "http://164.77.112.10:99/api/Usuarios/pagination";
+
   const [data, setData] = useState([]);
   useEffect(() => {
     (async () => {
-      const data = await axios.get(url);
-      setData(data.data.data);
+      const data = await CallApiUsers();;
+      setData(data);
       
       
     })();
