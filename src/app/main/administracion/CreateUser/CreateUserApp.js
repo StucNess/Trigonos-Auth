@@ -250,7 +250,7 @@ function CreateUserApp(props) {
      
      <div className=" lgmax:col-span-12  lg:col-span-6 lg:mr-[20px]">
        
-       <div className="">
+       <div  className="lg:h-[730px]">
         
          <TableContainer component={Paper}>
            <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -308,7 +308,7 @@ function CreateUserApp(props) {
           <div className="w-[200px] h-[150px] ">
              <img className="" src="assets/images/logo/logoTRGNS.png" />
           </div>
-          <div>
+          <div className="">
             <Typography className=" text-4xl font-extrabold tracking-tight leading-tight">
               Agregar Usuario
             </Typography>
@@ -316,8 +316,8 @@ function CreateUserApp(props) {
             
           </div>
           
-          <Box className="flex flex-col lh:flex-row w-full ">
-            <div className="lh:w-1/2 bg-grey-50 lh:ml-[50px] lh:mr-[25px]">
+          <Box className="flex flex-row ssmmax:flex-col ssmmax:justify-center  w-full ">
+            <div className="w-1/2 ssmmax:w-2/2  bg-grey-50 ml-[50px] mr-[50px] lg:mr-[25px]">
                     <div >
                         <AdviceModule textwidth={350}  msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} />
                         <Controller
@@ -326,7 +326,7 @@ function CreateUserApp(props) {
                           render={({ field }) => (
                             <TextField
                             {...field}
-                              className="mb-24"
+                              className="mb-24  w-full"
                               label="Usuario"
                               type="user"
                               variant="outlined"
@@ -402,7 +402,7 @@ function CreateUserApp(props) {
                           )}
                         />
             </div>
-            <div className="lh:w-1/2 bg-grey-50 lh:ml-[25px] lh:mr-[50px]">
+            <div className="w-1/2 ssmmax:w-2/2 bg-grey-50 ml-[50px] lg:ml-[25px] mr-[50px]">
             <AdviceModule textwidth={350} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
                 <Controller
                   name="password"
@@ -448,7 +448,7 @@ function CreateUserApp(props) {
                     render={({ field }) => (
                       <FormControl
                         
-                        className="mb-24 w-320"
+                        className="mb-24 w-full"
                         label="project"
                         error={!!errors.project}
                         type="select"
@@ -497,7 +497,7 @@ function CreateUserApp(props) {
                   control={control}
                   render={({ field }) => (
                     <FormControl
-                      className="mb-24  w-320"
+                      className="mb-24 w-full"
                       label="Rol"
                       type="select"
                       required>
