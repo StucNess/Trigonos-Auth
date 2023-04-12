@@ -13,6 +13,7 @@ module.exports = {
       md: '960px',
       lf: '1100px',
       lg: '1280px',
+      lh: '1380px',
       xl: '1920px',
       //Rangos
       zerorange: {'min': '0px', 'max': '1280px'},
