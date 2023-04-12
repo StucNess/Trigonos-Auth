@@ -54,16 +54,7 @@ function SignInPage() {
 
   const { isValid, dirtyFields, errors } = formState;
 
-  useEffect(() => {
-    setValue("email", "ejoocontactos@gmail.com", {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    setValue("password", "Colocolo2$", {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  }, [setValue]);
+
 
   function onSubmit({ email, password }) {
     jwtService
@@ -93,10 +84,10 @@ function SignInPage() {
             Iniciar Sesión
           </Typography>
           <div className="flex items-baseline mt-2 font-medium">
-            <Typography>¿No tiene una cuenta?</Typography>
+            {/* <Typography>¿No tiene una cuenta?</Typography>
             <Link className="ml-4" to="/sign-up">
               Registrarse
-            </Link>
+            </Link> */}
           </div>
 
           <form
@@ -143,10 +134,12 @@ function SignInPage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between">
               <Controller
+                
                 name="remember"
                 control={control}
                 render={({ field }) => (
-                  <FormControl>
+                  <FormControl
+                    disabled>
                     <FormControlLabel
                       label="Recordarme"
                       control={<Checkbox size="small" {...field} />}

@@ -24,9 +24,29 @@ import FusePageSimple from "@fuse/core/FusePageSimple";
 import jwtServiceConfig from "../../../auth/services/jwtService/jwtServiceConfig";
 import { CallApiParticipants } from "../store/CallApiParticipants";
 import AdviceModule from "../../comercial/AdviceModule";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
+import { CallApiUsers } from "./store/CallApiUsers";
 
+const columns = [
+  { id: "id", label: "ID", minWidth: 20 },
+  { id: "username", label: "Usuario", minWidth: 20 },
+  { id: "nombre", label: "Nombre", minWidth: 20 },
+  { id: "apellido", label: "Apellido", minWidth: 20 },
+  { id: "email", label: "Email", minWidth: 20 },
+  
+];
+function createData(id, email, username, nombre, apellido) {
+  return { id, email, username, nombre, apellido };
+}
+const rows = [];
 const schema = yup.object().shape({
-  user: yup.string().required("Debe ingresar su nombre completo"),
+  // user: yup.string().required("Debe ingresar su nombre completo"),
   email: yup
     .string()
     .email("Debe ingresar un email correcto")
@@ -97,7 +117,30 @@ function CreateUserApp(props) {
   const { isValid, dirtyFields, errors } = formState;
 
   
- 
+
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    (async () => {
+      const data = await CallApiUsers();;
+      setData(data);
+      
+      
+    })();
+   
+  }, []);
+  // console.log(data);
+  // data.map(
+  //   ({
+  //     id, email, username, nombre, apellido,
+  //   }) =>
+      
+  //     rows.push(
+  //       createData(
+  //         id, email, username, nombre, apellido,
+  //       )
+  //     )
+  // );
+  // console.log(rows);
  const handleSetEmail = (event) => {
   const {
     target: { value },
@@ -146,7 +189,7 @@ function CreateUserApp(props) {
   function onSubmit(e) {
     const data = {
       email: e.email,
-      username: e.user,
+      username: e.email,
       nombre: e.firstName,
       apellido: e.lastName,
       password: e.password,
@@ -185,264 +228,340 @@ function CreateUserApp(props) {
       });
   }
   return (
-    <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
-      <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
-        <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
-          <div className="divLogo_">
-            <img className="LogoTrgns" src="assets/images/logo/logoTRGNS.png" />
-          </div>
-          <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
-            Agregar Usuario
-          </Typography>
-
-          <form
+    <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full ">
+     <div
+     className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-24   ">
+     <div className="  col-span-12 mb-[20px]" >
+        {/* Box de titulo y guía */}
+       <Box className="  bg-white rounded-sm p-[10px] ">
+         <h1 className="ml-[5px]">Agregar Usuarios</h1>
+         <h1 className="border border-b-pantoneazul"></h1>
+         <Box   className="flex flex-auto bg-white rounded-sm bg-grey-300 m-[10px] p-[10px]"  >
+           <div>
+             <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
+           </div>
+           <div>
+             <span className="text-grey-700">Debe ingresar los datos del <b>Usuario</b> en la sección izquierda luego presionar <b>Crear Usuario</b> debe aceptar o reachazar y posteriormente se actualizará la lista de la izquierda</span>
+           </div>
+           
+         </Box>
+       </Box>
+     </div>
+     
+     <div className=" lgmax:col-span-12  lg:col-span-6 lg:mr-[20px]">
+       
+       <div  className="lg:h-[730px]">
+        
+         <TableContainer component={Paper}>
+           <Table sx={{ minWidth: 650 }} aria-label="simple table">
+             <TableHead>
+               <TableRow>
+                {columns.map((column) => (
+                  <TableCell
+                    key={column.id}
+                    align={column.align}
+                    style={{ minWidth: column.minWidth }}
+                  >
+                    {column.label}
+                  </TableCell>
+                ))}
+               </TableRow>
+           </TableHead>
+             <TableBody>
+             {data
+              
+              .map((row) => {
+                return (
+                  
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.email}>
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      const valuee = row;
+                      return (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}>
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        </div>
+     </div>
+     
+     <div  className=" lgmax:col-span-12  lg:col-span-6 lgmax:mt-[20px] lg:ml-[20px] "> 
+      
+       <form
             name="registerForm"
             noValidate
-            className="flex flex-col justify-center w-full mt-32"
+            className="bg-white"
             onSubmit={handleSubmit(onSubmit)}>
-            <div >
-            <AdviceModule textwidth={350}  msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} />
-            <Controller
-              name="user"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  value={emailUser}
-                  
-                  className="mb-24"
-                  label="Usuario"
-                  autoFocus
-                  type="user"
-                  error={!!errors.user}
-                  helperText={errors?.user?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                  disabled
-                />
-              )}
-            />
-            </div>
+          <Box className="flex flex-col">
+          <div className="flex flex-row items-center">
+          <div className="w-[200px] h-[150px] ">
+             <img className="" src="assets/images/logo/logoTRGNS.png" />
+          </div>
+          <div className="">
+            <Typography className=" text-4xl font-extrabold tracking-tight leading-tight">
+              Agregar Usuario
+            </Typography>
+          </div>
             
-            <Controller
-              name="firstName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Nombre"
-                  autoFocus
-                  type="name"
-                  error={!!errors.firstName}
-                  helperText={errors?.firstName?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-            <Controller
-              name="lastName"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Apellido"
-                  autoFocus
-                  type="apellido"
-                  error={!!errors.lastName}
-                  helperText={errors?.lastName?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-           
+          </div>
+          
+          <Box className="flex flex-row ssmmax:flex-col ssmmax:justify-center  w-full ">
+            <div className="w-1/2 ssmmax:w-2/2  bg-grey-50 ml-[50px] mr-[50px] lg:mr-[25px]">
+                    <div >
+                        <AdviceModule textwidth={350}  msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} />
+                        <Controller
+                          name="user"
+                          control={control}
+                          render={({ field }) => (
+                            <TextField
+                            {...field}
+                              className="mb-24  w-full"
+                              label="Usuario"
+                              type="user"
+                              variant="outlined"
+                              fullWidth
+                              disabled
+                              value={emailUser}
+                              
+                            />
+                          )}
+                        />
+                        
+                        </div>
+                        
+                        <Controller
+                          name="firstName"
+                          control={control}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              className="mb-24"
+                              label="Nombre"
+                              autoFocus
+                              type="name"
+                              error={!!errors.firstName}
+                              helperText={errors?.firstName?.message}
+                              variant="outlined"
+                              required
+                              fullWidth
+                            />
+                          )}
+                        />
+                        <Controller
+                          name="lastName"
+                          control={control}
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              className="mb-24"
+                              label="Apellido"
+                              autoFocus
+                              type="apellido"
+                              error={!!errors.lastName}
+                              helperText={errors?.lastName?.message}
+                              variant="outlined"
+                              required
+                              fullWidth
+                            />
+                          )}
+                        />
+                      
 
-         
-            <Controller
-              name="email"
-              control={control}
-              
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Email"
-                  type="email"
-                  error={!!errors.email}
-                  helperText={errors?.email?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                  onChange={e => {
-                    field.onChange(e);
-                    handleSetEmail(e);
-                  }}
-                />
-              )}
-            />
-
-           
-            <AdviceModule textwidth={350} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
-            <Controller
-              name="password"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Contraseña"
-                  type="text"
-                  error={!!errors.password}
-                  helperText={errors?.password?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-
-            <Controller
-              name="passwordConfirm"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Contraseña (Confirmar)"
-                  type="text"
-                  error={!!errors.passwordConfirm}
-                  helperText={errors?.passwordConfirm?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-              <div className="w-full" >
-              <AdviceModule textwidth={300}msg={"Para asignar los clientes al usuario debe desplegar la lista y podrá seleccionar uno por uno los clientes que requiera asignar."} />
-              <Controller
-                
-                name="project"
-                control={control}
-                render={({ field }) => (
-                  <FormControl
                     
-                    className="mb-24 w-320"
-                    label="project"
-                    error={!!errors.project}
-                    type="select"
-                    required>
-                    <InputLabel id="demo-simple-select-standard-label">
-                      Seleccione clientes
-                    </InputLabel>
-                    <Select
-                      labelId="demo-multiple-name-label"
-                      id="demo-multiple-name"
-                      multiple
-                      value={personName}
-                      onChange={handleChangeProyect}
-                      input={<OutlinedInput label="Name" />}
-                      // MenuProps={MenuProps}
-                    >
-                      {apiResponseProyects.data != undefined ? (
-                        apiResponseProyects.data.map((e) => (
-                          <MenuItem
-                            key={e.id}
-                            value={e.id}
-                            style={getStyles(
-                              e.commercial_Business,
-                              personName,
-                              theme
-                            )}>
-                            {e.business_Name}
-                          </MenuItem>
-                        ))
-                      ) : (
-                        <MenuItem id="1" value="1">
-                          Proyecto 1
+                        <Controller
+                          name="email"
+                          control={control}
+                          
+                          render={({ field }) => (
+                            <TextField
+                              {...field}
+                              className="mb-24"
+                              label="Email"
+                              type="email"
+                              error={!!errors.email}
+                              helperText={errors?.email?.message}
+                              variant="outlined"
+                              required
+                              fullWidth
+                              onChange={e => {
+                                field.onChange(e);
+                                handleSetEmail(e);
+                              }}
+                            />
+                          )}
+                        />
+            </div>
+            <div className="w-1/2 ssmmax:w-2/2 bg-grey-50 ml-[50px] lg:ml-[25px] mr-[50px]">
+            <AdviceModule textwidth={350} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="mb-24"
+                      label="Contraseña"
+                      type="text"
+                      error={!!errors.password}
+                      helperText={errors?.password?.message}
+                      variant="outlined"
+                      required
+                      fullWidth
+                    />
+                  )}
+                />
+
+                <Controller
+                  name="passwordConfirm"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="mb-24"
+                      label="Contraseña (Confirmar)"
+                      type="text"
+                      error={!!errors.passwordConfirm}
+                      helperText={errors?.passwordConfirm?.message}
+                      variant="outlined"
+                      required
+                      fullWidth
+                    />
+                  )}
+                />
+                  <div className="w-full" >
+                  <AdviceModule textwidth={400}msg={"Para asignar los clientes al usuario debe desplegar la lista y podrá seleccionar uno por uno los clientes que requiera asignar."} />
+                  <Controller
+                    
+                    name="project"
+                    control={control}
+                    render={({ field }) => (
+                      <FormControl
+                        
+                        className="mb-24 w-full"
+                        label="project"
+                        error={!!errors.project}
+                        type="select"
+                        required>
+                        <InputLabel id="demo-simple-select-standard-label">
+                          Seleccione clientes
+                        </InputLabel>
+                        <Select
+                          labelId="demo-multiple-name-label"
+                          id="demo-multiple-name"
+                          multiple
+                          value={personName}
+                          onChange={handleChangeProyect}
+                          input={<OutlinedInput label="Name" />}
+                          // MenuProps={MenuProps}
+                        >
+                          {apiResponseProyects.data != undefined ? (
+                            apiResponseProyects.data.map((e) => (
+                              <MenuItem
+                                key={e.id}
+                                value={e.id}
+                                style={getStyles(
+                                  e.commercial_Business,
+                                  personName,
+                                  theme
+                                )}>
+                                {e.business_Name}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem id="1" value="1">
+                              Proyecto 1
+                            </MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    )}
+                  />
+                  </div>
+                  
+              
+                
+                
+                <Controller
+                  name="rol "
+                  control={control}
+                  render={({ field }) => (
+                    <FormControl
+                      className="mb-24 w-full"
+                      label="Rol"
+                      type="select"
+                      required>
+                      <InputLabel id="demo-simple-select-standard-label">
+                        Seleccione rol
+                      </InputLabel>
+                      <Select
+                        value={rolName}
+                        onChange={handleChangeRol}
+                        input={<OutlinedInput label="Name" />}
+                        // MenuProps={MenuProps}
+                      >
+                        <MenuItem id="1" value="admin">
+                          ADMIN
                         </MenuItem>
-                      )}
-                    </Select>
-                  </FormControl>
-                )}
-              />
-              </div>
-             
+                        <MenuItem id="2" value="trgns">
+                          TRGNS
+                        </MenuItem>
+                        <MenuItem id="3" value="cliente">
+                          CLIENTE
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+            </div>
+          </Box>
+          <Box className="flex justify-center">
+              <Button
+                    variant="contained"
+                    color="secondary"
+                    className=" w-[200px] "
+                    aria-label="Register"
+                    // disabled={_.isEmpty(dirtyFields) || !isValid}
+                    type="submit"
+                    size="large">
+                    Crear usuario
+                  </Button>
+                  {alertt && (
+                    <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
+                      <Alert severity="success">
+                        Usuario registrado correctamente!!
+                      </Alert>
+                    </Stack>
+                  )}
+                  {error && (
+                    <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
+                      <Alert severity="warning">
+                        Error!! El usuario no se ha registrado
+                      </Alert>
+                    </Stack>
+                  )}
+          </Box>
+       
+          </Box>
          
-           
-           
-            <Controller
-              name="rol"
-              control={control}
-              render={({ field }) => (
-                <FormControl
-                  className="mb-24"
-                  label="Rol"
-                  type="select"
-                  required>
-                  <InputLabel id="demo-simple-select-standard-label">
-                    Seleccione rol
-                  </InputLabel>
-                  <Select
-                    value={rolName}
-                    onChange={handleChangeRol}
-                    input={<OutlinedInput label="Name" />}
-                    // MenuProps={MenuProps}
-                  >
-                    <MenuItem id="1" value="admin">
-                      ADMIN
-                    </MenuItem>
-                    <MenuItem id="2" value="trgns">
-                      TRGNS
-                    </MenuItem>
-                    <MenuItem id="3" value="cliente">
-                      CLIENTE
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              )}
-            />
+          
+        </form>
+     </div>
+    
+   </div>
+       
+     </div>   
 
-            <Button
-              variant="contained"
-              color="secondary"
-              className="w-full mt-24"
-              aria-label="Register"
-              // disabled={_.isEmpty(dirtyFields) || !isValid}
-              type="submit"
-              size="large">
-              Crear usuario
-            </Button>
-            {alertt && (
-              <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
-                <Alert severity="success">
-                  Usuario registrado correctamente!!
-                </Alert>
-              </Stack>
-            )}
-            {error && (
-              <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
-                <Alert severity="warning">
-                  Error!! El usuario no se ha registrado
-                </Alert>
-              </Stack>
-            )}
-          </form>
-        </div>
-      </Paper>
-
-      <Box
-        className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden opacity-[.67]"
-        id="box_der"
-        sx={{ backgroundColor: "secondary.main" }}
-      />
-    </div>
   );
 }
 

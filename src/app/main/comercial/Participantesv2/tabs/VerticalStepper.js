@@ -45,6 +45,22 @@ import {
 import TablaHistorificacion from "./TablaHistorificacion";
 import AlertCambios from "./widgets/AlertCambios";
 import AdviceModule from "../../AdviceModule";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
+//MODAL TABLA CAMBIOS
+function createData(campo,antiguo,nuevo) {
+  return { campo,antiguo,nuevo};
+}
+
+let rows = [
+
+];
+
 const steps = [
   "Coordinado",
   "Datos de Contacto",
@@ -372,22 +388,56 @@ export default function HorizontalNonLinearStepper(props) {
                 </Typography> */
   }
   const FetchDatas = () => {
-    var encuentra = false;
-    for (var i = 0; i < p.tags.length; i++) {
-      encuentra = false;
-      for (var j = 0; j < tags.length; j++) {
-        if (p.tags[i] == tags[j]) {
-          encuentra = true;
-          break;
-        }
-      }
-      if (!encuenta) {
-        alert("los arreglos no son iguales");
-        break;
-      }
-    }
-    if (encuentra) {
-      alert("si son iguales");
+    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
+    rows = [
+
+      dataConfirm.name ===	formState.name? undefined:createData('Nombre', dataConfirm.name	,formState.name),
+      dataConfirm.businessName ===	formState.businessName? undefined:createData('Razón Social', dataConfirm.businessName	,formState.businessName),
+      dataConfirm.commercialBusiness ===	formState.commercialBusiness? undefined:createData('Giro', dataConfirm.commercialBusiness	,formState.commercialBusiness),
+      dataConfirm.manager ===	formState.manager? undefined:createData('Gerente general', dataConfirm.manager	,formState.manager),
+      dataConfirm.commercialAddress ===	formState.commercialAddress? undefined:createData('Dirección Comercial', dataConfirm.commercialAddress	,formState.commercialAddress),
+      dataConfirm.email ===	formState.email? undefined:createData('Email DTE', dataConfirm.email	,formState.email),
+      dataConfirm.payContactPhones ===	formState.payContactPhones? undefined:createData('Teléfono de Contacto Pago', dataConfirm.payContactPhones	,formState.payContactPhones),
+      dataConfirm.billsContactPhones ===	formState.billsContactPhones? undefined:createData('Teléfono de Contacto Factura', dataConfirm.billsContactPhones	,formState.billsContactPhones),
+      dataConfirm.banksName ===	formState.banksName? undefined:createData('Banco', dataConfirm.banksName	,formState.banksName),
+      dataConfirm.bankAccount ===	formState.bankAccount? undefined:createData('Cuenta Corriente', dataConfirm.bankAccount	,formState.bankAccount),
+      
+      
+    ]
+    rows = rows.filter(x => x!==undefined);
+    if (isEqual) {
+      return <div>No se han encontrado cambios</div>
+    } else {
+      
+      return(
+    
+        <TableContainer component={Paper} className="bg-grey-100">
+          <Table  aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Nombre Campo</TableCell>
+                <TableCell align="left">Atributo Antiguo</TableCell>
+                <TableCell align="left">Atributo Nuevo</TableCell>
+                
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow
+                  key={row.campo}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell component="th" scope="row">
+                    {row.campo}
+                  </TableCell>
+                  <TableCell align="left">{row.antiguo}</TableCell>
+                  <TableCell align="left">{row.nuevo}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>)
+     
     }
   };
 
@@ -1857,9 +1907,10 @@ export default function HorizontalNonLinearStepper(props) {
             {"¿Estas seguro de guardar estos cambios?"}
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Mostrar listado de cambios
-            </DialogContentText>
+            
+            <Box>
+            {FetchDatas()}
+            </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAlert}>Cancelar</Button>

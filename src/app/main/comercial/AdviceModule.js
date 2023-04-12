@@ -41,7 +41,7 @@ export default function AdviceModule({msg,textwidth=200,direction = "rtl",classN
                         horizontal: 'left',
                     }}
                     >
-                    <Typography className='whitespace-pre-wrap' sx={{ p: 2}}>{msg}</Typography>
+                    <Typography className='whitespace-pre-wrap' sx={{ p: 2,width:textwidth}}>{msg}</Typography>
                 </Popover>
             </div>
         </div>
