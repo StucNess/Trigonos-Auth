@@ -270,7 +270,7 @@ export default function EnhancedTable(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) =>
+  props.payRollData.map((p) =>{
     rows.push(
       createData(
         p.rutAcreedor,
