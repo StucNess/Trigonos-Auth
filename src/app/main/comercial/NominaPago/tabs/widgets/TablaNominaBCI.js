@@ -479,15 +479,6 @@ export default function EnhancedTable(props) {
                 <TextField {...params} label="Concepto" />
               )}
             />
-            <Autocomplete
-              disablePortal
-              id="combo-box-demo"
-              options={[]}
-              sx={{ width: 300, mt: 2 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Concepto" />
-              )}
-            />
             <LocalizationProvider
               dateAdapter={AdapterDateFns}
               adapterLocale={es}
@@ -554,28 +545,38 @@ export default function EnhancedTable(props) {
               />
             </LocalizationProvider>
           </div>
-          <Button
-            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
-            variant="contained"
-            color="secondary"
-            onClick={() => activarDisc(checked, glosa)}
-          >
-            {/* <SiMicrosoftexcel className="mr-3 " /> */}
-            Buscar
-          </Button>
-        </Box>
+          <h1 className="border border-b-pantoneazul"></h1>
+          <div className="flex flex-row justify-center align-middle  ">
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] mr-[100px] "
+              variant="contained"
+              color="secondary"
+              // onClick={() => activarDisc(checked, glosa)}
+            >
+              Limpiar Filtros
+            </Button>
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+              variant="contained"
+              color="secondary"
+              onClick={() => activarDisc(checked, glosa)}
+            >
+              {/* <SiMicrosoftexcel className="mr-3 " /> */}
+              Buscar
+            </Button>
 
-        <Box className="flex  w-full items-center justify-evenly  ">
-          <Button
-            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
-            variant="contained"
-            color="secondary"
-            onClick={() => downloadExcelFile("mydata", dataExport)}
-          >
-            <SiMicrosoftexcel className="mr-3 " />
-            Nomina de pago <HiDownload />
-          </Button>
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] ml-[100px]"
+              variant="contained"
+              color="secondary"
+              onClick={() => downloadExcelFile("mydata", dataExport)}
+            >
+              <SiMicrosoftexcel className="mr-3 " />
+              Nomina de pago <HiDownload />
+            </Button>
+          </div>
         </Box>
+        <h1 className="border border-b-pantoneazul"></h1>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
