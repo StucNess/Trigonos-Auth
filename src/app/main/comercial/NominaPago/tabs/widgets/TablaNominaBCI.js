@@ -21,8 +21,13 @@ import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
-
+//IMPORTACIONES PARA LOS DATAPICKER
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import AdapterDateFns from "@date-io/date-fns";
 import { DatePicker } from "@mui/x-date-pickers";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+//
 import {
   Autocomplete,
   Divider,
@@ -243,6 +248,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable(props) {
+  let conditionPeriods = 0;
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("nro_documento");
   const [selected, setSelected] = useState([]);
@@ -252,7 +258,10 @@ export default function EnhancedTable(props) {
   const [total, setTotal] = useState(0);
   const [dataExport, setDataExport] = useState([]);
   const [disabledDateEnd, setDisabledDateEnd] = useState(true);
-  const [checked, setChecked] = useState(true);
+  const [checked, setChecked] = useState(false);
+  const [render, setRender] = useState(false);
+  const [glosa, setGlosa] = useState("");
+  const [inputValue, setInputValue] = useState("");
   let rows = [];
   let glosas = [];
   let pruebaaa = [];
@@ -264,6 +273,14 @@ export default function EnhancedTable(props) {
     currency: "CLP",
     style: "currency",
   });
+  const limpiarFiltros = () => {
+    rows = [];
+
+    props.sendDiscData(false, "");
+    activarDisc(false, "");
+    setGlosa("");
+    setChecked(false);
+  };
   const conditionalPeriods = (e) => {
     if (e.target.name === "hasta" && e.target.checked === true) {
       conditionPeriods = 1;
@@ -274,7 +291,7 @@ export default function EnhancedTable(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) =>
+  props.payRollData.map((p) => {
     rows.push(
       createData(
         p.rutAcreedor,
@@ -291,7 +308,7 @@ export default function EnhancedTable(props) {
   });
 
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.rut));
+    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
     setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
@@ -306,7 +323,7 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.rut);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -411,14 +428,20 @@ export default function EnhancedTable(props) {
     }
     convertToSheet(dataPrueba);
   }
-  const activarDisc = (param) => {
+  const activarDisc = (param, glosa = "") => {
     rows = [];
-    setChecked(param.target.checked);
 
-    props.changedDisc();
-    props.sendDiscData(param.target.checked);
+    if (param.target != undefined) {
+      setGlosa("");
+      setChecked(param.target.checked);
+      props.sendDiscData(param.target.checked, glosa);
+      props.changedDisc();
+      return;
+    }
+    props.sendDiscData(checked, glosa);
+    render ? setRender(false) : setRender(true);
   };
-
+  // console.log(glosas.filter(onlyUnique));
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -435,7 +458,7 @@ export default function EnhancedTable(props) {
           <div className="flex flex-row justify-center align-middle  ">
             <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
               <Typography
-                className="mt-[4px]"
+                className="mt-[11px]"
                 variant="subtitle1"
                 id="tableTitle"
                 component="div"
@@ -446,12 +469,20 @@ export default function EnhancedTable(props) {
                 checked={checked}
                 onChange={(e) => activarDisc(e, "")}
                 inputProps={{ "aria-label": "controlled" }}
+                sx={{ mt: 1 }}
               />
             </div>
             <Autocomplete
               disablePortal
+              value={glosa}
               id="combo-box-demo"
-              options={[]}
+              options={glosas.filter(onlyUnique)}
+              onChange={(event, newValue) =>
+                newValue != undefined && setGlosa(newValue)
+              }
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
               sx={{ width: 300, mt: 2 }}
               renderInput={(params) => (
                 <TextField {...params} label="Concepto" />
@@ -522,22 +553,6 @@ export default function EnhancedTable(props) {
                 )}
               />
             </LocalizationProvider>
-            {/*
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha inicio"
-            >
-
-            </TextField>
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha termino"
-              defaultValue="EUR"
-            ></TextField> */}
           </div>
           <h1 className="border border-b-pantoneazul"></h1>
           <div className="flex flex-row justify-center align-middle  ">
@@ -545,7 +560,7 @@ export default function EnhancedTable(props) {
               className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] mr-[100px] "
               variant="contained"
               color="secondary"
-              // onClick={() => activarDisc(checked, glosa)}
+              onClick={() => limpiarFiltros()}
             >
               Limpiar Filtros
             </Button>
@@ -592,17 +607,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.rut);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  console.log(row);
+
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.rut)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.rut}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
