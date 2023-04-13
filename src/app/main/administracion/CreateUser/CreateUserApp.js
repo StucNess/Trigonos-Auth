@@ -238,7 +238,7 @@ function CreateUserApp(props) {
           <div className="  col-span-12 mb-[20px]" >
             {/* Box de titulo y guía */}
             <Box className="  bg-white rounded-sm p-[10px] ">
-              <h1 className="ml-[5px]">Agregar Usuarios Example</h1>
+              <h1 className="ml-[5px]">Agregar Usuarios</h1>
               <h1 className="border border-b-pantoneazul"></h1>
               <Box   className="flex flex-auto bg-white rounded-sm bg-grey-300 m-[10px] p-[10px]"  >
                 <div>
