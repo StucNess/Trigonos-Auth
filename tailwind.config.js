@@ -57,7 +57,7 @@ module.exports = {
     },
     colors: ({ colors }) => ({
       pantoneazul: '#002554',
-      pantonerojo: '#e04e39',
+      pantonerojo: '#e4493f',
       inherit: colors.inherit,
       current: colors.current,
       transparent: 'transparent',

@@ -31,7 +31,7 @@ const themesConfig = {
       },
       secondary: {
         light: '#002554',
-        main: '#e04e39',
+        main: '#e4493f',
         dark: '#002554',
         contrastText: darkPaletteText.primary,
       },
@@ -49,41 +49,7 @@ const themesConfig = {
       danger: 'orange',
     },
   },
-  defaultOld: {
-    palette: {
-      mode: 'light',
-      divider: '#e2e8f0',
-      text: lightPaletteText,
-      common: {
-        black: 'rgb(17, 24, 39)',
-        white: 'rgb(255, 255, 255)',
-      },
-      primary: {
-        light: '#64748b',
-        main: '#1e293b',
-        dark: '#0f172a',
-        contrastText: darkPaletteText.primary,
-      },
-      secondary: {
-        light: '#818cf8',
-        main: '#4f46e5',
-        dark: '#3730a3',
-        contrastText: darkPaletteText.primary,
-      },
-      background: {
-        paper: '#FFFFFF',
-        default: '#f1f5f9',
-      },
-      error: {
-        light: '#ffcdd2',
-        main: '#f44336',
-        dark: '#b71c1c',
-      },
-    },
-    status: {
-      danger: 'orange',
-    },
-  },
+  
   
   defaultDark: {
     palette: {
@@ -102,7 +68,7 @@ const themesConfig = {
       },
       secondary: {
         light: '#818cf8',
-        main: '#4f46e5',
+        main: '#e4493f',
         dark: '#3730a3',
         contrastText: darkPaletteText.primary,
       },

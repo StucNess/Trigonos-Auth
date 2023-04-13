@@ -180,7 +180,7 @@ import {
                     {...field}
                     className="m-24 w-auto "
                     label="Usuario"
-                    autoFocus
+                    
                     type="user"
                     error={!!errors.user}
                     helperText={errors?.user?.message}
@@ -198,7 +198,7 @@ import {
                     {...field}
                     className="m-24 w-auto "
                     label="Nombre"
-                    autoFocus
+                    
                     type="name"
                     error={!!errors.firstName}
                     helperText={errors?.firstName?.message}
@@ -216,7 +216,7 @@ import {
                     {...field}
                     className="m-24 w-auto"
                     label="Apellido"
-                    autoFocus
+                    
                     type="apellido"
                     error={!!errors.lastName}
                     helperText={errors?.lastName?.message}

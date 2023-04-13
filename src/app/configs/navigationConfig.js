@@ -70,31 +70,25 @@ const navigationConfig = [
     type: "group",
     icon: "heroicons-outline:home",
     children: [
-      {
-        id: "c1.Participantes",
-        title: "Participantes",
-        type: "item",
-        icon: "heroicons-outline:clipboard-check",
-        url: "/comercial/Participantes",
-      },
+    
       {
         id: "c1.Participants",
-        title: "Participantes V2",
+        title: "Gestión Participantes",
         type: "item",
         icon: "heroicons-outline:clipboard-check",
         url: "/comercial/Participantesv2",
       },
-      {
-        id: "example-component",
-        title: "Example",
-        translate: "EXAMPLE",
-        type: "item",
-        icon: "heroicons-outline:star",
-        url: "example",
-      },
+      // {
+      //   id: "example-component",
+      //   title: "Example",
+      //   translate: "EXAMPLE",
+      //   type: "item",
+      //   icon: "heroicons-outline:star",
+      //   url: "example",
+      // },
       {
         id: "c1.facturacion",
-        title: "FACTURACIÓN",
+        title: "Facturación",
         type: "collapse",
         icon: "heroicons-outline:calculator",
         children: [

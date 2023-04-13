@@ -352,7 +352,7 @@ function CreateUserApp(props) {
                                   {...field}
                                   className="mb-24"
                                   label="Nombre"
-                                  autoFocus
+                                  
                                   type="name"
                                   error={!!errors.firstName}
                                   helperText={errors?.firstName?.message}
@@ -370,7 +370,7 @@ function CreateUserApp(props) {
                                   {...field}
                                   className="mb-24"
                                   label="Apellido"
-                                  autoFocus
+                                  
                                   type="apellido"
                                   error={!!errors.lastName}
                                   helperText={errors?.lastName?.message}
