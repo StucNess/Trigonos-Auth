@@ -14,8 +14,15 @@ import _ from "@lodash";
 
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import jwtService from "../../auth/services/jwtService";
+
+
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 //IMPORTACIONES OBSOLETAS, pueden que sirvan a un futuro si no eliminar..
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import AvatarGroup from "@mui/material/AvatarGroup";
@@ -51,7 +58,13 @@ function SignInPage() {
       defaultValues,
       resolver: yupResolver(schema),
     });
-
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+  
+    const handleMouseDownPassword = (event) => {
+      event.preventDefault();
+    };
+  
   const { isValid, dirtyFields, errors } = formState;
 
 
@@ -115,22 +128,63 @@ function SignInPage() {
             />
 
             <Controller
+            
               name="password"
+              
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
                   label="Contraseña"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   error={!!errors.password}
                   helperText={errors?.password?.message}
                   variant="outlined"
                   required
                   fullWidth
+                  InputProps={{
+                    endAdornment:
+                    <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                  }
+
+                  }
+                  
                 />
+             
+                
               )}
             />
+            {/* <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+              <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+              <OutlinedInput
+                id="outlined-adornment-password"
+                type={showPassword ? 'text' : 'password'}
+
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+                label="Password"
+              />
+            </FormControl> */}
 
             <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between">
               <Controller

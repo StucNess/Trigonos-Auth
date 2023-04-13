@@ -24,6 +24,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   },
 }));
 let changeDisc;
+let discPrueba = false;
 let ldata;
 const NominaPagoApp = () => {
   let tablaSelect = 1;
@@ -31,43 +32,43 @@ const NominaPagoApp = () => {
   const [clientData, setClienteData] = useState([]);
   const [payRollData, setPayRollData] = useState([]);
   const [disc, setDisc] = useState(false);
+  // const [render, setRender] = useState(false);
   // useEffect(() => {
   // }, []);
-  const getClientData = (data) => {
+  const getClientData = (data, glosa = "") => {
+    console.log(disc);
     setClienteData(data);
-    callApiPayroll(data.id);
+    callApiPayroll(data.id, glosa);
     ldata = data;
   };
-  const getDiscData = (data) => {
-    setDisc(data);
+  const getDiscData = (disc, glosa = "") => {
+    discPrueba = disc;
+    setDisc(disc);
 
-    getClientData(ldata);
+    getClientData(ldata, glosa);
   };
-  const callApiPayroll = (id, pageSize = 100) => {
-    let prueba;
-    if (disc == false) {
+  const callApiPayroll = (id, glosa = "") => {
+    if (discPrueba == false) {
       axios
-        .get(
-          `http://164.77.112.10:99/api/Nominas?id=${id}&PageSize=${pageSize}`
-        )
+        .get(`http://164.77.112.10:99/api/Nominas?id=${id}&Glosa=${glosa}`)
         .then((response) => {
-          setPayRollData(response.data.data);
+          setPayRollData(response.data);
         });
     } else {
       axios
         .get(
-          `http://164.77.112.10:99/api/Nominas?id=${id}&PageSize=${pageSize}&Disc=si`
+          `http://164.77.112.10:99/api/Nominas?id=${id}&Disc=si&Glosa=${glosa}`
         )
         .then((response) => {
-          setPayRollData(response.data.data);
+          setPayRollData(response.data);
         });
     }
-    console.log(payRollData);
+    // console.log(payRollData);
   };
   const getChangeDisc = (param) => {
     changeDisc = param;
-
-    disc ? setDisc(false) : setDisc(true);
+    console.log(param);
+    // setDisc(param);
   };
   return (
     <Root

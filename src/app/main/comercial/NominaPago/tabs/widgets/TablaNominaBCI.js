@@ -21,8 +21,13 @@ import * as XLSX from "xlsx";
 import { visuallyHidden } from "@mui/utils";
 import Switch from "@mui/material/Switch";
 import FormGroup from "@mui/material/FormGroup";
-
+//IMPORTACIONES PARA LOS DATAPICKER
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import AdapterDateFns from "@date-io/date-fns";
 import { DatePicker } from "@mui/x-date-pickers";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
+//
 import {
   Autocomplete,
   Divider,
@@ -243,6 +248,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function EnhancedTable(props) {
+  let conditionPeriods = 0;
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("nro_documento");
   const [selected, setSelected] = useState([]);
@@ -251,14 +257,41 @@ export default function EnhancedTable(props) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [total, setTotal] = useState(0);
   const [dataExport, setDataExport] = useState([]);
-  const rows = [];
-  const [checked, setChecked] = useState(true);
+  const [disabledDateEnd, setDisabledDateEnd] = useState(true);
+  const [checked, setChecked] = useState(false);
+  const [render, setRender] = useState(false);
+  const [glosa, setGlosa] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  let rows = [];
+  let glosas = [];
+  let pruebaaa = [];
+  function onlyUnique(value, index, array) {
+    return array.indexOf(value) === index;
+  }
   // const [disc, setDisc] = useState(false);
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
     style: "currency",
   });
-  props.payRollData.map((p) =>
+  const limpiarFiltros = () => {
+    rows = [];
+
+    props.sendDiscData(false, "");
+    activarDisc(false, "");
+    setGlosa("");
+    setChecked(false);
+  };
+  const conditionalPeriods = (e) => {
+    if (e.target.name === "hasta" && e.target.checked === true) {
+      conditionPeriods = 1;
+      setDisabledDateEnd(false);
+    }
+    if (e.target.name === "hasta" && e.target.checked === false) {
+      conditionPeriods = 0;
+      setDisabledDateEnd(true);
+    }
+  };
+  props.payRollData.map((p) => {
     rows.push(
       createData(
         p.rutAcreedor,
@@ -270,10 +303,12 @@ export default function EnhancedTable(props) {
         p.id,
         p.fechaDesconformidad
       )
-    )
-  );
+    );
+    glosas.push(p.glosa);
+  });
+
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.rut));
+    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
     setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
@@ -288,7 +323,7 @@ export default function EnhancedTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.rut);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -393,12 +428,20 @@ export default function EnhancedTable(props) {
     }
     convertToSheet(dataPrueba);
   }
-  const activarDisc = (param) => {
-    setChecked(param.target.checked);
-    props.changedDisc();
-    props.sendDiscData(param.target.checked);
+  const activarDisc = (param, glosa = "") => {
+    rows = [];
+
+    if (param.target != undefined) {
+      setGlosa("");
+      setChecked(param.target.checked);
+      props.sendDiscData(param.target.checked, glosa);
+      props.changedDisc();
+      return;
+    }
+    props.sendDiscData(checked, glosa);
+    render ? setRender(false) : setRender(true);
   };
-  console.log(rows);
+  // console.log(glosas.filter(onlyUnique));
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -415,7 +458,7 @@ export default function EnhancedTable(props) {
           <div className="flex flex-row justify-center align-middle  ">
             <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
               <Typography
-                className="mt-[4px]"
+                className="mt-[11px]"
                 variant="subtitle1"
                 id="tableTitle"
                 component="div"
@@ -424,57 +467,125 @@ export default function EnhancedTable(props) {
               </Typography>
               <Switch
                 checked={checked}
-                onChange={activarDisc}
+                onChange={(e) => activarDisc(e, "")}
                 inputProps={{ "aria-label": "controlled" }}
+                sx={{ mt: 1 }}
               />
             </div>
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-select-currency"
-              select
-              label="Coordinado"
-              defaultValue="EUR"
+            <Autocomplete
+              disablePortal
+              value={glosa}
+              id="combo-box-demo"
+              options={glosas.filter(onlyUnique)}
+              onChange={(event, newValue) =>
+                newValue != undefined && setGlosa(newValue)
+              }
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
+              sx={{ width: 300, mt: 2 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Concepto" />
+              )}
+            />
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              adapterLocale={es}
             >
-              {/* {currencies.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))} */}
-            </TextField>
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha inicio"
-              defaultValue="EUR"
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Desde"
+                disabled
+                checked
+                name="desde"
+                sx={{ ml: 2, mt: 1 }}
+              />
+              <DatePicker
+                views={["year", "month"]}
+                label="Fecha inicio"
+                openTo="year"
+                minDate={new Date("2017-02-01")}
+                maxDate={new Date("2023-01-01")}
+                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+                // onChange={(value) => {
+                //   value != null &&
+                //     setSelected({
+                //       ...selected,
+                //       sInicioPeriodo: value,
+                //     });
+                // }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={null}
+                    sx={{ mt: 2, width: 300 }}
+                  />
+                )}
+              />
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Hasta"
+                onChange={(e) => conditionalPeriods(e)}
+                name="hasta"
+                sx={{ ml: 2, mt: 1 }}
+              />
+              <DatePicker
+                views={["year", "month"]}
+                label="Fecha termino"
+                openTo="year"
+                disabled={disabledDateEnd ? true : false}
+                minDate={new Date("2017-02-01")}
+                maxDate={new Date("2023-01-01")}
+                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+                // onChange={(value) => {
+                //   value != null &&
+                //     setSelected({
+                //       ...selected,
+                //       sInicioPeriodo: value,
+                //     });
+                // }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    helperText={null}
+                    sx={{ mt: 2, width: 300 }}
+                  />
+                )}
+              />
+            </LocalizationProvider>
+          </div>
+          <h1 className="border border-b-pantoneazul"></h1>
+          <div className="flex flex-row justify-center align-middle  ">
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] mr-[100px] "
+              variant="contained"
+              color="secondary"
+              onClick={() => limpiarFiltros()}
             >
-              {/* {currencies.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))} */}
-            </TextField>
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha termino"
-              defaultValue="EUR"
-            ></TextField>
+              Limpiar Filtros
+            </Button>
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+              variant="contained"
+              color="secondary"
+              onClick={() => activarDisc(checked, glosa)}
+            >
+              {/* <SiMicrosoftexcel className="mr-3 " /> */}
+              Buscar
+            </Button>
+
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] ml-[100px]"
+              variant="contained"
+              color="secondary"
+              onClick={() => downloadExcelFile("mydata", dataExport)}
+            >
+              <SiMicrosoftexcel className="mr-3 " />
+              Nomina de pago <HiDownload />
+            </Button>
           </div>
         </Box>
-
-        <Box className="flex  w-full items-center justify-evenly  ">
-          <Button
-            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
-            variant="contained"
-            color="secondary"
-            onClick={() => downloadExcelFile("mydata", dataExport)}
-          >
-            <SiMicrosoftexcel className="mr-3 " />
-            Nomina de pago <HiDownload />
-          </Button>
-        </Box>
+        <h1 className="border border-b-pantoneazul"></h1>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
@@ -496,17 +607,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.rut);
+                  const isItemSelected = isSelected(row.id);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  console.log(row);
+
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.rut)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.rut}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -564,10 +675,6 @@ export default function EnhancedTable(props) {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      {/* <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      /> */}
     </Box>
   );
 }

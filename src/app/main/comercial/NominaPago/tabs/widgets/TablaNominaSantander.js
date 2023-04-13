@@ -47,7 +47,8 @@ function createData(
   cod_banco,
   n_factura_uno,
   monto_total,
-  id
+  id,
+  disc
 ) {
   return {
     rut,
@@ -57,6 +58,7 @@ function createData(
     n_factura_uno,
     monto_total,
     id,
+    disc,
   };
 }
 
@@ -131,6 +133,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: "Monto Total",
+  },
+  {
+    id: "Disconformidad",
+    numeric: false,
+    disablePadding: false,
+    label: "Fecha Disconformidad",
   },
 ];
 function EnhancedTableHead(props) {
@@ -255,9 +263,16 @@ export default function TablaNominaSantander(props) {
   const [total, setTotal] = useState(0);
   const [dataExport, setDataExport] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [render, setRender] = useState(false);
   const [disabledDateEnd, setDisabledDateEnd] = useState(true);
-  const [checked, setChecked] = useState(true);
-  const rows = [];
+  const [checked, setChecked] = useState(false);
+  const [glosa, setGlosa] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  let rows = [];
+  let glosas = [];
+  function onlyUnique(value, index, array) {
+    return array.indexOf(value) === index;
+  }
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
     style: "currency",
@@ -272,7 +287,7 @@ export default function TablaNominaSantander(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) =>
+  props.payRollData.map((p) => {
     rows.push(
       createData(
         p.rutAcreedor,
@@ -281,13 +296,15 @@ export default function TablaNominaSantander(props) {
         p.sBifAcreedor,
         p.folio,
         chile.format(p.valorNeto),
-        p.id
+        p.id,
+        p.fechaDesconformidad
       )
-    )
-  );
+    );
+    glosas.push(p.glosa);
+  });
+
   useEffect(() => {
     let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-
     setDataExport(prueba);
     let pruebaValor = 0;
     prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
@@ -424,12 +441,18 @@ export default function TablaNominaSantander(props) {
     }
     convertToSheet(dataPrueba);
   }
-  const activarDisc = (param) => {
+  const activarDisc = (param, glosa = "") => {
     rows = [];
-    setChecked(param.target.checked);
 
-    props.changedDisc();
-    props.sendDiscData(param.target.checked);
+    if (param.target != undefined) {
+      setGlosa("");
+      setChecked(param.target.checked);
+      props.sendDiscData(param.target.checked, glosa);
+      props.changedDisc();
+      return;
+    }
+    render ? setRender(false) : setRender(true);
+    props.sendDiscData(checked, glosa);
   };
   return (
     <Box sx={{ width: "100%" }}>
@@ -456,20 +479,28 @@ export default function TablaNominaSantander(props) {
               </Typography>
               <Switch
                 checked={checked}
-                onChange={activarDisc}
+                onChange={(e) => activarDisc(e, "")}
                 inputProps={{ "aria-label": "controlled" }}
                 sx={{ mt: 1 }}
               />
             </div>
             <Autocomplete
               disablePortal
+              value={glosa}
               id="combo-box-demo"
-              options={[]}
+              options={glosas.filter(onlyUnique)}
+              onChange={(event, newValue) =>
+                newValue != undefined && setGlosa(newValue)
+              }
+              onInputChange={(event, newInputValue) => {
+                setInputValue(newInputValue);
+              }}
               sx={{ width: 300, mt: 2 }}
               renderInput={(params) => (
                 <TextField {...params} label="Concepto" />
               )}
             />
+
             <LocalizationProvider
               dateAdapter={AdapterDateFns}
               adapterLocale={es}
@@ -535,35 +566,37 @@ export default function TablaNominaSantander(props) {
                 )}
               />
             </LocalizationProvider>
-            {/*
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha inicio"
-            >
-
-            </TextField>
-            <TextField
-              className="w-[200px] m-[10px]"
-              id="outlined-basic"
-              select
-              label="Fecha termino"
-              defaultValue="EUR"
-            ></TextField> */}
           </div>
-        </Box>
+          <h1 className="border border-b-pantoneazul"></h1>
+          <div className="flex flex-row justify-center align-middle  ">
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] mr-[100px] "
+              variant="contained"
+              color="secondary"
+              // onClick={() => activarDisc(checked, glosa)}
+            >
+              Limpiar Filtros
+            </Button>
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+              variant="contained"
+              color="secondary"
+              onClick={() => activarDisc(checked, glosa)}
+            >
+              {/* <SiMicrosoftexcel className="mr-3 " /> */}
+              Buscar
+            </Button>
 
-        <Box className="flex  w-full items-center justify-evenly  ">
-          <Button
-            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
-            variant="contained"
-            color="secondary"
-            onClick={() => downloadExcelFile("mydata", dataExport)}
-          >
-            <SiMicrosoftexcel className="mr-3 " />
-            Nomina de pago <HiDownload />
-          </Button>
+            <Button
+              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] ml-[100px]"
+              variant="contained"
+              color="secondary"
+              onClick={() => downloadExcelFile("mydata", dataExport)}
+            >
+              <SiMicrosoftexcel className="mr-3 " />
+              Nomina de pago <HiDownload />
+            </Button>
+          </div>
         </Box>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -604,7 +637,7 @@ export default function TablaNominaSantander(props) {
                           color="primary"
                           checked={isItemSelected}
                           inputProps={{
-                            "aria-labelledby": labelId,
+                            "aria-labelledby": "Disconformidad",
                           }}
                         />
                       </TableCell>

@@ -69,7 +69,7 @@ export default function SelectClientTable(props) {
     })();
   }, []);
   const searchPayroll = () => {
-    // render == true ? setRender(true) : setRender(false);
+    render == true ? setRender(true) : setRender(false);
     let prueba = participants.find((p) => p.id == cliente);
     
     if (prueba!=undefined){
@@ -165,7 +165,7 @@ export default function SelectClientTable(props) {
           <Button
             className="w-[150px]"
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={searchPayroll}
             startIcon={<SearchIcon />}
             style={{

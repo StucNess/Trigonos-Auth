@@ -26,7 +26,7 @@ export default function FiltrosParticipant(props) {
   }, [dataParticipant]);
   useEffect(() => {
     if (props.change) {
-      console.log(props.change);
+      // console.log(props.change);
       `ID DEL REFRESH: ${props.idParticipant}`;
       callAsyncApi(props.idParticipant);
     }
