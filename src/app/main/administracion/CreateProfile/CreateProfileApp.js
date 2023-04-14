@@ -403,7 +403,7 @@ function CreateProfileApp(props){
                     <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
                     </div>
                     <div>
-                    <span className="text-grey-700">En el apartado de <b>Perfil Nuevo Usuario</b> podrá asignar el <b>Rol</b> y los <b>Clientes</b> al usuario y desde el apartado de <b>Información de Nuevo Usuario</b> podrá completar la información personal del usuario y posteriormente debe guardar y confirmar.</span>
+                    <span className="text-grey-700">Debe presionar el botón de <b>Nuevo Perfil</b> en donde debera ingresar la información correspondiente y también las ventanas asociadas a ese perfil o rol y luego debe presionar guardar y en caso de deshacer todo simplemente debe cancelar.</span>
                     </div>
                     
                 </Box>
