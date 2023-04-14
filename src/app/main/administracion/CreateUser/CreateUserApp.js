@@ -32,7 +32,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { CallApiUsers } from "./store/CallApiUsers";
-
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 const columns = [
   { id: "id", label: "ID", minWidth: 20 },
   { id: "username", label: "Usuario", minWidth: 20 },
@@ -68,6 +69,7 @@ const schema = yup.object().shape({
 });
 const defaultValues = {
   user: "",
+  pais:"",
   firstName: "",
   lastName: "",
   email: "",
@@ -186,6 +188,23 @@ function CreateUserApp(props) {
       setApiResponseProyects(value);
     });
   }, [alertt, error]);
+  const countryArray = [
+    { label: 'Chile' },
+    
+  ];
+  const empresaArray = [
+    { label: 'Bluetree' },
+    { label: 'Abastible' },
+    { label: 'exampleEmpresa' },
+    
+  ];
+  const rolArray = [
+    { label: 'Administrador' },
+    { label: 'Trabajador Prisma' },
+    { label: 'Clientes' },
+    
+  ];
+  
   function onSubmit(e) {
     const data = {
       email: e.email,
@@ -233,6 +252,13 @@ function CreateUserApp(props) {
       //     Header
       // </div>}
       content={
+        <form
+        name="registerForm"
+        noValidate
+        className="w-full"
+        onSubmit={handleSubmit(onSubmit)}>
+
+       
         <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full ">
           <div className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-24   ">
           <div className="  col-span-12 mb-[20px]" >
@@ -245,14 +271,14 @@ function CreateUserApp(props) {
                   <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
                 </div>
                 <div>
-                  <span className="text-grey-700">Debe ingresar los datos del <b>Usuario</b> en la sección izquierda luego presionar <b>Crear Usuario</b> debe aceptar o rechazar y posteriormente se actualizará la lista de la izquierda</span>
+                  <span className="text-grey-700">En el apartado de <b>Perfil Nuevo Usuario</b> podrá asignar el <b>Rol</b> y los <b>Clientes</b> al usuario y desde el apartado de <b>Información de Nuevo Usuario</b> podrá completar la información personal del usuario y posteriormente debe guardar y confirmar.</span>
                 </div>
                 
               </Box>
             </Box>
           </div>
-          
-          <div className=" lgmax:col-span-12  lg:col-span-6 lg:mr-[20px]">
+          {/* PERFIL USUARIO SON LOS PERFILES QUE SE CREAN PARA LA VISUALIZACION DE VENTANAS ESPECIFICAS */}
+          {/* <div className=" lgmax:col-span-12  lg:col-span-3 tvxxl:col-span-2  lg:mr-[20px]">
             
             <div  className="lg:max-h-[730px]">
             
@@ -298,123 +324,251 @@ function CreateUserApp(props) {
               </Table>
             </TableContainer>
             </div>
+          </div> */}
+       
+
+             
+          <div className=" lgmax:col-span-12  lg:col-span-3 tvxxl:col-span-2 lg:mr-[20px] bg-white">
+
+            <div className="flex flex-row w-full m-[20px]" >
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+              Perfil Nuevo Usuario
+              </Typography>
+              {/* <h2 className="text-pantoneazul">Perfil Nuevo Usuario</h2> */}
+              <AdminPanelSettingsIcon className="ml-[10px] text-pantoneazul"/>
+               {/*AVANZAR DESDE ACA  */}
+            </div>
+            <AdviceModule className="relative" classnamesegund="absolute -top-[55px] right-[10px] " textwidth={400}msg={"Los roles son creados en el modulo de \"Perfiles\" estos están asociados a ciertas ventanas que podrá ver el usuario, en la parte inferior usted podrá asignar los clientes desplegando la lista y seleccionando uno por uno."} />
+
+            <h1 className="border border-b-pantoneazul w-full"></h1>
+            
+          <div>
+          <div className="w-full m-[20px]">
+              <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Rol Usuario:
+              </Typography>
+             
           </div>
-          
-          <div  className=" lgmax:col-span-12  lg:col-span-6 lgmax:mt-[20px] lg:ml-[20px] "> 
-          
-            <form
-                name="registerForm"
-                noValidate
-                className="bg-white"
-                onSubmit={handleSubmit(onSubmit)}>
-              <Box className="flex flex-col">
-              <div className="flex flex-row items-center">
-              <div className="w-[200px] h-[150px] ">
-                  <img className="" src="assets/images/logo/logoTRGNS.png" />
-              </div>
-              <div className="">
-                <Typography className=" text-4xl font-extrabold tracking-tight leading-tight">
-                  Agregar Usuario
-                </Typography>
-              </div>
+          <div>
+                <Autocomplete
+                       
+                       disablePortal
+                       className=" ml-[20px] mr-[20px] mb-[20px]"
+                       id="combo-box-demo"
+                       options={rolArray}
+ 
+                       renderInput={(params) => <TextField {...params} label="Seleccionar Rol" />}
+                     />
+                </div>
+          <div className="w-full m-[20px]">
+              <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Clientes:
+              </Typography>
+            
+          </div>
+            <div className="ml-[20px] mr-[20px] mb-[20px]" >
+                        
+                        <Controller
+                          
+                          name="project"
+                          control={control}
+                          render={({ field }) => (
+                            <FormControl
+                              
+                              className="w-full"
+                              label="project"
+                              error={!!errors.project}
+                              type="select"
+                              required>
+                              <InputLabel id="demo-simple-select-standard-label">
+                                Seleccione clientes
+                              </InputLabel>
+                              <Select
+                                labelId="demo-multiple-name-label"
+                                id="demo-multiple-name"
+                                multiple
+                                value={personName}
+                                onChange={handleChangeProyect}
+                                input={<OutlinedInput label="Name" />}
+                                // MenuProps={MenuProps}
+                              >
+                                {apiResponseProyects.data != undefined ? (
+                                  apiResponseProyects.data.map((e) => (
+                                    <MenuItem
+                                      key={e.id}
+                                      value={e.id}
+                                      style={getStyles(
+                                        e.commercial_Business,
+                                        personName,
+                                        theme
+                                      )}>
+                                      {e.business_Name}
+                                    </MenuItem>
+                                  ))
+                                ) : (
+                                  <MenuItem id="1" value="1">
+                                    Proyecto 1
+                                  </MenuItem>
+                                )}
+                              </Select>
+                            </FormControl>
+                          )}
+                        />
+            </div>
+          </div>
+          </div>
+
+          <div className=" lgmax:col-span-12  lg:col-span-9 tvxxl:col-span-10 lgmax:mt-[20px]  bg-white">
+            <div className="flex flex-row w-full m-[20px]">
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+              Información de Nuevo Usuario
+              </Typography>
+             
+              <PersonAddAltIcon className="ml-[10px] text-pantoneazul"/>
+            </div>
+            <h1 className="border border-b-pantoneazul w-full"></h1>
+            <div className="w-full m-[20px]">
+                  <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                      Datos:
+                    </Typography>
+                   
+                </div>
+            <div className="flex flex-col">
+              <div className="flex justify-evenly ">
                 
+                <Controller
+                  name="firstName"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="ml-[20px] mr-[10px] mb-[20px]"
+                      label="Nombre"
+                      autoFocus
+                      type="name"
+                      error={!!errors.firstName}
+                      helperText={errors?.firstName?.message}
+                      variant="outlined"
+                      required
+                      fullWidth
+                    />
+                  )}
+                />
+                
+                <Controller
+                  name="lastName"
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="ml-[10px] mr-[20px] mb-[20px]"
+                      label="Apellido"
+                      autoFocus
+                      type="apellido"
+                      error={!!errors.lastName}
+                      helperText={errors?.lastName?.message}
+                      variant="outlined"
+                      required
+                      fullWidth
+                    />
+                  )}
+                />
               </div>
               
-              <Box className="flex flex-row ssmmax:flex-col ssmmax:justify-center  w-full ">
-                <div className="w-1/2 ssmmax:w-2/2  bg-grey-50 ml-[50px] mr-[50px] lg:mr-[25px]">
-                        <div >
-                            <AdviceModule textwidth={350}  msg={"El usuario por defecto es el email ingresado en el campo \"Email\"."} />
-                            <Controller
-                              name="user"
-                              control={control}
-                              render={({ field }) => (
-                                <TextField
-                                {...field}
-                                  className="mb-24  w-full"
-                                  label="Usuario"
-                                  type="user"
-                                  variant="outlined"
-                                  fullWidth
-                                  disabled
-                                  value={emailUser}
-                                  
-                                />
-                              )}
-                            />
-                            
-                            </div>
-                            
-                            <Controller
-                              name="firstName"
-                              control={control}
-                              render={({ field }) => (
-                                <TextField
-                                  {...field}
-                                  className="mb-24"
-                                  label="Nombre"
-                                  
-                                  type="name"
-                                  error={!!errors.firstName}
-                                  helperText={errors?.firstName?.message}
-                                  variant="outlined"
-                                  required
-                                  fullWidth
-                                />
-                              )}
-                            />
-                            <Controller
-                              name="lastName"
-                              control={control}
-                              render={({ field }) => (
-                                <TextField
-                                  {...field}
-                                  className="mb-24"
-                                  label="Apellido"
-                                  
-                                  type="apellido"
-                                  error={!!errors.lastName}
-                                  helperText={errors?.lastName?.message}
-                                  variant="outlined"
-                                  required
-                                  fullWidth
-                                />
-                              )}
-                            />
-                          
-    
-                        
-                            <Controller
-                              name="email"
-                              control={control}
-                              
-                              render={({ field }) => (
-                                <TextField
-                                  {...field}
-                                  className="mb-24"
-                                  label="Email"
-                                  type="email"
-                                  error={!!errors.email}
-                                  helperText={errors?.email?.message}
-                                  variant="outlined"
-                                  required
-                                  fullWidth
-                                  onChange={e => {
-                                    field.onChange(e);
-                                    handleSetEmail(e);
-                                  }}
-                                />
-                              )}
-                            />
+               {/* <Controller
+                
+                  name="pais"
+                  control={control}
+                  
+                  render={({ field }) => (
+                    
+                  )}
+                /> */}
+                <div>
+                <Autocomplete
+                       
+                       disablePortal
+                       className=" ml-[20px] mr-[20px] mb-[20px]"
+                       id="combo-box-demo"
+                       options={countryArray}
+ 
+                       renderInput={(params) => <TextField {...params} label="Seleccionar País" />}
+                     />
                 </div>
-                <div className="w-1/2 ssmmax:w-2/2 bg-grey-50 ml-[50px] lg:ml-[25px] mr-[50px]">
-                <AdviceModule textwidth={350} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
+                
+              <Controller
+                  name="email"
+                  control={control}
+                  
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      className="ml-[20px] mr-[20px] mb-[20px]"
+                      label="Email"
+                      type="email"
+                      error={!!errors.email}
+                      helperText={errors?.email?.message}
+                      variant="outlined"
+                      required
+                      
+                      onChange={e => {
+                        field.onChange(e);
+                        handleSetEmail(e);
+                      }}
+                    />
+                  )}
+                />
+                <div>
+                <Autocomplete
+                       
+                       disablePortal
+                       className=" ml-[20px] mr-[20px] mb-[20px]"
+                       id="combo-box-demo"
+                       options={empresaArray}
+ 
+                       renderInput={(params) => <TextField {...params} label="Seleccionar Empresa" />}
+                     />
+                </div>
+                <h1 className="border border-b-pantoneazul  ml-[20px] mr-[20px]"/>
+                <div className="w-full m-[20px]">
+                    <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                    Seguridad:
+                    </Typography>
+                   
+                </div>
+                
+                <div className=" flex justify-evenly ml-[20px] mr-[20px] mb-[20px] " >
+                  
+                  <Controller
+                    name="user"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                      {...field}
+                        className=" w-full"
+                        label="Usuario"
+                        type="user"
+                        variant="outlined"
+                        
+                        disabled
+                        value={emailUser}
+                        
+                      />
+                    )}
+                  />
+                  <AdviceModule className="relative w-[34px] ml-[20px]" classnamesegund = ""textwidth={350}  msg={"Este campo está desactivado debido a que el nombre de usuario por defecto es el email ingresado en el campo \"Email\"."} />
+                  
+                  </div>
+                  
+                    
+                    <div className="flex justify-evenly ml-[20px] mr-[20px] mb-[20px]">
                     <Controller
                       name="password"
                       control={control}
                       render={({ field }) => (
                         <TextField
                           {...field}
-                          className="mb-24"
+                          className="mr-[10px] "
                           label="Contraseña"
                           type="text"
                           error={!!errors.password}
@@ -432,7 +586,7 @@ function CreateUserApp(props) {
                       render={({ field }) => (
                         <TextField
                           {...field}
-                          className="mb-24"
+                          className="ml-[10px]"
                           label="Contraseña (Confirmar)"
                           type="text"
                           error={!!errors.passwordConfirm}
@@ -443,55 +597,76 @@ function CreateUserApp(props) {
                         />
                       )}
                     />
-                      <div className="w-full" >
-                      <AdviceModule textwidth={400}msg={"Para asignar los clientes al usuario debe desplegar la lista y podrá seleccionar uno por uno los clientes que requiera asignar."} />
-                      <Controller
+                    <AdviceModule className="relative w-[34px] ml-[20px]" classnamesegund = "" textwidth={350} msg={"La contraseña debe contener:\n-Debe tener al menos 8 carácteres.\n-Debe tener al menos una mayúscula.\n-Debe tener al menos un número.\n-Debe tener al menos un carácter especial."}  />
+                    </div>
+                    <Box className="flex justify-center">
+                  <Button
+                        variant="contained"
+                        color="secondary"
+                        className=" w-[200px] mb-[10px]"
+                        aria-label="Register"
+                        // disabled={_.isEmpty(dirtyFields) || !isValid}
+                        type="submit"
+                        size="large">
+                        Crear usuario
+                      </Button>
+                      {alertt && (
+                        <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
+                          <Alert severity="success">
+                            Usuario registrado correctamente!!
+                          </Alert>
+                        </Stack>
+                      )}
+                      {error && (
+                        <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
+                          <Alert severity="warning">
+                            Error!! El usuario no se ha registrado
+                          </Alert>
+                        </Stack>
+                      )}
+              </Box>
+                   
+            </div>
+          
+            
+          </div>
+          
+
+         
+          {/* ELEMENTOS PARA AGREGAR USUARIOS */}
+          {/* <div  className=" lgmax:col-span-12  lg:col-span-9 tvxxl:col-span-10 lgmax:mt-[20px] lg:ml-[20px] "> 
+          
+            <form
+                name="registerForm"
+                noValidate
+                
+                onSubmit={handleSubmit(onSubmit)}>
+              <Box className="flex flex-col">
+              <div className="flex flex-row items-center">
+              <div className="w-[200px] h-[150px] ">
+                  <img className="" src="assets/images/logo/logoTRGNS.png" />
+              </div>
+              <div className="">
+                <Typography className=" text-4xl font-extrabold tracking-tight leading-tight">
+                  Agregar Usuario
+                </Typography>
+              </div>
+                
+              </div>
+              
+              <Box className="flex flex-row ssmmax:flex-col ssmmax:justify-center  w-full ">
+                <div className="w-1/2 ssmmax:w-2/2  bg-grey-50 ml-[50px] mr-[50px] lg:mr-[25px]">
                         
-                        name="project"
-                        control={control}
-                        render={({ field }) => (
-                          <FormControl
                             
-                            className="mb-24 w-full"
-                            label="project"
-                            error={!!errors.project}
-                            type="select"
-                            required>
-                            <InputLabel id="demo-simple-select-standard-label">
-                              Seleccione clientes
-                            </InputLabel>
-                            <Select
-                              labelId="demo-multiple-name-label"
-                              id="demo-multiple-name"
-                              multiple
-                              value={personName}
-                              onChange={handleChangeProyect}
-                              input={<OutlinedInput label="Name" />}
-                              // MenuProps={MenuProps}
-                            >
-                              {apiResponseProyects.data != undefined ? (
-                                apiResponseProyects.data.map((e) => (
-                                  <MenuItem
-                                    key={e.id}
-                                    value={e.id}
-                                    style={getStyles(
-                                      e.commercial_Business,
-                                      personName,
-                                      theme
-                                    )}>
-                                    {e.business_Name}
-                                  </MenuItem>
-                                ))
-                              ) : (
-                                <MenuItem id="1" value="1">
-                                  Proyecto 1
-                                </MenuItem>
-                              )}
-                            </Select>
-                          </FormControl>
-                        )}
-                      />
-                      </div>
+                           
+                          
+    
+                        
+                           
+                </div>
+                <div className="w-1/2 ssmmax:w-2/2 bg-grey-50 ml-[50px] lg:ml-[25px] mr-[50px]">
+               
+                      
                       
                   
                     
@@ -529,41 +704,17 @@ function CreateUserApp(props) {
                     />
                 </div>
               </Box>
-              <Box className="flex justify-center">
-                  <Button
-                        variant="contained"
-                        color="secondary"
-                        className=" w-[200px] "
-                        aria-label="Register"
-                        // disabled={_.isEmpty(dirtyFields) || !isValid}
-                        type="submit"
-                        size="large">
-                        Crear usuario
-                      </Button>
-                      {alertt && (
-                        <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
-                          <Alert severity="success">
-                            Usuario registrado correctamente!!
-                          </Alert>
-                        </Stack>
-                      )}
-                      {error && (
-                        <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
-                          <Alert severity="warning">
-                            Error!! El usuario no se ha registrado
-                          </Alert>
-                        </Stack>
-                      )}
-              </Box>
+              
             
               </Box>
               
               
             </form>
-          </div>
+          </div> */}
         
           </div>
         </div>
+        </form>
       }
       scroll="content"
     />
