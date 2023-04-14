@@ -43,6 +43,14 @@ const navigationConfig = [
          
         ],
       },
+      {
+        id: "administracion.GestionPerfiles",
+        title: "Gestión de Perfiles",
+        type: "item",
+        icon: "heroicons-outline:shield-exclamation",
+        url: "/administracion/CreateProfile",
+        
+      },
     ],
   },
   {
