@@ -157,7 +157,7 @@ input:-webkit-autofill:active
 }
 
 
-#box_login{background-image: linear-gradient(to right, #e04e39, rgb(0,37,84));
+#box_login{background-image: linear-gradient(to right, #e4493f, rgb(0,37,84));
 }
 #box_der{
     background-image: url("/public/assets/images/logo/backgroudtrgns.png");

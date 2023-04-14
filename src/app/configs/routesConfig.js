@@ -31,7 +31,7 @@ const routes = [
   ),
   {
     path: "/",
-    element: <Navigate to="/example" />,
+    element: <Navigate to="/comercial/estadoFacturacion" />,
     auth: settingsConfig.defaultAuth,
   },
   {
