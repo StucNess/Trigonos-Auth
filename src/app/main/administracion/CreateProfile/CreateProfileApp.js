@@ -512,7 +512,11 @@ function CreateProfileApp(props){
                                         variant="contained"
                                         color="secondary"
                                         className=" h-[28px]  w-[100px] mr-[20px]"
-                                     
+                                        onClick={
+                                          table
+                                            ? () => setTable(false)
+                                            : () => setTable(true)
+                                        }
                                         type="submit"
                                         size="small">
                                         <SettingsIcon/>Editar
@@ -521,10 +525,10 @@ function CreateProfileApp(props){
                                         variant="contained"
                                         color="secondary"
                                         className=" h-[28px]  w-[100px] mr-[20px]"
-                                        
+                                       
                                         type="submit"
                                         size="small">
-                                        <DeleteForeverIcon/>Desactivar
+                                        <DeleteForeverIcon />Desactivar
                                     </Button>
                                     </StyledTableCell>
                                     

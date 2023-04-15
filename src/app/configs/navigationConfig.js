@@ -18,6 +18,14 @@ const navigationConfig = [
     translate: "ADMINISTRACIÓN",
     auth: authRoles.admin,
     children: [
+      {
+        id: "administracion.GestionPerfiles",
+        title: "Gestión de Perfiles",
+        type: "item",
+        icon: "heroicons-outline:shield-exclamation",
+        url: "/administracion/CreateProfile",
+        
+      },
       
       {
         id: "administracion.GestionUsuarios",
@@ -34,7 +42,7 @@ const navigationConfig = [
           },
           {
             id: "GestionUsuarios.EditarUsuarios",
-            title: "Editar Usuarios",
+            title: "Lista y Edición de Usuarios",
             type: "item",
             icon: "heroicons-outline:pencil-alt",
             url: "/administracion/EditUserApp",
@@ -43,14 +51,7 @@ const navigationConfig = [
          
         ],
       },
-      {
-        id: "administracion.GestionPerfiles",
-        title: "Gestión de Perfiles",
-        type: "item",
-        icon: "heroicons-outline:shield-exclamation",
-        url: "/administracion/CreateProfile",
-        
-      },
+      
     ],
   },
   {
