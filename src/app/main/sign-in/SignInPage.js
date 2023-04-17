@@ -16,7 +16,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import jwtService from "../../auth/services/jwtService";
-
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -52,6 +52,11 @@ const defaultValues = {
 };
 
 function SignInPage() {
+  const [loading, setLoading] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState(false);
+  function handleClick() {
+    setLoading(true);
+  }
   const { control, formState, register, handleSubmit, setError, setValue } =
     useForm({
       mode: "onChange",
@@ -70,19 +75,30 @@ function SignInPage() {
 
 
   function onSubmit({ email, password }) {
-    jwtService
+    setMsgAlert(false);
+    setLoading(true);
+    setTimeout(() => {
+      jwtService
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
         // No need to do anything, user data will be set at app/auth/AuthContext
       })
-      .catch((response) => {
-        // _errors.forEach((error) => {
-        //   setError(error.type, {
-        //     type: "manual",
-        //     message: error.message,
-        //   });
-        // });
+      .finally((response) => {
+        setLoading(false);
+        setMsgAlert(true);
       });
+      // let {resp} = jwtService
+      // .signInWithEmailAndPassword(email, password);
+      // if(jwtService
+      //   .signInWithEmailAndPassword(email, password)){
+      //     setLoading(false);
+      // }else{
+      //   setLoading(false);
+      // }
+      
+      
+    }, 2000);
+    
   }
 
   return (
@@ -118,6 +134,9 @@ function SignInPage() {
                   label="Email"
                   autoFocus
                   type="email"
+                  onClick={() => {
+                    setMsgAlert(false);
+                  }}
                   error={!!errors.email}
                   helperText={errors?.email?.message}
                   variant="outlined"
@@ -143,6 +162,9 @@ function SignInPage() {
                   variant="outlined"
                   required
                   fullWidth
+                  onClick={() => {
+                    setMsgAlert(false);
+                  }}
                   InputProps={{
                     endAdornment:
                     <InputAdornment position="end">
@@ -207,7 +229,7 @@ function SignInPage() {
               </Link>
             </div>
 
-            <Button
+            {/* <Button
               variant="contained"
               color="secondary"
               className=" w-full mt-16"
@@ -216,7 +238,26 @@ function SignInPage() {
               type="submit"
               size="large">
               Iniciar Sesión
-            </Button>
+            </Button> */}
+            <LoadingButton 
+            
+              loading={loading}
+              disabled={_.isEmpty(dirtyFields) || !isValid}
+              type="submit"
+              size="large"
+              variant="contained"
+              color="secondary">
+                Iniciar Sesión
+            </LoadingButton>
+            <div className="h-[30px] text-center mt-[20px]">
+              {MsgAlert && (
+                  
+                  <span className="text-red">
+                   <b>Email o contraseña incorrectos, intente nuevamente</b>
+                  </span>
+                )}
+            </div>
+            
           </form>
         </div>
       </Paper>
