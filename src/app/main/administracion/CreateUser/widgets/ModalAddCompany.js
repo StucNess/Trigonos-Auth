@@ -13,6 +13,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import TextField from "@mui/material/TextField";
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import BusinessIcon from '@mui/icons-material/Business';
 import * as yup from "yup";
 const schema = yup.object().shape({
     // user: yup.string().required("Debe ingresar su nombre completo"),
@@ -50,15 +51,7 @@ export default function ModalAddCompany({setActive}) {
     setActive();
   };
 
-  const descriptionElementRef = useRef(null);
-  useEffect(() => {
-    if (open) {
-      const { current: descriptionElement } = descriptionElementRef;
-      if (descriptionElement !== null) {
-        descriptionElement.focus();
-      }
-    }
-  }, [open]);
+  
 
   return (
     // <div>
@@ -74,7 +67,7 @@ export default function ModalAddCompany({setActive}) {
       >
         <DialogTitle id="scroll-dialog-title"><div className="static ">
                 <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
-                Agregar Nueva Empresa <DriveFileRenameOutlineIcon/>
+                Agregar Nueva Empresa <BusinessIcon/>
                 </Typography>
 
                 

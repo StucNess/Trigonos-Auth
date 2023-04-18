@@ -1,23 +1,28 @@
 
 import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+
 import Button from "@mui/material/Button";
 import IconButton from '@mui/material/IconButton';
 import Typography from "@mui/material/Typography";
-import FormGroup from '@mui/material/FormGroup';
+
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
+
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import TextField from "@mui/material/TextField";
-import Switch from '@mui/material/Switch';
+
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import InputAdornment from "@mui/material/InputAdornment";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
 import EditIcon from "@mui/icons-material/Edit";
-import { Paper } from "@mui/material";
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import { useState } from "react";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 const style = {
   position: "absolute",
   top: "50%",
@@ -43,6 +48,7 @@ export default function ModalEditUser({
   });
   const [checkedExt, setCheckedExt] = useState(false);
   const [checkedBlue, setCheckedBlue] = useState(false);
+  const [scroll, setScroll] = useState('paper');
   const {
     estado,
     nombre,
@@ -65,33 +71,28 @@ export default function ModalEditUser({
 
 
   return (
-    <div>
-      <Modal
-        open={open}
-        onClose={() => handleClose}
-        >
-       
-          <Box sx={style}>
+    <Dialog
+    open={open}
+    // onClose={handleClose}
+  
+    scroll={'paper'}
+     aria-labelledby="scroll-dialog-title"
+     aria-describedby="scroll-dialog-description"
+  >
+    <DialogTitle id="scroll-dialog-title"><div className="static ">
+            <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
+            Edición de Usuario <BorderColorIcon/>
+            </Typography>
+
             
-            <div className="static  ml-[20px] mt-[20px] min-w-[400px]">
-                <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
-                    Edición de Usuario  <PersonAddIcon/>
-                </Typography>
-               
-                <IconButton className="absolute top-0 right-0" onClick={handleClose} variant="contained" color="error">
-                    <HighlightOffIcon />
-                </IconButton>
-                <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
-                    Usuario:  Elvis Olmedo
-                </Typography>
-            </div>
-            
-            
-            <h1 className="border-b-[1px] border-b-pantoneazul w-full"></h1>
-            
-            <div className="overflow-y-scroll max-h-[70vh]">
-            
-            <TextField
+            <IconButton className="absolute top-0 right-0" onClick={handleClose} variant="contained" color="error">
+                <HighlightOffIcon />
+            </IconButton>
+        
+        </div></DialogTitle>
+    <DialogContent dividers={scroll === 'paper'} className="min-w-[400px]">
+      
+    <TextField
                     className="m-[20px] "
                     label="Nombre"
                     type="text"
@@ -453,44 +454,33 @@ export default function ModalEditUser({
                             </Box>
                           </Box>
                         </Box>
+    </DialogContent>
+    <DialogActions className='flex justify-center m-[20px]'>
+  
+            <Button
+                variant="contained"
+                color="secondary"
+                className=" h-[28px]  w-[100px] mr-[20px]"
+                onClick={handleClose}
                 
-              
-
-            </div>
-            
-            <h1 className="border-b-[1px] border-b-pantoneazul w-full"></h1>
-            <div className="flex justify-evenly  m-[20px]">
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    className=" h-[28px]  w-[100px] mr-[20px]"
-                    onClick={handleClose}
-                    type="submit"
-                    size="small">
-                    Cancelar
-                </Button>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    className=" h-[28px]  w-[100px] mr-[20px]"
-                    
-                    type="submit"
-                    size="small">
-                    Guardar
-                </Button>
+                size="small">
+                Cancelar
+            </Button>
+            <Button
+                variant="contained"
+                color="secondary"
+                className=" h-[28px]  w-[100px] mr-[20px]"
                 
-            </div>
+                type="submit"
+                size="small">
+                Guardar
+            </Button>
             
-            
-           
-            
-            
-
-       
-          
-          </Box>
         
-      </Modal>
-    </div>
+    </DialogActions>
+  </Dialog>
+
+
+  
   );
 }
