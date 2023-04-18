@@ -12,12 +12,14 @@ import ComercialConfigs from "../main/comercial/ComercialConfigs";
 import AnalisisConfig from "../main/analisis/AnalisisConfig";
 import AdministracionConfig from "../main/administracion/AdministracionConfig";
 import ProfileAppConfig from "../main/profile/ProfileAppConfig";
+import RecoverPassTwoConfig from "../main/recover-password/RecoverPassTwoConfig";
 const routeConfigs = [
   ExampleConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,
   RecoverPassConfig,
+  RecoverPassTwoConfig,
   ...ComercialConfigs,
   ...AnalisisConfig,
   ...AdministracionConfig,

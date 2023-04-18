@@ -1,4 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
 import { useRef } from "react";
@@ -28,73 +29,32 @@ import emailjs from "@emailjs/browser";
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  email: yup
+  password: yup
     .string()
-    .email("Por favor ingrese un email válido")
-    .required("Debe ingresar su email asociado a su cuenta de Trígonos"),
+    .required("Por favor ingrese una contraseña")
+    .min(8, "Contraseña demasiado corta - mínimo 8 caracteres."),
+  passwordConfirm: yup
+    .string()
+    .oneOf([yup.ref("password"), null], "Las contraseñas no coinciden"),
 });
 
 const defaultValues = {
-  email: "",
-  remember: true,
+  password: "",
+  passwordConfirm: "",
 };
-function RecoverPass() {
-  const form = useRef();
+
+function RecoverPassTwo() {
+  const { username, email } = useParams();
+  console.log(email);
   const { control, formState, register, handleSubmit, setError, setValue } =
     useForm({
       mode: "onChange",
       defaultValues,
       resolver: yupResolver(schema),
     });
-
+  const form = useRef();
   const { isValid, dirtyFields, errors } = formState;
-  useEffect(() => {
-    setValue("email", "admin@fusetheme.com", {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    // setValue("password", "admin", { shouldDirty: true, shouldValidate: true });
-  }, [setValue]);
-  const ApiValidarEmail = ({ email }) => {
-    let url = `http://164.77.112.10:99/api/Usuarios/ValidarEmail?email=${email}`;
-    let error = 0;
 
-    axios
-      .post(url) // SI ENCUENTRA EMAIL
-      .then(function (response) {
-        let nombre = response.data.nombre;
-        let apellido = response.data.apellido;
-        let token = response.data.token;
-        let data = {
-          service_id: "service_6dh0yhl",
-          template_id: "template_db5hpw5",
-          user_id: "51ZXSK_DUUis1g37z",
-          template_params: {
-            to_name: `${nombre} ${apellido}`,
-            email: email,
-            message: `INGRESE AL LINK PARA CAMBIAR LA CONTRASEÑA
-        LINK 
-        
-        http://localhost:3000/recover-password-two/${token}/${email}`,
-          },
-        };
-        axios
-          .post("https://api.emailjs.com/api/v1.0/email/send", data) // ENVIO DATA AL CORREO
-          .then(function (response) {
-            console.log("EMAIL EXISTE"); // ENVIE LA DATA BIEN
-          })
-          .catch(function (error) {
-            error = 1;
-            console.log("EMAIL NO EXISTE"); // ENVIE LA DATA MAL
-          });
-      })
-      .catch(function (error) {
-        if (error == 1) {
-          return;
-        }
-        console.log("EMAIL NO EXISTE");
-      });
-  };
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
       <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
@@ -113,23 +73,39 @@ function RecoverPass() {
           </div>
           <form
             ref={form}
-            name="loginForm"
+            name="cambiarContrasena"
             noValidate
             className="flex flex-col justify-center w-full mt-32"
-            onSubmit={handleSubmit(ApiValidarEmail)}
+            // onSubmit={handleSubmit(ApiValidarEmail)}
           >
             <Controller
-              name="email"
+              name="password"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Email"
-                  autoFocus
-                  type="email"
-                  error={!!errors.email}
-                  helperText={errors?.email?.message}
+                  label="Contraseña"
+                  type="password"
+                  error={!!errors.password}
+                  helperText={errors?.password?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+            <Controller
+              name="passwordConfirm"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Contraseña (Confirmar)"
+                  type="password"
+                  error={!!errors.passwordConfirm}
+                  helperText={errors?.passwordConfirm?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -145,7 +121,7 @@ function RecoverPass() {
               type="submit"
               size="large"
             >
-              Buscar Usuario
+              Cambiar contraseña
             </Button>
           </form>
         </div>
@@ -159,4 +135,4 @@ function RecoverPass() {
   );
 }
 
-export default RecoverPass;
+export default RecoverPassTwo;
