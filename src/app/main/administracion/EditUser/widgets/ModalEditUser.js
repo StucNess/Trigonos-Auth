@@ -92,7 +92,7 @@ export default function ModalEditUser({
             <div className="overflow-y-scroll max-h-[70vh]">
             
             <TextField
-                    className="zerorange:w-[300px]  lg:w-[400px] w-[350px]   m-[20px] "
+                    className="m-[20px] "
                     label="Nombre"
                     type="text"
                     defaultValue="Vacio"

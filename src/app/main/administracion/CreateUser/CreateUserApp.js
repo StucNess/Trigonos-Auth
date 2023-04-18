@@ -34,6 +34,9 @@ import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
 import { CallApiUsers } from "./store/CallApiUsers";
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import AddIcon from '@mui/icons-material/Add';
+import IconButton from '@mui/material/IconButton';
+import ModalAddCompany from "./widgets/ModalAddCompany";
 const columns = [
   { id: "id", label: "ID", minWidth: 20 },
   { id: "username", label: "Usuario", minWidth: 20 },
@@ -117,7 +120,7 @@ function CreateUserApp(props) {
   const [error, setError] = useState(false);
   const [emailUser, setEmailUser] = useState('');
   const { isValid, dirtyFields, errors } = formState;
-
+  const [modal, setModal] = useState(true);
   
 
   const [data, setData] = useState([]);
@@ -518,16 +521,37 @@ function CreateUserApp(props) {
                     />
                   )}
                 />
-                <div>
-                <Autocomplete
-                       
-                       disablePortal
-                       className=" ml-[20px] mr-[20px] mb-[20px]"
-                       id="combo-box-demo"
-                       options={empresaArray}
- 
-                       renderInput={(params) => <TextField {...params} label="Seleccionar Empresa" />}
-                     />
+                
+                <div className=" flex justify-evenly ml-[20px] mr-[20px]  " >
+                
+               
+                  <Autocomplete
+                        
+                        disablePortal
+                        className=" w-full"
+                        id="combo-box-demo"
+                        options={empresaArray}
+  
+                        renderInput={(params) => <TextField {...params} label="Seleccionar Empresa" />}
+                      />
+                  <AdviceModule className="relative w-[34px] ml-[20px]" classnamesegund = ""textwidth={350}  msg={"Este campo permite asignar la empresa asociada al usuario, si necesita crear una nueva presione el botón + en la parte inferior del campo."} />
+                </div>
+                <div className="ml-[20px] my-[5px] ">
+                <IconButton
+                      variant="contained"
+                      color="primary"
+                      // className="w-[20px]"
+                      title="Crear Empresa"
+                    
+                      size="small"
+                      onClick={
+                        modal
+                          ? () => setModal(false)
+                          : () => setModal(true)
+                      }
+                      >
+                      <AddIcon fontSize="inherit"/>
+                  </IconButton>
                 </div>
                 <h1 className="border border-b-pantoneazul  ml-[20px] mr-[20px]"/>
                 <div className="w-full m-[20px]">
@@ -714,6 +738,12 @@ function CreateUserApp(props) {
         
           </div>
         </div>
+        {!modal && (
+                <ModalAddCompany
+               
+                setActive={() => setModal(true)}
+                />
+            )}
         </form>
       }
       scroll="content"

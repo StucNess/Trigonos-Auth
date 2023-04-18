@@ -68,7 +68,7 @@ class JwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithEmailAndPassword = (email, password) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve,reject) => {
       axios
         .post(jwtServiceConfig.signIn, {
           email,
@@ -76,35 +76,44 @@ class JwtService extends FuseUtils.EventEmitter {
         })
         .then((response) => {
           if (response.data.username) {
-            const url = `http://164.77.112.10:99/api/Participantes?id=${response.data.id}`;
-            let kaka;
-            const prueba = async () => {
-              let pruebaa;
-              await axios.get(url).then((responsee) => {
-                pruebaa = responsee.data.data[0].id;
-              });
-              return pruebaa;
-            };
-            prueba().then((value) => {
-              localStorage.setItem("ProyectUser", value);
-            });
-            const json = {
-              role: response.data.role,
-              data: {
-                displayName: response.data.username,
-                email: response.data.email,
-                nombre: response.data.nombre,
-                apellido: response.data.apellido,
+            
+            setTimeout(() => {
+                  const url = `http://164.77.112.10:99/api/Participantes?id=${response.data.id}`;
+                let kaka;
+                const prueba = async () => {
+                  let pruebaa;
+                  await axios.get(url).then((responsee) => {
+                    pruebaa = responsee.data.data[0].id;
+                  });
+                  return pruebaa;
+                };
+                prueba().then((value) => {
+                  localStorage.setItem("ProyectUser", value);
+                });
+                const json = {
+                  role: response.data.role,
+                  data: {
+                    displayName: response.data.username,
+                    email: response.data.email,
+                    nombre: response.data.nombre,
+                    apellido: response.data.apellido,
 
-              },
-            };
-            this.setSession(response.data.token, response.data.id);
-            resolve(json);
-            this.emit("onLogin", json);
+                  },
+                };
+                this.setSession(response.data.token, response.data.id);
+                resolve(json);
+                
+                this.emit("onLogin", json);
+            }, 2000);
+            
           } else {
-            reject(response.data.error);
+            
+            console.log("no funciona")
           }
-        });
+        })
+        .catch((response) => {
+          reject(response)
+          })
     });
   };
 
