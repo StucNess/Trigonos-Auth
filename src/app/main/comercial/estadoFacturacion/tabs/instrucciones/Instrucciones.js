@@ -5,7 +5,9 @@ import Estados from "./widgets/Estados";
 import Filtros from "./widgets/Filtros";
 import Button from "@mui/material/Button";
 import TablaInstrucciones from "./widgets/TablaInstrucciones";
-
+import { Paper } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { SiMicrosoftexcel } from "react-icons/si";
 let search = () => {};
 let ClearDebtorAndCreditor;
 let clearStates;
@@ -83,7 +85,7 @@ const Instrucciones = (props) => {
       initial="hidden"
       animate="show"
     >
-      <motion.div variants={item} className=" col-span-12  ">
+      <motion.div variants={item} className=" hd:col-span-6  hdmas:col-span-12 ">
         <Estados
           idParticipante={props.id}
           getClearStates={getClearStates}
@@ -94,7 +96,46 @@ const Instrucciones = (props) => {
           // chargeFilters={disabled}
         />
       </motion.div>
-
+      <motion.div variants={item} className=" hd:col-span-6  hdmas:col-span-12 ">
+        <Paper className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full">
+          <div className="flex flex-col sm:flex-row items-start justify-between">
+            <Typography className="text-lg font-medium tracking-tight leading-6 truncate">
+              Descargas
+            </Typography>
+          </div>
+          <div className="flex justify-center flex-wrap w-full h-full  items-center mt-12">
+          <Button
+              className=" rounded flex justify-start m-[20px] min-w-[170px]"
+              variant="contained"
+              color="success"
+              
+              // onClick={exportToExcel}
+            >
+              <SiMicrosoftexcel size={30} className="mr-[10px]"/>Todas
+            </Button>
+          
+            <Button
+              className=" rounded flex justify-start m-[20px] min-w-[170px]"
+              variant="contained"
+              color="success"
+              
+              // onClick={exportToExcel}
+            >
+              <SiMicrosoftexcel size={30} className="mr-[10px] "/>Solo Deudor
+            </Button>
+            <Button
+              className=" rounded flex justify-start m-[20px] min-w-[170px]"
+              variant="contained"
+              color="success"
+              disabled //lo deje de ejemplo
+              // onClick={exportToExcel}
+            >
+              <SiMicrosoftexcel size={30} className="mr-[10px]"/>Solo Acreedor
+            </Button>
+          </div>
+        </Paper>
+      </motion.div>
+      
       <motion.div
         variants={item}
         className=" hdmas:col-span-12  hd:col-span-3 "
