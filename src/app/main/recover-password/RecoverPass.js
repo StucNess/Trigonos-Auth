@@ -11,6 +11,7 @@ import axios from "axios";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { useEffect } from "react";
+import history from "@history";
 import jwtService from "../../auth/services/jwtService";
 //IMPORTACIONES OBSOLETAS, pueden que sirvan a un futuro si no eliminar..
 import FormLabel from "@mui/material/FormLabel";
@@ -81,7 +82,7 @@ function RecoverPass() {
         axios
           .post("https://api.emailjs.com/api/v1.0/email/send", data) // ENVIO DATA AL CORREO
           .then(function (response) {
-            console.log("EMAIL EXISTE"); // ENVIE LA DATA BIEN
+            history.push("/recover-password-two/3ksjs/asdds3"); // ENVIE LA DATA BIEN
           })
           .catch(function (error) {
             error = 1;
