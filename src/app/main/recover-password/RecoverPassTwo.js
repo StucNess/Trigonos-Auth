@@ -65,12 +65,12 @@ function RecoverPassTwo() {
           <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
             Recuperar Contraseña
           </Typography>
-          <div className="flex items-baseline mt-2 font-medium">
+          {/* <div className="flex items-baseline mt-2 font-medium">
             <Typography>¿No tiene una cuenta?</Typography>
             <Link className="ml-4" to="/sign-in">
               Iniciar Sesión
             </Link>
-          </div>
+          </div> */}
           <form
             ref={form}
             name="cambiarContrasena"

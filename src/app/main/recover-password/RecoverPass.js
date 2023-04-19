@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
 import Button from "@mui/material/Button";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
@@ -12,6 +12,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { useEffect } from "react";
 import history from "@history";
+import LoadingButton from '@mui/lab/LoadingButton';
 import jwtService from "../../auth/services/jwtService";
 //IMPORTACIONES OBSOLETAS, pueden que sirvan a un futuro si no eliminar..
 import FormLabel from "@mui/material/FormLabel";
@@ -41,7 +42,10 @@ const defaultValues = {
 };
 function RecoverPass() {
   const form = useRef();
-  const { control, formState, register, handleSubmit, setError, setValue } =
+  const [loading, setLoading] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState(false);
+  const [MsgEmail, setMsgEmail] = useState(false);
+  const { control, formState, register, handleSubmit, setError } =
     useForm({
       mode: "onChange",
       defaultValues,
@@ -49,14 +53,10 @@ function RecoverPass() {
     });
 
   const { isValid, dirtyFields, errors } = formState;
-  useEffect(() => {
-    setValue("email", "admin@fusetheme.com", {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    // setValue("password", "admin", { shouldDirty: true, shouldValidate: true });
-  }, [setValue]);
+
   const ApiValidarEmail = ({ email }) => {
+    setMsgAlert(false);
+    setLoading(true);
     let url = `http://164.77.112.10:99/api/Usuarios/ValidarEmail?email=${email}`;
     let error = 0;
 
@@ -82,11 +82,28 @@ function RecoverPass() {
         axios
           .post("https://api.emailjs.com/api/v1.0/email/send", data) // ENVIO DATA AL CORREO
           .then(function (response) {
-            history.push("/recover-password-two/3ksjs/asdds3"); // ENVIE LA DATA BIEN
+
+           
+            setTimeout(() => {
+              error = 1;
+              //
+              setLoading(false);
+              setMsgEmail(true);
+              
+              // history.push("/recover-password-two/3ksjs/asdds3"); // ENVIE LA DATA BIEN
+
+            }, 2000);
           })
           .catch(function (error) {
-            error = 1;
-            console.log("EMAIL NO EXISTE"); // ENVIE LA DATA MAL
+           
+              error = 1;
+              console.log("EMAIL NO EXISTE"); // ENVIE LA DATA MAL
+              setLoading(false);
+              setMsgAlert(true);
+
+
+            
+
           });
       })
       .catch(function (error) {
@@ -94,6 +111,15 @@ function RecoverPass() {
           return;
         }
         console.log("EMAIL NO EXISTE");
+        setTimeout(() => {
+          setLoading(false);
+          setMsgAlert(true);
+
+
+        }, 2000);
+
+
+
       });
   };
   return (
@@ -119,7 +145,8 @@ function RecoverPass() {
             className="flex flex-col justify-center w-full mt-32"
             onSubmit={handleSubmit(ApiValidarEmail)}
           >
-            <Controller
+            {!MsgEmail?(<div className="flex flex-col justify-center">
+              <Controller
               name="email"
               control={control}
               render={({ field }) => (
@@ -127,7 +154,7 @@ function RecoverPass() {
                   {...field}
                   className="mb-24"
                   label="Email"
-                  autoFocus
+                  
                   type="email"
                   error={!!errors.email}
                   helperText={errors?.email?.message}
@@ -137,17 +164,32 @@ function RecoverPass() {
                 />
               )}
             />
-            <Button
-              variant="contained"
-              color="secondary"
-              className=" w-full mt-16"
-              aria-label="Sign in"
-              disabled={_.isEmpty(dirtyFields) || !isValid}
-              type="submit"
-              size="large"
-            >
-              Buscar Usuario
-            </Button>
+          <LoadingButton 
+            
+            loading={loading}
+            disabled={_.isEmpty(dirtyFields) || !isValid}
+            type="submit"
+            size="large"
+            variant="contained"
+            color="secondary">
+              Recuperar Contraseña
+          </LoadingButton>
+            </div>) : (
+                
+                <span className="text-pantoneazul">
+                 <b>Por favor revise su bandeja de entrada de su Email asociado a su cuenta, puede cerrar esta ventana.</b>
+                </span>
+              )}
+            
+          <div className="h-[30px] text-center mt-[20px]">
+            {MsgAlert && (
+                
+                <span className="text-red">
+                 <b>Debe ingresar un email valido, intente nuevamente.</b>
+                </span>
+              )}
+            
+          </div>
           </form>
         </div>
       </Paper>
