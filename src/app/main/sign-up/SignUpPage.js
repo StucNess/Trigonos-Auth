@@ -43,7 +43,11 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .required("Por favor ingrese una contraseña")
-    .min(8, "Contraseña demasiado corta - mínimo 8 caracteres."),
+    .min(8, "Contraseña demasiado corta - mínimo 8 caracteres.")
+    .matches(
+      /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/,
+      "La contraseña debe tener almenos una mayuscula, un numero y un caracter especial"
+    ),
   passwordConfirm: yup
     .string()
     .oneOf([yup.ref("password"), null], "Las contraseñas no coinciden"),
@@ -198,7 +202,8 @@ function SignUpPage() {
                   label="Proyecto"
                   // error={!!errors.project}
                   type="select"
-                  required>
+                  required
+                >
                   {/* <FormLabel className="font-medium text-14" component="legend">
                     Proyecto
                   </FormLabel>
@@ -215,12 +220,14 @@ function SignUpPage() {
                     value={personName}
                     onChange={handleChange}
                     input={<OutlinedInput label="Name" />}
-                    MenuProps={MenuProps}>
+                    MenuProps={MenuProps}
+                  >
                     {names.map((name) => (
                       <MenuItem
                         key={name}
                         value={name}
-                        style={getStyles(name, personName, theme)}>
+                        style={getStyles(name, personName, theme)}
+                      >
                         {name}
                       </MenuItem>
                     ))}
@@ -236,7 +243,8 @@ function SignUpPage() {
               render={({ field }) => (
                 <FormControl
                   className="items-center"
-                  error={!!errors.acceptTermsConditions}>
+                  error={!!errors.acceptTermsConditions}
+                >
                   <FormControlLabel
                     label="Acepto los Términos de servicio y la Política de privacidad"
                     control={<Checkbox size="small" {...field} />}
@@ -255,7 +263,8 @@ function SignUpPage() {
               aria-label="Register"
               disabled={_.isEmpty(dirtyFields) || !isValid}
               type="submit"
-              size="large">
+              size="large"
+            >
               Crear cuenta
             </Button>
           </form>
@@ -265,7 +274,8 @@ function SignUpPage() {
       <Box
         className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden"
         id="box_der"
-        sx={{ backgroundColor: "secondary.main" }}></Box>
+        sx={{ backgroundColor: "secondary.main" }}
+      ></Box>
     </div>
   );
 }

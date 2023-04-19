@@ -26,7 +26,7 @@ const RecoverPassTwoConfig = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "recover-password-two/:username/:email",
+      path: "recover-password-two/:token/:email",
       element: <RecoverPassTwo />,
     },
   ],
