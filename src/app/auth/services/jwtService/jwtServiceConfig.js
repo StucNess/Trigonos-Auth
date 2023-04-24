@@ -1,8 +1,10 @@
 const jwtServiceConfig = {
-  signIn: "http://164.77.112.10:99/api/Usuarios/Login",
-  signUp: "http://164.77.112.10:99/api/Usuarios/Registrar",
-  addProyects: "http://164.77.112.10:99/api/Usuarios/AsignarProyecto",
-  accessToken: "http://164.77.112.10:99/api/Usuarios",
+  signIn: "https://trigonosapi.azurewebsites.net/api/Usuarios/Login",
+  signUp: "https://trigonosapi.azurewebsites.net/api/Usuarios/Registrar",
+  addProyects: "https://trigonosapi.azurewebsites.net/api/Usuarios/AsignarProyecto",
+  accessToken: "https://trigonosapi.azurewebsites.net/api/Usuarios",
+  addCompany: "http://localhost:5205/Empresas/Agregar",
+  addNewRol: "http://localhost:5205/Rol/Agregar",
   updateUser: "api/auth/user/update",
 };
 

@@ -453,7 +453,7 @@ export default function HorizontalNonLinearStepper(props) {
         '["' + formState.payContactPhones.replace(/,/g, '","') + '"]';
 
       const apiPatchParticipante =
-        `http://164.77.112.10:99/api/Participantes?` +
+        `https://trigonosapi.azurewebsites.net/api/Participantes?` +
         `id=${formState.id}&` +
         `Name=${formState.name}&` +
         `Rut=${formState.rut}&` +

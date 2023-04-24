@@ -10,13 +10,13 @@ export const getProjects = createAsyncThunk(
   async (numero = 1, PageIndex = 10, PageSize = 1) => {
     if (numero === 1) {
       const response = await axios.get(
-        "http://164.77.112.10:99/api/Participantes"
+        "https://trigonosapi.azurewebsites.net/api/Participantes"
       );
       return response.data.data;
     }
 
     const response = await axios.get(
-      `http://164.77.112.10:99/api/Participantes?All=s&PageIndex=${PageIndex}&PageSize=${PageSize}`
+      `https://trigonosapi.azurewebsites.net/api/Participantes?All=s&PageIndex=${PageIndex}&PageSize=${PageSize}`
     );
     return response.data.data;
   }

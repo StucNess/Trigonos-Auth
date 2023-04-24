@@ -37,6 +37,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AddIcon from '@mui/icons-material/Add';
 import IconButton from '@mui/material/IconButton';
 import ModalAddCompany from "./widgets/ModalAddCompany";
+import { CallApiEmpresas } from "./store/CallApiEmpresas";
 const columns = [
   { id: "id", label: "ID", minWidth: 20 },
   { id: "username", label: "Usuario", minWidth: 20 },
@@ -45,6 +46,7 @@ const columns = [
   { id: "email", label: "Email", minWidth: 20 },
   
 ];
+let dataEmpr;
 function createData(id, email, username, nombre, apellido) {
   return { id, email, username, nombre, apellido };
 }
@@ -124,6 +126,7 @@ function CreateUserApp(props) {
   
 
   const [data, setData] = useState([]);
+  const [dataEmpresas, setDataEmpresas] = useState([]);
   useEffect(() => {
     (async () => {
       const data = await CallApiUsers();;
@@ -131,9 +134,23 @@ function CreateUserApp(props) {
       
       
     })();
-   
+    (async () => {
+    
+      const data_ = await CallApiEmpresas();;
+      setDataEmpresas(data_);
+
+      
+      
+    })();
   }, []);
-  // console.log(data);
+  useEffect(() => {
+    (async () => {
+    
+      const data_ = await CallApiEmpresas();;
+      setDataEmpresas(data_);
+    })();
+  }, [modal]);
+  console.log(dataEmpr);
   // data.map(
   //   ({
   //     id, email, username, nombre, apellido,
@@ -524,14 +541,16 @@ function CreateUserApp(props) {
                 
                 <div className=" flex justify-evenly ml-[20px] mr-[20px]  " >
                 
-               
+                    {/* INTEGRAR api empresas */}
                   <Autocomplete
                         
                         disablePortal
                         className=" w-full"
                         id="combo-box-demo"
-                        options={empresaArray}
-  
+                        options={dataEmpresas}
+                        getOptionLabel={(option) =>
+                          option.nombreEmpresa
+                        }
                         renderInput={(params) => <TextField {...params} label="Seleccionar Empresa" />}
                       />
                   <AdviceModule className="relative w-[34px] ml-[20px]" classnamesegund = ""textwidth={350}  msg={"Este campo permite asignar la empresa asociada al usuario, si necesita crear una nueva presione el botón + en la parte inferior del campo."} />

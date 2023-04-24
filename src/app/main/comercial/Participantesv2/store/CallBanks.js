@@ -4,9 +4,9 @@ import axios from "axios";
 export const CallBanks = async (id = 1, opcion = 1) => {
   let url;
   if (opcion == 1) {
-    url = `http://164.77.112.10:99/api/Banks/${id}`;
+    url = `https://trigonosapi.azurewebsites.net/api/Banks/${id}`;
   } else {
-    url = `http://164.77.112.10:99/api/Banks/`;
+    url = `https://trigonosapi.azurewebsites.net/api/Banks/`;
   }
 
   let response;

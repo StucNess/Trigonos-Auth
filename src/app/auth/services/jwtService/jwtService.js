@@ -78,7 +78,7 @@ class JwtService extends FuseUtils.EventEmitter {
           if (response.data.username) {
             
             setTimeout(() => {
-                  const url = `http://164.77.112.10:99/api/Participantes?id=${response.data.id}`;
+                  const url = `https://trigonosapi.azurewebsites.net/api/Participantes?id=${response.data.id}`;
                 let kaka;
                 const prueba = async () => {
                   let pruebaa;

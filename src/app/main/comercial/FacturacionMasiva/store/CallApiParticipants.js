@@ -5,7 +5,7 @@ export const CallApiParticipants = async (
   PageSize = 10,
   numero = 1
 ) => {
-  let url = "http://164.77.112.10:99/api/Participantes";
+  let url = "https://trigonosapi.azurewebsites.net/api/Participantes";
   let response;
   let prueba;
 

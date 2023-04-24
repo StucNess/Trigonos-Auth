@@ -200,7 +200,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   ];
   
   const DEFAULT_ORDER = 'asc';
-  const DEFAULT_ORDER_BY = 'codreferencia';
+  const DEFAULT_ORDER_BY = 'nombre';
   const DEFAULT_ROWS_PER_PAGE = 5;
   
   function EnhancedTableHead(props) {

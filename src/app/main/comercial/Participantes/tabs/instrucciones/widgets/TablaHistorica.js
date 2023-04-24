@@ -279,7 +279,7 @@ let apiHistorial = {};
 export default function StickyHeadTable({ projects, diccionariop }) {
   // const [rows, setRows] = React.useState([
   // ]);
-  const url = `http://164.77.112.10:99/Historificacion?id=${diccionariop.id}`;
+  const url = `https://trigonosapi.azurewebsites.net/Historificacion?id=${diccionariop.id}`;
   const [table, setTable] = React.useState(true);
   const rows = [];
   const [page, setPage] = React.useState(0);

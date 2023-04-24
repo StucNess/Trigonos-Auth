@@ -40,6 +40,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { useCallback, useEffect, useState } from "react";
 import ModalAddProfile from "./Widgets/ModalAddProfile";
+import { CallApiRoles } from "./store/CallApiRoles";
 
 
 let theme = createTheme(
@@ -78,20 +79,42 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       border: 0,
     },
   }));
-  function createData(estado,codreferencia,nombre,descripcion) {
+  function createData(estado,codReferencia,nombre,descripcion,id) {
     return {
-        estado,codreferencia,nombre,descripcion
+        estado,codReferencia,nombre,descripcion,id
     };
   }
   
-  const rows = [
-    createData('Activo', 1069, 'Administrador', 'Perfil de administrador todas las paginas seleccionadas'),
-    createData('Activo', 1111, 'Estado Facturación', 'Solo puede visualizar el modulo de estado de facturación'),
-    createData('Activo', 1313, 'Clientes', 'Perfil para clientes'),
-    createData('Activo', 4849, 'Trabajadores Prisma', 'Perfil para trabajadores de Prisma'),
-    
    
-  ];
+  let rows = [];
+  let rowspermanent = [];
+  
+
+     
+
+ 
+ 
+  // async function CargaData(){
+    
+  //   const data = await CallApiRoles();
+  //   console.log(data);
+  //   data.map(
+  //     ({
+  //       id, codReferencia, nombre, descripcion, bhabilitado,
+  //     }) =>
+  //     rows.push(
+  //         createData(
+  //           // createData('Activo', 4849, 'Trabajadores Prisma', 'Perfil para trabajadores de Prisma')
+  //           bhabilitado ===1 ? 'Activo':'Desactivado', codReferencia, nombre, descripcion,id
+  //         )
+  //       )
+      
+  //   );
+  // }
+
+   
+  
+  
   
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -108,11 +131,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
-  
-  // Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-  // stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-  // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-  // with exampleArray.slice().sort(exampleComparator)
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -133,8 +151,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       label: 'Estado',
     },
     {
-      id: 'codreferencia',
-      numeric: true,
+      id: 'codReferencia',
+      numeric: false,
       disablePadding: false,
       label: 'Código Referencia',
     },
@@ -161,7 +179,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   ];
   
   const DEFAULT_ORDER = 'asc';
-  const DEFAULT_ORDER_BY = 'codreferencia';
+  const DEFAULT_ORDER_BY = 'id';
   const DEFAULT_ROWS_PER_PAGE = 5;
   
   function EnhancedTableHead(props) {
@@ -179,7 +197,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
             <TableCell
               key={headCell.id}
               align="left"
-              padding="20px"
+              
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
@@ -275,20 +293,78 @@ function CreateProfileApp(props){
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [paddingHeight, setPaddingHeight] = useState(0);
     const [table, setTable] = useState(true);
-    useEffect(() => {
+    const [isloading, setIsloading] = useState(true);
+    const [rowss, setRowss] = useState([]
+    );
+ 
+    function search(searchString) {
+      if (typeof searchString !== 'string' || searchString.length === 0) {
+      return rowspermanent;
+      }
+      let searchLower = searchString.toString().toLowerCase();
+      let filtered = rowspermanent.filter(key => {
+      if (key.estado.toLowerCase().includes(searchLower)) {
+      return true;
+      }
+      
+      if (key.codReferencia.toLowerCase().includes(searchLower)) {
+      return true;
+      }
+      if (key.nombre.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.descripcion.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.id.toString().toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      })
+      return filtered;
+     }
+
+    function CargaDataRol(){
+        fetch("http://localhost:5205/Rol")
+        .then((response) => response.json())
+        .then((data) => {
+          rows = data.map(function(el) {
+            el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
+            return {
+              estado:el.bhabilitado ,codReferencia:el.codReferencia ,nombre:el.nombre,descripcion:el.descripcion,id:el.id
+            };          
+          });
+          rowspermanent = rows;
+          rowsOnMount();
+        });
+      };
+    function rowsOnMount(){
       let rowsOnMount = stableSort(
         rows,
         getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY),
       );
-  
+      
       rowsOnMount = rowsOnMount.slice(
         0 * DEFAULT_ROWS_PER_PAGE,
         0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE,
       );
-  
       setVisibleRows(rowsOnMount);
+    }
+    useEffect(() => {
+      CargaDataRol();
     }, []);
-  
+    useEffect(() => {
+      CargaDataRol();
+    }, [table]);
+    useEffect(() => {
+      rows = rowss;
+      rowsOnMount();
+    }, [rowss]);
+    const handleSetRow = (event) => {
+      const {
+        target: { value },
+      } = event;
+      setRowss(search(value.trim()));
+    }
     const handleRequestSort = useCallback(
       (event, newOrderBy) => {
         const isAsc = orderBy === newOrderBy && order === 'asc';
@@ -309,19 +385,19 @@ function CreateProfileApp(props){
   
     const handleSelectAllClick = (event) => {
       if (event.target.checked) {
-        const newSelected = rows.map((n) => n.codreferencia);
+        const newSelected = rows.map((n) => n.nombre);
         setSelected(newSelected);
         return;
       }
       setSelected([]);
     };
   
-    const handleClick = (event, codreferencia) => {
-      const selectedIndex = selected.indexOf(codreferencia);
+    const handleClick = (event, codReferencia) => {
+      const selectedIndex = selected.indexOf(codReferencia);
       let newSelected = [];
   
       if (selectedIndex === -1) {
-        newSelected = newSelected.concat(selected, codreferencia);
+        newSelected = newSelected.concat(selected, codReferencia);
       } else if (selectedIndex === 0) {
         newSelected = newSelected.concat(selected.slice(1));
       } else if (selectedIndex === selected.length - 1) {
@@ -383,18 +459,17 @@ function CreateProfileApp(props){
       setDense(event.target.checked);
     };
   
-    const isSelected = (codreferencia) => selected.indexOf(codreferencia) !== -1;
-  
+    const isSelected = (codReferencia) => selected.indexOf(codReferencia) !== -1;
+   
+
   return (
     <Root
-    // header={<div>
-    //     Header
-    // </div>}
+
     content={
             <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full ">
             <div className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-24   ">
             <div className="  col-span-12 mb-[20px]" >
-                {/* Box de titulo y guía */}
+
                 <Box className="  bg-white rounded-sm p-[10px] ">
                 <h1 className="ml-[5px]">Gestión de Perfiles</h1>
                 <h1 className="border border-b-pantoneazul"></h1>
@@ -411,8 +486,7 @@ function CreateProfileApp(props){
             </div>
             
             <div className=" col-span-12   bg-white"> 
-            {/*  lg:col-span-3 tvxxl:col-span-2 */}
-            
+
             <div className="flex justify-between w-full" >
                 <div className="flex flex-row  m-[20px]">
                 <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
@@ -457,12 +531,15 @@ function CreateProfileApp(props){
             <h1 className="border border-b-pantoneazul w-full"></h1>
             <div className="flex flex-row m-[20px]">
             
-            <TextField id="outlined-basic" label="Filtrar" variant="filled" />
+            <TextField id="outlined-basic" label="Filtrar" variant="filled" 
+                      onChange={e => {
+                      
+                        handleSetRow(e);
+                      }} />
             
 
             </div>
-            
-            <Box className="m-[20px]" >
+            {isloading?(<Box className="m-[20px]" >
                 <Box >
                     
                     <TableContainer sx={{ maxHeight: 360 }} overflow-y-auto>
@@ -471,6 +548,7 @@ function CreateProfileApp(props){
                         aria-labelledby="tableTitle"
                         size={dense ? 'small' : 'medium'}
                         stickyHeader
+                        
                     >
                         <EnhancedTableHead
                         numSelected={selected.length}
@@ -483,7 +561,7 @@ function CreateProfileApp(props){
                         <TableBody>
                         {visibleRows
                             ? visibleRows.map((row, index) => {
-                                const isItemSelected = isSelected(row.codreferencia);
+                                const isItemSelected = isSelected(row.id);
                                 const labelId = `enhanced-table-checkbox-${index}`;
 
                                 return (
@@ -492,6 +570,7 @@ function CreateProfileApp(props){
                                     
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
+                                    key={row.id}
                                 >
                                     
                                     <StyledTableCell
@@ -500,11 +579,11 @@ function CreateProfileApp(props){
                                     component="th"
                                     id={labelId}
                                     scope="row"
-                                    padding="20px"
+                                    
                                     >
                                     {row.estado}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">{row.codreferencia}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.codReferencia}</StyledTableCell>
                                     <StyledTableCell align="left">{row.nombre}</StyledTableCell>
                                     <StyledTableCell align="left">{row.descripcion}</StyledTableCell>
                                     <StyledTableCell align="left">
@@ -512,11 +591,11 @@ function CreateProfileApp(props){
                                         variant="contained"
                                         color="secondary"
                                         className=" h-[28px]  w-[100px] mr-[20px]"
-                                        onClick={
-                                          table
-                                            ? () => setTable(false)
-                                            : () => setTable(true)
-                                        }
+                                        // onClick={
+                                        //   table
+                                        //     ? () => setTable(false)
+                                        //     : () => setTable(true)
+                                        // }
                                         type="submit"
                                         size="small">
                                         <SettingsIcon/>Editar
@@ -551,7 +630,7 @@ function CreateProfileApp(props){
                     <TablePagination
                     labelRowsPerPage="Filas por página"
                     variant="h5"
-                    rowsPerPageOptions={[5, 10, 25,{ value: -1, label: 'All' }]}
+                    rowsPerPageOptions={[5, 10, 25]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}
@@ -564,13 +643,15 @@ function CreateProfileApp(props){
                     control={<Switch checked={dense} onChange={handleChangeDense} />}
                     label="Disminuir espacio"
                 />
-                </Box> 
+                </Box> ):(<div>UWU?</div>)}
+            
             </div>
             </div>
             {!table && (
                 <ModalAddProfile
                
                 setTable={() => setTable(true)}
+                
                 />
             )}
             </div>
