@@ -31,10 +31,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 const schema = yup.object().shape({
   // user: yup.string().required("Debe ingresar su nombre completo"),
-  codReferencia: yup
-    .string()
-    .required("Debe ingresar un Código de Referencia"),
-  nombre: yup
+  
+  name: yup
     .string()
     .required("Debe ingresar un Nombre"),
   descripcion: yup
@@ -42,8 +40,8 @@ const schema = yup.object().shape({
     .required("Debe ingresar una Descripción"),
 });
 const defaultValues = {
-  codReferencia:"",
-  nombre: "",
+
+  name: "",
   descripcion: "",
   
   
@@ -57,7 +55,7 @@ export default function ModalAddProfile({
   const [scroll, setScroll] = useState('paper');
   const [secondDopen, setSecondDopen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [CodRef, setCodRef] = useState("");
+
   const [nameRol, setNameRol] = useState("");
   const [descRol, setDescRol] = useState("");
   const [MsgAlert, setMsgAlert] = useState({
@@ -83,9 +81,7 @@ export default function ModalAddProfile({
   const handleCloseAlert = () => {
     setSecondDopen(false);
   };
-  const handleChangeCodRef = event => {
-    setCodRef(event.target.value);
-  };
+ 
   const handleChangeNombre = event => {
     setNameRol(event.target.value);
   };
@@ -94,9 +90,9 @@ export default function ModalAddProfile({
   };
   function onSubmitRol(e) {
     const data = {
-      codReferencia:e.codReferencia,
-      nombre: e.nombre,
+      name: e.name,
       descripcion: e.descripcion,
+      bhabilitado: 0,
     };
     setLoading(true);
     setTimeout(() => {
@@ -112,6 +108,9 @@ export default function ModalAddProfile({
       .catch((error) => {
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el Rol.",msgError:true});
+        setTimeout(() => {
+          handleClose();
+        },2500);
       });
     }, 2000);
   }
@@ -147,30 +146,9 @@ export default function ModalAddProfile({
             // onSubmit={}
             >
                 <div className="ml-[10px] mr-[10px] flex flex-col">
+                        
                         <Controller
-                          name="codReferencia"
-                          control={control}
-                          render={({ field }) => (
-                              <TextField
-                              {...field}
-                  
-                              className="w-full mt-[20px]"
-                              label="Código de Referencia"
-                              onChange={e => {
-                                field.onChange(e);
-                                handleChangeCodRef(e);
-                              }}
-                              type="text"
-                              error={!!errors.codReferencia}
-                              helperText={errors?.codReferencia?.message}
-                              variant="filled"
-                              required
-                              
-                              />
-                          )}
-                        />
-                        <Controller
-                          name="nombre"
+                          name="name"
                           control={control}
                           render={({ field }) => (
                               <TextField
@@ -259,9 +237,6 @@ export default function ModalAddProfile({
             {"¿Desea guardar el siguiente Rol?"}
           </DialogTitle>
           <DialogContent className='flex flex-col' >
-            <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
-            Codigo de Referencia: <b className='text-black'>{CodRef}</b>
-            </Typography>
             <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
             Nombre del Rol: <b className='text-black'>{nameRol}</b>
             </Typography>

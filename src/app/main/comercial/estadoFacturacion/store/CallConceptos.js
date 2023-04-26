@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const CallConceptos = async () => {
   let url = "";
-  url = "https://trigonosapi.azurewebsites.net/glosa";
+  url = "http://localhost:5205/glosa";
   const response = await axios.get(url);
   const dataResponse = await response.data;
   const dataResponseNew = [...dataResponse, { label: "" }];

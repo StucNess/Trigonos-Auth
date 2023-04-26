@@ -78,7 +78,7 @@ class JwtService extends FuseUtils.EventEmitter {
           if (response.data.username) {
             
             setTimeout(() => {
-                  const url = `https://trigonosapi.azurewebsites.net/api/Participantes?id=${response.data.id}`;
+                  const url = `http://localhost:5205/api/Participantes?id=${response.data.id}`;
                 let kaka;
                 const prueba = async () => {
                   let pruebaa;
@@ -102,7 +102,7 @@ class JwtService extends FuseUtils.EventEmitter {
                 };
                 this.setSession(response.data.token, response.data.id);
                 resolve(json);
-                
+                console.log("funciona")
                 this.emit("onLogin", json);
             }, 2000);
             

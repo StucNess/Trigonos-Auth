@@ -151,12 +151,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       label: 'Estado',
     },
     {
-      id: 'codReferencia',
-      numeric: false,
-      disablePadding: false,
-      label: 'Código Referencia',
-    },
-    {
       id: 'nombre',
       numeric: false,
       disablePadding: false,
@@ -307,9 +301,7 @@ function CreateProfileApp(props){
       return true;
       }
       
-      if (key.codReferencia.toLowerCase().includes(searchLower)) {
-      return true;
-      }
+     
       if (key.nombre.toLowerCase().includes(searchLower)) {
         return true;
         }
@@ -324,13 +316,13 @@ function CreateProfileApp(props){
      }
 
     function CargaDataRol(){
-        fetch("http://localhost:5205/Rol")
+        fetch("http://localhost:5205/api/Rol")
         .then((response) => response.json())
         .then((data) => {
           rows = data.map(function(el) {
             el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
             return {
-              estado:el.bhabilitado ,codReferencia:el.codReferencia ,nombre:el.nombre,descripcion:el.descripcion,id:el.id
+              estado:el.bhabilitado ,nombre:el.name,descripcion:el.descripcion,id:el.id
             };          
           });
           rowspermanent = rows;
@@ -583,7 +575,7 @@ function CreateProfileApp(props){
                                     >
                                     {row.estado}
                                     </StyledTableCell>
-                                    <StyledTableCell align="left">{row.codReferencia}</StyledTableCell>
+                                   
                                     <StyledTableCell align="left">{row.nombre}</StyledTableCell>
                                     <StyledTableCell align="left">{row.descripcion}</StyledTableCell>
                                     <StyledTableCell align="left">

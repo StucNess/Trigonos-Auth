@@ -188,7 +188,7 @@ const TablaInstrucciones = (props) => {
   useEffect(() => {
     (async () => {
       const proyectsResponse = await axios.get(
-        "https://trigonosapi.azurewebsites.net/api/Participantes"
+        "http://localhost:5205/api/Participantes"
       );
       proyects = await proyectsResponse;
     })();

@@ -2,9 +2,9 @@
  * Authorization Roles
  */
 const authRoles = {
-  admin: ["admin", "trgns"],
-  staff: ["trgns"],
-  user: ["admin", "staff", "user"],
+  admin: ["Administrador", "Trabajadores Prisma"],
+  staff: ["Trabajadores Prisma"],
+  user: ["Administrador", "Trabajadores Prisma", "Cliente"],
   onlyGuest: [],
 };
 
