@@ -15,7 +15,14 @@ import * as yup from "yup";
 import _ from "@lodash";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import OutlinedInput from "@mui/material/OutlinedInput";
+
+import DescriptionIcon from '@mui/icons-material/Description';
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningIcon from '@mui/icons-material/Warning';
+import CircularProgress from '@mui/material/CircularProgress';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import BackspaceIcon from '@mui/icons-material/Backspace';
 // import jwtService from '../../auth/services/jwtService';
 /* Importaciones mias */
 import Select from "@mui/material/Select";
@@ -24,14 +31,8 @@ import FusePageSimple from "@fuse/core/FusePageSimple";
 import jwtServiceConfig from "../../../auth/services/jwtService/jwtServiceConfig";
 import { CallApiParticipants } from "../store/CallApiParticipants";
 import AdviceModule from "../../comercial/AdviceModule";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
-import { CallApiUsers } from "./store/CallApiUsers";
+
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import AddIcon from '@mui/icons-material/Add';
@@ -39,8 +40,19 @@ import IconButton from '@mui/material/IconButton';
 import ModalAddCompany from "./widgets/ModalAddCompany";
 import { CallApiEmpresas } from "./store/CallApiEmpresas";
 import { CallApiRole } from "./store/CallApiRole";
-import { FormLabel } from '@mui/material';
+
 import { FormHelperText } from '@mui/material';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+
+import DialogTitle from "@mui/material/DialogTitle";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 const schema = yup.object().shape({
   // user: yup.string().required("Debe ingresar su nombre completo"),
   email: yup
@@ -64,8 +76,10 @@ const schema = yup.object().shape({
   firstName: yup.string().required("Debe ingresar el nombre del usuario."),
   lastName: yup.string().required("Debe ingresar el apellido del usuario."), 
   rol: yup.string().required("Debe seleccionar un rol."),  
-
-  project: yup.string(),
+  user:yup.string().required("Debe ingresar un email para este campo"),  
+  project:  yup.array()
+  .min(1, "Debe seleccionar al menos un cliente")
+  .required("Debe seleccionar al menos un cliente").nullable(true),
 });
 const defaultValues = {
   user: "",
@@ -102,10 +116,19 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-sidebarHeader": {},
   "& .FusePageSimple-sidebarContent": {},
 }));
+//MODAL TABLA CAMBIOS
+function createData(campo,value) {
+  return { campo,value};
+}
 
+let rows = [
+
+];
+let dataproject_ = {};
+let dataempresas_ = {};
 // eslint-disable-next-line import/prefer-default-export
 // export const CreateUserApp = () => {
-function CreateUserApp(props) {
+export default function CreateUserApp(props) {
   const theme = useTheme();
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
   const { control, formState, handleSubmit, reset } = useForm({
@@ -114,17 +137,68 @@ function CreateUserApp(props) {
     resolver: yupResolver(schema),
   });
   const [personName, setPersonName] = useState([]);
+  const [personData, setPersonData] = useState({
+    id:0,
+    name:""
+  });
+  const [loading, setLoading] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText:"",
+    msgError:false,
+  });
+  const {msgResp,msgText,msgError} = MsgAlert;
 
   const [alertt, setAlertt] = useState(false);
   const [error, setError] = useState(false);
   const [emailUser, setEmailUser] = useState('');
   const { isValid, dirtyFields, errors } = formState;
   const [modal, setModal] = useState(true);
-  
-
-
+  const [open, setOpen] = useState(false);
+  const [secondDopen, setSecondDopen] = useState(false);
+  const [scroll, setScroll] = useState('paper');
   const [dataEmpresas, setDataEmpresas] = useState([]);
   const [dataRole, setDataRole] = useState([]);
+  const [projectData, setProjectData] = useState();
+ 
+  const [data, setData] = useState({
+    email: "",
+    username: "",
+    nombre: "",
+    apellido: "",
+    idEmpresa: "",
+    pais: "",
+    password: "",
+    rol: ""});
+ 
+ 
+  function onSubmit(e) {
+   
+    
+    setData ({
+      email: e.email,
+      username: e.email,
+      nombre: e.firstName,
+      apellido: e.lastName,
+      idEmpresa: e.idEmpresa,
+      pais: e.pais,
+      password: e.password,
+      rol: e.rol,
+    });
+   
+    setOpen(true);
+   
+  }
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleCloseAlert = () => {
+    setOpen(false);
+  };
+  const handleCloseSecond = () => {
+    setSecondDopen(false);
+  };
+  
 
   useEffect(() => {
     (async () => {
@@ -151,6 +225,21 @@ function CreateUserApp(props) {
   } = event;
   setEmailUser(value);
 }
+  
+  useEffect(() => {
+   
+    if (apiResponseProyects.data !=undefined){
+      let res = apiResponseProyects.data.filter(item => personName.includes(item.id)).map(function(el) {
+        return {
+          id:el.id ,name:el.name
+        };          
+      });
+      dataproject_ =res;
+   
+    }
+ 
+  }, [personName])
+  
   const handleChangeProyect = (event) => {
     const {
       target: { value },
@@ -159,6 +248,8 @@ function CreateUserApp(props) {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+    
+
   };
 
  
@@ -186,18 +277,92 @@ function CreateUserApp(props) {
       setApiResponseProyects(value);
     });
   }, [alertt, error]);
+  function ConfirmData() {
  
-  function onSubmit(e) {
-    const data = {
-      email: e.email,
-      username: e.email,
-      nombre: e.firstName,
-      apellido: e.lastName,
-      idEmpresa: e.idEmpresa,
-      pais: e.pais,
-      password: e.password,
-      rol: e.rol,
-    };
+    rows = [
+      createData('Email', data.email),
+      createData('Nombre usuario', data.email),
+      createData('Contraseña', data.password),
+      createData('Rol', data.rol),
+      createData('Nombre', data.nombre),
+      createData('Apellido', data.apellido),
+      createData('País', data.pais),
+      createData('Empresa', dataempresas_.nombreEmpresa),
+      createData('Clientes Asignados',
+      <TableContainer component={Paper} className="max-h-[300px]">
+                <Table  stickyHeader aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Id</TableCell>
+                      <TableCell align="left">Nombre</TableCell>
+                      
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dataproject_.map((row) => (
+                      <TableRow
+                        key={row.id}
+                        sx={{  '&:last-child td, &:last-child th': { border: 0 } }}
+                      >
+                        <TableCell component="th" scope="row" sx={{backgroundColor: 'pantoneazul'}}>
+                          {row.id}
+                        </TableCell>
+                        <TableCell align="left">{row.name}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+         
+        
+      
+      
+       )
+      
+      
+      
+    ]
+ 
+    // rows = rows.filter(x => x!==undefined);
+  
+      
+      return(
+    
+        <TableContainer component={Paper} className="bg-grey-100">
+          <Table  aria-label="simple table">
+            <TableHead >
+              <TableRow>
+                <TableCell>Nombre Campo</TableCell>
+                <TableCell align="left">Atributos</TableCell>
+                
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow
+                  key={row.campo}
+                  sx={{  '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell className="text-pantoneazul text-lg  " component="th" scope="row">
+                    {row.campo}
+                  </TableCell>
+                  <TableCell align="left">{row.value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>)
+     
+    
+  };
+ 
+  function onSubmitAxios(){
+    
+    setSecondDopen(true);
+    setLoading(true);
+
+    handleCloseAlert();
+    setTimeout(() => {
     let timer = 0;
     axios
       .post(jwtServiceConfig.signUp, data)
@@ -213,21 +378,41 @@ function CreateUserApp(props) {
             axios
               .post(jwtServiceConfig.addProyects, dataProyect)
               .then((response) => {
-          
+                
               })
               .catch((error) => {
                 console.log(`Error al agregar el proyecto ${personName[x]}`);
+                
                 return;
               });
           }, timer);
         }
-        setAlertt(true);
+        setLoading(false);
+        setMsgAlert({msgResp: true,msgText:"Usuario agregado correctamente.",msgError:false});
+        setTimeout(() => {
+          handleCloseSecond();
+          reset({
+              
+          }, {
+           
+          });
+          setPersonName([]);
+          setEmailUser("");
+        },2000);
+        
+        // setAlertt(true);
       })
       .catch((error) => {
-      
-        setError(true);
+        setLoading(false);
+        setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar la empresa.",msgError:true});
+        setTimeout(() => {
+          handleCloseSecond();
+        },2500);
+        // setError(true);
       });
+    }, 2000);
   }
+  
   return (
     <Root
     
@@ -236,7 +421,8 @@ function CreateUserApp(props) {
         name="registerForm"
         noValidate
         className="w-full"
-        onSubmit={handleSubmit(onSubmit)}>
+        onSubmit={handleSubmit(onSubmit)}
+        >
 
        
         <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full ">
@@ -250,6 +436,7 @@ function CreateUserApp(props) {
                 <div>
                   <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
                 </div>
+               
                 <div>
                   <span className="text-grey-700">En el apartado de <b>Perfil Nuevo Usuario</b> podrá asignar el <b>Rol</b> y los <b>Clientes</b> al usuario y desde el apartado de <b>Información de Nuevo Usuario</b> podrá completar la información personal del usuario y posteriormente debe guardar y confirmar.</span>
                 </div>
@@ -282,17 +469,7 @@ function CreateUserApp(props) {
              
           </div>
           <div className="ml-[20px] mr-[20px] mb-[20px]">
-                {/* <Autocomplete
-                        
-                        disablePortal
-                        className=" ml-[20px] mr-[20px] mb-[20px]"
-                        id="combo-box-demo"
-                        options={dataRole}
-                        getOptionLabel={(option) =>
-                          option.name
-                        }
-                        renderInput={(params) => <TextField {...params} label="Seleccionar Rol" />}
-                      /> */}
+               
                       <Controller
                       name="rol"
                       control={control}
@@ -317,8 +494,7 @@ function CreateUserApp(props) {
                             }}
                             error={!!errors.rol}
                             variant="outlined"
-                            // input={<OutlinedInput label="Name" />}
-                            // MenuProps={MenuProps}
+                    
                           >
                             {dataRole.map(({ name, id }) => (
                             <MenuItem key={id} id={id} value={name} >
@@ -355,21 +531,26 @@ function CreateUserApp(props) {
                                 Seleccione clientes
                               </InputLabel>
                               <Select
+                                {...field}
                               
                                 labelId="demo-multiple-name-label"
                                 id="demo-multiple-name"
                                 multiple
                                 value={personName}
-                                onChange={handleChangeProyect}
+                              
+                              
                                 label="Seleccione clientes"
-                                // input={<OutlinedInput label="Name" />}
-                                // MenuProps={MenuProps}
+                                onChange={e => {
+                                  field.onChange(e);
+                                  handleChangeProyect(e);
+                                }}
                               >
                                 {apiResponseProyects.data != undefined ? (
                                   apiResponseProyects.data.map((e) => (
                                     <MenuItem
                                       key={e.id}
                                       value={e.id}
+                                      
                                       style={getStyles(
                                         e.commercial_Business,
                                         personName,
@@ -384,6 +565,7 @@ function CreateUserApp(props) {
                                   </MenuItem>
                                 )}
                               </Select>
+                              <FormHelperText className="text-red">{errors?.project?.message}</FormHelperText>
                             </FormControl>
                           )}
                         />
@@ -393,11 +575,33 @@ function CreateUserApp(props) {
 
           <div className=" lgmax:col-span-12  lg:col-span-9 tvxxl:col-span-10 lgmax:mt-[20px]  bg-white">
             <div className="flex flex-row w-full m-[20px]">
+              <div className="flex flex-row w-full">
               <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
               Información de Nuevo Usuario
               </Typography>
              
               <PersonAddAltIcon className="ml-[10px] text-pantoneazul"/>
+              </div>
+             
+               <div className="relative group ">
+              
+               <Button size="small" className=" absolute inset-y-0 right-[20px] text-pantoneazul" 
+                onClick={() => {
+                        reset({
+                          project: []  
+                        }, {
+                        
+                        });
+                        setPersonName([]);
+                        setEmailUser("");
+                      }} ><BackspaceIcon/> </Button>
+                      
+                      {/* <div class="transition-all transform translate-y-8  opacity-0 group-hover:opacity-100 group-hover:translate-y-0 duration-300 absolute  inset-0 z-10  -left-[300px] flex justify-center items-center  text-pantonerojo">Vaciar Campos</div>         */}
+                       
+                      
+                </div>                   
+            
+             
             </div>
             <h1 className="border border-b-pantoneazul w-full"></h1>
             <div className="w-full m-[20px]">
@@ -417,7 +621,7 @@ function CreateUserApp(props) {
                       {...field}
                       className="ml-[20px] mr-[10px] mb-[20px]"
                       label="Nombre"
-                      autoFocus
+                      
                       type="name"
                       error={!!errors.firstName}
                       helperText={errors?.firstName?.message}
@@ -436,7 +640,7 @@ function CreateUserApp(props) {
                       {...field}
                       className="ml-[10px] mr-[20px] mb-[20px]"
                       label="Apellido"
-                      autoFocus
+                      
                       type="apellido"
                       error={!!errors.lastName}
                       helperText={errors?.lastName?.message}
@@ -447,16 +651,6 @@ function CreateUserApp(props) {
                   )}
                 />
               </div>
-              
-               {/* <Controller
-                
-                  name="pais"
-                  control={control}
-                  
-                  render={({ field }) => (
-                    
-                  )}
-                /> */}
                 
                 <Controller
                       name="pais"
@@ -519,19 +713,6 @@ function CreateUserApp(props) {
                 
                 <div className=" flex justify-evenly ml-[20px] mr-[20px]  " >
                 
-                    {/* INTEGRAR api empresas */}
-                  {/* <Autocomplete
-                        
-                        disablePortal
-                        className=" w-full"
-                        id="combo-box-demo"
-                        options={dataEmpresas}
-                        getOptionLabel={(option) =>
-                          option.nombreEmpresa
-                        }
-                        
-                        renderInput={(params) => <TextField {...params} label="Seleccionar Empresa" />}
-                      /> */}
                     <Controller
                       name="idEmpresa"
                       control={control}
@@ -552,6 +733,7 @@ function CreateUserApp(props) {
                          
                             onChange={e => {
                               field.onChange(e);
+                              dataempresas_ = dataEmpresas.find((p) => p.id == e.target.value);
                               
                             }}
                             error={!!errors.idEmpresa}
@@ -640,7 +822,8 @@ function CreateUserApp(props) {
                         label="Usuario"
                         type="user"
                         variant="outlined"
-                        
+                        error={!!errors.user}
+                        helperText={errors?.user?.message}
                         disabled
                         value={emailUser}
                         
@@ -696,11 +879,12 @@ function CreateUserApp(props) {
                         color="secondary"
                         className=" w-[200px] mb-[10px]"
                         aria-label="Register"
-                        // disabled={_.isEmpty(dirtyFields) || !isValid}
+                        //disabled={_.isEmpty(dirtyFields) || !isValid}
                         type="submit"
                         size="large">
                         Crear usuario
                       </Button>
+                      
                       {alertt && (
                         <Stack className="mt-[10px]" sx={{ width: "100%" }} spacing={2}>
                           <Alert severity="success">
@@ -721,87 +905,6 @@ function CreateUserApp(props) {
           
             
           </div>
-          
-
-         
-          {/* ELEMENTOS PARA AGREGAR USUARIOS */}
-          {/* <div  className=" lgmax:col-span-12  lg:col-span-9 tvxxl:col-span-10 lgmax:mt-[20px] lg:ml-[20px] "> 
-          
-            <form
-                name="registerForm"
-                noValidate
-                
-                onSubmit={handleSubmit(onSubmit)}>
-              <Box className="flex flex-col">
-              <div className="flex flex-row items-center">
-              <div className="w-[200px] h-[150px] ">
-                  <img className="" src="assets/images/logo/logoTRGNS.png" />
-              </div>
-              <div className="">
-                <Typography className=" text-4xl font-extrabold tracking-tight leading-tight">
-                  Agregar Usuario
-                </Typography>
-              </div>
-                
-              </div>
-              
-              <Box className="flex flex-row ssmmax:flex-col ssmmax:justify-center  w-full ">
-                <div className="w-1/2 ssmmax:w-2/2  bg-grey-50 ml-[50px] mr-[50px] lg:mr-[25px]">
-                        
-                            
-                           
-                          
-    
-                        
-                           
-                </div>
-                <div className="w-1/2 ssmmax:w-2/2 bg-grey-50 ml-[50px] lg:ml-[25px] mr-[50px]">
-               
-                      
-                      
-                  
-                    
-                    
-                    <Controller
-                      name="rol "
-                      control={control}
-                      render={({ field }) => (
-                        <FormControl
-                          className="mb-24 w-full"
-                          label="Rol"
-                          type="select"
-                          required>
-                          <InputLabel id="demo-simple-select-standard-label">
-                            Seleccione rol
-                          </InputLabel>
-                          <Select
-                            value={rolName}
-                            onChange={handleChangeRol}
-                            input={<OutlinedInput label="Name" />}
-                            // MenuProps={MenuProps}
-                          >
-                            <MenuItem id="1" value="admin">
-                              ADMIN
-                            </MenuItem>
-                            <MenuItem id="2" value="trgns">
-                              TRGNS
-                            </MenuItem>
-                            <MenuItem id="3" value="cliente">
-                              CLIENTE
-                            </MenuItem>
-                          </Select>
-                        </FormControl>
-                      )}
-                    />
-                </div>
-              </Box>
-              
-            
-              </Box>
-              
-              
-            </form>
-          </div> */}
         
           </div>
         </div>
@@ -811,6 +914,68 @@ function CreateUserApp(props) {
                 setActive={() => setModal(true)}
                 />
             )}
+        <Dialog
+          open={secondDopen}
+         
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          scroll={'paper'}
+        >
+         
+          {loading?(<div className='flex justify-center items-center h-[250px] w-[300px]'>
+            <CircularProgress color="secondary"/>
+          </div>):(
+          <div>
+           {msgResp && (<div className='flex justify-center items-center h-[250px] w-[300px]' >
+            {msgError? (<div className='flex justify-center items-center h-[250px] w-[300px]'>
+              <WarningIcon className='w-[68px] h-[68px] text-red'/>
+              <span className='absolute bottom-[70px] text-red'> <b>{msgText}</b></span>
+            </div>):(<div className='flex justify-center items-center h-[250px] w-[300px]'>
+              <CheckCircleIcon className='w-[68px] h-[68px] text-green'/>
+              <span className='absolute bottom-[70px] text-green'> <b>{msgText}</b></span>
+            </div>)}
+            
+           </div>)}
+          
+          </div>)}
+            
+        </Dialog>
+        <Dialog
+          open={open}
+      
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          scroll={'paper'}
+        >
+          
+          <DialogTitle id="scroll-dialog-title"><div className="static ">
+            <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 mt-[5px]">
+            Confirmar datos del nuevo usuario <DescriptionIcon/>
+            </Typography>
+            <IconButton className="absolute top-0 right-0" onClick={handleCloseAlert} variant="contained" color="error">
+                <HighlightOffIcon />
+            </IconButton>
+            
+            </div></DialogTitle>
+          <DialogContent dividers={scroll === 'paper'}>
+            
+            <Box>
+            {<ConfirmData/>}
+            </Box>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAlert}>Cancelar</Button>
+            <Button onClick={onSubmitAxios} autoFocus>
+              Guardar
+            </Button>
+          </DialogActions>
+    
+                      
+              
+            
+         
+          
+        </Dialog>
         </form>
       }
       scroll="content"
@@ -819,4 +984,4 @@ function CreateUserApp(props) {
  
 }
 
-export default CreateUserApp;
+

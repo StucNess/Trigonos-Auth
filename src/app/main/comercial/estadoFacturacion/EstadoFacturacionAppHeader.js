@@ -45,7 +45,7 @@ const EstadoFacturacionAppHeader = (props) => {
 
   function handleCloseProjectMenu() {
     setSelectedProject({
-      id: selectedProject.id,
+      id: selectedProject,
       menuEl: null,
     });
   }
