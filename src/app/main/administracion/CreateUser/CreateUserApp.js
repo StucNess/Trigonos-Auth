@@ -270,7 +270,7 @@ function CreateUserApp(props) {
               <AdminPanelSettingsIcon className="ml-[10px] text-pantoneazul"/>
        
             </div>
-            <AdviceModule className="relative" classnamesegund="absolute -top-[55px] right-[10px] " textwidth={400}msg={"Los roles son creados en el modulo de \"Perfiles\" estos están asociados a ciertas ventanas que podrá ver el usuario, en la parte inferior usted podrá asignar los clientes desplegando la lista y seleccionando uno por uno."} />
+            <AdviceModule className="relative" classnamesegund="absolute -top-[55px] right-[10px] " textwidth={400}msg={"Los roles son creados en el modulo de \"Gestión de Perfiles\" estos están asociados a ciertas ventanas que podrá ver el usuario, en la parte inferior usted podrá asignar los clientes desplegando la lista y seleccionando uno por uno."} />
 
             <h1 className="border border-b-pantoneazul w-full"></h1>
             
