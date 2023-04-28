@@ -15,7 +15,7 @@ import * as yup from "yup";
 import _ from "@lodash";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-
+import CachedIcon from '@mui/icons-material/Cached';
 import DescriptionIcon from '@mui/icons-material/Description';
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -32,6 +32,7 @@ import jwtServiceConfig from "../../../auth/services/jwtService/jwtServiceConfig
 import { CallApiParticipants } from "../store/CallApiParticipants";
 import AdviceModule from "../../comercial/AdviceModule";
 import ErrorOutlinedIcon from '@mui/icons-material/ErrorOutlined';
+import Tooltip from '@mui/material/Tooltip';
 
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -103,6 +104,19 @@ function getStyles(name, personName, theme) {
         : theme.typography.fontWeightBold,
   };
 }
+// PARA EL ESTILO DE LOS TOOLTIP HOVER
+const componentsProps={
+  tooltip: {
+    sx: {
+      userSelect:'none',
+      bgcolor: 'secondary.main',
+      '& .MuiTooltip-arrow': {
+      color: 'secondary.main',
+      
+      },
+    },
+  },
+};
 //
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -583,8 +597,12 @@ export default function CreateUserApp(props) {
               <PersonAddAltIcon className="ml-[10px] text-pantoneazul"/>
               </div>
              
-               <div className="relative group ">
-              
+               <div className="relative ">
+               
+               
+               <Tooltip  title="Vaciar Casillas" arrow placement="top-start"
+               componentsProps={componentsProps}>
+               
                <Button size="small" className=" absolute inset-y-0 right-[20px] text-pantoneazul" 
                 onClick={() => {
                         reset({
@@ -594,9 +612,9 @@ export default function CreateUserApp(props) {
                         });
                         setPersonName([]);
                         setEmailUser("");
-                      }} ><BackspaceIcon/> </Button>
+                      }} ><CachedIcon /> </Button>
+                 </Tooltip>     
                       
-                      {/* <div class="transition-all transform translate-y-8  opacity-0 group-hover:opacity-100 group-hover:translate-y-0 duration-300 absolute  inset-0 z-10  -left-[300px] flex justify-center items-center  text-pantonerojo">Vaciar Campos</div>         */}
                        
                       
                 </div>                   
