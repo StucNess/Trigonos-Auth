@@ -77,7 +77,7 @@ const schema = yup.object().shape({
   firstName: yup.string().required("Debe ingresar el nombre del usuario."),
   lastName: yup.string().required("Debe ingresar el apellido del usuario."), 
   rol: yup.string().required("Debe seleccionar un rol."),  
-  user:yup.string().required("Debe ingresar un email para este campo"),  
+  // user:yup.string().required("Debe ingresar un email para este campo"),  
   project:  yup.array()
   .min(1, "Debe seleccionar al menos un cliente")
   .required("Debe seleccionar al menos un cliente").nullable(true),
@@ -327,28 +327,15 @@ export default function CreateUserApp(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
-         
-        
-      
-      
        )
-      
-      
-      
     ]
- 
-    // rows = rows.filter(x => x!==undefined);
-  
-      
       return(
-    
         <TableContainer component={Paper} className="bg-grey-100">
           <Table  aria-label="simple table">
             <TableHead >
               <TableRow>
                 <TableCell>Nombre Campo</TableCell>
                 <TableCell align="left">Atributos</TableCell>
-                
               </TableRow>
             </TableHead>
             <TableBody>
@@ -366,15 +353,10 @@ export default function CreateUserApp(props) {
             </TableBody>
           </Table>
         </TableContainer>)
-     
-    
   };
- 
   function onSubmitAxios(){
-    
     setSecondDopen(true);
     setLoading(true);
-
     handleCloseAlert();
     setTimeout(() => {
     let timer = 0;
@@ -413,16 +395,13 @@ export default function CreateUserApp(props) {
           setPersonName([]);
           setEmailUser("");
         },2000);
-        
-        // setAlertt(true);
       })
       .catch((error) => {
         setLoading(false);
-        setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar la empresa.",msgError:true});
+        setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el usuario.",msgError:true});
         setTimeout(() => {
           handleCloseSecond();
         },2500);
-        // setError(true);
       });
     }, 2000);
   }
@@ -747,8 +726,7 @@ export default function CreateUserApp(props) {
                           <Select
                             {...field}
                             label = "Seleccione Empresa"
-                            // value={idEmpresa}
-                         
+                   
                             onChange={e => {
                               field.onChange(e);
                               dataempresas_ = dataEmpresas.find((p) => p.id == e.target.value);
@@ -756,8 +734,7 @@ export default function CreateUserApp(props) {
                             }}
                             error={!!errors.idEmpresa}
                             variant="outlined"
-                            // input={<OutlinedInput label="Name" />}
-                            // MenuProps={MenuProps}
+                          
                           >
                             {dataEmpresas.map(({ nombreEmpresa, id }) => (
                             <MenuItem key={id} id={id} value={id} >
@@ -769,36 +746,7 @@ export default function CreateUserApp(props) {
                         </FormControl>
                       )}
                     />
-                   {/* <Controller
-                      control={control}
-                      name="idEmpresa"
-                      rules={{ required: true }}
-                      render={({ field: { onChange, value } }) => (
-                        <Autocomplete
-                          onChange={(event, item) => {
-                            onChange(item);
-                          }}
-                          value={value}
-                          options={dataEmpresas}
-                          getOptionLabel={(item) => (item.nombreEmpresa ? item.nombreEmpresa : "")}
-                          getOptionSelected={(option, value) =>
-                            value === undefined || value === "" || option.id === value.id
-                          }
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              label="items"
-                              margin="normal"
-                              variant="outlined"
-                              error={!!errors.idEmpresa}
-                              helperText={errors?.idEmpresa?.message}
-                              required
-                            />
-                          )}
-                        />
-                      )}
-                    />
-                     */}
+                 
                   <AdviceModule className="relative w-[34px] ml-[20px]" classnamesegund = ""textwidth={350}  msg={"Este campo permite asignar la empresa asociada al usuario, si necesita crear una nueva presione el botón + en la parte inferior del campo."} />
                 
                 
@@ -807,7 +755,7 @@ export default function CreateUserApp(props) {
                 <IconButton
                       variant="contained"
                       color="primary"
-                      // className="w-[20px]"
+                    
                       title="Crear Empresa"
                     
                       size="small"
@@ -897,7 +845,7 @@ export default function CreateUserApp(props) {
                         color="secondary"
                         className=" w-[200px] mb-[10px]"
                         aria-label="Register"
-                        //disabled={_.isEmpty(dirtyFields) || !isValid}
+                   
                         type="submit"
                         size="large">
                         Crear usuario
@@ -987,11 +935,7 @@ export default function CreateUserApp(props) {
               Guardar
             </Button>
           </DialogActions>
-    
-                      
-              
-            
-         
+
           
         </Dialog>
         </form>
