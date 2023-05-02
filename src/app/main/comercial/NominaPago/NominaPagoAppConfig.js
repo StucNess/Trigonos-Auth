@@ -8,6 +8,7 @@ const  NominaPagoAppConfig = {
       config: {},
     },
   },
+  
   routes: [
     {
       path: 'comercial/nominaPago',

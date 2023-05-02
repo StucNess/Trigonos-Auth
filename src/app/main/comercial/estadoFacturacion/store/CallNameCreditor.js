@@ -80,7 +80,7 @@ export const CallNameCreditor = async (id = 141, data, filters) => {
 
   url =
     `
-    http://localhost:5205/sFiltrosNameCreditor?id=${id}&FechaEmision=${params.fechaEmision}&FechaRecepcion=${params.fechaRecepcion}&` +
+     https://trigonosapi.azurewebsites.net/sFiltrosNameCreditor?id=${id}&FechaEmision=${params.fechaEmision}&FechaRecepcion=${params.fechaRecepcion}&` +
     `FechaPago=${params.fechaPago}&FechaAceptacion=${params.fechaAceptacion}&Glosa=${params.glosa}&Concepto=${params.concepto}&EstadoAceptacion=${params.estadoAceptacion}&` +
     `EstadoRecepcion=${params.estadoRecepcion}&Acreedor=${params.acreedorId}&Deudor=${params.deudorId}&MontoNeto=${params.montoNeto}&MontoBruto=${params.montoBruto}&EstadoEmision=${params.estadoEmision}&` +
     `EstadoPago=${params.estadoPago}&RutAcreedor=${params.rutAcreedor}&RutDeudor=${params.rutDeudor}&Folio=${params.folio}&NombreAcreedor=${params.nombreAcreedor}&NombreDeudor=${params.nombreDeudor}`;

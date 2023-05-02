@@ -12,7 +12,7 @@
 // /* eslint-disable camelcase */
 
 // mock
-//   .onPost("http://localhost:5205/api/Usuarios/Login")
+//   .onPost(" https://trigonosapi.azurewebsites.net/api/Usuarios/Login")
 //   .reply(async (config) => {
 //     const data = JSON.parse(config.data);
 //     console.log(config);

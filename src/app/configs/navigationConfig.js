@@ -114,6 +114,7 @@ const navigationConfig = [
             type: "item",
             icon: "heroicons-outline:clipboard-list",
             url: "/comercial/nominaPago",
+            auth: authRoles.admin, //Es una prueba
           },
           {
             id: "c1.facturacion.FacturacionMasiva",

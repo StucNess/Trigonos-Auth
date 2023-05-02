@@ -118,6 +118,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   function createData(estado, nombre, apellido, email, pais,usuario) {
     return { estado, nombre, apellido, email, pais,usuario };
   }
+  let rows = [];
+  let rowspermanent = [];
   
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -316,14 +318,48 @@ function EditUserApp(props){
     const [table, setTable] = useState(true);
 
 
-    let rows = [];
+   
     const [data, setData] = useState([]);
+    function CargaDataUser(){
+
+
+      (async () => {
+        const data = await CallApiUsers();;
+        setData(data);
+        console.log(data);
+        rows = data.map(function(el) {
+          el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
+          return {
+            estado:el.bhabilitado ,nombre:el.name,descripcion:el.descripcion,id:el.id
+          };          
+        });
+        
+      })();
+
+      fetch(" https://trigonosapi.azurewebsites.net/api/Rol")
+      .then((response) => response.json())
+      .then((data) => {
+        rows = data.map(function(el) {
+          el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
+          return {
+            estado:el.bhabilitado ,nombre:el.name,descripcion:el.descripcion,id:el.id
+          };          
+        });
+        rowspermanent = rows;
+        rowsOnMount();
+      });
+    };
     useEffect(() => {
       (async () => {
         const data = await CallApiUsers();;
         setData(data);
         console.log(data);
-        
+        rows = data.map(function(el) {
+          el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
+          return {
+            estado:el.bhabilitado ,nombre:el.name,descripcion:el.descripcion,id:el.id
+          };          
+        });
         
       })();
       
