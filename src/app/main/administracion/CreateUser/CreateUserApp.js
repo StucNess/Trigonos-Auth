@@ -140,6 +140,7 @@ let rows = [
 ];
 let dataproject_ = {};
 let dataempresas_ = {};
+
 // eslint-disable-next-line import/prefer-default-export
 // export const CreateUserApp = () => {
 export default function CreateUserApp(props) {
@@ -239,6 +240,28 @@ export default function CreateUserApp(props) {
   } = event;
   setEmailUser(value);
 }
+useEffect(() => {
+  if (alertt === true) {
+    setTimeout(() => {
+      setAlertt(false);
+    }, 5000);
+  }
+  if (error === true) {
+    setTimeout(() => {
+      setError(false);
+    }, 5000);
+  }
+  const fetchData = async () => {
+    let prueba;
+    // eslint-disable-next-line prefer-const
+    prueba = await CallApiParticipants();
+    return prueba;
+  };
+  fetchData().then((value) => {
+    setApiResponseProyects(value);
+
+  });
+}, [alertt, error]);
   
   useEffect(() => {
    
@@ -270,27 +293,7 @@ export default function CreateUserApp(props) {
   function timeout(delay = number) {
     return new Promise((res) => setTimeout(res, delay));
   }
-  useEffect(() => {
-    if (alertt === true) {
-      setTimeout(() => {
-        setAlertt(false);
-      }, 5000);
-    }
-    if (error === true) {
-      setTimeout(() => {
-        setError(false);
-      }, 5000);
-    }
-    const fetchData = async () => {
-      let prueba;
-      // eslint-disable-next-line prefer-const
-      prueba = await CallApiParticipants();
-      return prueba;
-    };
-    fetchData().then((value) => {
-      setApiResponseProyects(value);
-    });
-  }, [alertt, error]);
+  
   function ConfirmData() {
  
     rows = [
@@ -536,10 +539,11 @@ export default function CreateUserApp(props) {
                                 onChange={e => {
                                   field.onChange(e);
                                   handleChangeProyect(e);
+                                  
                                 }}
                               >
-                                {apiResponseProyects.data != undefined ? (
-                                  apiResponseProyects.data.map((e) => (
+                                {apiResponseProyects != undefined ? (
+                                  apiResponseProyects.map((e) => (
                                     <MenuItem
                                       key={e.id}
                                       value={e.id}

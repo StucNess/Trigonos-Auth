@@ -48,6 +48,8 @@ import PropTypes from 'prop-types';
 import { Link as RouterLink, MemoryRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
 import { CallApiUsers } from "./store/CallApiUsers";
+import { CallApiEmpresas } from "../CreateUser/store/CallApiEmpresas";
+import { CallApiParticipants } from "../store/CallApiParticipants";
 
 
 const LinkBehavior = forwardRef((props, ref) => (
@@ -107,20 +109,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     },
   }));
 
-  const columns = [
-    { id: "id", label: "ID", minWidth: 20 },
-    { id: "username", label: "Usuario", minWidth: 20 },
-    { id: "nombre", label: "Nombre", minWidth: 20 },
-    { id: "apellido", label: "Apellido", minWidth: 20 },
-    { id: "email", label: "Email", minWidth: 20 },
-    
-  ];
-  function createData(estado, nombre, apellido, email, pais,usuario) {
-    return { estado, nombre, apellido, email, pais,usuario };
-  }
   let rows = [];
   let rowspermanent = [];
-  
+
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -160,7 +151,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       disablePadding: true,
       label: 'Estado',
     },
-    
+    {
+      id: 'rol',
+      numeric: false,
+      disablePadding: false,
+      label: 'Rol',
+    },
+    {
+      id: 'email',
+      numeric: false,
+      disablePadding: false,
+      label: 'Email',
+    }, 
     {
       id: 'nombre',
       numeric: false,
@@ -174,16 +176,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       label: 'Apellido',
     },
     {
-      id: 'email',
-      numeric: false,
+      id: 'codempresa',
+      numeric: true,
       disablePadding: false,
-      label: 'Email',
+      label: 'Código Empresa',
     },
     {
-      id: 'pais',
-      numeric: false,
+      id: 'empresa',
+      numeric: true,
       disablePadding: false,
-      label: 'País',
+      label: 'Empresa',
     },
     {
       id: 'usuario',
@@ -191,6 +193,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       disablePadding: false,
       label: 'Usuario',
       },
+
+    {
+      id: 'pais',
+      numeric: false,
+      disablePadding: false,
+      label: 'País',
+    },
+    
     {
       id: 'Acciones',
       numeric: false,
@@ -315,81 +325,160 @@ function EditUserApp(props){
     const [visibleRows, setVisibleRows] = useState(null);
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [paddingHeight, setPaddingHeight] = useState(0);
-    const [table, setTable] = useState(true);
+    const [table, setTable] = useState(false);
+    const [dataUser, setDataUser] = useState({});
+    const [dataParticipant, setDataParticipant] = useState([]);
+    const [apiResponseProyects, setApiResponseProyects] = useState([]);
 
+    const [rowss, setRowss] = useState([]
+      );
 
    
-    const [data, setData] = useState([]);
-    function CargaDataUser(){
 
 
-      (async () => {
-        const data = await CallApiUsers();;
-        setData(data);
-        console.log(data);
-        rows = data.map(function(el) {
-          el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
-          return {
-            estado:el.bhabilitado ,nombre:el.name,descripcion:el.descripcion,id:el.id
-          };          
-        });
-        
-      })();
-
-      fetch(" https://trigonosapi.azurewebsites.net/api/Rol")
+    function search(searchString) {
+      if (typeof searchString !== 'string' || searchString.length === 0) {
+      return rowspermanent;
+      }
+      let searchLower = searchString.toString().toLowerCase();
+      let filtered = rowspermanent.filter(key => {
+      if (key.estado.toLowerCase().includes(searchLower)) {
+      return true;
+      }
+      if (key.rol.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.email.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.nombre.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.apellido.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.codempresa.toString().toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.empresa.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.usuario.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      if (key.pais.toLowerCase().includes(searchLower)) {
+        return true;
+        }
+      })
+      return filtered;
+     }
+    
+     function CargaDataParticipant(row){
+     
+      fetch(` https://trigonosapi.azurewebsites.net/api/Participantes?id=${row.id}`)
       .then((response) => response.json())
       .then((data) => {
-        rows = data.map(function(el) {
-          el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
-          return {
-            estado:el.bhabilitado ,nombre:el.name,descripcion:el.descripcion,id:el.id
-          };          
-        });
-        rowspermanent = rows;
-        rowsOnMount();
-      });
-    };
-    useEffect(() => {
-      (async () => {
-        const data = await CallApiUsers();;
-        setData(data);
-        console.log(data);
-        rows = data.map(function(el) {
-          el.bhabilitado = el.bhabilitado ===1 ? 'Activo':'Desactivado';
-          return {
-            estado:el.bhabilitado ,nombre:el.name,descripcion:el.descripcion,id:el.id
-          };          
-        });
-        
-      })();
-      
-    }, []);
-   
-    data.map(
-      ({
-        id, email, username, nombre, apellido,
-      }) =>
-        rows.push(
-          createData(
-            'Activo', nombre, apellido, email ,'Chile',username,
-          )
-        )
+        //  setDataParticipant(data.data);
        
-    );
-    console.log(rows);
-    useEffect(() => {
+        console.log('------------------------------------------------');
+
+        
+        let ids = data.data.map( function(el) {
+          return el.id     
+        });
+        let newArray = apiResponseProyects.filter(item => !ids.includes(item.id));
+        setDataUser({userData:row,participantData:data.data,participantFullData:newArray});
+        setTable(true);
+        
+        console.log(newArray);
+          
+          
+        
+
+       
+        
+         
+     
+      });     
+    
+    };
+    function CargaDataRol(){
+        fetch(" http://localhost:5205/api/Usuarios/pagination")
+        .then((response) => response.json())
+        .then((data) => {
+          let data_ =[];
+       
+          (async () => {
+            data_ = await CallApiEmpresas();
+            
+            rows = data.data.map( function(el) {
+              el.lockoutEnd = el.lockoutEnd ===null ? 'Activo':'Desactivado';
+              
+              
+              return {
+                estado:el.lockoutEnd ,rol:el.role,email:el.email,nombre:el.nombre,apellido:el.apellido,codempresa:el.idEmpresa,empresa: data_.find((p) => p.id == el.idEmpresa).nombreEmpresa,usuario:el.username,pais:el.pais ,id:el.id
+              };  
+                     
+            });
+            
+            console.log(rows)
+           
+            rowspermanent = rows;
+          
+            
+            rowsOnMount();
+          })();
+         
+        });
+      };
+
+    function rowsOnMount(){
       let rowsOnMount = stableSort(
         rows,
         getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY),
       );
-  
+      
       rowsOnMount = rowsOnMount.slice(
         0 * DEFAULT_ROWS_PER_PAGE,
         0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE,
       );
-  
       setVisibleRows(rowsOnMount);
-    }, [data]);
+    }
+
+   
+    useEffect(() => {
+      CargaDataRol();
+      const fetchData = async () => {
+        let prueba;
+        // eslint-disable-next-line prefer-const
+        prueba = await CallApiParticipants();
+        return prueba;
+      };
+      fetchData().then((value) => {
+        
+        setApiResponseProyects(value.map( function(el) {
+          return {
+            id:el.id ,name:el.name
+          };  
+                 
+        }));
+      });
+    }, []);
+    useEffect(() => {
+      CargaDataRol();
+    }, [table]);
+    useEffect(() => {
+      rows = rowss;
+      rowsOnMount();
+    }, [rowss]);
+ 
+    const handleSetRow = (event) => {
+      const {
+        target: { value },
+      } = event;
+      setRowss(search(value.trim()));
+    }
+
   
     const handleRequestSort = useCallback(
       (event, newOrderBy) => {
@@ -556,8 +645,11 @@ function EditUserApp(props){
             <h1 className="border border-b-pantoneazul w-full"></h1>
             <div className="flex flex-row m-[20px]">
             
-            <TextField id="outlined-basic" label="Filtrar" variant="filled" />
-            
+            <TextField id="outlined-basic" label="Filtrar" variant="filled" 
+                      onChange={e => {
+                      
+                        handleSetRow(e);
+                      }} />
 
             </div>
             
@@ -600,21 +692,29 @@ function EditUserApp(props){
                                     >
                                     {row.estado}
                                     </StyledTableCell>
+                                    <StyledTableCell align="left">{row.rol}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.email}</StyledTableCell>
                                     <StyledTableCell align="left">{row.nombre}</StyledTableCell>
                                     <StyledTableCell align="left">{row.apellido}</StyledTableCell>
-                                    <StyledTableCell align="left">{row.email}</StyledTableCell>
-                                    <StyledTableCell align="left">{row.pais}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.codempresa}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.empresa}</StyledTableCell>
                                     <StyledTableCell align="left">{row.usuario}</StyledTableCell>
+                                    <StyledTableCell align="left">{row.pais}</StyledTableCell>
+                                  
                                     <StyledTableCell align="left">
                                     <Button
                                         variant="contained"
                                         color="secondary"
                                         className=" h-[28px]  w-[100px] mr-[20px]"
-                                        onClick={
-                                          table
-                                            ? () => setTable(false)
-                                            : () => setTable(true)
-                                        }
+                                        onClick=
+                                        {() => {
+                                         
+                                        
+                                        
+                                        CargaDataParticipant(row);
+                                        }}
+
+                                        
                                         type="submit"
                                         size="small">
                                         <SettingsIcon/>Editar
@@ -647,15 +747,15 @@ function EditUserApp(props){
                     </Table>
                     </TableContainer>
                     <TablePagination
-                    labelRowsPerPage="Filas por página"
-                    variant="h5"
-                    rowsPerPageOptions={[5, 10, 25,{ value: -1, label: 'All' }]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
+                      labelRowsPerPage="Filas por página"
+                      variant="h5"
+                      rowsPerPageOptions={[5, 10, 25,{ value: -1, label: 'All' }]}
+                      component="div"
+                      count={rows.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
                     />       
            </Box>
                 <FormControlLabel
@@ -665,10 +765,11 @@ function EditUserApp(props){
                 </Box> 
             </div>
             </div>
-            {!table && (
+            {table && (
                 <ModalEditUser
-               
-                setTable={() => setTable(true)}
+                apiResponseProyects ={apiResponseProyects}
+                dataUser ={dataUser}
+                setTable={() => setTable(false)}
                 />
             )}
             </div>

@@ -10,7 +10,7 @@ export const CallApiParticipants = async (
   let prueba;
 
   response = await axios.get(url);
-  prueba = await response.data;
+  prueba = await response.data.data;
 
   return prueba;
 };

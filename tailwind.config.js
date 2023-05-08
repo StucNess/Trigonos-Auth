@@ -10,6 +10,7 @@ module.exports = {
     screens: {
       sm: '600px',
       ssm: '768px',
+      sd: '849px',
       md: '960px',
       lf: '1100px',
       lg: '1280px',
@@ -40,6 +41,7 @@ module.exports = {
       lgmax:{'max':'1281px'},
       smmax: {'max': '601px'},//máximo
       ssmmax: {'max':'769px'},
+      sdmmax: {'max':'850px'},
       mdmax: {'max': '960px'},//máximo
       //Personal EditUserPaper
       tvxxllg: {'min': '1280px', 'max': '1900px'},

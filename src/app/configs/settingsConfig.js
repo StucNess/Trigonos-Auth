@@ -9,7 +9,7 @@ const settingsConfig = {
   customScrollbars: true,
   direction: i18n.dir(i18n.options.lng) || "ltr", // rtl,
   theme: {
-    main: themesConfig.default,
+    main: themesConfig.default, 
     navbar: themesConfig.defaultDark,
     toolbar: themesConfig.default,
     footer: themesConfig.defaultDark,

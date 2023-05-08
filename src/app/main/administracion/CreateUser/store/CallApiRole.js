@@ -5,6 +5,7 @@ export const CallApiRole = async () => {
   let response = await axios.get(url);
   
   let data = await response.data;
-  
+ 
+  console.log(data);
   return data;
 };

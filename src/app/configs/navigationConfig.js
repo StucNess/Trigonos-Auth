@@ -10,7 +10,7 @@ i18next.addResourceBundle("ar", "navigation", ar);
 
 const navigationConfig = [
   {
-    id: "administracion",
+    id: "administracion", 
     title: "Administración",
     subtitle: "Trigonos Energy",
     type: "group",
