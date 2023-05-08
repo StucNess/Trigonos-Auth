@@ -194,8 +194,9 @@ export default function ModalAddProfile({
                 </div>
                         <div className="ml-[10px] mr-[10px] flex flex-col">
                         <h4>Selección de paginas</h4>
-                        <Switch {...label} />
+                     
                         <FormGroup className="ml-[10px]">
+                            <FormControlLabel control={<Switch defaultChecked />} label="Todas" />
                             <FormControlLabel control={<Checkbox  />} label="Gestión Participantes" />
                             <FormControlLabel control={<Checkbox  />} label="Agregar Usuarios" />
                             <FormControlLabel control={<Checkbox  />} label="Estado de facturación" />

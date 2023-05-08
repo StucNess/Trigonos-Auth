@@ -259,18 +259,20 @@ useEffect(() => {
   };
   fetchData().then((value) => {
     setApiResponseProyects(value);
+    console.log(value)
 
   });
 }, [alertt, error]);
   
   useEffect(() => {
    
-    if (apiResponseProyects.data !=undefined){
-      let res = apiResponseProyects.data.filter(item => personName.includes(item.id)).map(function(el) {
+    if (apiResponseProyects !=undefined){
+      let res = apiResponseProyects.filter(item => personName.includes(item.id)).map(function(el) {
         return {
           id:el.id ,name:el.name
         };          
       });
+      console.log(res);
       dataproject_ =res;
    
     }
