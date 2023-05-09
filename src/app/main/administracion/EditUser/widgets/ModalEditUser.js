@@ -213,7 +213,7 @@ export default function ModalEditUser({
             "rol": formState.rol
           }  
       axios
-        .post(`http://localhost:5205/api/Usuarios/actualizar/${formState.id}`,dataUser)
+        .post(`https://trigonosapi.azurewebsites.net/api/Usuarios/actualizar/${formState.id}`,dataUser)
         .then((response) => {
           setLoading(false);
           setMsgAlert({msgResp: true,msgText:"Usuario modificado correctamente.",msgError:false});

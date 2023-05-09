@@ -14,13 +14,14 @@ function NavbarLayout2(props) {
   return (
     <Root className={clsx('w-full h-64 min-h-64 max-h-64 shadow-md', props.className)}>
       <div className="flex flex-auto justify-between items-center w-full h-full container p-0 lg:px-24 z-20">
+      <FuseScrollbars className="flex h-full items-center">
+          <Navigation className="w-full" layout="horizontal" />
+        </FuseScrollbars>
         <div className="flex shrink-0 items-center px-8">
           <Logo />
         </div>
 
-        <FuseScrollbars className="flex h-full items-center">
-          <Navigation className="w-full" layout="horizontal" />
-        </FuseScrollbars>
+        
       </div>
     </Root>
   );

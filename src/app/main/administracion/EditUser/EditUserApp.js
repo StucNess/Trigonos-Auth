@@ -403,7 +403,7 @@ function EditUserApp(props){
     
     };
     function CargaDataRol(){
-        fetch(" http://localhost:5205/api/Usuarios/pagination")
+        fetch(" https://trigonosapi.azurewebsites.net/api/Usuarios/pagination")
         .then((response) => response.json())
         .then((data) => {
           let data_ =[];
