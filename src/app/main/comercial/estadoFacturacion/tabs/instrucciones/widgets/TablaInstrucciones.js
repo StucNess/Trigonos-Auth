@@ -296,8 +296,17 @@ const TablaInstrucciones = (props) => {
     render1,
     cargando,
   ]);
+  // useEffect(() => {
+  //   props.tokenCharge(cargando);
+  // }, [cargando]);
   props.tokenCharge(cargando);
-
+  // useEffect(() => {
+  //   if (error === "ERR_BAD_RESPONSE") {
+  //     setAlert(true);
+  //     setCargando(false);
+  //     tableData = [];
+  //   }
+  // }, [error]);
   const handleChangePage = (event, newPage) => {
     if (pageIndex === newPage) {
       condicion = 1;

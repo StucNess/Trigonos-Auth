@@ -108,7 +108,9 @@ export default function StickyHeadTable() {
   };
   const getModal = async (hola) => {
     await axios
-      .get(` https://trigonosapi.azurewebsites.net/api/Participantes/${hola.id}`)
+      .get(
+        ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${hola.id}`
+      )
       .then((response) => {
         const prueba = response.data;
         diccionario.id = prueba.id;
@@ -162,7 +164,7 @@ export default function StickyHeadTable() {
     pageIndex = 1;
   };
   return (
-    <Paper  sx={{ width: "100%", overflow: "hidden" , p: 2, m:2}}>
+    <Paper sx={{ width: "100%", overflow: "hidden", p: 2, m: 2 }}>
       <FormGroup>
         <FormControlLabel
           onChange={prueba}
@@ -170,7 +172,7 @@ export default function StickyHeadTable() {
           label="Clientes"
         />
       </FormGroup>
-      <TableContainer  sx={{ maxHeight: 440 , width: "auto"}}>
+      <TableContainer sx={{ maxHeight: 440, width: "auto" }}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -178,7 +180,8 @@ export default function StickyHeadTable() {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}>
+                  style={{ minWidth: column.minWidth }}
+                >
                   {column.label}
                 </TableCell>
               ))}
@@ -201,7 +204,8 @@ export default function StickyHeadTable() {
                               ? () => getModal(valuee)
                               : () => setTable(true)
                           }
-                          align={column.align}>
+                          align={column.align}
+                        >
                           {column.format && typeof value === "number"
                             ? column.format(value)
                             : value}
