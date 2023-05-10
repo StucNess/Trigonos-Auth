@@ -36,7 +36,7 @@ const NominaPagoApp = () => {
   // useEffect(() => {
   // }, []);
   const getClientData = (data, glosa = "") => {
-    console.log(disc);
+    // console.log(disc);
     setClienteData(data);
     callApiPayroll(data.id, glosa);
     ldata = data;
@@ -50,7 +50,9 @@ const NominaPagoApp = () => {
   const callApiPayroll = (id, glosa = "") => {
     if (discPrueba == false) {
       axios
-        .get(` https://trigonosapi.azurewebsites.net/api/Nominas?id=${id}&Glosa=${glosa}`)
+        .get(
+          ` https://trigonosapi.azurewebsites.net/api/Nominas?id=${id}&Glosa=${glosa}`
+        )
         .then((response) => {
           setPayRollData(response.data);
         });

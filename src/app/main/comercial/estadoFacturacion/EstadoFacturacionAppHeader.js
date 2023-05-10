@@ -31,7 +31,7 @@ const EstadoFacturacionAppHeader = (props) => {
     props.clearStates();
     props.clearFilters();
     setSelectedProject({
-      id: id,
+      id: selectedProject.id,
       menuEl: null,
     });
   }

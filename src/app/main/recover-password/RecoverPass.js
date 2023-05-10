@@ -91,7 +91,7 @@ function RecoverPass() {
           })
           .catch(function (error) {
             error = 1;
-            console.log("EMAIL NO EXISTE"); // ENVIE LA DATA MAL
+            // console.log("EMAIL NO EXISTE"); // ENVIE LA DATA MAL
             setLoading(false);
             setMsgAlert(true);
           });
@@ -100,7 +100,7 @@ function RecoverPass() {
         if (error == 1) {
           return;
         }
-        console.log("EMAIL NO EXISTE");
+        // console.log("EMAIL NO EXISTE");
         setTimeout(() => {
           setLoading(false);
           setMsgAlert(true);

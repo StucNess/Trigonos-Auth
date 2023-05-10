@@ -296,17 +296,8 @@ const TablaInstrucciones = (props) => {
     render1,
     cargando,
   ]);
-  // useEffect(() => {
-  //   props.tokenCharge(cargando);
-  // }, [cargando]);
   props.tokenCharge(cargando);
-  // useEffect(() => {
-  //   if (error === "ERR_BAD_RESPONSE") {
-  //     setAlert(true);
-  //     setCargando(false);
-  //     tableData = [];
-  //   }
-  // }, [error]);
+
   const handleChangePage = (event, newPage) => {
     if (pageIndex === newPage) {
       condicion = 1;
@@ -481,7 +472,6 @@ const TablaInstrucciones = (props) => {
       <Paper className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full  w-full">
         <div className="flex flex-col sm:flex-row items-start justify-between">
           {alert && <AlertDialogSlide />}
-          
         </div>
         <div className="flex flex-col flex-auto mt-9">
           <TableContainer component={Paper}>

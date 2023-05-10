@@ -2,7 +2,8 @@ import React from "react";
 import axios from "axios";
 /*import dayjs from "dayjs";*/
 let prueba = [];
-export const CallConceptoFilter = async (id = 141, data, filters) => {
+const idProyecto = window.localStorage.getItem("ProyectUser");
+export const CallConceptoFilter = async (id = idProyecto, data, filters) => {
   let url = "";
   // let acreedorid = "";
   // let deudorid = "";

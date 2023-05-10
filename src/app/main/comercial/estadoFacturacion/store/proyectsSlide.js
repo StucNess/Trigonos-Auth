@@ -8,17 +8,16 @@ import axios from "axios";
 export const getProjects = createAsyncThunk(
   "estadoFacturacionApp/projects/getProjects",
   async () => {
-    const idUser = localStorage.getItem("idUser");
+    let ProyectUser = localStorage.getItem("ProyectUser");
 
     const response = await axios.get(
-      ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${idUser}`
+      `https://trigonosapi.azurewebsites.net/api/Participantes`
     );
+    console.log(response.data.data);
     return response.data.data;
   }
 );
-
 const projectsAdapter = createEntityAdapter({});
-
 export const {
   selectAll: selectProjects,
   selectEntities: selectProjectsEntities,
@@ -26,7 +25,6 @@ export const {
 } = projectsAdapter.getSelectors(
   (state) => state.estadoFacturacionApp.projects
 );
-
 const projectsSlice = createSlice({
   name: "estadoFacturacionApp/projects",
   initialState: projectsAdapter.getInitialState(),
@@ -35,5 +33,4 @@ const projectsSlice = createSlice({
     [getProjects.fulfilled]: projectsAdapter.setAll,
   },
 });
-
 export default projectsSlice.reducer;
