@@ -3,7 +3,7 @@ import BrowserRouter from "@fuse/core/BrowserRouter";
 import FuseLayout from "@fuse/core/FuseLayout";
 import FuseTheme from "@fuse/core/FuseTheme";
 import { SnackbarProvider } from "notistack";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import rtlPlugin from "stylis-plugin-rtl";
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
@@ -15,6 +15,8 @@ import FuseAuthorization from "@fuse/core/FuseAuthorization";
 import settingsConfig from "app/configs/settingsConfig";
 import withAppProviders from "./withAppProviders";
 import { AuthProvider } from "./auth/AuthContext";
+import { getRole } from "./store/Role";
+import { useEffect } from "react";
 
 // import axios from 'axios';
 /**
@@ -38,10 +40,15 @@ const emotionCacheOptions = {
 };
 
 const App = () => {
+  const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
-
+  const {isloading,role} = useSelector(state=> state.fuse.roleSlice)
+  console.log(role);
+  useEffect(() => {
+    dispatch( getRole() );
+  }, [])
   return (
     <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
       <FuseTheme theme={mainTheme} direction={langDirection}>

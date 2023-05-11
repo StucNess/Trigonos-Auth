@@ -4,8 +4,9 @@ import message from './messageSlice';
 import navbar from './navbarSlice';
 import navigation from './navigationSlice';
 import settings from './settingsSlice';
-
+import roleSlice from '../Role/roleSlice';
 const fuseReducers = combineReducers({
+  roleSlice,
   navigation,
   settings,
   navbar,
