@@ -13,6 +13,7 @@ import AnalisisConfig from "../main/analisis/AnalisisConfig";
 import AdministracionConfig from "../main/administracion/AdministracionConfig";
 import ProfileAppConfig from "../main/profile/ProfileAppConfig";
 import RecoverPassTwoConfig from "../main/recover-password/RecoverPassTwoConfig";
+
 const routeConfigs = [
   ExampleConfig, 
   SignOutConfig,
@@ -25,6 +26,33 @@ const routeConfigs = [
   ...AdministracionConfig,
   ProfileAppConfig,
 ];
+
+
+// function routes (){
+//   return[
+//     ...FuseUtils.generateRoutesFromConfigs(
+//       routeConfigs,
+//       settingsConfig.defaultAuth
+//     ),
+//     {
+//       path: "/",
+//       element: <Navigate to="/comercial/estadoFacturacion" />,
+//       auth: settingsConfig.defaultAuth,
+//     },
+//     {
+//       path: "loading",
+//       element: <FuseLoading />,
+//     },
+//     {
+//       path: "404",
+//       element: <Error404Page />,
+//     },
+//     {
+//       path: "*",
+//       element: <Navigate to="404" />,
+//     },
+//   ]
+// }
 
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(

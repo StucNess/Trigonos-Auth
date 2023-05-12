@@ -7,17 +7,19 @@ import Provider from 'react-redux/es/components/Provider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StyledEngineProvider } from '@mui/material/styles';
-import routes from 'app/configs/routesConfig';
+import routes from './configs/routesConfig';
 import store from './store';
 import AppContext from './AppContext';
-
-const withAppProviders = (Component) => (props) => {
+import { useDispatch, useSelector } from 'react-redux';
+// const cosita = routes()
+const withAppProviders = (Component ) => (props) => {
   
+  // let person = props.uwu;
+
   const WrapperComponent = () => (
+    
     <AppContext.Provider
-      value={{
-        routes,
-      }}
+      value={{routes}}
     >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Provider store={store}>

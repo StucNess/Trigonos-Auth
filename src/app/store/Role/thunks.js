@@ -8,7 +8,6 @@ export const getRole =( id = 0 ) => {
        
         const {data} = await roleApi.get("/listarRolPagina")
 
-        console.log(data)
 
 
        dispatch(setRole({

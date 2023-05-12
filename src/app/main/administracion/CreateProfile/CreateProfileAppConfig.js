@@ -1,9 +1,15 @@
 import { lazy } from "react";
 import { authRoles } from "src/app/auth";
+import { useDispatch, useSelector } from "react-redux";
+import roleSlice from "app/store/Role/roleSlice";
+
 // import AcuseteApp from "./AcuseteApp";
 const CreateProfileApp = lazy(() => import("./CreateProfileApp"));
 
-const CreateProfileAppConfig = {
+
+
+
+ const CreateProfileAppConfig = {
   settings: {
     layout: {
       config: {},
@@ -17,5 +23,6 @@ const CreateProfileAppConfig = {
     },
   ],
 };
-
 export default CreateProfileAppConfig;
+
+

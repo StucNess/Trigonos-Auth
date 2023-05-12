@@ -13,10 +13,19 @@ import themeLayouts from "app/theme-layouts/themeLayouts";
 import { selectMainTheme } from "app/store/fuse/settingsSlice";
 import FuseAuthorization from "@fuse/core/FuseAuthorization";
 import settingsConfig from "app/configs/settingsConfig";
-import withAppProviders from "./withAppProviders";
+// import withAppProviders from "./withAppProviders";
 import { AuthProvider } from "./auth/AuthContext";
 import { getRole } from "./store/Role";
 import { useEffect } from "react";
+import Provider from 'react-redux/es/components/Provider';
+
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { StyledEngineProvider } from '@mui/material/styles';
+import routes from "./configs/routesConfig";
+import store from "./store";
+import AppContext from "./AppContext";
+
 
 // import axios from 'axios';
 /**
@@ -39,42 +48,75 @@ const emotionCacheOptions = {
   },
 };
 
+
+const withAppProviders = (Component ) => (props) => {
+  
+  // let person = props.uwu;
+
+  const WrapperComponent = () => (
+    
+    <AppContext.Provider
+      value={{routes}}
+    >
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Provider store={store}>
+          <StyledEngineProvider injectFirst>
+            <App {...props} />
+          </StyledEngineProvider>
+        </Provider>
+      </LocalizationProvider>
+    </AppContext.Provider>
+  );
+
+  return WrapperComponent;
+};
+
 const App = () => {
+ 
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const langDirection = useSelector(selectCurrentLanguageDirection);
   const mainTheme = useSelector(selectMainTheme);
+  
   const {isloading,role} = useSelector(state=> state.fuse.roleSlice)
-  console.log(role);
+  
   useEffect(() => {
     dispatch( getRole() );
+    
   }, [])
+ 
   return (
-    <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
-      <FuseTheme theme={mainTheme} direction={langDirection}>
-        <AuthProvider>
-          <BrowserRouter>
-            <FuseAuthorization
-              userRole={user.role}
-              loginRedirectUrl={settingsConfig.loginRedirectUrl}>
-              <SnackbarProvider
-                maxSnack={5}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                classes={{
-                  containerRoot:
-                    "bottom-0 right-0 mb-52 md:mb-68 mr-8 lg:mr-80 z-99",
-                }}>
-                <FuseLayout layouts={themeLayouts} />
-              </SnackbarProvider>
-            </FuseAuthorization>
-          </BrowserRouter>
-        </AuthProvider>
-      </FuseTheme>
-    </CacheProvider>
+
+      <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
+            <FuseTheme theme={mainTheme} direction={langDirection}>
+              <AuthProvider>
+                <BrowserRouter>
+                  <FuseAuthorization
+                    userRole={user.role}
+                    loginRedirectUrl={settingsConfig.loginRedirectUrl}>
+                    <SnackbarProvider
+                      maxSnack={5}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      classes={{
+                        containerRoot:
+                          "bottom-0 right-0 mb-52 md:mb-68 mr-8 lg:mr-80 z-99",
+                      }}>
+                      <FuseLayout layouts={themeLayouts} />
+                    </SnackbarProvider>
+                  </FuseAuthorization>
+                </BrowserRouter>
+              </AuthProvider>
+            </FuseTheme>
+          </CacheProvider>
+
+   
   );
 };
 
-export default withAppProviders(App)();
+
+// export default App;
+
+export default withAppProviders()( );
