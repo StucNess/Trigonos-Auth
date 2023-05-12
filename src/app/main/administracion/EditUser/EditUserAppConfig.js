@@ -1,55 +1,24 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { lazy } from "react";
-// import { role,nose } from "../../../auth/authRolescarga";
-
-// import AcuseteApp from "./AcuseteApp";
-// axios
-// .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
-// .then((response) => {
-//   console.log(response.data[0].nombreRol);
-
-
-// })
-// .catch((error) => {
-  
+// useEffect(() => {
+//   console.log("aqui");
 // });
-
-
-console.log()
-
 const EditUserApp = lazy(() => import("./EditUserApp"));
+// let array = [];
+console.log(window.localStorage.getItem("pagina"));
+console.log("aquiasdasd");
 
-// function EditUserAppConfigComponent (){
-
-
-  
-//   return{
-//       settings: {
-//         layout: {
-//           config: {},
-//         },
-//       },
-
-//       auth:"Administrador",
-//       routes: [
-//         {
-//           path: "administracion/EditUserApp",
-//           element: <EditUserApp />,
-//         },
-//       ],
-    
-//   }
-// }
-
-
-const EditUserAppConfig = {
+let EditUserAppConfig = {
   settings: {
     layout: {
       config: {},
     },
   },
-  auth:["Administrador"],
+  auth:
+    window.localStorage.getItem("pagina") == "Facturacion"
+      ? ["Administrador"]
+      : ["Nada"],
   routes: [
     {
       path: "administracion/EditUserApp",
@@ -59,11 +28,3 @@ const EditUserAppConfig = {
 };
 
 export default EditUserAppConfig;
-
-
-
-
-
-
-
-

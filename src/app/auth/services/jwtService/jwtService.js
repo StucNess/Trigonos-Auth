@@ -68,6 +68,20 @@ class JwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithEmailAndPassword = (email, password) => {
+    localStorage.removeItem("pagina");
+    axios
+      .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
+      .then((response) => {
+        // console.log(response.data[0].nombrePagina);
+        // console.log(response.data[0].nombrePagina);
+        localStorage.setItem("pagina", response.data[0].nombrePagina);
+
+        // array.push(response.data[0].nombrePagina);
+        // if (array.includes("Facturacion")) {
+        //   console.log("correctooo");
+        // }
+      })
+      .catch((error) => {});
     return new Promise((resolve, reject) => {
       axios
         .post(jwtServiceConfig.signIn, {
@@ -114,6 +128,20 @@ class JwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithToken = () => {
+    localStorage.removeItem("pagina");
+    axios
+      .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
+      .then((response) => {
+        // console.log(response.data[0].nombrePagina);
+        // console.log(response.data[0].nombrePagina);
+        localStorage.setItem("pagina", response.data[0].nombrePagina);
+
+        // array.push(response.data[0].nombrePagina);
+        // if (array.includes("Facturacion")) {
+        //   console.log("correctooo");
+        // }
+      })
+      .catch((error) => {});
     return new Promise((resolve, reject) => {
       axios
         .get(jwtServiceConfig.accessToken, {
@@ -162,14 +190,18 @@ class JwtService extends FuseUtils.EventEmitter {
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("idUser");
+      window.location.reload();
+
       delete axios.defaults.headers.common.Authorization;
     }
   };
 
   logout = () => {
     this.setSession(null);
+
     this.emit("onLogout", "Logged out");
     history.push("/sign-in");
+    window.location.reload();
   };
 
   isAuthTokenValid = (access_token) => {
