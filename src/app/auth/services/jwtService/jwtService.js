@@ -68,20 +68,7 @@ class JwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithEmailAndPassword = (email, password) => {
-    localStorage.removeItem("pagina");
-    axios
-      .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
-      .then((response) => {
-        // console.log(response.data[0].nombrePagina);
-        // console.log(response.data[0].nombrePagina);
-        localStorage.setItem("pagina", response.data[0].nombrePagina);
-
-        // array.push(response.data[0].nombrePagina);
-        // if (array.includes("Facturacion")) {
-        //   console.log("correctooo");
-        // }
-      })
-      .catch((error) => {});
+   
     return new Promise((resolve, reject) => {
       axios
         .post(jwtServiceConfig.signIn, {
@@ -90,6 +77,20 @@ class JwtService extends FuseUtils.EventEmitter {
         })
         .then((response) => {
           if (response.data.username) {
+            localStorage.removeItem("pagina");
+            axios
+              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
+              .then((response) => {
+                // console.log(response.data[0].nombrePagina);
+                // console.log(response.data[0].nombrePagina);
+                localStorage.setItem("pagina", response.data[0].nombrePagina);
+        
+                // array.push(response.data[0].nombrePagina);
+                // if (array.includes("Facturacion")) {
+                //   console.log("correctooo");
+                // }
+              })
+              .catch((error) => {});
             setTimeout(() => {
               const url = ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${response.data.id}`;
               let kaka;
@@ -128,20 +129,7 @@ class JwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithToken = () => {
-    localStorage.removeItem("pagina");
-    axios
-      .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
-      .then((response) => {
-        // console.log(response.data[0].nombrePagina);
-        // console.log(response.data[0].nombrePagina);
-        localStorage.setItem("pagina", response.data[0].nombrePagina);
-
-        // array.push(response.data[0].nombrePagina);
-        // if (array.includes("Facturacion")) {
-        //   console.log("correctooo");
-        // }
-      })
-      .catch((error) => {});
+   
     return new Promise((resolve, reject) => {
       axios
         .get(jwtServiceConfig.accessToken, {
@@ -153,7 +141,20 @@ class JwtService extends FuseUtils.EventEmitter {
           if (response.data.username) {
             this.setSession(response.data.token, response.data.id);
             // console.log(response);
-
+            localStorage.removeItem("pagina");
+            axios
+              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
+              .then((response) => {
+                // console.log(response.data[0].nombrePagina);
+                // console.log(response.data[0].nombrePagina);
+                localStorage.setItem("pagina", response.data[0].nombrePagina);
+        
+                // array.push(response.data[0].nombrePagina);
+                // if (array.includes("Facturacion")) {
+                //   console.log("correctooo");
+                // }
+              })
+              .catch((error) => {});
             const json = {
               role: response.data.role,
               data: {
@@ -202,6 +203,7 @@ class JwtService extends FuseUtils.EventEmitter {
     this.emit("onLogout", "Logged out");
     history.push("/sign-in");
     window.location.reload();
+    localStorage.setItem("pagina", []);
   };
 
   isAuthTokenValid = (access_token) => {

@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import FuseMessage from '@fuse/core/FuseMessage';
 import FuseSuspense from '@fuse/core/FuseSuspense';
 import AppContext from 'app/AppContext';
+
 import clsx from 'clsx';
 import { memo, useContext } from 'react';
 import { useSelector } from 'react-redux';
@@ -41,9 +42,16 @@ const Root = styled('div')(({ theme, config }) => ({
 
 function Layout2(props) {
   const config = useSelector(selectFuseCurrentLayoutConfig);
+
   const appContext = useContext(AppContext);
+ 
+
   const { routes } = appContext;
 
+  // const routes = role;
+// console.log(routes)
+ 
+//   console.log(role)
   return (
     <Root id="fuse-layout" className="w-full flex" config={config}>
       {config.leftSidePanel.display && <LeftSideLayout2 />}

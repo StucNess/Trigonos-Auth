@@ -135,7 +135,7 @@ class FuseUtils {
   }
 
   static setRoutes(config, defaultAuth) {
-    console.log(JSON.stringify(config.routes))
+    // console.log(JSON.stringify(config.routes))
     let routes = [...config.routes];
 
     routes = routes.map((route) => {

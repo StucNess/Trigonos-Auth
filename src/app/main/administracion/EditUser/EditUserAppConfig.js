@@ -1,9 +1,16 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { lazy } from "react";
+import { useSelector } from "react-redux";
 // useEffect(() => {
 //   console.log("aqui");
 // });
+// export function prueba (){
+//   const { isloading, role } = useSelector((state) => state.fuse.roleSlice);
+//   console.log(role)
+// }
+
+
 const EditUserApp = lazy(() => import("./EditUserApp"));
 // let array = [];
 console.log(window.localStorage.getItem("pagina"));
@@ -15,10 +22,10 @@ let EditUserAppConfig = {
       config: {},
     },
   },
-  auth:
-    window.localStorage.getItem("pagina") == "Facturacion"
-      ? ["Administrador"]
-      : ["Nada"],
+  auth:["Administrador"],
+    // window.localStorage.getItem("pagina") == "Facturacion"
+    //   ? ["Administrador"]
+    //   : ["Nada"],
   routes: [
     {
       path: "administracion/EditUserApp",

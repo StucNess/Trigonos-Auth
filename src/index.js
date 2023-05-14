@@ -6,13 +6,15 @@ import './styles/app-base.css';
 import './styles/app-components.css';
 import './styles/app-utilities.css';
 import { createRoot } from 'react-dom/client';
-import App from './app/App';
+import WithAppProviders from './app/App';
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
-
+import AppRemaster from './app/AppRemaster';
+import AppAsync from './app/AppAsync';
 const container = document.getElementById('root');
 const root = createRoot(container);
-root.render(<App />);
+// root.render(<WithAppProviders />);
+root.render(<AppAsync />);
 
 reportWebVitals();
 

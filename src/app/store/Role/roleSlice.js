@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-
+import routes from 'app/configs/routesConfig';
 export const roleSlice = createSlice({
     name: 'role',
     initialState: {
-        role: [],
+        role: routes,
         isloading:false
     },
     reducers: {
