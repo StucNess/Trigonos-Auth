@@ -191,7 +191,7 @@ class JwtService extends FuseUtils.EventEmitter {
     } else {
       localStorage.removeItem("token");
       localStorage.removeItem("idUser");
-      window.location.reload();
+
 
       delete axios.defaults.headers.common.Authorization;
     }
@@ -202,7 +202,7 @@ class JwtService extends FuseUtils.EventEmitter {
 
     this.emit("onLogout", "Logged out");
     history.push("/sign-in");
-    window.location.reload();
+
     localStorage.setItem("pagina", []);
   };
 

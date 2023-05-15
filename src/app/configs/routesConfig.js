@@ -28,32 +28,6 @@ const routeConfigs = [
 ];
 
 
-// function routes (){
-//   return[
-//     ...FuseUtils.generateRoutesFromConfigs(
-//       routeConfigs,
-//       settingsConfig.defaultAuth
-//     ),
-//     {
-//       path: "/",
-//       element: <Navigate to="/comercial/estadoFacturacion" />,
-//       auth: settingsConfig.defaultAuth,
-//     },
-//     {
-//       path: "loading",
-//       element: <FuseLoading />,
-//     },
-//     {
-//       path: "404",
-//       element: <Error404Page />,
-//     },
-//     {
-//       path: "*",
-//       element: <Navigate to="404" />,
-//     },
-//   ]
-// }
-
 const routes = [
   ...FuseUtils.generateRoutesFromConfigs(
     routeConfigs,

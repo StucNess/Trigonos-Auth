@@ -13,25 +13,29 @@ import { useSelector } from "react-redux";
 
 const EditUserApp = lazy(() => import("./EditUserApp"));
 // let array = [];
-console.log(window.localStorage.getItem("pagina"));
-console.log("aquiasdasd");
 
-let EditUserAppConfig = {
-  settings: {
-    layout: {
-      config: {},
-    },
-  },
-  auth:["Administrador"],
-    // window.localStorage.getItem("pagina") == "Facturacion"
-    //   ? ["Administrador"]
-    //   : ["Nada"],
-  routes: [
-    {
-      path: "administracion/EditUserApp",
-      element: <EditUserApp />,
-    },
-  ],
-};
 
-export default EditUserAppConfig;
+
+
+export function EditUserAppConfig (item =[]){
+
+  
+  const Config ={
+    settings: {
+      layout: {
+        config: {},
+      },
+    },
+    auth:item,
+      // window.localStorage.getItem("pagina") == "Facturacion"
+      //   ? ["Administrador"]
+      //   : ["Nada"],
+    routes: [
+      {
+        path: "administracion/EditUserApp",
+        element: <EditUserApp />,
+      },
+    ],
+  }
+return Config
+}

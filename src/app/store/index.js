@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createReducer from './rootReducer';
+import { routesApi } from './RoutesRoles/routesApi';
 
 if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept('./rootReducer', () => {
@@ -8,7 +9,7 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   });
 }
 
-const middlewares = [];
+const middlewares = [routesApi.middleware];
 
 if (process.env.NODE_ENV === 'development') {
   const { createLogger } = require(`redux-logger`);

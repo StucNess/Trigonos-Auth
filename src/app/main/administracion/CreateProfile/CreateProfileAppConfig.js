@@ -9,20 +9,44 @@ const CreateProfileApp = lazy(() => import("./CreateProfileApp"));
 
 
 
- const CreateProfileAppConfig = {
-  settings: {
-    layout: {
-      config: {},
+//  const CreateProfileAppConfig = {
+//   settings: {
+//     layout: {
+//       config: {},
+//     },
+//   },
+//   auth: authRoles.admin,
+//   routes: [
+//     {
+//       path: "administracion/CreateProfile",
+//       element: <CreateProfileApp />,
+//     },
+//   ],
+// };
+
+
+
+
+
+export function CreateProfileAppConfig (item =[]){
+
+  
+  const Config ={
+    settings: {
+      layout: {
+        config: {},
+      },
     },
-  },
-  auth: authRoles.admin,
-  routes: [
-    {
-      path: "administracion/CreateProfile",
-      element: <CreateProfileApp />,
-    },
-  ],
-};
-export default CreateProfileAppConfig;
+    auth: item,
+    routes: [
+      {
+        path: "administracion/CreateProfile",
+        element: <CreateProfileApp />,
+      },
+    ],
+  }
+return Config
+}
+
 
 

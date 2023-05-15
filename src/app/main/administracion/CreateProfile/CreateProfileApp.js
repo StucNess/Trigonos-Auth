@@ -583,11 +583,7 @@ function CreateProfileApp(props){
                                         variant="contained"
                                         color="secondary"
                                         className=" h-[28px]  w-[100px] mr-[20px]"
-                                        // onClick={
-                                        //   table
-                                        //     ? () => setTable(false)
-                                        //     : () => setTable(true)
-                                        // }
+                                        onClick={() => window.location.reload(true)}
                                         type="submit"
                                         size="small">
                                         <SettingsIcon/>Editar

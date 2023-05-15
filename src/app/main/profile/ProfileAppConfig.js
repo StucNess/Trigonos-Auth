@@ -1,19 +1,45 @@
 
-import ProfileApp from './ProfileApp';
+
+import { lazy } from "react";
+
+const ProfileApp = lazy(() => import("./ProfileApp"));
 
 
-const  ProfileAppConfig = {
-  settings: {
-    layout: {
-      config: {},
+
+export function ProfileAppConfig (item =[]){
+
+  
+  const Config ={
+    settings: {
+      layout: {
+        config: {},
+      },
     },
-  },
-  routes: [
-    {
-      path: 'ProfileApp',
-      element: <ProfileApp />,
-    },
-  ],
-};
+    auth:item ,
+    routes: [
+      {
+        path: 'ProfileApp',
+        element: <ProfileApp />,
+      },
+    ],
+  }
+return Config
+}
 
-export default ProfileAppConfig;
+// const  ProfileAppConfig = {
+//   settings: {
+//     layout: {
+//       config: {},
+//     },
+//   },
+//   routes: [
+//     {
+//       path: 'ProfileApp',
+//       element: <ProfileApp />,
+//     },
+//   ],
+// };
+
+
+
+
