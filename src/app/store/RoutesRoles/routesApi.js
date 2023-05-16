@@ -10,9 +10,22 @@ export const routesApi = createApi({
         getAllRoutes: builder.query({
             query:()=>'/listarRolPagina'
         }),
-        // getRoute: builder.query({
+        // getListarPaginaWeb: builder.query({
         //     query:(todoid)=>`/routes/${todoid}`
-        // })
+        // }),
+        getListarPaginaWeb: builder.query({
+            query:(todoid)=>'/ListarPaginaWeb'
+        }),
+        // postHabilitarRol: builder.query({
+        //     query:(id)=>`/activarRolPagina/${id}`
+        // }),
+        postHabilitarRol: builder.mutation({
+            query: (id) => ({
+              url: '/activarRolPagina/',
+              method: 'POST',
+              body: { id },
+            }),
+          }),
     })
 })
-export const { useGetAllRoutesQuery }= routesApi;
+export const { useGetAllRoutesQuery, useGetListarPaginaWebQuery,usePostHabilitarRolQuery }= routesApi;

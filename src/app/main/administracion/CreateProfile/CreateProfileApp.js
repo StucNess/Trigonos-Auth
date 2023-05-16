@@ -29,8 +29,6 @@ import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 
-import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -40,7 +38,8 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { useCallback, useEffect, useState } from "react";
 import ModalAddProfile from "./Widgets/ModalAddProfile";
-import { CallApiRoles } from "./store/CallApiRoles";
+import { useGetAllRoutesQuery, useGetListarPaginaWebQuery } from "app/store/RoutesRoles/routesApi";
+
 
 
 let theme = createTheme(
@@ -79,11 +78,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       border: 0,
     },
   }));
-  function createData(estado,codReferencia,nombre,descripcion,id) {
-    return {
-        estado,codReferencia,nombre,descripcion,id
-    };
-  }
+  // function createData(estado,codReferencia,nombre,descripcion,id) {
+  //   return {
+  //       estado,codReferencia,nombre,descripcion,id
+  //   };
+  // }
   
    
   let rows = [];
@@ -184,24 +183,26 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     };
   
     return (
-      <TableHead>
-        <TableRow>
+      <TableHead >
+        <TableRow >
           
           {headCells.map((headCell) => (
             <TableCell
+              id={headCell.id}
               key={headCell.id}
               align="left"
               
               sortDirection={orderBy === headCell.id ? order : false}
             >
               <TableSortLabel
+                id={headCell.id}
                 active={orderBy === headCell.id}
                 direction={orderBy === headCell.id ? order : 'asc'}
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
                 {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
+                  <Box component="span" sx={visuallyHidden} id={headCell.id}>
                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                   </Box>
                 ) : null}
@@ -227,6 +228,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   
     return (
       <Toolbar
+      
         sx={{
           pl: { sm: 2 },
           pr: { xs: 1, sm: 1 },
@@ -238,6 +240,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       >
         {numSelected > 0 ? (
           <Typography
+          
             sx={{ flex: '1 1 100%' }}
             color="inherit"
             variant="subtitle1"
@@ -257,7 +260,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         )}
   
         {numSelected > 0 ? (
-          <Tooltip title="Delete">
+          <Tooltip title="Delete" >
             <IconButton>
               <DeleteIcon />
             </IconButton>
@@ -286,11 +289,42 @@ function CreateProfileApp(props){
     const [visibleRows, setVisibleRows] = useState(null);
     const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
     const [paddingHeight, setPaddingHeight] = useState(0);
-    const [table, setTable] = useState(true);
+    const [table, setTable] = useState(false);
     const [isloading, setIsloading] = useState(true);
+    const [tipoModal, setTipoModal] = useState(true);
+    const [dataRol, setDataRol] = useState({});
+    const [dataAsing, setDataAsing] = useState({})
+    const [dataNoAsing, setDataNoAsing] = useState({})
     const [rowss, setRowss] = useState([]
+      
     );
- 
+    const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
+    const {data: dataWeb =[],isLoading: isloadingListar =true} = useGetListarPaginaWebQuery();
+    
+    function EnviarDatos(row){
+     if(isloadingg !=true){
+      function getListRoles(idrol){
+        return (todos.filter(
+          (item) => item.idrol=== idrol
+        ));
+      }
+      console.log(todos)
+      let ids = getListRoles(row.id).map(function (el) {
+        return el.idpagina;
+      });
+      function getListWebNoAsign(ids){
+        return (dataWeb.filter(
+          (item) => !ids.includes(item.id)
+        ));
+      }
+
+      setDataAsing(getListRoles(row.id));
+      setDataNoAsing(getListWebNoAsign(ids));
+      setDataRol(row);
+      setTipoModal(false);
+      setTable(true);
+     }
+    }
     function search(searchString) {
       if (typeof searchString !== 'string' || searchString.length === 0) {
       return rowspermanent;
@@ -481,11 +515,11 @@ function CreateProfileApp(props){
 
             <div className="flex justify-between w-full" >
                 <div className="flex flex-row  m-[20px]">
-                <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                <Typography  className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
                 Agregar Perfil
                 </Typography>
                     
-                <AssignmentIndIcon className="ml-[10px] text-pantoneazul"/>
+                <AssignmentIndIcon   className="ml-[10px] text-pantoneazul"/>
                 </div>
              
                
@@ -497,11 +531,12 @@ function CreateProfileApp(props){
                     aria-label="Register"
                     type="submit"
                     size="small"
-                    onClick={
-                        table
-                          ? () => setTable(false)
-                          : () => setTable(true)
-                      }>
+                    onClick={() => {
+                      setTable(true);
+                      setTipoModal(true);
+                    }} 
+                      
+                      >
                     <AddIcon/>Nuevo Perfil
                 </Button>
                 </div>
@@ -523,7 +558,7 @@ function CreateProfileApp(props){
             <h1 className="border border-b-pantoneazul w-full"></h1>
             <div className="flex flex-row m-[20px]">
             
-            <TextField id="outlined-basic" label="Filtrar" variant="filled" 
+            <TextField id="outlined-basic" label="Filtrar" variant="filled" name="uwu"
                       onChange={e => {
                       
                         handleSetRow(e);
@@ -534,8 +569,9 @@ function CreateProfileApp(props){
             {isloading?(<Box className="m-[20px]" >
                 <Box >
                     
-                    <TableContainer sx={{ maxHeight: 360 }} overflow-y-auto>
+                    <TableContainer sx={{ maxHeight: 360, overflow:"true" }} >
                     <Table
+                        
                         sx={{ minWidth: 750 }}
                         aria-labelledby="tableTitle"
                         size={dense ? 'small' : 'medium'}
@@ -543,6 +579,7 @@ function CreateProfileApp(props){
                         
                     >
                         <EnhancedTableHead
+                        
                         numSelected={selected.length}
                         order={order}
                         orderBy={orderBy}
@@ -550,7 +587,7 @@ function CreateProfileApp(props){
                         onRequestSort={handleRequestSort}
                         rowCount={rows.length}
                         />
-                        <TableBody>
+                        <TableBody >
                         {visibleRows
                             ? visibleRows.map((row, index) => {
                                 const isItemSelected = isSelected(row.id);
@@ -583,7 +620,13 @@ function CreateProfileApp(props){
                                         variant="contained"
                                         color="secondary"
                                         className=" h-[28px]  w-[100px] mr-[20px]"
-                                        onClick={() => window.location.reload(true)}
+                                        onClick={
+                                          // () => window.location.reload(true)
+                                          () => {
+                                          
+                                            EnviarDatos(row);
+                                          }
+                                        }
                                         type="submit"
                                         size="small">
                                         <SettingsIcon/>Editar
@@ -628,6 +671,7 @@ function CreateProfileApp(props){
                     />       
            </Box>
                 <FormControlLabel
+                    name="formControlLabel"
                     control={<Switch checked={dense} onChange={handleChangeDense} />}
                     label="Disminuir espacio"
                 />
@@ -635,11 +679,15 @@ function CreateProfileApp(props){
             
             </div>
             </div>
-            {!table && (
+            {table && (
                 <ModalAddProfile
-               
-                setTable={() => setTable(true)}
                 
+               
+                setTable={() => setTable(false)}
+                tipoModal={tipoModal}
+                dataRol={dataRol}
+                dataAsing={dataAsing}
+                dataNoAsing={dataNoAsing}
                 />
             )}
             </div>

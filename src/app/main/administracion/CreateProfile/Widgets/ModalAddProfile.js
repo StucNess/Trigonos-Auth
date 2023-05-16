@@ -7,6 +7,10 @@ import Typography from "@mui/material/Typography";
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import DisabledByDefaultIcon from "@mui/icons-material/DisabledByDefault";
+import EditIcon from "@mui/icons-material/Edit";
+
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import TextField from "@mui/material/TextField";
@@ -29,6 +33,19 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
+import InputAdornment from "@mui/material/InputAdornment";
+import { useGetAllRoutesQuery, usePostHabilitarRolQuery } from "app/store/RoutesRoles/routesApi";
+import Divider from "@mui/material/Divider";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import CommentIcon from "@mui/icons-material/Comment";
+import CachedIcon from '@mui/icons-material/Cached';
+import Tooltip from '@mui/material/Tooltip';
 const schema = yup.object().shape({
   // user: yup.string().required("Debe ingresar su nombre completo"),
   
@@ -49,15 +66,23 @@ const defaultValues = {
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 export default function ModalAddProfile({
-    setTable,tipoModal = true,
+    setTable,
+    tipoModal ,//true es para un nuevo perfil, false es para editar un perfil
+    dataRol,
+    dataAsing,
+    dataNoAsing
+
 }) {
+  
   const [open, setOpen] = useState(true);
   const [scroll, setScroll] = useState('paper');
   const [secondDopen, setSecondDopen] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [countActive, setCountActive] = useState(0);
+  const [postHabilitarRol, { isLoading }] = usePostHabilitarRolQuery();
   const [nameRol, setNameRol] = useState("");
   const [descRol, setDescRol] = useState("");
+  const [idprueba, setidprueba] = useState(2);
   const [MsgAlert, setMsgAlert] = useState({
     msgResp: false,
     msgText:"",
@@ -69,10 +94,117 @@ export default function ModalAddProfile({
     defaultValues,
     resolver: yupResolver(schema),
   });
-  const { isValid, dirtyFields, errors } = formState;
+  const { isValid, dirtyFields, errors} = formState;
+ 
+  
+  // const [paginasConAsign, setPaginasConAsign] = useState(todos);
+  const [checked, setChecked] = useState(dataAsing);
+  const [checkeddos, setCheckedDos] = useState(dataNoAsing);
+
+  const [dataState, setDataState] = useState({
+    id: dataRol.id,
+    nombre: dataRol.nombre,
+    descripcion: dataRol.descripcion,
+    ventanasAsing:dataAsing,
+   
+  });
+  const [dataConfirm, setDataConfirm] = useState({
+    id: dataRol.id,
+    nombre: dataRol.nombre,
+    descripcion: dataRol.descripcion,
+    ventanasAsing:dataAsing,
+  });
+  const [update, setUpdate] = useState({
+    nombre: false,
+    descripcion: false,
+   
+  });
+  const {
+    nombre,
+    descripcion
+  } = update;
+
+  useEffect(() => {
+    //Elimina del checked las paginas que no tienen un rol habilitado !=0
+    RevertirSeleccion();
+
+  }, [])
+
+  function RevertirSeleccion(){
+   
+    setChecked(dataAsing.filter(
+      (item) => item.bhabilitado!= 0
+    ));
+  }
+  const handleToggleAll = (items) => () => {
+    // setCheckeddos([]);
+    if (checked.length != dataAsing.length) {
+      setChecked(dataAsing);
+    } else {
+      setChecked([]);
+    }
+  };
+  const handleToggleAlldos = (items) => () => {
+    // setChecked([]);
+    if (checkeddos.length != dataNoAsing.length) {
+      setCheckedDos(dataNoAsing);
+    } else {
+      setCheckedDos([]);
+    }
+  };
+  const handleToggle = (value) => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+  const handleToggledos = (value) => () => {
+    const currentIndex = checkeddos.indexOf(value);
+    const newChecked = [...checkeddos];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setCheckedDos(newChecked);
+  };
+  async function Pruebauwu(){
+    console.log(checked)
+    // addNewPost(2)
+    // for (let x = 0; x < checked.length; x++) {
+      // const handleSendPost = async () => {
+        
+      // };
+      try {
+        await postHabilitarRol(idprueba);
+        console.log('Solicitud POST enviada correctamente');
+      } catch (error) {
+        console.error('Error al enviar la solicitud POST:', error);
+      }
+    // }
+  }
+  const onInputChange = ({ target }) => {
+      const { name, value } = target;
+      console.log(name)
+      console.log(value)
+      setDataState({
+        ...dataState,
+        [name]: value,
+      });
+    };
+
   const handleClose = () => {
     setOpen(false);
     setTable();
+   
   };
   const handleClickOpen = () => {
     setSecondDopen(true);
@@ -114,31 +246,33 @@ export default function ModalAddProfile({
       });
     }, 2000);
   }
+  if(tipoModal){
+   return( 
+   <Dialog
+    open={open}
+    // onClose={handleClose}
+  
+    scroll={'paper'}
+     aria-labelledby="scroll-dialog-title"
+     aria-describedby="scroll-dialog-description"
+  >
 
-  return (
-    <Dialog
-        open={open}
-        // onClose={handleClose}
-      
-        scroll={'paper'}
-         aria-labelledby="scroll-dialog-title"
-         aria-describedby="scroll-dialog-description"
-      >
-
-      
-        <DialogTitle id="scroll-dialog-title"><div className="static ">
-                <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
-                Agregar Nuevo Perfil <RecentActorsIcon/>
-                </Typography>
-
-                
-                <IconButton className="absolute top-0 right-0" onClick={handleClose} variant="contained" color="error">
-                    <HighlightOffIcon />
-                </IconButton>
+  
+    <DialogTitle id="scroll-dialog-title"><div className="static ">
             
-            </div></DialogTitle>
-        <DialogContent dividers={scroll === 'paper'} className="min-w-[400px]">
-          <div>
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
+              Agregar Nuevo Perfil <RecentActorsIcon/>
+              </Typography>
+            
+
+            
+            <IconButton className="absolute top-0 right-0" onClick={handleClose} variant="contained" color="error">
+                <HighlightOffIcon />
+            </IconButton>
+        
+        </div></DialogTitle>
+    <DialogContent dividers={scroll === 'paper'} className="min-w-[400px]">
+      <div>
         <form
             name="registerForm"
             noValidate
@@ -147,54 +281,54 @@ export default function ModalAddProfile({
             >
                 <div className="ml-[10px] mr-[10px] flex flex-col">
                         
-                        <Controller
-                          name="name"
-                          control={control}
-                          render={({ field }) => (
-                              <TextField
-                              {...field}
-                  
-                              className="w-full mt-[20px]"
-                              label="Nombre Rol"
-                              onChange={e => {
-                                field.onChange(e);
-                                handleChangeNombre(e);
-                              }}
-                              type="text"
-                              error={!!errors.nombre}
-                              helperText={errors?.nombre?.message}
-                              variant="filled"
-                              required
-                              
-                              />
-                          )}
+                  <Controller
+                    name="name"
+                    control={control}
+                    render={({ field }) => (
+                        <TextField
+                        {...field}
+            
+                        className="w-full mt-[20px]"
+                        label="Nombre Rol"
+                        onChange={e => {
+                          field.onChange(e);
+                          handleChangeNombre(e);
+                        }}
+                        type="text"
+                        error={!!errors.nombre}
+                        helperText={errors?.nombre?.message}
+                        variant="filled"
+                        required
+                        
                         />
-                        <Controller
-                          name="descripcion"
-                          control={control}
-                          render={({ field }) => (
-                              <TextField
-                              {...field}
-                  
-                              className="w-full mt-[20px]"
-                              label="Descripción Rol"
-                              onChange={e => {
-                                field.onChange(e);
-                                handleChangeDesc(e);
-                              }}
-                              type="text"
-                              error={!!errors.descripcion}
-                              helperText={errors?.descripcion?.message}
-                              variant="filled"
-                              required
-                              
-                              />
-                          )}
+                    )}
+                  />
+                  <Controller
+                    name="descripcion"
+                    control={control}
+                    render={({ field }) => (
+                        <TextField
+                        {...field}
+            
+                        className="w-full mt-[20px]"
+                        label="Descripción Rol"
+                        onChange={e => {
+                          field.onChange(e);
+                          handleChangeDesc(e);
+                        }}
+                        type="text"
+                        error={!!errors.descripcion}
+                        helperText={errors?.descripcion?.message}
+                        variant="filled"
+                        required
+                        
                         />
+                    )}
+                  />
                 </div>
                         <div className="ml-[10px] mr-[10px] flex flex-col">
                         <h4>Selección de paginas</h4>
-                     
+                    
                         <FormGroup className="ml-[10px]">
                             <FormControlLabel control={<Switch defaultChecked />} label="Todas" />
                             <FormControlLabel control={<Checkbox  />} label="Gestión Participantes" />
@@ -224,7 +358,7 @@ export default function ModalAddProfile({
             <CircularProgress color="secondary"/>
           </div>):(
           <div>
-           {msgResp? (<div className='flex justify-center items-center h-[250px] w-[300px]' >
+          {msgResp? (<div className='flex justify-center items-center h-[250px] w-[300px]' >
             {msgError? (<div className='flex justify-center items-center h-[250px] w-[300px]'>
               <WarningIcon className='w-[68px] h-[68px] text-red'/>
               <span className='absolute bottom-[70px] text-red'> <b>{msgText}</b></span>
@@ -233,7 +367,7 @@ export default function ModalAddProfile({
               <span className='absolute bottom-[70px] text-green'> <b>{msgText}</b></span>
             </div>)}
             
-           </div>):(<div>
+          </div>):(<div>
             <DialogTitle id="alert-dialog-title">
             {"¿Desea guardar el siguiente Rol?"}
           </DialogTitle>
@@ -251,31 +385,510 @@ export default function ModalAddProfile({
               Guardar
             </Button>
           </DialogActions>
-           </div>)}
+          </div>)}
           </div>)}
         </Dialog>
-          </form>
-          </div>
-          
-        
-        </DialogContent>
-        <DialogActions className='flex justify-center m-[20px]'>
+        </form>
+      </div>
       
-                <Button 
-                    size="large"
-                    className=" h-[28px]  w-[100px] mr-[20px]"
-                    disabled={_.isEmpty(dirtyFields) || !isValid}
-                    onClick={handleClickOpen}
-                    variant="contained"
-                    color="secondary">
-                      Guardar
-                  </Button>
-                        
-            
-        </DialogActions>
+    
+    </DialogContent>
+    <DialogActions className='flex justify-center m-[20px]'>
+  
+            <Button 
+                size="large"
+                className=" h-[28px]  w-[100px] mr-[20px]"
+                disabled={_.isEmpty(dirtyFields) || !isValid}
+                onClick={handleClickOpen}
+                variant="contained"
+                color="secondary">
+                  Guardar
+              </Button>
+                    
         
-       
-      </Dialog>
+    </DialogActions>
+    
+   
+  </Dialog>)
+  }else{
+    return(<Dialog
+    open={open}
+    // onClose={handleClose}
+  
+    scroll={'paper'}
+     aria-labelledby="scroll-dialog-title"
+     aria-describedby="scroll-dialog-description"
+  >
 
-  );
+  
+    <DialogTitle id="scroll-dialog-title"><div className="static ">
+            
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
+              Edición de Perfil <RecentActorsIcon/>
+              </Typography>
+            
+
+            
+            <IconButton className="absolute top-0 right-0" onClick={handleClose} variant="contained" color="error">
+                <HighlightOffIcon />
+            </IconButton>
+        
+        </div></DialogTitle>
+    <DialogContent dividers={scroll === 'paper'} className="min-w-[450px]">
+      <div>
+        <form
+            name="registerForm"
+            noValidate
+            className="w-full"
+            // onSubmit={}
+            >
+              
+                
+                <div className="ml-[10px] mr-[10px] flex flex-col">
+                        
+                 
+                    <div className="h-[20px]">
+                    {nombre ? (
+                      <>
+                        <span className="text-red-500">
+                          Recuerde aceptar o cancelar el cambio realizado
+                        </span>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    </div>
+                   <Controller
+                    name="name"
+                    control={control}
+                    defaultValue="Vacio"
+                    render={({ field}) => (
+                    <TextField
+                    {...field}
+                    
+                    className=" w-full "
+                    label="Nombre Rol"
+                    type="text"
+                    // defaultValue="Vacio" Nota no ocupar un defaultValue en el chield ocuparlo en el controller
+                    name="nombre"
+                    value={dataState.nombre}
+                    onChange={e => {
+                      
+                      field.onChange(e);
+                      onInputChange(e);
+                      handleChangeNombre(e);
+                    }}
+                  
+                    disabled={nombre ? false : true}
+                   
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {nombre ? (
+                            <>
+                              <CheckBoxIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    nombre: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                              <DisabledByDefaultIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setDataState({
+                                    ...dataState,
+                                    nombre: dataRol.nombre,
+                                  });
+                                  setUpdate({
+                                    ...update,
+                                    nombre: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <EditIcon
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setUpdate({
+                                  ...update,
+                                  nombre: true,
+                                });
+                                setCountActive(countActive + 1);
+                              }}
+                            />
+                          )}
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={!!errors.nombre}
+                    helperText={errors?.nombre?.message}
+                    variant="filled"
+                    required
+                    />
+                )}/>
+                <div className="h-[20px]">
+                    {descripcion ? (
+                      <>
+                        <span className="text-red-500">
+                          Recuerde aceptar o cancelar el cambio realizado
+                        </span>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    </div>
+                   <Controller
+                    name="descripcion"
+                    control={control}
+                    defaultValue="Vacio"
+                    render={({ field}) => (
+                    <TextField
+                    {...field}
+                    id="filled-multiline-flexible"
+                    className=" w-full "
+                    label="Descripción Rol"
+                    multiline
+                    type="text"
+                    // defaultValue="Vacio" Nota no ocupar un defaultValue en el chield ocuparlo en el controller
+                    name="descripcion"
+                    value={dataState.descripcion}
+                    onChange={e => {
+                      
+                      field.onChange(e);
+                      onInputChange(e);
+                      handleChangeNombre(e);
+                    }}
+                  
+                    disabled={descripcion ? false : true}
+                   
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start"
+                        style={{
+                          maxHeight: 'none',
+                          height: 'auto',
+                          marginTop: '-1px',
+                          marginRight: '5px',
+                          marginBottom: '-1px',
+                         }}
+                         >
+                          {descripcion ? (
+                            <>
+                              <CheckBoxIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    descripcion: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                              <DisabledByDefaultIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setDataState({
+                                    ...dataState,
+                                    descripcion: dataRol.descripcion,
+                                  });
+                                  setUpdate({
+                                    ...update,
+                                    descripcion: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <EditIcon
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setUpdate({
+                                  ...update,
+                                  descripcion: true,
+                                });
+                                setCountActive(countActive + 1);
+                              }}
+                            />
+                          )}
+                        </InputAdornment>
+                      ),
+                    }}
+                    error={!!errors.nombre}
+                    helperText={errors?.nombre?.message}
+                    variant="filled"
+                    required
+                    />
+                )}/>
+                </div>
+                <div className="ml-[10px] mr-[10px] flex flex-col">
+                  <div>
+                  <IconButton edge="end" aria-label="comments"
+                                 onClick={() => {
+                                  Pruebauwu();
+                                }} 
+                                >
+                    <CachedIcon />
+                  </IconButton>
+                  <Typography className="text-xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px] w-auto">
+                    Ventanas con rol {dataRol.nombre}
+                  </Typography>
+            
+                  <div className="max-h-[300px] mt-[10px]">
+                    <Card>
+                    <ListItem
+                            key="{value.id}"
+                            secondaryAction={
+                              <Tooltip title="Revertir Cambios">
+                                <IconButton edge="end" aria-label="comments"
+                                 onClick={() => {
+                                  RevertirSeleccion();
+                                }} 
+                                >
+                                  <CachedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            }
+                            disablePadding
+                          >
+                        <ListItemButton
+                          onClick={handleToggleAll(dataAsing)}
+                          disabled={!checked.length === 0}
+                        >
+                          <ListItemIcon>
+                            <Checkbox
+                              checked={
+                                checked.length === dataAsing.length &&
+                                checked.length !== 0
+                              }
+                              indeterminate={
+                                checked.length !== dataAsing.length &&
+                                checked.length !== 0
+                              }
+                              inputProps={{
+                                "aria-label": "all items selected",
+                              }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText id="nose" primary="Seleccionar todo" />
+                      </ListItemButton>
+                          </ListItem>
+                    
+                    <Divider />
+                    <List
+                      sx={{
+                        height: "300px",
+                        width: "100%",
+                        // maxWidth: 300,
+                        bgcolor: "background.paper",
+                        overflow: "auto",
+                      }}
+                    >
+                      {dataAsing.map((value) => {
+                        const labelId = `checkbox-list-label-${value.id}`;
+
+                        return (
+                          <ListItem
+                            key={value.id}
+                            secondaryAction={
+                              <IconButton edge="end" aria-label="comments">
+                                <CommentIcon />
+                              </IconButton>
+                            }
+                            disablePadding
+                          >
+                            <ListItemButton
+                              role={undefined}
+                              onClick={handleToggle(value)}
+                              dense
+                            >
+                              <ListItemIcon>
+                                <Checkbox
+                                  edge="start"
+                                  checked={checked.indexOf(value) !== -1}
+                                  tabIndex={-1}
+                                  disableRipple
+                                  // inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                              </ListItemIcon>
+                              <ListItemText id={value.id} primary={value.nombrePagina} />
+                            </ListItemButton>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                    </Card>
+                  </div>
+                  </div>
+                 
+                  <div className="h-[60px]">
+                  
+                  </div>
+                  <Typography className="text-xl font-medium text-pantoneazul leading-6 truncate mt-[5px] w-auto">
+                    Ventanas sin rol de {dataRol.nombre}
+                  </Typography>
+                  <div className="max-h-[300px] mt-[10px]">
+                      <Card>
+                      <ListItemButton
+                          onClick={handleToggleAlldos(dataNoAsing)}
+                          disabled={!checkeddos.length === 0}
+                        >
+                          <ListItemIcon>
+                            <Checkbox
+                              checked={
+                                checkeddos.length === dataNoAsing.length &&
+                                checkeddos.length !== 0
+                              }
+                              indeterminate={
+                                checkeddos.length !== dataNoAsing.length &&
+                                checkeddos.length !== 0
+                              }
+                              inputProps={{
+                                "aria-label": "all items selected",
+                              }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText id="nose" primary="Seleccionar todo" />
+                      </ListItemButton>
+                      <Divider />
+                      <List
+                        sx={{
+                          height: "300px",
+                          width: "100%",
+                          // maxWidth: 300,
+                          bgcolor: "background.paper",
+                          overflow: "auto",
+                        }}
+                      >
+                        {dataNoAsing.map((value) => {
+                          const labelId = `checkbox-list-label-${value.id}`;
+
+                          return (
+                            <ListItem
+                              key={value.id}
+                              secondaryAction={
+                                <IconButton edge="end" aria-label="comments">
+                                  <CommentIcon />
+                                </IconButton>
+                              }
+                              disablePadding
+                            >
+                              <ListItemButton
+                                role={undefined}
+                                onClick={handleToggledos(value)}
+                                dense
+                              >
+                                <ListItemIcon>
+                                  <Checkbox
+                                    edge="start"
+                                    checked={checkeddos.indexOf(value) !== -1}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    // inputProps={{ 'aria-labelledby': labelId }}
+                                  />
+                                </ListItemIcon>
+                                <ListItemText id={value.id} primary={value.nombre} />
+                              </ListItemButton>
+                            </ListItem>
+                          );
+                        })}
+                      </List>
+                      </Card>
+                  </div>
+               
+                 
+               
+                </div>
+                
+                 
+                
+                  
+            <Dialog
+            open={secondDopen}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+        >
+          {loading?(<div className='flex justify-center items-center h-[250px] w-[300px]'>
+            <CircularProgress color="secondary"/>
+          </div>):(
+          <div>
+          {msgResp? (<div className='flex justify-center items-center h-[250px] w-[300px]' >
+            {msgError? (<div className='flex justify-center items-center h-[250px] w-[300px]'>
+              <WarningIcon className='w-[68px] h-[68px] text-red'/>
+              <span className='absolute bottom-[70px] text-red'> <b>{msgText}</b></span>
+            </div>):(<div className='flex justify-center items-center h-[250px] w-[300px]'>
+              <CheckCircleIcon className='w-[68px] h-[68px] text-green'/>
+              <span className='absolute bottom-[70px] text-green'> <b>{msgText}</b></span>
+            </div>)}
+            
+          </div>):(<div>
+            <DialogTitle id="alert-dialog-title">
+            {"¿Desea guardar el siguiente Rol?"}
+          </DialogTitle>
+          <DialogContent className='flex flex-col' >
+            <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
+            Nombre del Rol: <b className='text-black'>{nameRol}</b>
+            </Typography>
+            <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
+            Descripción del Rol: <b className='text-black'>{descRol}</b>
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseAlert}>Cancelar</Button>
+            <Button onClick={handleSubmit(onSubmitRol)} autoFocus>
+              Guardar
+            </Button>
+          </DialogActions>
+          </div>)}
+          </div>)}
+        </Dialog>
+        </form>
+      </div>
+      
+    
+    </DialogContent>
+    <DialogActions className='flex justify-center m-[20px]'>
+  
+            <Button 
+                size="large"
+                className=" h-[28px]  w-[100px] mr-[20px]"
+                disabled={_.isEmpty(dirtyFields) || !isValid}
+                onClick={handleClickOpen}
+                variant="contained"
+                color="secondary">
+                  Guardar
+              </Button>
+                    
+        
+    </DialogActions>
+    
+   
+  </Dialog>)
+  }
+
+  
+
+  
 }
