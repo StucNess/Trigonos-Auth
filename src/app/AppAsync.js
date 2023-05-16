@@ -40,7 +40,7 @@ import RecoverPassTwoConfig from "./main/recover-password/RecoverPassTwoConfig";
 import { ComercialConfigs } from "./main/comercial/ComercialConfigs";
 import AnalisisConfig from "./main/analisis/AnalisisConfig";
 import { AdministracionConfig } from "./main/administracion/AdministracionConfig";
-import { useGetAllRoutesQuery } from "./store/RoutesRoles/routesApi";
+import { useGetAllRoutesQuery, useGetOnlyHabilitRoutesQuery } from "./store/RoutesRoles/routesApi";
 import { ProfileAppConfig } from "./main/profile/ProfileAppConfig";
 
 
@@ -65,7 +65,8 @@ export const AppContextRoutes = createContext();
 const AppContextProvider = ({ children }) => {
   const [data, setData] = useState([]);
   const [routes, setRoutes] = useState([]);
-  const {data: todos =[],isLoading: isloading =true} = useGetAllRoutesQuery();
+  const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
+  const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
 
   ProfileAppConfig()
   
@@ -77,7 +78,7 @@ const AppContextProvider = ({ children }) => {
 
   if (isloading===false){
     function getListRoles(idPagina){
-      return (todos.filter(
+      return (todoshabilit.filter(
         (item) => item.idpagina=== idPagina
       )).map(function(el) {
         return el.nombreRol         
@@ -90,9 +91,9 @@ const AppContextProvider = ({ children }) => {
       SignUpConfig,
       RecoverPassConfig,
       RecoverPassTwoConfig,
-      ...ComercialConfigs(todos),
+      ...ComercialConfigs(todoshabilit),
       ...AnalisisConfig,
-      ...AdministracionConfig(todos),//los que contienen el spread se les pasa el objeto completo
+      ...AdministracionConfig(todoshabilit),//los que contienen el spread se les pasa el objeto completo
       ProfileAppConfig(getListRoles(3)),
     ];
     const routes = [

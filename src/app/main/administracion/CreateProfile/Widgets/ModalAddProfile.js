@@ -34,7 +34,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import InputAdornment from "@mui/material/InputAdornment";
-import { useGetAllRoutesQuery, usePostHabilitarRolQuery } from "app/store/RoutesRoles/routesApi";
+import { useGetAllRoutesQuery, usePostDeshabilitarRolMutation, usePostHabilitarRolMutation } from "app/store/RoutesRoles/routesApi";
 import Divider from "@mui/material/Divider";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -79,7 +79,24 @@ export default function ModalAddProfile({
   const [secondDopen, setSecondDopen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [countActive, setCountActive] = useState(0);
-  const [postHabilitarRol, { isLoading }] = usePostHabilitarRolQuery();
+  const [postHabilitarRol, data_] = usePostHabilitarRolMutation();
+  const [postDeshabilitarRol, data] = usePostDeshabilitarRolMutation();
+  const postHabilitarRolPagina = async (data) => {
+    try {
+      await postHabilitarRol(data);
+      // console.log(response); // Manejar la respuesta exitosa
+    } catch (error) {
+      // console.error(error); // Manejar el error
+    }
+  };
+  const postDeshabilitarRolPagina = async (data) => {
+    try {
+      await postDeshabilitarRol(data);
+      // console.log(response); // Manejar la respuesta exitosa
+    } catch (error) {
+      // console.error(error); // Manejar el error
+    }
+  };
   const [nameRol, setNameRol] = useState("");
   const [descRol, setDescRol] = useState("");
   const [idprueba, setidprueba] = useState(2);
@@ -176,21 +193,44 @@ export default function ModalAddProfile({
 
     setCheckedDos(newChecked);
   };
-  async function Pruebauwu(){
-    console.log(checked)
+  function DinamicHabDesac(object){ //Funcion para activar y deshactivar dinamicamente
+    console.log(object)
+    let objDesactivado=object.filter(//los objetos desactivados seran activados
+      (item) => item.bhabilitado=== 0
+    )
+   
     // addNewPost(2)
-    // for (let x = 0; x < checked.length; x++) {
-      // const handleSendPost = async () => {
-        
-      // };
-      try {
-        await postHabilitarRol(idprueba);
-        console.log('Solicitud POST enviada correctamente');
-      } catch (error) {
-        console.error('Error al enviar la solicitud POST:', error);
+    for (let x = 0; x < objDesactivado.length; x++) {
+      // console.log(objDesactivado[x].id)
+      // console.log(x)
+      // console.log(objDesactivado.length-1)
+      postHabilitarRolPagina(objDesactivado[x].id);
+      if (x === objDesactivado.length -1){
+        //hacer algo aqui nose
       }
-    // }
+    }
+    console.log(checked);//los objetos activados que han sido desactivados seran desactivados
+    let ids = object.map(function (el) {
+      return el.id;
+    });
+    let objActivado = dataAsing.filter(
+      (item) => !ids.includes(item.id) && item.bhabilitado=== 1
+    );
+    for (let x = 0; x < objActivado.length; x++) {
+      // console.log(objDesactivado[x].id)
+      // console.log(x)
+      // console.log(objDesactivado.length-1)
+      postDeshabilitarRolPagina(objActivado[x].id);
+      if (x === objActivado.length -1){
+        //hacer algo aqui nose
+      }
+    }
+    console.log(objActivado);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
   }
+  
   const onInputChange = ({ target }) => {
       const { name, value } = target;
       console.log(name)
@@ -326,27 +366,184 @@ export default function ModalAddProfile({
                     )}
                   />
                 </div>
-                        <div className="ml-[10px] mr-[10px] flex flex-col">
-                        <h4>Selección de paginas</h4>
-                    
-                        <FormGroup className="ml-[10px]">
-                            <FormControlLabel control={<Switch defaultChecked />} label="Todas" />
-                            <FormControlLabel control={<Checkbox  />} label="Gestión Participantes" />
-                            <FormControlLabel control={<Checkbox  />} label="Agregar Usuarios" />
-                            <FormControlLabel control={<Checkbox  />} label="Estado de facturación" />
-                            <FormControlLabel control={<Checkbox  />} label="Nominas de Pago" />
-                            <FormControlLabel control={<Checkbox  />} label="Facturación Masiva" />
-                            <FormControlLabel control={<Checkbox  />} label="DashBoards" />
-                            <FormControlLabel control={<Checkbox  />} label="Label" />
-                            <FormControlLabel control={<Checkbox  />} label="Label" />
-                            <FormControlLabel control={<Checkbox  />} label="Label" />
-                            <FormControlLabel control={<Checkbox  />} label="Label" />
-                            <FormControlLabel control={<Checkbox  />} label="Label" />
-                            <FormControlLabel control={<Checkbox defaultChecked />} label="Label" />
-                        
-                            <FormControlLabel disabled control={<Checkbox />} label="Disabled" />
-                        </FormGroup>
+                <div className="ml-[10px] mr-[10px] flex flex-col">
+                  <div>
+                  <IconButton edge="end" aria-label="comments"
+                                 onClick={() => {
+                                  DinamicHabDesac(checked);
 
+                                }} 
+                                >
+                    <CachedIcon />
+                  </IconButton>
+                  <Typography className="text-xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px] w-auto">
+                    Ventanas con rol {dataRol.nombre}
+                  </Typography>
+            
+                  <div className="max-h-[300px] mt-[10px]">
+                    <Card>
+                    <ListItem
+                            key="{value.id}"
+                            secondaryAction={
+                              <Tooltip title="Revertir Cambios">
+                                <IconButton edge="end" aria-label="comments"
+                                 onClick={() => {
+                                  RevertirSeleccion();
+                                }} 
+                                >
+                                  <CachedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            }
+                            disablePadding
+                          >
+                        <ListItemButton
+                          onClick={handleToggleAll(dataAsing)}
+                          disabled={!checked.length === 0}
+                        >
+                          <ListItemIcon>
+                            <Checkbox
+                              checked={
+                                checked.length === dataAsing.length &&
+                                checked.length !== 0
+                              }
+                              indeterminate={
+                                checked.length !== dataAsing.length &&
+                                checked.length !== 0
+                              }
+                              inputProps={{
+                                "aria-label": "all items selected",
+                              }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText id="nose" primary="Seleccionar todo" />
+                      </ListItemButton>
+                          </ListItem>
+                    
+                    <Divider />
+                    <List
+                      sx={{
+                        height: "300px",
+                        width: "100%",
+                        // maxWidth: 300,
+                        bgcolor: "background.paper",
+                        overflow: "auto",
+                      }}
+                    >
+                      {dataAsing.map((value) => {
+                        const labelId = `checkbox-list-label-${value.id}`;
+
+                        return (
+                          <ListItem
+                            key={value.id}
+                            secondaryAction={
+                              <IconButton edge="end" aria-label="comments">
+                                <CommentIcon />
+                              </IconButton>
+                            }
+                            disablePadding
+                          >
+                            <ListItemButton
+                              role={undefined}
+                              onClick={handleToggle(value)}
+                              dense
+                            >
+                              <ListItemIcon>
+                                <Checkbox
+                                  edge="start"
+                                  checked={checked.indexOf(value) !== -1}
+                                  tabIndex={-1}
+                                  disableRipple
+                                  // inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                              </ListItemIcon>
+                              <ListItemText id={value.id} primary={value.nombrePagina} />
+                            </ListItemButton>
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                    </Card>
+                  </div>
+                  </div>
+                 
+                  <div className="h-[60px]">
+                  
+                  </div>
+                  <Typography className="text-xl font-medium text-pantoneazul leading-6 truncate mt-[5px] w-auto">
+                    Ventanas sin rol de {dataRol.nombre}
+                  </Typography>
+                  <div className="max-h-[300px] mt-[10px]">
+                      <Card>
+                      <ListItemButton
+                          onClick={handleToggleAlldos(dataNoAsing)}
+                          disabled={!checkeddos.length === 0}
+                        >
+                          <ListItemIcon>
+                            <Checkbox
+                              checked={
+                                checkeddos.length === dataNoAsing.length &&
+                                checkeddos.length !== 0
+                              }
+                              indeterminate={
+                                checkeddos.length !== dataNoAsing.length &&
+                                checkeddos.length !== 0
+                              }
+                              inputProps={{
+                                "aria-label": "all items selected",
+                              }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText id="nose" primary="Seleccionar todo" />
+                      </ListItemButton>
+                      <Divider />
+                      <List
+                        sx={{
+                          height: "300px",
+                          width: "100%",
+                          // maxWidth: 300,
+                          bgcolor: "background.paper",
+                          overflow: "auto",
+                        }}
+                      >
+                        {dataNoAsing.map((value) => {
+                          const labelId = `checkbox-list-label-${value.id}`;
+
+                          return (
+                            <ListItem
+                              key={value.id}
+                              secondaryAction={
+                                <IconButton edge="end" aria-label="comments">
+                                  <CommentIcon />
+                                </IconButton>
+                              }
+                              disablePadding
+                            >
+                              <ListItemButton
+                                role={undefined}
+                                onClick={handleToggledos(value)}
+                                dense
+                              >
+                                <ListItemIcon>
+                                  <Checkbox
+                                    edge="start"
+                                    checked={checkeddos.indexOf(value) !== -1}
+                                    tabIndex={-1}
+                                    disableRipple
+                                    // inputProps={{ 'aria-labelledby': labelId }}
+                                  />
+                                </ListItemIcon>
+                                <ListItemText id={value.id} primary={value.nombre} />
+                              </ListItemButton>
+                            </ListItem>
+                          );
+                        })}
+                      </List>
+                      </Card>
+                  </div>
+               
+                 
+               
                 </div>
                 <Dialog
           open={secondDopen}
@@ -442,8 +639,6 @@ export default function ModalAddProfile({
             className="w-full"
             // onSubmit={}
             >
-              
-                
                 <div className="ml-[10px] mr-[10px] flex flex-col">
                         
                  
@@ -647,7 +842,8 @@ export default function ModalAddProfile({
                   <div>
                   <IconButton edge="end" aria-label="comments"
                                  onClick={() => {
-                                  Pruebauwu();
+                                  DinamicHabDesac(checked);
+
                                 }} 
                                 >
                     <CachedIcon />
