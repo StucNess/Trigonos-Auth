@@ -23,6 +23,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import ScreenshotMonitorIcon from '@mui/icons-material/ScreenshotMonitor';
+import DesktopAccessDisabledIcon from '@mui/icons-material/DesktopAccessDisabled';
 import { Paper } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -34,7 +36,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import InputAdornment from "@mui/material/InputAdornment";
-import { useGetAllRoutesQuery, usePostDeshabilitarRolMutation, usePostHabilitarRolMutation } from "app/store/RoutesRoles/routesApi";
+import { useGetAllRoutesQuery, useGetListarPaginaWebQuery, usePostDeshabilitarRolMutation, usePostHabilitarRolMutation, usePostNewRolMutation, usePostNewRolPagesMutation } from "app/store/RoutesRoles/routesApi";
 import Divider from "@mui/material/Divider";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -70,7 +72,7 @@ export default function ModalAddProfile({
     tipoModal ,//true es para un nuevo perfil, false es para editar un perfil
     dataRol,
     dataAsing,
-    dataNoAsing
+    dataNoAsing,
 
 }) {
   
@@ -81,6 +83,11 @@ export default function ModalAddProfile({
   const [countActive, setCountActive] = useState(0);
   const [postHabilitarRol, data_] = usePostHabilitarRolMutation();
   const [postDeshabilitarRol, data] = usePostDeshabilitarRolMutation();
+  const [postNewRol, data__] = usePostNewRolMutation();
+  const [postNewRolPages, data_rolpages_] = usePostNewRolPagesMutation();
+  
+  const {data: dataWeb =[],isLoading: isloadingListar =true} = useGetListarPaginaWebQuery();  //Son las paginas web que estan disponibles en la BD.
+
   const postHabilitarRolPagina = async (data) => {
     try {
       await postHabilitarRol(data);
@@ -115,8 +122,8 @@ export default function ModalAddProfile({
  
   
   // const [paginasConAsign, setPaginasConAsign] = useState(todos);
-  const [checked, setChecked] = useState(dataAsing);
-  const [checkeddos, setCheckedDos] = useState(dataNoAsing);
+  const [checked, setChecked] = useState(tipoModal?dataWeb:dataAsing);
+  const [checkeddos, setCheckedDos] = useState(tipoModal?dataWeb:dataNoAsing);
 
   const [dataState, setDataState] = useState({
     id: dataRol.id,
@@ -148,15 +155,15 @@ export default function ModalAddProfile({
   }, [])
 
   function RevertirSeleccion(){
-   
-    setChecked(dataAsing.filter(
+    
+    setChecked(tipoModal?dataWeb:dataAsing.filter(
       (item) => item.bhabilitado!= 0
     ));
   }
   const handleToggleAll = (items) => () => {
     // setCheckeddos([]);
-    if (checked.length != dataAsing.length) {
-      setChecked(dataAsing);
+    if (checked.length != (tipoModal? dataWeb.length:dataAsing.length)) {
+      setChecked(tipoModal? dataWeb:dataAsing);
     } else {
       setChecked([]);
     }
@@ -192,6 +199,7 @@ export default function ModalAddProfile({
     }
 
     setCheckedDos(newChecked);
+    console.log(newChecked)
   };
   function DinamicHabDesac(object){ //Funcion para activar y deshactivar dinamicamente
     console.log(object)
@@ -231,6 +239,34 @@ export default function ModalAddProfile({
     }, 1500);
   }
   
+  function DinamicAddPagesRoles(objectArray,idRol){ //Funcion para activar y deshactivar dinamicamente
+    // console.log(object)
+    // let objDesactivado=object.filter(//los objetos desactivados seran activados
+    //   (item) => item.bhabilitado=== 0
+    // )
+   
+    // addNewPost(2)
+    for (let x = 0; x < objectArray.length; x++) {
+      // console.log(objDesactivado[x].id)
+      // console.log(x)
+      // console.log(objDesactivado.length-1)
+      let data = {
+        idrol:idRol,
+        idpagina:  objectArray[x].id,
+        bhabilitado: 1
+      }
+      postNewRolPages(data);
+      if (x === objectArray.length -1){
+        //hacer algo aqui nose
+        
+      }
+    }
+  
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 1500);
+  }
   const onInputChange = ({ target }) => {
       const { name, value } = target;
       console.log(name)
@@ -261,6 +297,8 @@ export default function ModalAddProfile({
     setDescRol(event.target.value);
   };
   function onSubmitRol(e) {
+    console.log(checked);
+    
     const data = {
       name: e.name,
       descripcion: e.descripcion,
@@ -268,22 +306,57 @@ export default function ModalAddProfile({
     };
     setLoading(true);
     setTimeout(() => {
-      axios
-      .post(jwtServiceConfig.addNewRol, data)
-      .then((response) => {
+      postNewRol(data).then((response)=>{
+        // DinamicAddPagesRoles(checked,idRol)
+        console.log(response.data.id);
+        DinamicAddPagesRoles(checked,response.data.id);
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Rol agregado correctamente.",msgError:false});
         setTimeout(() => {
           handleClose();
         },2500);
-      })
-      .catch((error) => {
+      }).catch((error)=>{
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el Rol.",msgError:true});
         setTimeout(() => {
           handleClose();
         },2500);
       });
+
+     
+    }, 2000);
+  }
+  function onSubmitEditRol() {
+    console.log(checked);
+    
+    // const data = {
+    //   name: e.nombre,
+    //   descripcion: e.descripcion,
+    //   bhabilitado: 0,
+    // };
+    // console.log(e.name)
+    setLoading(true);
+    setTimeout(() => {
+
+      if(dataNoAsing.length>0){
+        DinamicAddPagesRoles(checkeddos,dataRol.id);
+      }
+      DinamicHabDesac(checked);
+      
+      setLoading(false);
+      setMsgAlert({msgResp: true,msgText:"Rol agregado correctamente.",msgError:false});
+      setTimeout(() => {
+        handleClose();
+      },2500);
+      
+      // setLoading(false);
+      // setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el Rol.",msgError:true});
+      // setTimeout(() => {
+      //   handleClose();
+      // },2500);
+    
+
+     
     }, 2000);
   }
   if(tipoModal){
@@ -349,7 +422,7 @@ export default function ModalAddProfile({
                     render={({ field }) => (
                         <TextField
                         {...field}
-            
+                        multiline
                         className="w-full mt-[20px]"
                         label="Descripción Rol"
                         onChange={e => {
@@ -368,47 +441,47 @@ export default function ModalAddProfile({
                 </div>
                 <div className="ml-[10px] mr-[10px] flex flex-col">
                   <div>
-                  <IconButton edge="end" aria-label="comments"
+                  {/* <IconButton edge="end" aria-label="comments"
                                  onClick={() => {
                                   DinamicHabDesac(checked);
 
                                 }} 
                                 >
                     <CachedIcon />
-                  </IconButton>
+                  </IconButton> */}
                   <Typography className="text-xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px] w-auto">
-                    Ventanas con rol {dataRol.nombre}
+                    Ventanas disponibles para asignar
                   </Typography>
             
                   <div className="max-h-[300px] mt-[10px]">
                     <Card>
                     <ListItem
                             key="{value.id}"
-                            secondaryAction={
-                              <Tooltip title="Revertir Cambios">
-                                <IconButton edge="end" aria-label="comments"
-                                 onClick={() => {
-                                  RevertirSeleccion();
-                                }} 
-                                >
-                                  <CachedIcon />
-                                </IconButton>
-                              </Tooltip>
-                            }
+                            // secondaryAction={
+                            //   <Tooltip title="Revertir Cambios">
+                            //     <IconButton edge="end" aria-label="comments"
+                            //      onClick={() => {
+                            //       RevertirSeleccion();
+                            //     }} 
+                            //     >
+                            //       <CachedIcon />
+                            //     </IconButton>
+                            //   </Tooltip>
+                            // }
                             disablePadding
                           >
                         <ListItemButton
-                          onClick={handleToggleAll(dataAsing)}
+                          onClick={handleToggleAll(dataWeb)}
                           disabled={!checked.length === 0}
                         >
                           <ListItemIcon>
                             <Checkbox
                               checked={
-                                checked.length === dataAsing.length &&
+                                checked.length === dataWeb.length &&
                                 checked.length !== 0
                               }
                               indeterminate={
-                                checked.length !== dataAsing.length &&
+                                checked.length !== dataWeb.length &&
                                 checked.length !== 0
                               }
                               inputProps={{
@@ -430,7 +503,7 @@ export default function ModalAddProfile({
                         overflow: "auto",
                       }}
                     >
-                      {dataAsing.map((value) => {
+                      {dataWeb.map((value) => {
                         const labelId = `checkbox-list-label-${value.id}`;
 
                         return (
@@ -457,7 +530,7 @@ export default function ModalAddProfile({
                                   // inputProps={{ 'aria-labelledby': labelId }}
                                 />
                               </ListItemIcon>
-                              <ListItemText id={value.id} primary={value.nombrePagina} />
+                              <ListItemText id={value.id} primary={value.nombre} />
                             </ListItemButton>
                           </ListItem>
                         );
@@ -470,77 +543,7 @@ export default function ModalAddProfile({
                   <div className="h-[60px]">
                   
                   </div>
-                  <Typography className="text-xl font-medium text-pantoneazul leading-6 truncate mt-[5px] w-auto">
-                    Ventanas sin rol de {dataRol.nombre}
-                  </Typography>
-                  <div className="max-h-[300px] mt-[10px]">
-                      <Card>
-                      <ListItemButton
-                          onClick={handleToggleAlldos(dataNoAsing)}
-                          disabled={!checkeddos.length === 0}
-                        >
-                          <ListItemIcon>
-                            <Checkbox
-                              checked={
-                                checkeddos.length === dataNoAsing.length &&
-                                checkeddos.length !== 0
-                              }
-                              indeterminate={
-                                checkeddos.length !== dataNoAsing.length &&
-                                checkeddos.length !== 0
-                              }
-                              inputProps={{
-                                "aria-label": "all items selected",
-                              }}
-                            />
-                          </ListItemIcon>
-                          <ListItemText id="nose" primary="Seleccionar todo" />
-                      </ListItemButton>
-                      <Divider />
-                      <List
-                        sx={{
-                          height: "300px",
-                          width: "100%",
-                          // maxWidth: 300,
-                          bgcolor: "background.paper",
-                          overflow: "auto",
-                        }}
-                      >
-                        {dataNoAsing.map((value) => {
-                          const labelId = `checkbox-list-label-${value.id}`;
-
-                          return (
-                            <ListItem
-                              key={value.id}
-                              secondaryAction={
-                                <IconButton edge="end" aria-label="comments">
-                                  <CommentIcon />
-                                </IconButton>
-                              }
-                              disablePadding
-                            >
-                              <ListItemButton
-                                role={undefined}
-                                onClick={handleToggledos(value)}
-                                dense
-                              >
-                                <ListItemIcon>
-                                  <Checkbox
-                                    edge="start"
-                                    checked={checkeddos.indexOf(value) !== -1}
-                                    tabIndex={-1}
-                                    disableRipple
-                                    // inputProps={{ 'aria-labelledby': labelId }}
-                                  />
-                                </ListItemIcon>
-                                <ListItemText id={value.id} primary={value.nombre} />
-                              </ListItemButton>
-                            </ListItem>
-                          );
-                        })}
-                      </List>
-                      </Card>
-                  </div>
+                
                
                  
                
@@ -633,12 +636,7 @@ export default function ModalAddProfile({
         </div></DialogTitle>
     <DialogContent dividers={scroll === 'paper'} className="min-w-[450px]">
       <div>
-        <form
-            name="registerForm"
-            noValidate
-            className="w-full"
-            // onSubmit={}
-            >
+       
                 <div className="ml-[10px] mr-[10px] flex flex-col">
                         
                  
@@ -840,16 +838,9 @@ export default function ModalAddProfile({
                 </div>
                 <div className="ml-[10px] mr-[10px] flex flex-col">
                   <div>
-                  <IconButton edge="end" aria-label="comments"
-                                 onClick={() => {
-                                  DinamicHabDesac(checked);
-
-                                }} 
-                                >
-                    <CachedIcon />
-                  </IconButton>
                   <Typography className="text-xl font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px] w-auto">
-                    Ventanas con rol {dataRol.nombre}
+                    Ventanas Asignadas  <ScreenshotMonitorIcon/>
+                    {/* {dataRol.nombre} */}
                   </Typography>
             
                   <div className="max-h-[300px] mt-[10px]">
@@ -942,8 +933,9 @@ export default function ModalAddProfile({
                   <div className="h-[60px]">
                   
                   </div>
-                  <Typography className="text-xl font-medium text-pantoneazul leading-6 truncate mt-[5px] w-auto">
-                    Ventanas sin rol de {dataRol.nombre}
+                  {dataNoAsing.length>0?<>
+                    <Typography className="text-xl font-medium text-pantoneazul leading-6 truncate mt-[5px] w-auto">
+                    Ventanas No Asignadas  <DesktopAccessDisabledIcon/>
                   </Typography>
                   <div className="max-h-[300px] mt-[10px]">
                       <Card>
@@ -1012,7 +1004,8 @@ export default function ModalAddProfile({
                         })}
                       </List>
                       </Card>
-                  </div>
+                  </div></>:<></>}
+                
                
                  
                
@@ -1053,14 +1046,14 @@ export default function ModalAddProfile({
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAlert}>Cancelar</Button>
-            <Button onClick={handleSubmit(onSubmitRol)} autoFocus>
+            <Button onClick={onSubmitEditRol} >
               Guardar
             </Button>
           </DialogActions>
           </div>)}
           </div>)}
         </Dialog>
-        </form>
+     
       </div>
       
     
@@ -1070,7 +1063,7 @@ export default function ModalAddProfile({
             <Button 
                 size="large"
                 className=" h-[28px]  w-[100px] mr-[20px]"
-                disabled={_.isEmpty(dirtyFields) || !isValid}
+                // disabled={_.isEmpty(dirtyFields) || !isValid}
                 onClick={handleClickOpen}
                 variant="contained"
                 color="secondary">

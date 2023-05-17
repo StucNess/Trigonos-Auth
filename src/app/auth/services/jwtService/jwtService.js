@@ -49,7 +49,7 @@ class JwtService extends FuseUtils.EventEmitter {
       this.emit("onAutoLogin", true);
     } else {
       this.setSession(null);
-      this.emit("onAutoLogout", "access_token expired");
+      this.emit("onAutoLogout", "Tiempo de inactividad sobrepasado");
     }
   };
 
@@ -213,7 +213,7 @@ class JwtService extends FuseUtils.EventEmitter {
     const decoded = jwtDecode(access_token);
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
-      console.warn("access token expired");
+      console.warn("Tiempo de inactividad sobrepasado");
       return false;
     }
     return true;

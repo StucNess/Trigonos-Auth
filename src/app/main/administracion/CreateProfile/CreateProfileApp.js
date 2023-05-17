@@ -534,6 +534,7 @@ function CreateProfileApp(props){
                     onClick={() => {
                       setTable(true);
                       setTipoModal(true);
+                      console.log(dataWeb)
                     }} 
                       
                       >
@@ -688,6 +689,7 @@ function CreateProfileApp(props){
                 dataRol={dataRol}
                 dataAsing={dataAsing}
                 dataNoAsing={dataNoAsing}
+                dataWeb ={dataWeb}
                 />
             )}
             </div>
