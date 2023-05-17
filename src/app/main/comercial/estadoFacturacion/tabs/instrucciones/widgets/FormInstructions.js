@@ -5,6 +5,8 @@ import {
   Button,
   Box,
   Alert,
+  Tooltip,
+  
 } from "@mui/material";
 import * as React from "react";
 import axios from "axios";
@@ -13,6 +15,26 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import AdapterDateFns from "@date-io/date-fns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { es } from "date-fns/locale";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
+import IconButton from '@mui/material/IconButton';
+
+const componentsProps={
+  tooltip: {
+    sx: {
+      
+      userSelect:'none',
+     
+      bgcolor: 'primary.main',
+      '& .MuiTooltip-arrow': {
+      color: 'primary.main',
+      
+      },
+    },
+  },
+};
+
 
 let emisione;
 let buss;
@@ -21,6 +43,7 @@ const AceptationState = ["Aceptado", "Rechazado", "Pendiente"];
 const BillingState = ["No Facturado", "Facturado", "Facturado con Atraso"];
 const PaymentState = ["No Pagado", "Pagado", "Pagado con Atraso"];
 const FormInstructions = (props) => {
+  
   const [value, setValue] = React.useState(
     new Date("December 01, 1995 03:24:00")
   );
@@ -296,8 +319,8 @@ const FormInstructions = (props) => {
           </Alert>
         </Stack>
       )}
-      <Box mt={1.5}>
-        <Button
+      <Box className="flex justify-evenly" mt={1.5}>
+        {/* <Button
           sx={{ ml: 32, mr: 3, width: 200 }}
           variant="contained"
           color="success"
@@ -307,18 +330,64 @@ const FormInstructions = (props) => {
         >
           {" "}
           Modificar
-        </Button>
-        <Button
-          sx={{ ml: 32, mr: 3, width: 200 }}
-          variant="contained"
-          color="success"
-          onClick={() => {}}
-        >
-          {" "}
-          Prueba
-        </Button>
+        </Button> */}
+        {/* absolute top-0 right-0 */}
+        <Tooltip  
+        
+        title="Actualizar Instrucción" 
+        arrow 
+        placement="top"
+        componentsProps={componentsProps}
 
-        <Button
+        // placement="top-start"
+               >
+               
+        <IconButton 
+        className=""
+        size="medium" 
+        variant="contained" 
+        color="success"   
+        onClick={() => {
+            ApiPatch();
+          }} >
+                <CheckCircleOutlineIcon   fontSize="large" />
+        </IconButton>
+        </Tooltip> 
+
+        <Tooltip 
+      
+        title="Nose que poner uwu"  followCursor
+        // placement="top"
+        componentsProps={componentsProps}
+        // placement="top-start"
+               >
+        <IconButton 
+        className=""
+        size="medium" 
+        variant="contained" 
+        color="info"
+        // onClick={props.onClose}
+        >
+                <ErrorOutlineOutlinedIcon   fontSize="large" />
+        </IconButton>
+        </Tooltip>
+
+        
+        <Tooltip  title="Regresar a instrucciones" 
+        placement="top"
+        componentsProps={componentsProps}
+        // placement="top-start"
+               >
+        <IconButton 
+        className=""
+        size="medium" 
+        variant="contained" 
+        color="primary" 
+        onClick={props.onClose}>
+                <ArrowCircleRightOutlinedIcon   fontSize="large" />
+        </IconButton>
+        </Tooltip>
+        {/* <Button
           sx={{ width: 200 }}
           onClick={props.onClose}
           variant="contained"
@@ -326,7 +395,7 @@ const FormInstructions = (props) => {
         >
           {" "}
           Atras{" "}
-        </Button>
+        </Button> */}
       </Box>
     </div>
   );
