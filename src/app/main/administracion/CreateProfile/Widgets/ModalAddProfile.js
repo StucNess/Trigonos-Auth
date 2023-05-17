@@ -35,6 +35,7 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import InputAdornment from "@mui/material/InputAdornment";
 import { useGetAllRoutesQuery, useGetListarPaginaWebQuery, usePostDeshabilitarRolMutation, usePostHabilitarRolMutation, usePostNewRolMutation, usePostNewRolPagesMutation } from "app/store/RoutesRoles/routesApi";
 import Divider from "@mui/material/Divider";
@@ -51,7 +52,7 @@ import Tooltip from '@mui/material/Tooltip';
 const schema = yup.object().shape({
   // user: yup.string().required("Debe ingresar su nombre completo"),
   
-  name: yup
+  nombre: yup
     .string()
     .required("Debe ingresar un Nombre"),
   descripcion: yup
@@ -60,7 +61,7 @@ const schema = yup.object().shape({
 });
 const defaultValues = {
 
-  name: "",
+  nombre: "",
   descripcion: "",
   
   
@@ -122,8 +123,8 @@ export default function ModalAddProfile({
  
   
   // const [paginasConAsign, setPaginasConAsign] = useState(todos);
-  const [checked, setChecked] = useState(tipoModal?dataWeb:dataAsing);
-  const [checkeddos, setCheckedDos] = useState(tipoModal?dataWeb:dataNoAsing);
+  const [checked, setChecked] = useState([]);//tipoModal?dataWeb:dataAsing
+  const [checkeddos, setCheckedDos] = useState([]); //tipoModal?dataWeb:dataNoAsing
 
   const [dataState, setDataState] = useState({
     id: dataRol.id,
@@ -156,7 +157,7 @@ export default function ModalAddProfile({
 
   function RevertirSeleccion(){
     
-    setChecked(tipoModal?dataWeb:dataAsing.filter(
+    setChecked(tipoModal?[]:dataAsing.filter(
       (item) => item.bhabilitado!= 0
     ));
   }
@@ -164,6 +165,7 @@ export default function ModalAddProfile({
     // setCheckeddos([]);
     if (checked.length != (tipoModal? dataWeb.length:dataAsing.length)) {
       setChecked(tipoModal? dataWeb:dataAsing);
+      setDataState({...dataState,ventanasAsing: dataWeb} )
     } else {
       setChecked([]);
     }
@@ -187,6 +189,7 @@ export default function ModalAddProfile({
     }
 
     setChecked(newChecked);
+    setDataState({...dataState,ventanasAsing: newChecked} )
   };
   const handleToggledos = (value) => () => {
     const currentIndex = checkeddos.indexOf(value);
@@ -199,10 +202,10 @@ export default function ModalAddProfile({
     }
 
     setCheckedDos(newChecked);
-    console.log(newChecked)
+  
   };
   function DinamicHabDesac(object){ //Funcion para activar y deshactivar dinamicamente
-    console.log(object)
+    
     let objDesactivado=object.filter(//los objetos desactivados seran activados
       (item) => item.bhabilitado=== 0
     )
@@ -217,7 +220,7 @@ export default function ModalAddProfile({
         //hacer algo aqui nose
       }
     }
-    console.log(checked);//los objetos activados que han sido desactivados seran desactivados
+   //los objetos activados que han sido desactivados seran desactivados
     let ids = object.map(function (el) {
       return el.id;
     });
@@ -233,23 +236,16 @@ export default function ModalAddProfile({
         //hacer algo aqui nose
       }
     }
-    console.log(objActivado);
+   
     setTimeout(() => {
       window.location.reload();
     }, 1500);
   }
   
   function DinamicAddPagesRoles(objectArray,idRol){ //Funcion para activar y deshactivar dinamicamente
-    // console.log(object)
-    // let objDesactivado=object.filter(//los objetos desactivados seran activados
-    //   (item) => item.bhabilitado=== 0
-    // )
-   
-    // addNewPost(2)
+    
     for (let x = 0; x < objectArray.length; x++) {
-      // console.log(objDesactivado[x].id)
-      // console.log(x)
-      // console.log(objDesactivado.length-1)
+     
       let data = {
         idrol:idRol,
         idpagina:  objectArray[x].id,
@@ -269,8 +265,7 @@ export default function ModalAddProfile({
   }
   const onInputChange = ({ target }) => {
       const { name, value } = target;
-      console.log(name)
-      console.log(value)
+  
       setDataState({
         ...dataState,
         [name]: value,
@@ -284,7 +279,11 @@ export default function ModalAddProfile({
   };
   const handleClickOpen = () => {
     setSecondDopen(true);
-  
+    setMsgAlert({
+        msgResp: false,
+        msgText:"",
+        msgError:false,
+      });
   };
   const handleCloseAlert = () => {
     setSecondDopen(false);
@@ -297,67 +296,107 @@ export default function ModalAddProfile({
     setDescRol(event.target.value);
   };
   function onSubmitRol(e) {
-    console.log(checked);
-    
+
     const data = {
-      name: e.name,
+      name: e.nombre,
       descripcion: e.descripcion,
       bhabilitado: 0,
     };
     setLoading(true);
-    setTimeout(() => {
-      postNewRol(data).then((response)=>{
-        // DinamicAddPagesRoles(checked,idRol)
-        console.log(response.data.id);
-        DinamicAddPagesRoles(checked,response.data.id);
+    if(checked.length>0){
+
+    
+      setTimeout(() => {
+        postNewRol(data).then((response)=>{
+          // DinamicAddPagesRoles(checked,idRol)
+        
+          DinamicAddPagesRoles(checked,response.data.id);
+          setLoading(false);
+          setMsgAlert({msgResp: true,msgText:"Rol agregado correctamente.",msgError:false});
+          setTimeout(() => {
+            handleClose();
+          },2500);
+        }).catch((error)=>{
+          setLoading(false);
+          setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el Rol.",msgError:true});
+          setTimeout(() => {
+            handleClose();
+          },2500);
+        });
+  
+       
+      }, 2000);
+    }else{
+      setTimeout(() => {
+        setLoading(false);
+          setMsgAlert({msgResp: true,msgText:"Debe seleccionar una o mas ventanas",msgError:true});
+          setTimeout(() => {
+            setSecondDopen(false);
+          },2500);
+      }, 1000);
+    }
+    
+  
+  }
+  function onSubmitEditRol() {
+
+  
+    setLoading(true);
+    // console.log(dataConfirm);
+    // console.log(dataState);
+    console.log(loading)
+    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(dataState);
+    console.log(checkeddos.length)
+    if (isEqual && (checkeddos.length) ===0 ) {
+      // console.log("No se realiza envio a API");
+      setTimeout(() => {
+
+        setLoading(false);
+        setMsgAlert({
+          msgResp: true,
+          msgText: "Error, no ha realizado ningun cambio!!",
+          msgError: true,
+        });
+        setTimeout(() => {
+
+          
+          setSecondDopen(false)
+          // setMsgAlert({
+          //   msgResp: false,
+          //   msgText:"",
+          //   msgError:false,
+          // });
+         
+        }, 1000);
+
+
+      },1000);
+      
+    } else {
+     
+      setTimeout(() => {
+  
+        if(dataNoAsing.length>0){
+          DinamicAddPagesRoles(checkeddos,dataRol.id);
+        }
+        DinamicHabDesac(checked);
+        
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Rol agregado correctamente.",msgError:false});
         setTimeout(() => {
           handleClose();
         },2500);
-      }).catch((error)=>{
-        setLoading(false);
-        setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el Rol.",msgError:true});
-        setTimeout(() => {
-          handleClose();
-        },2500);
-      });
-
-     
-    }, 2000);
-  }
-  function onSubmitEditRol() {
-    console.log(checked);
-    
-    // const data = {
-    //   name: e.nombre,
-    //   descripcion: e.descripcion,
-    //   bhabilitado: 0,
-    // };
-    // console.log(e.name)
-    setLoading(true);
-    setTimeout(() => {
-
-      if(dataNoAsing.length>0){
-        DinamicAddPagesRoles(checkeddos,dataRol.id);
-      }
-      DinamicHabDesac(checked);
+        
+        // setLoading(false);
+        // setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el Rol.",msgError:true});
+        // setTimeout(() => {
+        //   handleClose();
+        // },2500);
       
-      setLoading(false);
-      setMsgAlert({msgResp: true,msgText:"Rol agregado correctamente.",msgError:false});
-      setTimeout(() => {
-        handleClose();
-      },2500);
-      
-      // setLoading(false);
-      // setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el Rol.",msgError:true});
-      // setTimeout(() => {
-      //   handleClose();
-      // },2500);
-    
-
-     
-    }, 2000);
+  
+       
+      }, 2000);
+    }
   }
   if(tipoModal){
    return( 
@@ -395,7 +434,7 @@ export default function ModalAddProfile({
                 <div className="ml-[10px] mr-[10px] flex flex-col">
                         
                   <Controller
-                    name="name"
+                    name="nombre"
                     control={control}
                     render={({ field }) => (
                         <TextField
@@ -509,11 +548,11 @@ export default function ModalAddProfile({
                         return (
                           <ListItem
                             key={value.id}
-                            secondaryAction={
-                              <IconButton edge="end" aria-label="comments">
-                                <CommentIcon />
-                              </IconButton>
-                            }
+                            // secondaryAction={
+                            //   <IconButton edge="end" aria-label="comments">
+                            //     <CommentIcon />
+                            //   </IconButton>
+                            // }
                             disablePadding
                           >
                             <ListItemButton
@@ -560,8 +599,13 @@ export default function ModalAddProfile({
           <div>
           {msgResp? (<div className='flex justify-center items-center h-[250px] w-[300px]' >
             {msgError? (<div className='flex justify-center items-center h-[250px] w-[300px]'>
-              <WarningIcon className='w-[68px] h-[68px] text-red'/>
+              {checked.length>0? <> <WarningIcon className='w-[68px] h-[68px] text-red'/>
               <span className='absolute bottom-[70px] text-red'> <b>{msgText}</b></span>
+              </>
+              : <> <ErrorOutlineIcon className='w-[68px] h-[68px] text-pantoneazul'/>
+              <span className='absolute bottom-[70px] text-pantoneazul'> <b>{msgText}</b></span>
+              </>}
+              
             </div>):(<div className='flex justify-center items-center h-[250px] w-[300px]'>
               <CheckCircleIcon className='w-[68px] h-[68px] text-green'/>
               <span className='absolute bottom-[70px] text-green'> <b>{msgText}</b></span>
@@ -573,12 +617,34 @@ export default function ModalAddProfile({
           </DialogTitle>
           <DialogContent className='flex flex-col' >
             <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
+            Nombre del Rol:
+             {/* <b className='text-black'>{dataState.nombre}</b> */}
+            </Typography>
+            <div className="border-2 border-sky-500 max-w-[300px]">
+            <Typography className="text-lg font-medium text-black  m-[10px]">
+            {nameRol}
+            
+            </Typography>
+            </div>
+            <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
+            Descripción del Rol:
+            </Typography>
+            <div className="border-2 border-sky-500 max-w-[300px]">
+            <Typography className="text-lg font-medium   m-[10px]">
+              {descRol}
+           
+            
+            </Typography>
+            </div>
+          </DialogContent>
+          {/* <DialogContent className='flex flex-col' >
+            <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
             Nombre del Rol: <b className='text-black'>{nameRol}</b>
             </Typography>
             <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
             Descripción del Rol: <b className='text-black'>{descRol}</b>
             </Typography>
-          </DialogContent>
+          </DialogContent> */}
           <DialogActions>
             <Button onClick={handleCloseAlert}>Cancelar</Button>
             <Button onClick={handleSubmit(onSubmitRol)} autoFocus>
@@ -636,7 +702,12 @@ export default function ModalAddProfile({
         </div></DialogTitle>
     <DialogContent dividers={scroll === 'paper'} className="min-w-[450px]">
       <div>
-       
+      <form
+            name="registerForm"
+            noValidate
+            className="w-full"
+            // onSubmit={}
+            >
                 <div className="ml-[10px] mr-[10px] flex flex-col">
                         
                  
@@ -652,7 +723,7 @@ export default function ModalAddProfile({
                     )}
                     </div>
                    <Controller
-                    name="name"
+                    name="nombre"
                     control={control}
                     defaultValue="Vacio"
                     render={({ field}) => (
@@ -663,7 +734,7 @@ export default function ModalAddProfile({
                     label="Nombre Rol"
                     type="text"
                     // defaultValue="Vacio" Nota no ocupar un defaultValue en el chield ocuparlo en el controller
-                    name="nombre"
+                    // name="nombre"
                     value={dataState.nombre}
                     onChange={e => {
                       
@@ -675,6 +746,9 @@ export default function ModalAddProfile({
                     disabled={nombre ? false : true}
                    
                     InputProps={{
+                      // value:dataState.nombre,
+                      // name:"nombre",
+                      // readOnly:nombre ? false : true,
                       startAdornment: (
                         <InputAdornment position="start">
                           {nombre ? (
@@ -700,6 +774,7 @@ export default function ModalAddProfile({
                                     ...dataState,
                                     nombre: dataRol.nombre,
                                   });
+                                  
                                   setUpdate({
                                     ...update,
                                     nombre: false,
@@ -757,7 +832,7 @@ export default function ModalAddProfile({
                     multiline
                     type="text"
                     // defaultValue="Vacio" Nota no ocupar un defaultValue en el chield ocuparlo en el controller
-                    name="descripcion"
+                    // name="descripcion"
                     value={dataState.descripcion}
                     onChange={e => {
                       
@@ -769,6 +844,8 @@ export default function ModalAddProfile({
                     disabled={descripcion ? false : true}
                    
                     InputProps={{
+                      readOnly:descripcion ? false : true,
+
                       startAdornment: (
                         <InputAdornment position="start"
                         style={{
@@ -829,8 +906,8 @@ export default function ModalAddProfile({
                         </InputAdornment>
                       ),
                     }}
-                    error={!!errors.nombre}
-                    helperText={errors?.nombre?.message}
+                    error={!!errors.descripcion}
+                    helperText={errors?.descripcion?.message}
                     variant="filled"
                     required
                     />
@@ -899,11 +976,11 @@ export default function ModalAddProfile({
                         return (
                           <ListItem
                             key={value.id}
-                            secondaryAction={
-                              <IconButton edge="end" aria-label="comments">
-                                <CommentIcon />
-                              </IconButton>
-                            }
+                            // secondaryAction={
+                            //   <IconButton edge="end" aria-label="comments">
+                            //     <CommentIcon />
+                            //   </IconButton>
+                            // }
                             disablePadding
                           >
                             <ListItemButton
@@ -976,11 +1053,11 @@ export default function ModalAddProfile({
                           return (
                             <ListItem
                               key={value.id}
-                              secondaryAction={
-                                <IconButton edge="end" aria-label="comments">
-                                  <CommentIcon />
-                                </IconButton>
-                              }
+                              // secondaryAction={
+                              //   <IconButton edge="end" aria-label="comments">
+                              //     <CommentIcon />
+                              //   </IconButton>
+                              // }
                               disablePadding
                             >
                               <ListItemButton
@@ -1013,7 +1090,7 @@ export default function ModalAddProfile({
                 
                  
                 
-                  
+        
             <Dialog
             open={secondDopen}
             aria-labelledby="alert-dialog-title"
@@ -1034,26 +1111,40 @@ export default function ModalAddProfile({
             
           </div>):(<div>
             <DialogTitle id="alert-dialog-title">
-            {"¿Desea guardar el siguiente Rol?"}
+            {"Confirmar cambios"}
           </DialogTitle>
           <DialogContent className='flex flex-col' >
             <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
-            Nombre del Rol: <b className='text-black'>{nameRol}</b>
+            Nombre del Rol:
+             {/* <b className='text-black'>{dataState.nombre}</b> */}
             </Typography>
+            <div className="border-2 border-sky-500 max-w-[300px]">
+            <Typography className="text-lg font-medium text-black  m-[10px]">
+            {dataState.nombre}
+            
+            </Typography>
+            </div>
             <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate mt-[5px]">
-            Descripción del Rol: <b className='text-black'>{descRol}</b>
+            Descripción del Rol:
             </Typography>
+            <div className="border-2 border-sky-500 max-w-[300px]">
+            <Typography className="text-lg font-medium   m-[10px]">
+              {dataState.descripcion}
+           
+            
+            </Typography>
+            </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAlert}>Cancelar</Button>
-            <Button onClick={onSubmitEditRol} >
+            <Button onClick={onSubmitEditRol} > 
               Guardar
             </Button>
           </DialogActions>
           </div>)}
           </div>)}
         </Dialog>
-     
+      </form>  
       </div>
       
     
