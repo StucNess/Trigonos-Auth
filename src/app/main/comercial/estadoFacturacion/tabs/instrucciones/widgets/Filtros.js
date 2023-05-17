@@ -121,7 +121,7 @@ const Filtros = (props) => {
     sTerminoPeriodo,
     buscar,
   } = selected;
-  const [disabledDateEnd, setDisabledDateEnd] = useState(true);
+  const [disabledDateEnd, setDisabledDateEnd] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -567,16 +567,18 @@ const Filtros = (props) => {
                 <LocalizationProvider
                   dateAdapter={AdapterDateFns}
                   adapterLocale={es}
+                  
                 >
-                  <Box className="flex flex-wrap justify-evenly">
-                    <Box>
-                      <FormControlLabel
+                  <Box className="flex justify-center">
+
+                    <Box className="flex flex-col">
+                      {/* <FormControlLabel
                         control={<Checkbox />}
                         label="Desde"
                         disabled
                         checked
                         name="desde"
-                      />
+                      /> */}
                       <DatePicker
                         views={["year", "month"]}
                         label="Fecha inicio"
@@ -595,18 +597,17 @@ const Filtros = (props) => {
                           <TextField
                             {...params}
                             helperText={null}
-                            sx={{ mb: 2, width: 300 }}
+                            sx={{  mb: 2 }}
                           />
                         )}
                       />
-                    </Box>
-                    <Box>
-                      <FormControlLabel
+                  
+                      {/* <FormControlLabel
                         control={<Checkbox />}
                         label="Hasta"
                         onChange={(e) => conditionalPeriods(e)}
                         name="hasta"
-                      />
+                      /> */}
                       <DatePicker
                         views={["year", "month"]}
                         label="Fecha termino"
@@ -626,10 +627,12 @@ const Filtros = (props) => {
                           <TextField
                             {...params}
                             helperText={null}
-                            sx={{ width: 300, mb: 2 }}
+                            
+                            sx={{  mb: 2 }}
                           />
                         )}
                       />
+                   
                     </Box>
                   </Box>
                 </LocalizationProvider>
@@ -669,7 +672,7 @@ const Filtros = (props) => {
                   }}
                   style={{
                     m: 1,
-                    width: 250,
+                    width: 200,
                     margin: "0 auto",
                     display: "flex",
                     marginTop: 25,
@@ -695,7 +698,7 @@ const Filtros = (props) => {
                   }
                   style={{
                     m: 1,
-                    width: 250,
+                    width: 200,
                     margin: "0 auto",
                     display: "flex",
                     marginTop: 25,

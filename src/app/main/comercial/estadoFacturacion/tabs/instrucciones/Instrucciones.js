@@ -138,7 +138,7 @@ const Instrucciones = (props) => {
       
       <motion.div
         variants={item}
-        className=" hdmas:col-span-12  hd:col-span-3 "
+        className=" hdmas:col-span-12  hd:col-span-2 "
       >
         {/*
         Cargar la diversificacion de las tablas aca
@@ -158,7 +158,7 @@ const Instrucciones = (props) => {
       </motion.div>
       <motion.div
         variants={item}
-        className="  hdmas:col-span-12   hd:col-span-9  "
+        className="  hdmas:col-span-12   hd:col-span-10  "
       >
         <TablaInstrucciones
           idParticipante={props.id}
