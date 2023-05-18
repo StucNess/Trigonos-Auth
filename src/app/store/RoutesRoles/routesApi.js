@@ -52,6 +52,16 @@ export const routesApi = createApi({
                 body: rol
             }),
         }),
+        postEditRol: builder.mutation({
+            query: (id,rol) => ({
+                headers:{
+                    'Content-type': 'application/json'
+                },
+                url: `/Actualizar/?${id}/`,
+                method: 'POST',
+                body: rol
+            }),
+        }),
         postNewRolPages: builder.mutation({ //Agrega un rol y pagina en la tabla de rompimiento
             query: (rolpage) => ({
                 headers:{
@@ -64,4 +74,4 @@ export const routesApi = createApi({
         }),
     })
 })
-export const { useGetAllRoutesQuery, useGetListarPaginaWebQuery,useGetOnlyHabilitRoutesQuery,usePostHabilitarRolMutation ,usePostDeshabilitarRolMutation, usePostNewRolMutation,usePostNewRolPagesMutation}= routesApi;
+export const { useGetAllRoutesQuery, useGetListarPaginaWebQuery,useGetOnlyHabilitRoutesQuery,usePostHabilitarRolMutation ,usePostDeshabilitarRolMutation, usePostNewRolMutation,usePostNewRolPagesMutation,usePostEditRolMutation}= routesApi;

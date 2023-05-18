@@ -37,7 +37,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import InputAdornment from "@mui/material/InputAdornment";
-import { useGetAllRoutesQuery, useGetListarPaginaWebQuery, usePostDeshabilitarRolMutation, usePostHabilitarRolMutation, usePostNewRolMutation, usePostNewRolPagesMutation } from "app/store/RoutesRoles/routesApi";
+import { useGetAllRoutesQuery, useGetListarPaginaWebQuery, usePostDeshabilitarRolMutation, usePostEditRolMutation, usePostHabilitarRolMutation, usePostNewRolMutation, usePostNewRolPagesMutation } from "app/store/RoutesRoles/routesApi";
 import Divider from "@mui/material/Divider";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -86,6 +86,7 @@ export default function ModalAddProfile({
   const [postDeshabilitarRol, data] = usePostDeshabilitarRolMutation();
   const [postNewRol, data__] = usePostNewRolMutation();
   const [postNewRolPages, data_rolpages_] = usePostNewRolPagesMutation();
+  const [postEditRol,dataEditRol] = usePostEditRolMutation()
   
   const {data: dataWeb =[],isLoading: isloadingListar =true} = useGetListarPaginaWebQuery();  //Son las paginas web que estan disponibles en la BD.
 
@@ -304,8 +305,6 @@ export default function ModalAddProfile({
     };
     setLoading(true);
     if(checked.length>0){
-
-    
       setTimeout(() => {
         postNewRol(data).then((response)=>{
           // DinamicAddPagesRoles(checked,idRol)
@@ -339,14 +338,9 @@ export default function ModalAddProfile({
   
   }
   function onSubmitEditRol() {
-
-  
     setLoading(true);
-    // console.log(dataConfirm);
-    // console.log(dataState);
-    console.log(loading)
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(dataState);
-    console.log(checkeddos.length)
+ 
     if (isEqual && (checkeddos.length) ===0 ) {
       // console.log("No se realiza envio a API");
       setTimeout(() => {
@@ -358,29 +352,21 @@ export default function ModalAddProfile({
           msgError: true,
         });
         setTimeout(() => {
-
-          
           setSecondDopen(false)
-          // setMsgAlert({
-          //   msgResp: false,
-          //   msgText:"",
-          //   msgError:false,
-          // });
-         
         }, 1000);
-
-
       },1000);
-      
     } else {
-     
       setTimeout(() => {
-  
         if(dataNoAsing.length>0){
           DinamicAddPagesRoles(checkeddos,dataRol.id);
         }
         DinamicHabDesac(checked);
         
+        postEditRol(dataRol.id,{
+          name: dataState.nombre,
+          descripcion:dataState.descripcion,
+          bhabilitado: 1
+        })
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Rol agregado correctamente.",msgError:false});
         setTimeout(() => {
