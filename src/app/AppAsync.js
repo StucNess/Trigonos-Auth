@@ -67,11 +67,24 @@ const AppContextProvider = ({ children }) => {
   const [routes, setRoutes] = useState([]);
   const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
   const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
-
+  const user = useSelector(selectUser);
+ 
   ProfileAppConfig()
-  
+  function getListRoless(idPagina){
+    return (todoshabilit.filter(
+      (item) => item.idpagina=== idPagina
+    )).map(function(el) {
+      return el.nombreRol         
+    });
+  }
+
+  function getListWebNoAsign(){
+     console.log(getListRoless(9).includes(user.role))
+  }
+  getListWebNoAsign();
  
   useEffect(() => {
+    
   }, []);
 
 
@@ -96,6 +109,7 @@ const AppContextProvider = ({ children }) => {
       ...AdministracionConfig(todoshabilit),//los que contienen el spread se les pasa el objeto completo
       ProfileAppConfig(getListRoles(3)),
     ];
+    // console.log(getListRoless(9).includes(user.role)) No recomiendo borrar esto sirve para guia o explicacion de por que el element del / esta asi
     const routes = [
       ...FuseUtils.generateRoutesFromConfigs(
         routeConfigs,
@@ -103,7 +117,7 @@ const AppContextProvider = ({ children }) => {
       ),
       {
         path: "/",
-        element: <Navigate to="/comercial/estadoFacturacion" />,
+        element: getListRoless(9).includes(user.role)? <Navigate to="/comercial/estadoFacturacion" />: <Error404Page />,
         auth: settingsConfig.defaultAuth,
       },
       {

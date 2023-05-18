@@ -307,7 +307,7 @@ export default function ModalAddProfile({
     if(checked.length>0){
       setTimeout(() => {
         postNewRol(data).then((response)=>{
-          // DinamicAddPagesRoles(checked,idRol)
+         
         
           DinamicAddPagesRoles(checked,response.data.id);
           setLoading(false);
@@ -340,15 +340,16 @@ export default function ModalAddProfile({
   function onSubmitEditRol() {
     setLoading(true);
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(dataState);
+    console.log(((dataState.nombre).trim()) === ((dataConfirm.nombre).trim()));
  
-    if (isEqual && (checkeddos.length) ===0 ) {
+    if (isEqual && (checkeddos.length) ===0 && ((dataState.nombre).trim()) === ((dataConfirm.nombre).trim()) &&((dataState.descripcion).trim() === (dataConfirm.descripcion).trim())) {
       // console.log("No se realiza envio a API");
       setTimeout(() => {
 
         setLoading(false);
         setMsgAlert({
           msgResp: true,
-          msgText: "Error, no ha realizado ningun cambio!!",
+          msgText: "Advertencia, debe realizar un cambio!",
           msgError: true,
         });
         setTimeout(() => {
@@ -361,11 +362,20 @@ export default function ModalAddProfile({
           DinamicAddPagesRoles(checkeddos,dataRol.id);
         }
         DinamicHabDesac(checked);
-        
-        postEditRol(dataRol.id,{
-          name: dataState.nombre,
-          descripcion:dataState.descripcion,
-          bhabilitado: 1
+        console.log(dataState.nombre)
+
+        postEditRol({
+          id:dataRol.id,
+          data:{ name: (dataState.nombre).trim() != (dataConfirm.nombre).trim()? dataState.nombre:null,
+            descripcion:(dataState.descripcion).trim() != (dataConfirm.descripcion).trim()? dataState.descripcion:null,
+            bhabilitado: 1}
+         
+        }).catch((error)=>{
+        setLoading(false);
+        setMsgAlert({msgResp: true,msgText:`Error a causa del nombre o descripción,${error}`,msgError:true});
+        setTimeout(() => {
+          handleClose();
+        },2500);
         })
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Rol agregado correctamente.",msgError:false});

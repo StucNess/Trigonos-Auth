@@ -53,13 +53,14 @@ export const routesApi = createApi({
             }),
         }),
         postEditRol: builder.mutation({
-            query: (id,rol) => ({
+            query: (rol) => ({
                 headers:{
                     'Content-type': 'application/json'
                 },
-                url: `/Actualizar/?${id}/`,
+                url: `/Actualizar/${rol.id}?parametros=`,
                 method: 'POST',
-                body: rol
+                
+                body:rol.data
             }),
         }),
         postNewRolPages: builder.mutation({ //Agrega un rol y pagina en la tabla de rompimiento
