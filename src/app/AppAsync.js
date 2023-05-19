@@ -40,9 +40,11 @@ import RecoverPassTwoConfig from "./main/recover-password/RecoverPassTwoConfig";
 import { ComercialConfigs } from "./main/comercial/ComercialConfigs";
 import AnalisisConfig from "./main/analisis/AnalisisConfig";
 import { AdministracionConfig } from "./main/administracion/AdministracionConfig";
-import { useGetAllRoutesQuery, useGetOnlyHabilitRoutesQuery } from "./store/RoutesRoles/routesApi";
+import { useGetAllRolesQuery, useGetAllRoutesQuery, useGetOnlyHabilitRoutesQuery } from "./store/RoutesRoles/routesApi";
 import { ProfileAppConfig } from "./main/profile/ProfileAppConfig";
-
+import { appendNavigationItem, selectNavigation, selectNavigationAll, setAsyncNavigation } from "./store/fuse/navigationSlice";
+import { navigationConfigAsync } from "./configs/navigationConfigAsync";
+import navigationConfig from "./configs/navigationConfig";
 
 
 
@@ -63,12 +65,19 @@ export const AppContextRoutes = createContext();
 
 // Componente que contiene el Provider
 const AppContextProvider = ({ children }) => {
+  const dispatch = useDispatch();
+
   const [data, setData] = useState([]);
   const [routes, setRoutes] = useState([]);
   const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
+  const {data: roles =[],isLoading: isloadingRol =true} = useGetAllRolesQuery();
   const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
   const user = useSelector(selectUser);
- 
+  // selectNavigationAll
+
+
+  
+
   ProfileAppConfig()
   function getListRoless(idPagina){
     return (todoshabilit.filter(
@@ -84,7 +93,8 @@ const AppContextProvider = ({ children }) => {
   getListWebNoAsign();
  
   useEffect(() => {
-    
+
+    dispatch(setAsyncNavigation(navigationConfigAsync()))
   }, []);
 
 
@@ -109,11 +119,15 @@ const AppContextProvider = ({ children }) => {
       ...AdministracionConfig(todoshabilit),//los que contienen el spread se les pasa el objeto completo
       ProfileAppConfig(getListRoles(3)),
     ];
+    let defaultAuth = roles.map(function(el) {
+      return el.name         
+    })
+   
+
     // console.log(getListRoless(9).includes(user.role)) No recomiendo borrar esto sirve para guia o explicacion de por que el element del / esta asi
     const routes = [
       ...FuseUtils.generateRoutesFromConfigs(
-        routeConfigs,
-        settingsConfig.defaultAuth
+        routeConfigs,defaultAuth
       ),
       {
         path: "/",

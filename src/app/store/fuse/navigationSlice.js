@@ -4,12 +4,12 @@ import FuseUtils from '@fuse/utils';
 import i18next from 'i18next';
 import _ from '@lodash';
 
-const navigationAdapter = createEntityAdapter();
-const emptyInitialState = navigationAdapter.getInitialState();
-const initialState = navigationAdapter.upsertMany(emptyInitialState, navigationConfig);
+export const navigationAdapter = createEntityAdapter();
+export const emptyInitialState = navigationAdapter.getInitialState();
+export const initialState = navigationAdapter.upsertMany(emptyInitialState, navigationConfig);
 
 export const appendNavigationItem = (item, parentId) => (dispatch, getState) => {
-  const navigation = selectNavigationAll(getState());
+  const navigation = selectNavigationAll(getState);
 
   return dispatch(setNavigation(FuseUtils.appendNavItem(navigation, item, parentId)));
 };
@@ -44,10 +44,11 @@ const navigationSlice = createSlice({
   reducers: {
     setNavigation: navigationAdapter.setAll,
     resetNavigation: (state, action) => initialState,
+    setAsyncNavigation: (state, action) => navigationAdapter.upsertMany(emptyInitialState, action.payload)  ,
   },
 });
 
-export const { setNavigation, resetNavigation } = navigationSlice.actions;
+export const { setNavigation, resetNavigation ,setAsyncNavigation } = navigationSlice.actions;
 
 const getUserRole = (state) => state.user.role;
 

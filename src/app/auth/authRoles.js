@@ -4,7 +4,7 @@
 const authRoles = {
   admin: ["Administrador", "Trabajadores Prisma"],
   staff: ["Trabajadores Prisma"],
-  user: ["Administrador", "Trabajadores Prisma", "Cliente"],
+  user: ['Administrador', 'Cliente', 'Trabajadores Prisma', 'Pc Plus', 'sadasd'],
   onlyGuest: [],
 };
 

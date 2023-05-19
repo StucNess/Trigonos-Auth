@@ -7,6 +7,7 @@ export const routesApi = createApi({
         baseUrl:'https://trigonosapi.azurewebsites.net/api/Rol/'
     }),
     endpoints:(builder)=>({
+        getAllRoles: builder.query({query:()=>''}),
         getAllRoutes: builder.query({
             query:()=>'/listarRolPagina'
         }),
@@ -75,4 +76,4 @@ export const routesApi = createApi({
         }),
     })
 })
-export const { useGetAllRoutesQuery, useGetListarPaginaWebQuery,useGetOnlyHabilitRoutesQuery,usePostHabilitarRolMutation ,usePostDeshabilitarRolMutation, usePostNewRolMutation,usePostNewRolPagesMutation,usePostEditRolMutation}= routesApi;
+export const { useGetAllRoutesQuery, useGetListarPaginaWebQuery,useGetOnlyHabilitRoutesQuery,usePostHabilitarRolMutation ,usePostDeshabilitarRolMutation, usePostNewRolMutation,usePostNewRolPagesMutation,usePostEditRolMutation,useGetAllRolesQuery}= routesApi;

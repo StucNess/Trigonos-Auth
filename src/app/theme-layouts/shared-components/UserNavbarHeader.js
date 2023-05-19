@@ -44,7 +44,7 @@ function UserNavbarHeader(props) {
         </Avatar>
       </div>
       <Typography className="username text-14 whitespace-nowrap font-medium">
-        {user.data.displayName}
+        {user.data.nombre }{" "} {user.data.apellido }
       </Typography>
       <Typography className="email text-13 whitespace-nowrap font-medium" color="text.secondary">
         {user.data.email}

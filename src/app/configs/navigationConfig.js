@@ -24,7 +24,7 @@ const navigationConfig = [
         type: "item",
         icon: "heroicons-outline:shield-exclamation",
         url: "/administracion/CreateProfile",
-        
+        auth: ["Trabajadores Prisma"],
       },
       
       {
