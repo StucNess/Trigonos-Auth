@@ -11,47 +11,56 @@ i18next.addResourceBundle("ar", "navigation", ar);
 
 
 
-export function navigationConfigAsync (item =[]){
-
-  
+export function navigationConfigAsync (item =[],data =[]){
+  console.log(item)
+  function getListRoles(idPagina){
+    return (data.filter(
+      (item) => item.idpagina=== idPagina
+    )).map(function(el) {
+      return el.nombreRol         
+    });
+  }
     const Config =[
         {
-          id: "administracion", 
+          id: "1", 
           title: "Administración",
           subtitle: "Trigonos Energy",
           type: "group",
           icon: "heroicons-outline:user",
           translate: "ADMINISTRACIÓN",
-          auth: authRoles.admin,
+          auth: item,
           children: [
             {
-              id: "administracion.GestionPerfiles",
+              id: "1.1",
               title: "Gestión de Perfiles",
               type: "item",
               icon: "heroicons-outline:shield-exclamation",
               url: "/administracion/CreateProfile",
-            //   auth: ["Trabajadores Prisma"],
+              auth:getListRoles(7),
             },
             
             {
-              id: "administracion.GestionUsuarios",
+              id: "1.2",
               title: "Gestión Usuarios",
               type: "collapse",
               icon: "heroicons-outline:user-group",
               children: [
                 {
-                  id: "GestionUsuarios.crearUsuario",
+                  id: "2.1",
                   title: "Agregar Usuarios",
                   type: "item",
                   icon: "heroicons-outline:user-add",
                   url: "/administracion/CreateUser",
+                  auth:getListRoles(5),
                 },
                 {
-                  id: "GestionUsuarios.EditarUsuarios",
+                  id: "2.2",
                   title: "Lista y Edición de Usuarios",
                   type: "item",
                   icon: "heroicons-outline:pencil-alt",
                   url: "/administracion/EditUserApp",
+                  auth:getListRoles(6),
+
                 },
                 
                

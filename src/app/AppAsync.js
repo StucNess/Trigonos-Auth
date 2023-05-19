@@ -93,8 +93,11 @@ const AppContextProvider = ({ children }) => {
   getListWebNoAsign();
  
   useEffect(() => {
-
-    dispatch(setAsyncNavigation(navigationConfigAsync()))
+    let defaultAuth = roles.map(function(el) {
+      return el.name         
+    })
+    
+   
   }, []);
 
 
@@ -122,7 +125,7 @@ const AppContextProvider = ({ children }) => {
     let defaultAuth = roles.map(function(el) {
       return el.name         
     })
-   
+    dispatch(setAsyncNavigation(navigationConfigAsync(defaultAuth,todoshabilit)))
 
     // console.log(getListRoless(9).includes(user.role)) No recomiendo borrar esto sirve para guia o explicacion de por que el element del / esta asi
     const routes = [
