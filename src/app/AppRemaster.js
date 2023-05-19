@@ -1,5 +1,5 @@
-import React, { createContext, useEffect, useState, useContext } from 'react';
-import App from './App';
+import React, { createContext, useEffect, useState, useContext } from "react";
+import App from "./App";
 // Crear el contexto
 export const AppContextRoutes = createContext();
 
@@ -11,12 +11,13 @@ const AppContextProvider = ({ children }) => {
     // Función asincrónica para obtener los datos
     const fetchData = async () => {
       try {
-        const response = await fetch('https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina');
+        const response = await fetch(
+          "https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina"
+        );
         const result = await response.json();
         setData(result);
-        console.log(result)
       } catch (error) {
-        console.error('Error al obtener los datos:', error);
+        console.error("Error al obtener los datos:", error);
       }
     };
 
@@ -51,4 +52,4 @@ const AppRemaster = () => {
     </AppContextProvider>
   );
 };
-export default AppRemaster
+export default AppRemaster;

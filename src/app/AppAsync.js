@@ -20,10 +20,9 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StyledEngineProvider } from "@mui/material/styles";
 
-
 import AppContext from "./AppContext";
 
-import React, { createContext, useEffect, useState, useContext } from 'react';
+import React, { createContext, useEffect, useState, useContext } from "react";
 
 import { Navigate } from "react-router-dom";
 import FuseLoading from "@fuse/core/FuseLoading/FuseLoading";
@@ -40,26 +39,33 @@ import RecoverPassTwoConfig from "./main/recover-password/RecoverPassTwoConfig";
 import { ComercialConfigs } from "./main/comercial/ComercialConfigs";
 import AnalisisConfig from "./main/analisis/AnalisisConfig";
 import { AdministracionConfig } from "./main/administracion/AdministracionConfig";
-import { useGetAllRolesQuery, useGetAllRoutesQuery, useGetOnlyHabilitRoutesQuery } from "./store/RoutesRoles/routesApi";
+import {
+  useGetAllRolesQuery,
+  useGetAllRoutesQuery,
+  useGetOnlyHabilitRoutesQuery,
+} from "./store/RoutesRoles/routesApi";
 import { ProfileAppConfig } from "./main/profile/ProfileAppConfig";
-import { appendNavigationItem, selectNavigation, selectNavigationAll, setAsyncNavigation } from "./store/fuse/navigationSlice";
+import {
+  appendNavigationItem,
+  selectNavigation,
+  selectNavigationAll,
+  setAsyncNavigation,
+} from "./store/fuse/navigationSlice";
 import { navigationConfigAsync } from "./configs/navigationConfigAsync";
 import navigationConfig from "./configs/navigationConfig";
 
-
-
 const emotionCacheOptions = {
-    rtl: {
-      key: "muirtl",
-      stylisPlugins: [rtlPlugin],
-      insertionPoint: document.getElementById("emotion-insertion-point"),
-    },
-    ltr: {
-      key: "muiltr",
-      stylisPlugins: [],
-      insertionPoint: document.getElementById("emotion-insertion-point"),
-    },
-  };
+  rtl: {
+    key: "muirtl",
+    stylisPlugins: [rtlPlugin],
+    insertionPoint: document.getElementById("emotion-insertion-point"),
+  },
+  ltr: {
+    key: "muiltr",
+    stylisPlugins: [],
+    insertionPoint: document.getElementById("emotion-insertion-point"),
+  },
+};
 // Crear el contexto
 export const AppContextRoutes = createContext();
 
@@ -69,56 +75,53 @@ const AppContextProvider = ({ children }) => {
 
   const [data, setData] = useState([]);
   const [routes, setRoutes] = useState([]);
-  const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
-  const {data: roles =[],isLoading: isloadingRol =true} = useGetAllRolesQuery();
-  const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
+  const { data: todos = [], isLoading: isloadingg = true } =
+    useGetAllRoutesQuery();
+  const { data: roles = [], isLoading: isloadingRol = true } =
+    useGetAllRolesQuery();
+  const { data: todoshabilit = [], isLoading: isloading = true } =
+    useGetOnlyHabilitRoutesQuery();
   const user = useSelector(selectUser);
   // selectNavigationAll
 
-
-  
-
-  ProfileAppConfig()
-  function getListRoless(idPagina){
-    return (todoshabilit.filter(
-      (item) => item.idpagina=== idPagina
-    )).map(function(el) {
-      return el.nombreRol         
-    });
+  ProfileAppConfig();
+  function getListRoless(idPagina) {
+    return todoshabilit
+      .filter((item) => item.idpagina === idPagina)
+      .map(function (el) {
+        return el.nombreRol;
+      });
   }
 
-  function getListWebNoAsign(){
-     console.log(getListRoless(9).includes(user.role))
+  function getListWebNoAsign() {
+    console.log(getListRoless(9).includes(user.role));
   }
   getListWebNoAsign();
- 
+
   useEffect(() => {
-    let defaultAuth = roles.map(function(el) {
-      return el.name         
-    })
-   
+    let defaultAuth = roles.map(function (el) {
+      return el.name;
+    });
   }, []);
   useEffect(() => {
-    let defaultAuth = roles.map(function(el) {
-      return el.name         
-    })
-    dispatch(setAsyncNavigation(navigationConfigAsync(defaultAuth,todoshabilit)))
-  
-  }, [isloadingRol,isloading])
-  
+    let defaultAuth = roles.map(function (el) {
+      return el.name;
+    });
+    dispatch(
+      setAsyncNavigation(navigationConfigAsync(defaultAuth, todoshabilit))
+    );
+  }, [isloadingRol, isloading]);
 
-
-
-  if (isloading===false){
-    function getListRoles(idPagina){
-      return (todoshabilit.filter(
-        (item) => item.idpagina=== idPagina
-      )).map(function(el) {
-        return el.nombreRol         
-      });
+  if (isloading === false) {
+    function getListRoles(idPagina) {
+      return todoshabilit
+        .filter((item) => item.idpagina === idPagina)
+        .map(function (el) {
+          return el.nombreRol;
+        });
     }
     const routeConfigs = [
-      ExampleConfig, 
+      ExampleConfig,
       SignOutConfig,
       SignInConfig,
       SignUpConfig,
@@ -126,22 +129,23 @@ const AppContextProvider = ({ children }) => {
       RecoverPassTwoConfig,
       ...ComercialConfigs(todoshabilit),
       ...AnalisisConfig,
-      ...AdministracionConfig(todoshabilit),//los que contienen el spread se les pasa el objeto completo
+      ...AdministracionConfig(todoshabilit), //los que contienen el spread se les pasa el objeto completo
       ProfileAppConfig(getListRoles(3)),
     ];
-    let defaultAuth = roles.map(function(el) {
-      return el.name         
-    })
-    
+    let defaultAuth = roles.map(function (el) {
+      return el.name;
+    });
 
     // console.log(getListRoless(9).includes(user.role)) No recomiendo borrar esto sirve para guia o explicacion de por que el element del / esta asi
     const routes = [
-      ...FuseUtils.generateRoutesFromConfigs(
-        routeConfigs,defaultAuth
-      ),
+      ...FuseUtils.generateRoutesFromConfigs(routeConfigs, defaultAuth),
       {
         path: "/",
-        element: getListRoless(9).includes(user.role)? <Navigate to="/comercial/estadoFacturacion" />: <Error404Page />,
+        element: getListRoless(9).includes(user.role) ? (
+          <Navigate to="/comercial/estadoFacturacion" />
+        ) : (
+          <Error404Page />
+        ),
         auth: settingsConfig.defaultAuth,
       },
       {
@@ -157,49 +161,35 @@ const AppContextProvider = ({ children }) => {
         element: <Navigate to="404" />,
       },
     ];
-    
-      // console.log(data)
-      // setInterval(() => {
-      //   const fetchData = async () => {
-      //     try {
-      //       const response = await fetch('https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina');
-            
-      //       const result = await response.json();
-      //       let isEqual = JSON.stringify(result) === JSON.stringify(data);
-      //       if(isEqual ==false){
-      //         console.log(isEqual)
-              
-      //       }
-      //       console.log(isEqual)
-      //     } catch (error) {
-      //       console.error('Error al obtener los datos:', error);
-      //     }
-      //   };
-      //   fetchData();
-      // }, 5000);
-      
-      return (
-     
-     
-           <AppContext.Provider value={{ routes }}>
-          <LocalizationProvider dateAdapter={AdapterDateFns}>
-            
-              <StyledEngineProvider injectFirst>
-               { children}
-              </StyledEngineProvider>
-          
-          </LocalizationProvider>
-        </AppContext.Provider>
-    
-       
-    
-      );
-    
 
+    // console.log(data)
+    // setInterval(() => {
+    //   const fetchData = async () => {
+    //     try {
+    //       const response = await fetch('https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina');
+
+    //       const result = await response.json();
+    //       let isEqual = JSON.stringify(result) === JSON.stringify(data);
+    //       if(isEqual ==false){
+    //         console.log(isEqual)
+
+    //       }
+    //       console.log(isEqual)
+    //     } catch (error) {
+    //       console.error('Error al obtener los datos:', error);
+    //     }
+    //   };
+    //   fetchData();
+    // }, 5000);
+
+    return (
+      <AppContext.Provider value={{ routes }}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <StyledEngineProvider injectFirst>{children}</StyledEngineProvider>
+        </LocalizationProvider>
+      </AppContext.Provider>
+    );
   }
-
- 
- 
 };
 
 // Uso del contexto en un componente hijo directo del Provider
@@ -224,50 +214,48 @@ const AppAsync = () => {
   );
 };
 
-
-
 const App = () => {
-    const dispatch = useDispatch();
-    // useEffect(()=>{
-  
-    // },[])
-    const user = useSelector(selectUser);
-    const langDirection = useSelector(selectCurrentLanguageDirection);
-    const mainTheme = useSelector(selectMainTheme);
-  
-    const { isloading, role } = useSelector((state) => state.fuse.roleSlice);
-  
-    useEffect(() => {
-      dispatch(getRole());
-    }, []);
-  
-    return (
-      <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
-        <FuseTheme theme={mainTheme} direction={langDirection}>
-          <AuthProvider>
-            <BrowserRouter>
-              <FuseAuthorization
-                userRole={user.role}
-                loginRedirectUrl={settingsConfig.loginRedirectUrl}
+  const dispatch = useDispatch();
+  // useEffect(()=>{
+
+  // },[])
+  const user = useSelector(selectUser);
+  const langDirection = useSelector(selectCurrentLanguageDirection);
+  const mainTheme = useSelector(selectMainTheme);
+
+  const { isloading, role } = useSelector((state) => state.fuse.roleSlice);
+
+  useEffect(() => {
+    dispatch(getRole());
+  }, []);
+
+  return (
+    <CacheProvider value={createCache(emotionCacheOptions[langDirection])}>
+      <FuseTheme theme={mainTheme} direction={langDirection}>
+        <AuthProvider>
+          <BrowserRouter>
+            <FuseAuthorization
+              userRole={user.role}
+              loginRedirectUrl={settingsConfig.loginRedirectUrl}
+            >
+              <SnackbarProvider
+                maxSnack={5}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "right",
+                }}
+                classes={{
+                  containerRoot:
+                    "bottom-0 right-0 mb-52 md:mb-68 mr-8 lg:mr-80 z-99",
+                }}
               >
-                <SnackbarProvider
-                  maxSnack={5}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  classes={{
-                    containerRoot:
-                      "bottom-0 right-0 mb-52 md:mb-68 mr-8 lg:mr-80 z-99",
-                  }}
-                >
-                  <FuseLayout layouts={themeLayouts} />
-                </SnackbarProvider>
-              </FuseAuthorization>
-            </BrowserRouter>
-          </AuthProvider>
-        </FuseTheme>
-      </CacheProvider>
-    );
-  };
-export default AppAsync
+                <FuseLayout layouts={themeLayouts} />
+              </SnackbarProvider>
+            </FuseAuthorization>
+          </BrowserRouter>
+        </AuthProvider>
+      </FuseTheme>
+    </CacheProvider>
+  );
+};
+export default AppAsync;

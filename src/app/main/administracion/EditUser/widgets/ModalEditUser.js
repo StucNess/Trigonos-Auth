@@ -189,7 +189,7 @@ export default function ModalEditUser({
         handleCloseSecond();
       }, 1200);
     } else {
-      console.log(formState.id);
+      // console.log(formState.id);
       const dataUser = {
         email: formState.email,
         username: formState.email,

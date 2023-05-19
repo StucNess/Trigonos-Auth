@@ -33,13 +33,13 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import SearchIcon from "@mui/icons-material/Search";
 import { callParticipants } from "../store/callParticipants";
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-import ReportIcon from '@mui/icons-material/Report';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import ReportIcon from "@mui/icons-material/Report";
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -71,20 +71,18 @@ export default function SelectClientTable(props) {
   const searchPayroll = () => {
     render == true ? setRender(true) : setRender(false);
     let prueba = participants.find((p) => p.id == cliente);
-    
-    if (prueba!=undefined){
-      console.log(prueba);
+
+    if (prueba != undefined) {
+      // console.log(prueba);
       props.sendClientData(prueba);
       props.changeDisc(searchPayroll);
-    }else{
+    } else {
       setAlertt(true);
     }
   };
-  const OpenDialogAlert = ()=>{
-    return(<div>
-      Debe seleccionar el loco
-    </div>)
-  }
+  const OpenDialogAlert = () => {
+    return <div>Debe seleccionar el loco</div>;
+  };
   useEffect(() => {
     if (alertt === true) {
       setOpen(true);
@@ -93,7 +91,6 @@ export default function SelectClientTable(props) {
         setOpen(false);
       }, 1500);
     }
-   
   }, [alertt]);
   return (
     <Box
@@ -179,10 +176,9 @@ export default function SelectClientTable(props) {
           >
             Buscar
           </Button>
-          
         </div>
       </Paper>
-     
+
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -190,10 +186,13 @@ export default function SelectClientTable(props) {
         // onClose={}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle sx={{ color: "#FF5733" }} >{"Error"}<ReportIcon sx={{ color: "#FF5733" }}/></DialogTitle>
+        <DialogTitle sx={{ color: "#FF5733" }}>
+          {"Error"}
+          <ReportIcon sx={{ color: "#FF5733" }} />
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            <h2>Debe seleccionar un Cliente</h2> 
+            <h2>Debe seleccionar un Cliente</h2>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
