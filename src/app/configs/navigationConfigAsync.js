@@ -12,7 +12,26 @@ i18next.addResourceBundle("ar", "navigation", ar);
 
 
 export function navigationConfigAsync (item =[],data =[]){
-  console.log(item)
+ //id de paginas
+  // const idMiPerfil = 3;
+  const idAgregarUsuario = 5;
+  const idEditarUsuarios= 6;
+  const idGestionPerfiles = 7;
+  const idGestionParticipant = 8;
+  const idEstFacturacion = 9;
+  const idNominaPago = 10;
+  const idFactMasiva= 11;
+ 
+
+  // ParticipantsAppConfig(getListRoles(8)),
+  // EstadoFacturacionAppConfig(getListRoles(9)),
+  // ParticipantesAppConfig(getListRoles(8)),
+  // NominaPagoAppConfig(getListRoles(10)),
+  // FacturacionMasivaAppConfig(getListRoles(11)),
+
+
+
+  // console.log(item)
   function getListRoles(idPagina){
     return (data.filter(
       (item) => item.idpagina=== idPagina
@@ -20,6 +39,21 @@ export function navigationConfigAsync (item =[],data =[]){
       return el.nombreRol         
     });
   }
+
+  let authGestUsuarios= data.filter(
+                (item) => [idAgregarUsuario,idEditarUsuarios]
+                .includes(item.idpagina))
+                .map(function(el) {
+                return el.nombreRol         
+              });
+  let authGestFacturacion= data.filter(
+                (item) => [idEstFacturacion,idNominaPago,idFactMasiva]
+                .includes(item.idpagina))
+                .map(function(el) {
+                return el.nombreRol         
+              });
+  
+
     const Config =[
         {
           id: "1", 
@@ -36,7 +70,7 @@ export function navigationConfigAsync (item =[],data =[]){
               type: "item",
               icon: "heroicons-outline:shield-exclamation",
               url: "/administracion/CreateProfile",
-              auth:getListRoles(7),
+              auth:getListRoles(idGestionPerfiles),
             },
             
             {
@@ -44,6 +78,7 @@ export function navigationConfigAsync (item =[],data =[]){
               title: "Gestión Usuarios",
               type: "collapse",
               icon: "heroicons-outline:user-group",
+              auth:authGestUsuarios,
               children: [
                 {
                   id: "2.1",
@@ -51,7 +86,7 @@ export function navigationConfigAsync (item =[],data =[]){
                   type: "item",
                   icon: "heroicons-outline:user-add",
                   url: "/administracion/CreateUser",
-                  auth:getListRoles(5),
+                  auth:getListRoles(idAgregarUsuario),
                 },
                 {
                   id: "2.2",
@@ -59,7 +94,7 @@ export function navigationConfigAsync (item =[],data =[]){
                   type: "item",
                   icon: "heroicons-outline:pencil-alt",
                   url: "/administracion/EditUserApp",
-                  auth:getListRoles(6),
+                  auth:getListRoles(idEditarUsuarios),
 
                 },
                 
@@ -88,19 +123,21 @@ export function navigationConfigAsync (item =[],data =[]){
           ],
         },
         {
-          id: "c1",
+          id: "2",
           title: "COMERCIAL",
           subtitle: "Modulo de Gestion Comercial",
           type: "group",
           icon: "heroicons-outline:home",
+          
           children: [
           
             {
-              id: "c1.Participants",
+              id: "2.1",
               title: "Gestión Participantes",
               type: "item",
               icon: "heroicons-outline:clipboard-check",
               url: "/comercial/Participantesv2",
+              auth: getListRoles(idGestionParticipant)
             },
             // {
             //   id: "example-component",
@@ -111,32 +148,37 @@ export function navigationConfigAsync (item =[],data =[]){
             //   url: "example",
             // },
             {
-              id: "c1.facturacion",
+              id: "2.2",
               title: "Facturación",
               type: "collapse",
               icon: "heroicons-outline:calculator",
+              auth:authGestFacturacion,
               children: [
                 {
-                  id: "c1.facturacion.EstadoFacturacion",
+                  id: "2.1",
                   title: "Estado Facturación",
                   type: "item",
                   icon: "heroicons-outline:clipboard-check",
                   url: "/comercial/estadoFacturacion",
+                  auth:getListRoles(idEstFacturacion)
                 },
                 {
-                  id: "c1.facturacion.NominaPago",
+                  id: "2.2",
                   title: "Nominas de Pago",
                   type: "item",
                   icon: "heroicons-outline:clipboard-list",
                   url: "/comercial/nominaPago",
-                  auth: authRoles.admin, //Es una prueba
+                  auth:getListRoles(idNominaPago)
+
                 },
                 {
-                  id: "c1.facturacion.FacturacionMasiva",
+                  id: "2.3",
                   title: "Facturación Masiva",
                   type: "item",
                   icon: "heroicons-outline:document-report",
                   url: "/comercial/facturacionMasiva",
+                  auth:getListRoles(idFactMasiva)
+
                 },
               ],
             },

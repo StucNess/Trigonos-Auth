@@ -15,6 +15,9 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import ListAltOutlinedIcon from '@mui/icons-material/ListAltOutlined';
 import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import themesConfig from 'app/configs/themesConfig';
+import { useGetInstruccionesQuery } from 'app/store/instrucciones/instruccionesApi';
+import { useState } from 'react';
+import { useEffect } from 'react';
 // PARA EL ESTILO DEL SELECT MULTIPLE
 function getStyles(name, personName, theme) {
     return {
@@ -29,6 +32,18 @@ const steps = ['Seleccionar cliente', 'Listado de instrucciones', 'Finalización
 export default function HorizontalLinearStepper() {
 
   const [activeStep, setActiveStep] = React.useState(0);
+  const [idParticipant, setIdParticipant] = useState(0)
+
+  const {data: dataWeb =[],isLoading: isloadingListar =true} = useGetInstruccionesQuery(idParticipant);  //Son las paginas web que estan disponibles en la BD.
+  
+
+
+  console.log(dataWeb);
+  useEffect(() => {
+    
+    setIdParticipant(141);
+  }, [])
+  
 //   const [skipped, setSkipped] = React.useState(new Set());
 
 //   const isStepOptional = (step) => {
