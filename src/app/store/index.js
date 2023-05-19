@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import createReducer from './rootReducer';
 import { routesApi } from './RoutesRoles/routesApi';
 import { instruccionesApi } from './instrucciones/instruccionesApi';
-
+import { participantesApi } from './participantesApi/participantesApi';
 if (process.env.NODE_ENV === 'development' && module.hot) {
   module.hot.accept('./rootReducer', () => {
     const newRootReducer = require('./rootReducer').default;
@@ -10,7 +10,7 @@ if (process.env.NODE_ENV === 'development' && module.hot) {
   });
 }
 
-const middlewares = [routesApi.middleware,instruccionesApi.middleware];
+const middlewares = [routesApi.middleware,instruccionesApi.middleware,participantesApi.middleware];
 
 if (process.env.NODE_ENV === 'development') {
   const { createLogger } = require(`redux-logger`);
