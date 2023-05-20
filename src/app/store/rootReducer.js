@@ -5,13 +5,16 @@ import user from './userSlice';
 import { routesApi } from './RoutesRoles/routesApi';
 import { instruccionesApi } from './instrucciones/instruccionesApi';
 import { participantesApi } from './participantesApi/participantesApi';
+import { usuariosApi } from './usuariosApi/usuariosApi';
+
 const createReducer = (asyncReducers) => (state, action) => {
   
   const combinedReducer = combineReducers({
     [routesApi.reducerPath]: routesApi.reducer,
     [instruccionesApi.reducerPath]: instruccionesApi.reducer,
     [participantesApi.reducerPath]: participantesApi.reducer,
-
+    [usuariosApi.reducerPath]: usuariosApi.reducer,
+    
     fuse,
     i18n,
     user,

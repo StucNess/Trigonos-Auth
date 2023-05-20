@@ -162,7 +162,7 @@ const AppContextProvider = ({ children }) => {
       // setInterval(() => {
       //   const fetchData = async () => {
       //     try {
-      //       const response = await fetch('https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina');
+      //       const response = await fetch('http://localhost:5205/api/Rol/listarRolPagina');
             
       //       const result = await response.json();
       //       let isEqual = JSON.stringify(result) === JSON.stringify(data);

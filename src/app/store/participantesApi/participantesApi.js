@@ -4,7 +4,7 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 export const participantesApi = createApi({
     reducerPath:'participantes',
     baseQuery: fetchBaseQuery({
-        baseUrl:'https://trigonosapi.azurewebsites.net/'
+        baseUrl:'http://localhost:5205/'
     }),
     endpoints:(builder)=>({
        

@@ -350,7 +350,7 @@ function CreateProfileApp(props){
      }
 
     function CargaDataRol(){
-        fetch(" https://trigonosapi.azurewebsites.net/api/Rol")
+        fetch(" http://localhost:5205/api/Rol")
         .then((response) => response.json())
         .then((data) => {
           rows = data.map(function(el) {

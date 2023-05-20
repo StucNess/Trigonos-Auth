@@ -61,6 +61,7 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { white } from "tailwindcss/colors";
 import jwtServiceConfig from "src/app/auth/services/jwtService/jwtServiceConfig";
 import axios from "axios";
+import { useGetUsuariosRolesQuery } from "app/store/usuariosApi/usuariosApi";
 // PARA EL ESTILO DEL SELECT MULTIPLE
 function getStyles(name, personName, theme) {
   return {
@@ -88,9 +89,13 @@ export default function ModalEditUser({
   apiResponseProyects,
   dataUser,
   setTable,
+  
 }) {
   const { userData, participantData, participantFullData } = dataUser;
+  const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
 
+  
+  
   const [formState, setFormState] = useState({
     id: userData.id,
     usuario: userData.usuario,
@@ -103,6 +108,7 @@ export default function ModalEditUser({
     pais: userData.pais,
     estado: userData.estado,
     participants: participantData,
+    rolid: undefined,
   });
   const [dataConfirm, setDataConfirm] = useState({
     id: userData.id,
@@ -116,6 +122,7 @@ export default function ModalEditUser({
     pais: userData.pais,
     estado: userData.estado,
     participants: participantData,
+    rolid: undefined,
   });
   const [update, setUpdate] = useState({
     estado: false,
@@ -131,6 +138,7 @@ export default function ModalEditUser({
 
   const theme = useTheme();
   // const [apiResponseProyects, setApiResponseProyects] = useState([]);
+
   const [secondDopen, setSecondDopen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [MsgAlert, setMsgAlert] = useState({
@@ -202,7 +210,7 @@ export default function ModalEditUser({
       };
       axios
         .post(
-          `https://trigonosapi.azurewebsites.net/api/Usuarios/actualizar/${formState.id}`,
+          `http://localhost:5205/api/Usuarios/actualizar/${formState.id}`,
           dataUser
         )
         .then((response) => {
@@ -332,6 +340,24 @@ export default function ModalEditUser({
       setDataRole(data_);
     })();
   }, []);
+  function getListRoles(idPagina){
+    return (data.filter(
+      (item) => item.idpagina=== idPagina
+    )).map(function(el) {
+      return el.nombreRol         
+    });
+  }
+  useEffect(() => {
+    setFormState({
+      ...formState,
+      roleid:  (dataUserRoles.filter(
+        (item) => item.userId=== userData.id
+      )).map(function(el) {
+        return el.roleId         
+      })
+      
+    });
+  }, [isloadRolesGet])
 
   //mesirve
   useEffect(() => {
