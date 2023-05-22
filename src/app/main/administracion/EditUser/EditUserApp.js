@@ -12,13 +12,15 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 //ICONS
+import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import AddIcon from "@mui/icons-material/Add";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import FormatListNumberedRtlIcon from "@mui/icons-material/FormatListNumberedRtl";
+
 import PeopleIcon from "@mui/icons-material/People";
 
 import { alpha } from "@mui/material/styles";
@@ -33,8 +35,7 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
 
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
+
 
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -50,9 +51,10 @@ import { forwardRef } from "react";
 import PropTypes from "prop-types";
 import { Link as RouterLink, MemoryRouter } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
-import { CallApiUsers } from "./store/CallApiUsers";
-import { CallApiEmpresas } from "../CreateUser/store/CallApiEmpresas";
-import { CallApiParticipants } from "../store/CallApiParticipants";
+
+import { useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery } from "app/store/usuariosApi/usuariosApi";
+import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
+import { useGetParticipantesByIdMutation, useGetParticipantesQuery } from "app/store/participantesApi/participantesApi";
 
 const LinkBehavior = forwardRef((props, ref) => (
   <RouterLink ref={ref} to="/" {...props} role={undefined} />
@@ -126,10 +128,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -229,12 +227,14 @@ function EnhancedTableHead(props) {
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
+            id={headCell.id}
             key={headCell.id}
             align="left"
-            padding="20px"
+           
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              id={headCell.id}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
@@ -330,11 +330,25 @@ function EditUserApp(props) {
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
+  const [cargando, setCargando] = useState(false);
+
   const [dataUser, setDataUser] = useState({});
   const [dataParticipant, setDataParticipant] = useState([]);
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
+  const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa} = useGetEmpresasQuery();
 
-  const [rowss, setRowss] = useState([]);
+ 
+  const {data: getUsuarios,isLoading , refetch, isFetching} = useGetUsuariosPaginationQuery({
+    pageSize:1000
+  });
+  const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
+  const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
+  const [getParticipantById, data_participant] = useGetParticipantesByIdMutation();
+  
+
+  
+ 
+  
 
   function search(searchString) {
     if (typeof searchString !== "string" || searchString.length === 0) {
@@ -374,65 +388,36 @@ function EditUserApp(props) {
   }
 
   function CargaDataParticipant(row) {
-    fetch(
-      ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${row.id}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        //  setDataParticipant(data.data);
-
-        console.log("------------------------------------------------");
-
-        let ids = data.data.map(function (el) {
-          return el.id;
-        });
-        let newArray = apiResponseProyects.filter(
-          (item) => !ids.includes(item.id)
-        );
-        setDataUser({
-          userData: row,
-          participantData: data.data,
-          participantFullData: newArray,
-        });
-        setTable(true);
-
-        console.log(newArray);
+    const idRolUser = (dataUserRoles.filter(
+      (item) => item.userId=== row.id
+    )).map(function(el) {
+      return el.roleId         
+    })[0]
+   
+    getParticipantById(row.id).then(({data}) => {
+ 
+      let ids = data.data.map(function (el) {
+        return el.id;
       });
-  }
-  function CargaDataRol() {
-    fetch(" https://trigonosapi.azurewebsites.net/api/Usuarios/pagination")
-      .then((response) => response.json())
-      .then((data) => {
-        let data_ = [];
-
-        (async () => {
-          data_ = await CallApiEmpresas();
-
-          rows = data.data.map(function (el) {
-            el.lockoutEnd = el.lockoutEnd === null ? "Activo" : "Desactivado";
-
-            return {
-              estado: el.lockoutEnd,
-              rol: el.role,
-              email: el.email,
-              nombre: el.nombre,
-              apellido: el.apellido,
-              codempresa: el.idEmpresa,
-              empresa: data_.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-              usuario: el.username,
-              pais: el.pais,
-              id: el.id,
-            };
-          });
-
-          console.log(rows);
-
-          rowspermanent = rows;
-
-          rowsOnMount();
-        })();
+      let newArray = apiResponseProyects.filter(
+        (item) => !ids.includes(item.id)
+      );
+      setDataUser({
+        userData: row,
+        participantData: data.data.map(function(el) {
+          return {id :el.id, name: el.name}         
+        }),
+        participantFullData: newArray,
+        roleid: idRolUser
       });
+      setTable(true);
+    });
+
+
+
+      
   }
+  
 
   function rowsOnMount() {
     let rowsOnMount = stableSort(
@@ -448,37 +433,132 @@ function EditUserApp(props) {
   }
 
   useEffect(() => {
-    CargaDataRol();
-    const fetchData = async () => {
-      let prueba;
-      // eslint-disable-next-line prefer-const
-      prueba = await CallApiParticipants();
-      return prueba;
-    };
-    fetchData().then((value) => {
+    if(loadParticipant==false){
       setApiResponseProyects(
-        value.map(function (el) {
+        getParticipant.data.map(function (el) {
           return {
             id: el.id,
             name: el.name,
           };
         })
       );
-    });
-  }, []);
+    }
+  }, [loadParticipant])
+  
+  
   useEffect(() => {
-    CargaDataRol();
+    if(isLoading===false){
+      rows = getUsuarios.data.map(function (el) {
+      let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+      return {
+        estado: estadonew,
+        rol: el.role,
+        email: el.email,
+        nombre: el.nombre,
+        apellido: el.apellido,
+        codempresa: el.idEmpresa,
+        empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+        usuario: el.username,
+        pais: el.pais,
+        id: el.id,
+      };
+      
+      });
+      rowspermanent = rows;
+      rowsOnMount();
+    }
+    
+  }, [isLoading]);
+  useEffect(() => {
+    // refreshEmpresa()
+   
+    // if(getUsuarios !=undefined){
+    //   rows = getUsuarios.data.map(function (el) {
+    //     let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+    //     return {
+    //       estado: estadonew,
+    //       rol: el.role,
+    //       email: el.email,
+    //       nombre: el.nombre,
+    //       apellido: el.apellido,
+    //       codempresa: el.idEmpresa,
+    //       empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+    //       usuario: el.username,
+    //       pais: el.pais,
+    //       id: el.id,
+    //     };
+        
+    //     });
+    //     rowspermanent = rows;
+    //     rowsOnMount();
+        
+    // }
+    if(table){
+      console.log("cargando")
+    }
   }, [table]);
   useEffect(() => {
-    rows = rowss;
-    rowsOnMount();
-  }, [rowss]);
+    if(cargando){
+
+      if(getUsuarios !=undefined){
+       
+          
+      }
+      rows = getUsuarios.data.map(function (el) {
+        let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+        return {
+          estado: estadonew,
+          rol: el.role,
+          email: el.email,
+          nombre: el.nombre,
+          apellido: el.apellido,
+          codempresa: el.idEmpresa,
+          empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+          usuario: el.username,
+          pais: el.pais,
+          id: el.id,
+        };
+        
+        });
+        rowspermanent = rows;
+        rowsOnMount();
+        setRowsPerPage(5);
+        let  newPage= 0;
+        setPage(newPage);
+        console.log(newPage);
+        const sortedRows = stableSort(rows, getComparator(order, orderBy));
+        const updatedRows = sortedRows.slice(
+          newPage * rowsPerPage,
+          newPage * rowsPerPage + rowsPerPage
+        );
+
+        setVisibleRows(updatedRows);
+
+        // Avoid a layout jump when reaching the last page with empty rows.
+        const numEmptyRows =
+          newPage > 0
+            ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
+            : 0;
+
+        const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
+        setPaddingHeight(newPaddingHeight);
+
+      setTimeout(() => {
+       
+        setCargando(false);
+       
+        
+     
+      }, 1000);
+    }
+  }, [cargando])
 
   const handleSetRow = (event) => {
     const {
       target: { value },
     } = event;
-    setRowss(search(value.trim()));
+    rows = search(value.trim());
+    rowsOnMount();
   };
 
   const handleRequestSort = useCallback(
@@ -532,9 +612,10 @@ function EditUserApp(props) {
   };
 
   const handleChangePage = useCallback(
+
     (event, newPage) => {
       setPage(newPage);
-
+      console.log(newPage);
       const sortedRows = stableSort(rows, getComparator(order, orderBy));
       const updatedRows = sortedRows.slice(
         newPage * rowsPerPage,
@@ -582,6 +663,8 @@ function EditUserApp(props) {
 
   const isSelected = (codreferencia) => selected.indexOf(codreferencia) !== -1;
 
+
+  
   return (
     <Root
       // header={<div>
@@ -650,6 +733,14 @@ function EditUserApp(props) {
                 <PeopleIcon className="ml-[10px] text-pantoneazul" />
               </div>
               <h1 className="border border-b-pantoneazul w-full"></h1>
+              {cargando?
+              <div className="flex items-center">
+                <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                  {/* <p>Chupa Chupa .....</p> */}
+                  <LinearProgress color="primary" />
+                </Stack>
+              </div>:
+              <>
               <div className="flex flex-row m-[20px]">
                 <TextField
                   id="outlined-basic"
@@ -660,10 +751,11 @@ function EditUserApp(props) {
                   }}
                 />
               </div>
-
+            
               <Box className="m-[20px]">
                 <Box>
-                  <TableContainer sx={{ maxHeight: 360 }} overflow-y-auto>
+                  <TableContainer  > 
+                    {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
                     <Table
                       sx={{ minWidth: 750 }}
                       aria-labelledby="tableTitle"
@@ -681,20 +773,21 @@ function EditUserApp(props) {
                       <TableBody>
                         {visibleRows
                           ? visibleRows.map((row, index) => {
-                              const isItemSelected = isSelected(row.email);
+                              const isItemSelected = isSelected(row.id);
                               const labelId = `enhanced-table-checkbox-${index}`;
 
                               return (
                                 <StyledTableRow
                                   aria-checked={isItemSelected}
                                   tabIndex={-1}
+                                  key={row.id}
                                 >
                                   <StyledTableCell
                                     align="left"
                                     component="th"
                                     id={labelId}
                                     scope="row"
-                                    padding="20px"
+                                
                                   >
                                     {row.estado}
                                   </StyledTableCell>
@@ -724,20 +817,63 @@ function EditUserApp(props) {
                                   </StyledTableCell>
 
                                   <StyledTableCell align="left">
-                                    <Button
+                                    {/* <Button
                                       variant="contained"
                                       color="secondary"
                                       className=" h-[28px]  w-[100px] mr-[20px]"
                                       onClick={() => {
-                                        CargaDataParticipant(row);
+                                         CargaDataParticipant(row);
                                       }}
                                       type="submit"
                                       size="small"
                                     >
                                       <SettingsIcon />
                                       Editar
-                                    </Button>
-                                    <Button
+                                    </Button> */}
+                                    <div className="flex flex-row">
+                                    <Tooltip  
+                                      title="Editar" 
+                                      arrow 
+                                      placement="top"
+                                      // placement="top-start"
+                                    >
+                                    <IconButton
+                                    sx={{ "&:hover": { color: "#e4493f" } }}
+                                    key="chechedLeft"
+                                    aria-label="Close"
+                                    color="primary"
+                                    onClick={() => {
+                                      CargaDataParticipant(row);
+                                   }}
+                                    size="small"
+                                  >
+                                    <SettingsIcon fontSize="large" />
+                                  </IconButton>
+                                  </Tooltip> 
+                                  <Tooltip  
+                                      title="Desactivar" 
+                                      arrow 
+                                      placement="top"
+                                      // placement="top-start"
+                                    >
+                                    <IconButton
+                                    sx={{ "&:hover": { color: "#e4493f" } }}
+                                    key="chechedLeft"
+                                    aria-label="Close"
+                                    color="primary"
+                                    onClick={() => {
+                                      CargaDataParticipant(row);
+                                   }}
+                                    size="small"
+                                  >
+                                    <DeleteForeverIcon fontSize="large" />
+                                  </IconButton>
+                                  </Tooltip> 
+
+                                    </div>
+                                    
+                                 
+                                    {/* <Button
                                       variant="contained"
                                       color="secondary"
                                       className=" h-[28px]  w-[100px] mr-[20px]"
@@ -746,7 +882,7 @@ function EditUserApp(props) {
                                     >
                                       <DeleteForeverIcon />
                                       Desactivar
-                                    </Button>
+                                    </Button> */}
                                   </StyledTableCell>
                                 </StyledTableRow>
                               );
@@ -764,22 +900,26 @@ function EditUserApp(props) {
                       </TableBody>
                     </Table>
                   </TableContainer>
+                  
                   <TablePagination
-                    labelRowsPerPage="Filas por página"
-                    variant="h5"
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { value: -1, label: "All" },
-                    ]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                  />
+                  labelRowsPerPage="Filas por página"
+                  variant="h5"
+                  // rowsPerPageOptions={[
+                  //   5,
+                  //   10,
+                  //   25,
+                  //   { value: -1, label: "All" },
+                  // ]}
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={rows.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                />
+                 
+                  
                 </Box>
                 <FormControlLabel
                   control={
@@ -788,6 +928,7 @@ function EditUserApp(props) {
                   label="Disminuir espacio"
                 />
               </Box>
+              </>}
             </div>
           </div>
           {table && (
@@ -795,6 +936,7 @@ function EditUserApp(props) {
               apiResponseProyects={apiResponseProyects}
               dataUser={dataUser}
               setTable={() => setTable(false)}
+              cargando={() => setCargando(true)}
             />
           )}
         </div>

@@ -89,9 +89,9 @@ const initialState = {
   data: {
     nombre: "",
     apellido: "",
-    displayName: "John Doe",
-    photoURL: "assets/images/avatars/brian-hughes.jpg",
-    email: "johndoe@withinpixels.com",
+    displayName: "",
+    photoURL: "",
+    email: "",
     shortcuts: ["apps.calendar", "apps.mailbox", "apps.contacts", "apps.tasks"],
   },
 };

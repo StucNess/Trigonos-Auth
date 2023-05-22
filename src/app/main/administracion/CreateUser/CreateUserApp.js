@@ -48,12 +48,13 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 
 import DialogTitle from "@mui/material/DialogTitle";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import { usePostUsuariosRegistrarMutation } from "app/store/usuariosApi/usuariosApi";
 const schema = yup.object().shape({
   // user: yup.string().required("Debe ingresar su nombre completo"),
   email: yup
@@ -151,10 +152,8 @@ export default function CreateUserApp(props) {
     resolver: yupResolver(schema),
   });
   const [personName, setPersonName] = useState([]);
-  const [personData, setPersonData] = useState({
-    id: 0,
-    name: "",
-  });
+  
+ 
   const [loading, setLoading] = useState(false);
   const [MsgAlert, setMsgAlert] = useState({
     msgResp: false,
@@ -174,7 +173,8 @@ export default function CreateUserApp(props) {
   const [dataEmpresas, setDataEmpresas] = useState([]);
   const [dataRole, setDataRole] = useState([]);
   const [projectData, setProjectData] = useState();
-
+  const [postAddUser, data_] = usePostUsuariosRegistrarMutation();
+ 
   const [data, setData] = useState({
     email: "",
     username: "",
@@ -184,8 +184,10 @@ export default function CreateUserApp(props) {
     pais: "",
     password: "",
     rol: "",
+    listIdProyects:[]
   });
-
+ 
+ 
   function onSubmit(e) {
     setData({
       email: e.email,
@@ -196,6 +198,7 @@ export default function CreateUserApp(props) {
       pais: e.pais,
       password: e.password,
       rol: e.rol,
+      listIdProyects: personName
     });
 
     setOpen(true);
@@ -279,6 +282,7 @@ export default function CreateUserApp(props) {
     );
   };
 
+
   function timeout(delay = number) {
     return new Promise((res) => setTimeout(res, delay));
   }
@@ -359,52 +363,63 @@ export default function CreateUserApp(props) {
     setLoading(true);
     handleCloseAlert();
     setTimeout(() => {
-      let timer = 0;
-      axios
-        .post(jwtServiceConfig.signUp, data)
-        .then((response) => {
-          const idUser = response.data.id;
-          for (let x = 0; x < personName.length; x++) {
-            timer = timer + 1000;
-            const dataProyect = {
-              idProyect: personName[x],
-              idUser: idUser,
-            };
-            setTimeout(() => {
-              axios
-                .post(jwtServiceConfig.addProyects, dataProyect)
-                .then((response) => {})
-                .catch((error) => {
-                  console.log(`Error al agregar el proyecto ${personName[x]}`);
-
-                  return;
-                });
-            }, timer);
-          }
-          setLoading(false);
-          setMsgAlert({
-            msgResp: true,
-            msgText: "Usuario agregado correctamente.",
-            msgError: false,
-          });
-          setTimeout(() => {
-            handleCloseSecond();
-            reset({}, {});
-            setPersonName([]);
-            setEmailUser("");
-          }, 2000);
-        })
-        .catch((error) => {
-          setLoading(false);
-          setMsgAlert({
-            msgResp: true,
-            msgText: "Error, no se ha logrado agregar el usuario.",
-            msgError: true,
-          });
-          setTimeout(() => {
-            handleCloseSecond();
-          }, 2500);
+    // let timer = 0;
+    postAddUser(data).then((response)=>{
+      console.log(response)
+      setLoading(false);
+      setMsgAlert({msgResp: true,msgText:"Usuario agregado correctamente.",msgError:false});
+      setTimeout(() => {
+        handleCloseSecond();
+        reset({
+            
+        }, {
+         
         });
+        setPersonName([]);
+        setEmailUser("");
+      },2000);
+     
+    }).catch((error)=>{
+      console.log(error)
+      setLoading(false);
+      setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar el usuario.",msgError:true});
+      setTimeout(() => {
+        handleCloseSecond();
+      },2500);
+
+
+    })
+    // axios
+    //   .post(jwtServiceConfig.signUp, data)
+    //   .then((response) => {
+    //     const idUser = response.data.id;
+    //     personName.map(function(el){
+    //       return { idProyect: el, idUser:response.data.id}
+    //     })
+    //     for (let x = 0; x < personName.length; x++) {
+    //       timer = timer + 1000;
+    //       const dataProyect = {
+    //         idProyect: personName[x],
+    //         idUser: idUser,
+    //       };
+    //       setTimeout(() => {
+    //         axios
+    //           .post(jwtServiceConfig.addProyects, dataProyect)
+    //           .then((response) => {
+                
+    //           })
+    //           .catch((error) => {
+    //             console.log(`Error al agregar el proyecto ${personName[x]}`);
+                
+    //             return;
+    //           });
+    //       }, timer);
+    //     }
+        
+    //   })
+    //   .catch((error) => {
+       
+    //   });
     }, 2000);
   }
 
