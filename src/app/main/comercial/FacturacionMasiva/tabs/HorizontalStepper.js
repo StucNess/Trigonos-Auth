@@ -18,6 +18,7 @@ import themesConfig from "app/configs/themesConfig";
 import { useGetInstruccionesQuery } from "app/store/instrucciones/instruccionesApi";
 import { useState } from "react";
 import { useEffect } from "react";
+import TabInstrucciones from "./TabInstrucciones";
 
 // PARA EL ESTILO DEL SELECT MULTIPLE
 function getStyles(name, personName, theme) {
@@ -129,16 +130,11 @@ export default function HorizontalLinearStepper(props) {
             </Box>
           ) : activeStep === 1 ? ( //descarga de folio/instrucciones
             <Box>
-              <Box
-                className="flex justify-center   text-white p-[10px] m-[40px] "
-                sx={{ bgcolor: "primary.main" }}
-              >
-                <ListAltOutlinedIcon className="w-[30px] h-[30px]  mr-[10px] " />
-                <b>
-                  {" "}
-                  <span className="text-[20px]">Listado de Instrucciones</span>
-                </b>
-              </Box>
+              {/* <Box> */}
+
+              <TabInstrucciones />
+
+              {/* </Box> */}
             </Box>
           ) : (
             //finalizacion del proceso
