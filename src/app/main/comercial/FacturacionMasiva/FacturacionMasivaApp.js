@@ -5,7 +5,11 @@ import FusePageSimple from "@fuse/core/FusePageSimple";
 import FacturacionMasivaAppHeader from "./FacturacionMasivaAppHeader";
 import HorizontalLinearStepper from "./tabs/HorizontalStepper";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
-import { useGetParticipantesQuery } from "app/store/participantesApi/participantesApi";
+import {
+  useGetParticipantesByIdMutation,
+  useGetParticipantesById_Query,
+  useGetParticipantesQuery,
+} from "app/store/participantesApi/participantesApi";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -16,11 +20,9 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 
 const NominaPagoApp = () => {
   const idUser = localStorage.getItem("idUser");
-  const {
-    data: dataParticipants = [],
-    isLoading: isLoadingParticipant = true,
-  } = useGetParticipantesQuery(idUser);
-  // console.log(isLoadingParticipant);
+  const { data: getParticipants, isLoading: loadparticipant } =
+    useGetParticipantesById_Query(idUser);
+
   return (
     <Root
       // header={<FacturacionMasivaAppHeader />}
@@ -42,10 +44,10 @@ const NominaPagoApp = () => {
               </div>
             </Box>
           </Box>
-          {!isLoadingParticipant && (
+          {!loadparticipant && (
             <Paper className="w-full p-[20px] ">
               <HorizontalLinearStepper
-                dataParticipants={dataParticipants.data}
+                dataParticipants={getParticipants.data}
               />
             </Paper>
           )}
