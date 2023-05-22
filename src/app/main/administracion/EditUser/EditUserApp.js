@@ -53,6 +53,9 @@ import { StaticRouter } from "react-router-dom/server";
 import { CallApiUsers } from "./store/CallApiUsers";
 import { CallApiEmpresas } from "../CreateUser/store/CallApiEmpresas";
 import { CallApiParticipants } from "../store/CallApiParticipants";
+import { useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery } from "app/store/usuariosApi/usuariosApi";
+import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
+import { useGetParticipantesByIdMutation, useGetParticipantesQuery } from "app/store/participantesApi/participantesApi";
 
 const LinkBehavior = forwardRef((props, ref) => (
   <RouterLink ref={ref} to="/" {...props} role={undefined} />
@@ -126,10 +129,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -229,12 +228,14 @@ function EnhancedTableHead(props) {
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
+            id={headCell.id}
             key={headCell.id}
             align="left"
-            padding="20px"
+           
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
+              id={headCell.id}
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
@@ -333,8 +334,20 @@ function EditUserApp(props) {
   const [dataUser, setDataUser] = useState({});
   const [dataParticipant, setDataParticipant] = useState([]);
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
+  const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa} = useGetEmpresasQuery();
 
-  const [rowss, setRowss] = useState([]);
+ 
+  const {data: getUsuarios,isLoading , refetch, isFetching} = useGetUsuariosPaginationQuery({
+    pageSize:1000
+  });
+  const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
+  const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
+  const [getParticipantById, data_participant] = useGetParticipantesByIdMutation();
+  
+
+  
+ 
+  
 
   function search(searchString) {
     if (typeof searchString !== "string" || searchString.length === 0) {
@@ -374,65 +387,36 @@ function EditUserApp(props) {
   }
 
   function CargaDataParticipant(row) {
-    fetch(
-      ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${row.id}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        //  setDataParticipant(data.data);
-
-        console.log("------------------------------------------------");
-
-        let ids = data.data.map(function (el) {
-          return el.id;
-        });
-        let newArray = apiResponseProyects.filter(
-          (item) => !ids.includes(item.id)
-        );
-        setDataUser({
-          userData: row,
-          participantData: data.data,
-          participantFullData: newArray,
-        });
-        setTable(true);
-
-        console.log(newArray);
+    const idRolUser = (dataUserRoles.filter(
+      (item) => item.userId=== row.id
+    )).map(function(el) {
+      return el.roleId         
+    })[0]
+   
+    getParticipantById(row.id).then(({data}) => {
+ 
+      let ids = data.data.map(function (el) {
+        return el.id;
       });
-  }
-  function CargaDataRol() {
-    fetch(" https://trigonosapi.azurewebsites.net/api/Usuarios/pagination")
-      .then((response) => response.json())
-      .then((data) => {
-        let data_ = [];
-
-        (async () => {
-          data_ = await CallApiEmpresas();
-
-          rows = data.data.map(function (el) {
-            el.lockoutEnd = el.lockoutEnd === null ? "Activo" : "Desactivado";
-
-            return {
-              estado: el.lockoutEnd,
-              rol: el.role,
-              email: el.email,
-              nombre: el.nombre,
-              apellido: el.apellido,
-              codempresa: el.idEmpresa,
-              empresa: data_.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-              usuario: el.username,
-              pais: el.pais,
-              id: el.id,
-            };
-          });
-
-          console.log(rows);
-
-          rowspermanent = rows;
-
-          rowsOnMount();
-        })();
+      let newArray = apiResponseProyects.filter(
+        (item) => !ids.includes(item.id)
+      );
+      setDataUser({
+        userData: row,
+        participantData: data.data.map(function(el) {
+          return {id :el.id, name: el.name}         
+        }),
+        participantFullData: newArray,
+        roleid: idRolUser
       });
+      setTable(true);
+    });
+
+
+
+      
   }
+  
 
   function rowsOnMount() {
     let rowsOnMount = stableSort(
@@ -448,37 +432,73 @@ function EditUserApp(props) {
   }
 
   useEffect(() => {
-    CargaDataRol();
-    const fetchData = async () => {
-      let prueba;
-      // eslint-disable-next-line prefer-const
-      prueba = await CallApiParticipants();
-      return prueba;
-    };
-    fetchData().then((value) => {
+    if(loadParticipant==false){
       setApiResponseProyects(
-        value.map(function (el) {
+        getParticipant.data.map(function (el) {
           return {
             id: el.id,
             name: el.name,
           };
         })
       );
-    });
-  }, []);
+    }
+  }, [loadParticipant])
+  
+  
   useEffect(() => {
-    CargaDataRol();
+    if(isLoading===false){
+      rows = getUsuarios.data.map(function (el) {
+      let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+      return {
+        estado: estadonew,
+        rol: el.role,
+        email: el.email,
+        nombre: el.nombre,
+        apellido: el.apellido,
+        codempresa: el.idEmpresa,
+        empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+        usuario: el.username,
+        pais: el.pais,
+        id: el.id,
+      };
+      
+      });
+      rowspermanent = rows;
+      rowsOnMount();
+    }
+  }, [isLoading]);
+  useEffect(() => {
+    // refreshEmpresa()
+   
+    if(getUsuarios !=undefined){
+      rows = getUsuarios.data.map(function (el) {
+        let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+        return {
+          estado: estadonew,
+          rol: el.role,
+          email: el.email,
+          nombre: el.nombre,
+          apellido: el.apellido,
+          codempresa: el.idEmpresa,
+          empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+          usuario: el.username,
+          pais: el.pais,
+          id: el.id,
+        };
+        
+        });
+        rowspermanent = rows;
+        rowsOnMount();
+    }
+
   }, [table]);
-  useEffect(() => {
-    rows = rowss;
-    rowsOnMount();
-  }, [rowss]);
 
   const handleSetRow = (event) => {
     const {
       target: { value },
     } = event;
-    setRowss(search(value.trim()));
+    rows = search(value.trim());
+    rowsOnMount();
   };
 
   const handleRequestSort = useCallback(
@@ -663,7 +683,7 @@ function EditUserApp(props) {
 
               <Box className="m-[20px]">
                 <Box>
-                  <TableContainer sx={{ maxHeight: 360 }} overflow-y-auto>
+                  <TableContainer sx={{ maxHeight: 360 , overflow:"true" }} >
                     <Table
                       sx={{ minWidth: 750 }}
                       aria-labelledby="tableTitle"
@@ -681,20 +701,21 @@ function EditUserApp(props) {
                       <TableBody>
                         {visibleRows
                           ? visibleRows.map((row, index) => {
-                              const isItemSelected = isSelected(row.email);
+                              const isItemSelected = isSelected(row.id);
                               const labelId = `enhanced-table-checkbox-${index}`;
 
                               return (
                                 <StyledTableRow
                                   aria-checked={isItemSelected}
                                   tabIndex={-1}
+                                  key={row.id}
                                 >
                                   <StyledTableCell
                                     align="left"
                                     component="th"
                                     id={labelId}
                                     scope="row"
-                                    padding="20px"
+                                
                                   >
                                     {row.estado}
                                   </StyledTableCell>
@@ -729,7 +750,7 @@ function EditUserApp(props) {
                                       color="secondary"
                                       className=" h-[28px]  w-[100px] mr-[20px]"
                                       onClick={() => {
-                                        CargaDataParticipant(row);
+                                         CargaDataParticipant(row);
                                       }}
                                       type="submit"
                                       size="small"
@@ -767,12 +788,13 @@ function EditUserApp(props) {
                   <TablePagination
                     labelRowsPerPage="Filas por página"
                     variant="h5"
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { value: -1, label: "All" },
-                    ]}
+                    // rowsPerPageOptions={[
+                    //   5,
+                    //   10,
+                    //   25,
+                    //   { value: -1, label: "All" },
+                    // ]}
+                    rowsPerPageOptions={[5, 10, 25]}
                     component="div"
                     count={rows.length}
                     rowsPerPage={rowsPerPage}

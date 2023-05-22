@@ -75,50 +75,54 @@ const AppContextProvider = ({ children }) => {
 
   const [data, setData] = useState([]);
   const [routes, setRoutes] = useState([]);
-  const { data: todos = [], isLoading: isloadingg = true } =
-    useGetAllRoutesQuery();
-  const { data: roles = [], isLoading: isloadingRol = true } =
-    useGetAllRolesQuery();
-  const { data: todoshabilit = [], isLoading: isloading = true } =
-    useGetOnlyHabilitRoutesQuery();
+  const [path, setPath] = useState({
+    path: "/",
+    element:<Navigate to="/comercial/estadoFacturacion" />,
+    auth: [settingsConfig.defaultAuth],
+  })
+  const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
+  const {data: roles =[],isLoading: isloadingRol =true} = useGetAllRolesQuery();
+  const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
   const user = useSelector(selectUser);
   // selectNavigationAll
 
-  ProfileAppConfig();
-  function getListRoless(idPagina) {
-    return todoshabilit
-      .filter((item) => item.idpagina === idPagina)
-      .map(function (el) {
-        return el.nombreRol;
-      });
+
+ 
+
+  
+  function getListRoless(idPagina){
+    return (todoshabilit.filter(
+      (item) => item.idpagina=== idPagina
+    )).map(function(el) {
+      return el.nombreRol         
+    });
   }
 
-  function getListWebNoAsign() {
-    console.log(getListRoless(9).includes(user.role));
-  }
-  getListWebNoAsign();
 
+ 
   useEffect(() => {
     let defaultAuth = roles.map(function (el) {
       return el.name;
     });
   }, []);
   useEffect(() => {
-    let defaultAuth = roles.map(function (el) {
-      return el.name;
-    });
-    dispatch(
-      setAsyncNavigation(navigationConfigAsync(defaultAuth, todoshabilit))
-    );
-  }, [isloadingRol, isloading]);
+    let defaultAuth = roles.map(function(el) {
+      return el.name         
+    })
+    dispatch(setAsyncNavigation(navigationConfigAsync(defaultAuth,todoshabilit)))
+    
+  }, [isloadingRol,isloading])
+  
 
-  if (isloading === false) {
-    function getListRoles(idPagina) {
-      return todoshabilit
-        .filter((item) => item.idpagina === idPagina)
-        .map(function (el) {
-          return el.nombreRol;
-        });
+
+
+  if (isloading===false){
+    function getListRoles(idPagina){
+      return (todoshabilit.filter(
+        (item) => item.idpagina=== idPagina
+      )).map(function(el) {
+        return el.nombreRol         
+      });
     }
     const routeConfigs = [
       ExampleConfig,
@@ -132,21 +136,19 @@ const AppContextProvider = ({ children }) => {
       ...AdministracionConfig(todoshabilit), //los que contienen el spread se les pasa el objeto completo
       ProfileAppConfig(getListRoles(3)),
     ];
-    let defaultAuth = roles.map(function (el) {
-      return el.name;
-    });
+    let defaultAuth = roles.map(function(el) {
+      return el.name         
+    })
+    
 
-    // console.log(getListRoless(9).includes(user.role)) No recomiendo borrar esto sirve para guia o explicacion de por que el element del / esta asi
+
+    
     const routes = [
       ...FuseUtils.generateRoutesFromConfigs(routeConfigs, defaultAuth),
       {
         path: "/",
-        element: getListRoless(9).includes(user.role) ? (
-          <Navigate to="/comercial/estadoFacturacion" />
-        ) : (
-          <Error404Page />
-        ),
-        auth: settingsConfig.defaultAuth,
+        element:getListRoless(9).includes(user.role)? <Navigate to="/comercial/estadoFacturacion" />: <Error404Page />,
+        auth: defaultAuth,
       },
       {
         path: "loading",
@@ -161,34 +163,27 @@ const AppContextProvider = ({ children }) => {
         element: <Navigate to="404" />,
       },
     ];
+   
+    
+    
+      return (
+     
+     
+           <AppContext.Provider value={{ routes }}>
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            
+              <StyledEngineProvider injectFirst>
+               { children}
+              </StyledEngineProvider>
+          
+          </LocalizationProvider>
+        </AppContext.Provider>
+    
+       
+    
+      );
+    
 
-    // console.log(data)
-    // setInterval(() => {
-    //   const fetchData = async () => {
-    //     try {
-    //       const response = await fetch('https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina');
-
-    //       const result = await response.json();
-    //       let isEqual = JSON.stringify(result) === JSON.stringify(data);
-    //       if(isEqual ==false){
-    //         console.log(isEqual)
-
-    //       }
-    //       console.log(isEqual)
-    //     } catch (error) {
-    //       console.error('Error al obtener los datos:', error);
-    //     }
-    //   };
-    //   fetchData();
-    // }, 5000);
-
-    return (
-      <AppContext.Provider value={{ routes }}>
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <StyledEngineProvider injectFirst>{children}</StyledEngineProvider>
-        </LocalizationProvider>
-      </AppContext.Provider>
-    );
   }
 };
 
