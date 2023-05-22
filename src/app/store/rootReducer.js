@@ -6,6 +6,7 @@ import { routesApi } from './RoutesRoles/routesApi';
 import { instruccionesApi } from './instrucciones/instruccionesApi';
 import { participantesApi } from './participantesApi/participantesApi';
 import { usuariosApi } from './usuariosApi/usuariosApi';
+import { empresaApi } from './empresaApi/empresaApi';
 
 const createReducer = (asyncReducers) => (state, action) => {
   
@@ -14,6 +15,7 @@ const createReducer = (asyncReducers) => (state, action) => {
     [instruccionesApi.reducerPath]: instruccionesApi.reducer,
     [participantesApi.reducerPath]: participantesApi.reducer,
     [usuariosApi.reducerPath]: usuariosApi.reducer,
+    [empresaApi.reducerPath]: empresaApi.reducer,
     
     fuse,
     i18n,

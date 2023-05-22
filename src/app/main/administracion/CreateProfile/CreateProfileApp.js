@@ -78,38 +78,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
       border: 0,
     },
   }));
-  // function createData(estado,codReferencia,nombre,descripcion,id) {
-  //   return {
-  //       estado,codReferencia,nombre,descripcion,id
-  //   };
-  // }
+
   
    
   let rows = [];
   let rowspermanent = [];
   
-
-     
-
- 
- 
-  // async function CargaData(){
-    
-  //   const data = await CallApiRoles();
-  //   console.log(data);
-  //   data.map(
-  //     ({
-  //       id, codReferencia, nombre, descripcion, bhabilitado,
-  //     }) =>
-  //     rows.push(
-  //         createData(
-  //           // createData('Activo', 4849, 'Trabajadores Prisma', 'Perfil para trabajadores de Prisma')
-  //           bhabilitado ===1 ? 'Activo':'Desactivado', codReferencia, nombre, descripcion,id
-  //         )
-  //       )
-      
-  //   );
-  // }
 
    
   
@@ -350,7 +324,7 @@ function CreateProfileApp(props){
      }
 
     function CargaDataRol(){
-        fetch(" http://localhost:5205/api/Rol")
+        fetch(" https://trigonosapi.azurewebsites.net/api/Rol")
         .then((response) => response.json())
         .then((data) => {
           rows = data.map(function(el) {

@@ -23,6 +23,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { green } from '@mui/material/colors';
+import { usePostAddEmpresaMutation } from 'app/store/empresaApi/empresaApi';
 const schema = yup.object().shape({
     // user: yup.string().required("Debe ingresar su nombre completo"),
     rutEmpresa: yup
@@ -52,7 +53,7 @@ export default function ModalAddCompany({setActive}) {
 
   const [rutCompany, setRutCompany] = useState("");
   const [nameCompany, setNameCompany] = useState("");
-  
+  const [postAddEmpresa, data_] = usePostAddEmpresaMutation();
   const { control, formState, handleSubmit, reset } = useForm({
     mode: "onChange",
     defaultValues,
@@ -88,19 +89,16 @@ export default function ModalAddCompany({setActive}) {
     };
     setLoading(true);
     setTimeout(() => {
-      axios
-      .post(jwtServiceConfig.addCompany, data)
-      .then((response) => {
+      postAddEmpresa(data).then((response)=>{
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Empresa agregada correctamente.",msgError:false});
         setTimeout(() => {
           handleClose();
         },2500);
-      })
-      .catch((error) => {
+      }).catch((error)=>{
         setLoading(false);
         setMsgAlert({msgResp: true,msgText:"Error, no se ha logrado agregar la empresa.",msgError:true});
-      });
+      })
     }, 2000);
   }
   function errorSubmit(){

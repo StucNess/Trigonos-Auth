@@ -79,7 +79,7 @@ class JwtService extends FuseUtils.EventEmitter {
           if (response.data.username) {
             localStorage.removeItem("pagina");
             axios
-              .get("http://localhost:5205/api/Rol/listarRolPagina")
+              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
               .then((response) => {
                 // console.log(response.data[0].nombrePagina);
                 // console.log(response.data[0].nombrePagina);
@@ -92,7 +92,7 @@ class JwtService extends FuseUtils.EventEmitter {
               })
               .catch((error) => {});
             setTimeout(() => {
-              const url = ` http://localhost:5205/api/Participantes?id=${response.data.id}`;
+              const url = ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${response.data.id}`;
               let kaka;
               const prueba = async () => {
                 let pruebaa;
@@ -143,7 +143,7 @@ class JwtService extends FuseUtils.EventEmitter {
             // console.log(response);
             localStorage.removeItem("pagina");
             axios
-              .get("http://localhost:5205/api/Rol/listarRolPagina")
+              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
               .then((response) => {
                 // console.log(response.data[0].nombrePagina);
                 // console.log(response.data[0].nombrePagina);

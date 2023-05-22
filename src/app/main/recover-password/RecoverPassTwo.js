@@ -70,12 +70,12 @@ function RecoverPassTwo() {
       },
     };
     const urlApi =
-      " http://localhost:5205/api/Usuarios/ActualizarContrasena";
+      " https://trigonosapi.azurewebsites.net/api/Usuarios/ActualizarContrasena";
     const jsonApi = {
       password: password,
     };
     // axios
-    //   .get(" http://localhost:5205/api/Usuarios", yourConfig)
+    //   .get(" https://trigonosapi.azurewebsites.net/api/Usuarios", yourConfig)
     axios
       .post(urlApi, jsonApi, yourConfig)
       .then((response) => {

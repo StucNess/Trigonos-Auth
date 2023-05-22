@@ -19,6 +19,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import TextField from "@mui/material/TextField";
 import Paper from "@mui/material/Paper";
+import CachedIcon from '@mui/icons-material/Cached';
 
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -61,7 +62,10 @@ import CommentIcon from "@mui/icons-material/Comment";
 import { white } from "tailwindcss/colors";
 import jwtServiceConfig from "src/app/auth/services/jwtService/jwtServiceConfig";
 import axios from "axios";
-import { useGetUsuariosRolesQuery } from "app/store/usuariosApi/usuariosApi";
+import { useGetUsuariosRolesQuery, usePostUsuariosActualizarMutation } from "app/store/usuariosApi/usuariosApi";
+import { useGetAllRolesQuery, useGetAllRoutesQuery } from "app/store/RoutesRoles/routesApi";
+import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
+import {Tooltip} from "@mui/material";
 // PARA EL ESTILO DEL SELECT MULTIPLE
 function getStyles(name, personName, theme) {
   return {
@@ -91,11 +95,15 @@ export default function ModalEditUser({
   setTable,
   
 }) {
-  const { userData, participantData, participantFullData } = dataUser;
-  const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
+  const [open, setOpen] = useState(true);
+  const { userData, participantData, participantFullData,roleid } = dataUser;
 
-  
-  
+  // const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
+  const {data: getRoles =[],isLoading: isloadRoles =true} = useGetAllRolesQuery();
+  const {data: getEmpresas =[],isLoading: isloadEmp =true} = useGetEmpresasQuery()
+  const [postUsuariosActualizar, dataActUser]  = usePostUsuariosActualizarMutation();
+
+
   const [formState, setFormState] = useState({
     id: userData.id,
     usuario: userData.usuario,
@@ -108,7 +116,9 @@ export default function ModalEditUser({
     pais: userData.pais,
     estado: userData.estado,
     participants: participantData,
-    rolid: undefined,
+    rolid: roleid,
+    listDeleteProyecto:null, 
+    listNewProyecto:null
   });
   const [dataConfirm, setDataConfirm] = useState({
     id: userData.id,
@@ -122,7 +132,9 @@ export default function ModalEditUser({
     pais: userData.pais,
     estado: userData.estado,
     participants: participantData,
-    rolid: undefined,
+    rolid: roleid,
+    listDeleteProyecto:null,
+    listNewProyecto:null
   });
   const [update, setUpdate] = useState({
     estado: false,
@@ -151,11 +163,9 @@ export default function ModalEditUser({
 
   const [countActive, setCountActive] = useState(0);
   const [activeButton, setActiveButton] = useState(false);
-  const [checkedExt, setCheckedExt] = useState(false);
-  const [checkedBlue, setCheckedBlue] = useState(false);
-  const [emailUser, setEmailUser] = useState(dataUser.email);
-  const [dataEmpresas, setDataEmpresas] = useState([]);
-  const [dataRole, setDataRole] = useState([]);
+  // const [checkedExt, setCheckedExt] = useState(false);
+  // const [checkedBlue, setCheckedBlue] = useState(false);
+  const [emailUser, setEmailUser] = useState("");
   const [scroll, setScroll] = useState("paper");
   // usstate para los clientes disponibles y los asignados
   const [clientDisp, setClientDisp] = useState(participantFullData);
@@ -183,9 +193,19 @@ export default function ModalEditUser({
     setSecondDopen(true);
 
     setLoading(true);
+    let listDeleteProyecto = (participantData.filter(
+      (item) => !clientAsig.includes(item) 
+    )).map(function (el) {
+      return {idProyect: el.id, idUser:userData.id };
+    });
+    let listNewProyecto = (participantFullData.filter(
+          (item) => !clientDisp.includes(item) 
+        )).map(function (el) {
+          return {idProyect: el.id, idUser:userData.id };
+        });
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    if (isEqual) {
-      // console.log("No se realiza envio a API");
+    if (isEqual &&  (listDeleteProyecto.length) === 0 && (listNewProyecto.length) ===0) {
+     
       setLoading(false);
 
       setMsgAlert({
@@ -197,48 +217,60 @@ export default function ModalEditUser({
         handleCloseSecond();
       }, 1200);
     } else {
-      console.log(formState.id);
+      
+      
       const dataUser = {
-        email: formState.email,
-        username: formState.email,
-        nombre: formState.nombre,
-        apellido: formState.apellido,
-        idEmpresa: formState.codempresa,
-        pais: formState.pais,
-        password: "Trgns23&",
-        rol: formState.rol,
+        idUser:formState.id ,
+        newData:{
+                email: (formState.email).trim() != (dataConfirm.email).trim()? formState.email:null,
+                username: (formState.email).trim() != (dataConfirm.email).trim()? formState.email:null,
+                nombre:  (formState.nombre).trim() != (dataConfirm.nombre).trim()? formState.nombre:null,
+                apellido: (formState.apellido).trim() != (dataConfirm.apellido).trim()? formState.apellido:null,
+                idEmpresa:  formState.codempresa != dataConfirm.codempresa? formState.codempresa:null,
+                pais: (formState.pais).trim() != (dataConfirm.pais).trim()? formState.pais:null,
+                password: "Trgns23&",
+                rolIdAnterior: roleid,
+                rolIdNuevo: (formState.rolid).trim() != (dataConfirm.rolid).trim()? formState.rolid:null,
+                listDeleteProyecto: listDeleteProyecto.length >0 ? listDeleteProyecto:null,//[ {idProyect: 0,idUser: "string" }]  recuerda es un arreglo de objetos //
+                listNewProyecto: listNewProyecto.length >0 ? listNewProyecto:null //[ {idProyect: 0,idUser: "string" }]  
+              
+              }
       };
-      axios
-        .post(
-          `http://localhost:5205/api/Usuarios/actualizar/${formState.id}`,
-          dataUser
-        )
-        .then((response) => {
-          setLoading(false);
-          setMsgAlert({
-            msgResp: true,
-            msgText: "Usuario modificado correctamente.",
-            msgError: false,
-          });
-          setTimeout(() => {
-            handleCloseSecond();
-            handleClose();
-          }, 2000);
-        })
-        .catch((error) => {
-          setLoading(false);
-          setMsgAlert({
-            msgResp: true,
-            msgText: "Error, no ha se ha modificado el usuario",
-            msgError: true,
-          });
-          setTimeout(() => {
-            handleCloseSecond();
-          }, 2500);
+      postUsuariosActualizar(dataUser).then((response)=>{
+        setLoading(false);
+        setMsgAlert({
+          msgResp: true,
+          msgText: "Usuario modificado correctamente.",
+          msgError: false,
         });
+        setTimeout(() => {
+          handleCloseSecond();
+          handleClose();
+        }, 2000);
+      }).catch((error)=>{
+        setLoading(false);
+        setMsgAlert({
+          msgResp: true,
+          msgText: "Error, no ha se ha modificado el usuario",
+          msgError: true,
+        });
+        setTimeout(() => {
+          handleCloseSecond();
+        }, 2500);
+      })
+     
     }
   };
-
+  function RevertirSeleccion(){
+    
+    setClientAsig(participantData);
+    setClientDisp(participantFullData);
+    setFormState({
+      ...formState,
+      listDeleteProyecto: null ,
+      listNewProyecto: null ,
+    });
+  }
   const handleToggleAll = (items) => () => {
     setCheckeddos([]);
     if (checked.length != clientDisp.length) {
@@ -280,27 +312,27 @@ export default function ModalEditUser({
     setCheckeddos(newChecked);
   };
   const handleCheckedRight = () => {
-    //pasar lo que este en el array al otro
+
     const newChecked = [...checked];
     let ids = newChecked.map(function (el) {
       return el.id;
     });
     let newArray = clientDisp.filter((item) => !ids.includes(item.id));
-    // console.log(newArray);
+
     setClientDisp(newArray);
     setClientAsig(clientAsig.concat(newChecked));
     setChecked([]);
   };
   const handleCheckedLeft = () => {
-    //pasar lo que este en el array al otro
+
     const newChecked = [...checkeddos];
     let ids = newChecked.map(function (el) {
       return el.id;
     });
     let newArray = clientAsig.filter((item) => !ids.includes(item.id));
-    // console.log(newArray);
     setClientAsig(newArray);
     setClientDisp(clientDisp.concat(newChecked));
+    
     setCheckeddos([]);
   };
   const onInputChange = ({ target }) => {
@@ -309,61 +341,30 @@ export default function ModalEditUser({
       ...formState,
       [name]: value,
     });
+    if(name==="email"){
+      setEmailUser(value)
+    }
   };
-  const [open, setOpen] = useState(true);
+ 
   const handleChangee = (event) => {
     setFormState({
       ...formState,
-      rol: event.target.value,
+      rolid: event.target.value,
     });
-    // setBankk(event.target.value);
   };
   const handleChangeempresa = (event) => {
     setFormState({
       ...formState,
       codempresa: event.target.value,
     });
-
-    // setBankk(event.target.value);
   };
   const handleClose = () => {
     setOpen(false);
     setTable();
   };
   useEffect(() => {
-    (async () => {
-      const data_ = await CallApiEmpresas();
-      setDataEmpresas(data_);
-    })();
-    (async () => {
-      const data_ = await CallApiRole();
-      setDataRole(data_);
-    })();
+    setEmailUser(userData.email);
   }, []);
-  function getListRoles(idPagina){
-    return (data.filter(
-      (item) => item.idpagina=== idPagina
-    )).map(function(el) {
-      return el.nombreRol         
-    });
-  }
-  useEffect(() => {
-    setFormState({
-      ...formState,
-      roleid:  (dataUserRoles.filter(
-        (item) => item.userId=== userData.id
-      )).map(function(el) {
-        return el.roleId         
-      })
-      
-    });
-  }, [isloadRolesGet])
-
-  //mesirve
-  useEffect(() => {
-    // console.log(checked);
-  }, [checked]);
-
   useEffect(() => {
     if (apiResponseProyects != undefined) {
       let res = apiResponseProyects
@@ -431,10 +432,11 @@ export default function ModalEditUser({
                   )}
                 </div>
                 <TextField
+                  id="filled-multiline-flexible"
                   className=" w-full "
                   label="Nombre"
                   type="text"
-                  defaultValue="Vacio"
+            
                   onChange={onInputChange}
                   name="nombre"
                   disabled={nombre ? false : true}
@@ -509,7 +511,7 @@ export default function ModalEditUser({
                   className=" w-full"
                   label="Apellido"
                   type="text"
-                  defaultValue="Vacio"
+             
                   onChange={onInputChange}
                   name="apellido"
                   disabled={apellido ? false : true}
@@ -586,10 +588,10 @@ export default function ModalEditUser({
                   id="standard-select-currency"
                   select
                   label="Rol"
-                  value={formState.rol}
+                  value={formState.rolid}
                   onChange={handleChangee}
                   variant="filled"
-                  name="rol"
+                  name="rolid"
                   disabled={rol ? false : true}
                   InputProps={{
                     startAdornment: (
@@ -616,7 +618,7 @@ export default function ModalEditUser({
                               onClick={() => {
                                 setFormState({
                                   ...formState,
-                                  rol: userData.rol,
+                                  rolid: roleid,
                                 });
 
                                 setUpdate({
@@ -647,8 +649,8 @@ export default function ModalEditUser({
                     ),
                   }}
                 >
-                  {dataRole.map((data) => (
-                    <MenuItem key={data.id} value={data.name}>
+                  {getRoles.map((data) => (
+                    <MenuItem key={data.id} value={data.id}>
                       {data.name}
                     </MenuItem>
                   ))}
@@ -752,10 +754,10 @@ export default function ModalEditUser({
                   className="w-full "
                   label="Email"
                   type="email"
-                  defaultValue="Vacio"
+               
                   onChange={(e) => {
                     onInputChange(e);
-                    handleSetEmail(e);
+                    // handleSetEmail(e);
                   }}
                   name="email"
                   disabled={email ? false : true}
@@ -817,7 +819,7 @@ export default function ModalEditUser({
                   variant="filled"
                 />
                 <div className="h-[20px]">
-                  {usuario ? (
+                  {/* {usuario ? (
                     <>
                       <span className="text-red-500">
                         Recuerde aceptar o cancelar el cambio realizado
@@ -825,16 +827,16 @@ export default function ModalEditUser({
                     </>
                   ) : (
                     <></>
-                  )}
+                  )} */}
                 </div>
                 <TextField
+                  name="usuario"
                   className=" w-full "
                   label="Usuario"
                   type="text"
-                  defaultValue={formState.email}
-                  // onChange={onInputChange}
-                  name="usuario"
+                 // defaultValue={userData.email}
                   value={emailUser}
+                  onChange={(event) => setEmailUser(event.target.value)}
                   disabled
                   variant="filled"
                 />
@@ -922,164 +924,16 @@ export default function ModalEditUser({
                     ),
                   }}
                 >
-                  {dataEmpresas.map((data) => (
+                  {getEmpresas.map((data) => (
                     <MenuItem key={data.id} value={data.id}>
                       {data.nombreEmpresa}
                     </MenuItem>
                   ))}
                 </TextField>
 
-                {/* <TableContainer component={Paper} className="max-h-[300px]">
-                <Table  stickyHeader aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Id</TableCell>
-                      <TableCell align="left">Nombre</TableCell>
-                      
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {apiResponseProyects.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        sx={{  '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row" sx={{backgroundColor: 'pantoneazul'}}>
-                          {row.id}
-                        </TableCell>
-                        <TableCell align="left">{row.business_Name}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-        </TableContainer>
-        <TableContainer component={Paper} className="max-h-[300px]">
-                <Table  stickyHeader aria-label="simple table">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Id</TableCell>
-                      <TableCell align="left">Nombre</TableCell>
-                      
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {participantData.map((row) => (
-                      <TableRow
-                        key={row.id}
-                        sx={{  '&:last-child td, &:last-child th': { border: 0 } }}
-                      >
-                        <TableCell component="th" scope="row" sx={{backgroundColor: 'pantoneazul'}}>
-                          {row.id}
-                        </TableCell>
-                        <TableCell align="left">{row.name}</TableCell>
-                        
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-        </TableContainer> */}
-
-                {/* El estado lo dejo para el final que se ve medio enredado */}
-                {/* <Box className="flex flex-col zerorange:w-[300px]  lg:w-[400px] w-[350px]   m-[20px]">
-                  <Box className="flex flex-row">
-                    <Typography
-                      variant="subtitle1"
-                      color="primary"
-                      className="mb-[40px]"
-                    >
-                      Estado
-                    </Typography>
-                    <InputAdornment className="m-[10px]">
-                      {estado ? (
-                        <>
-                          <CheckBoxIcon
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              setUpdate({
-                                ...update,
-                                estado: false,
-                              });
-                              // setCountActive(
-                              //   countActive > 0
-                              //     ? countActive - 1
-                              //     : countActive
-                              // );
-                            }}
-                          />
-                          <DisabledByDefaultIcon
-                            style={{ cursor: "pointer" }}
-                            onClick={() => {
-                              setUpdate({
-                                ...update,
-                                estado: false,
-                              });
-                              // setCountActive(
-                              //   countActive > 0
-                              //     ? countActive - 1
-                              //     : countActive
-                              // );
-                            }}
-                          />
-                        </>
-                      ) : (
-                        <EditIcon
-                          style={{ cursor: "pointer" }}
-                          onClick={() => {
-                            setUpdate({
-                              ...update,
-                              estado: true,
-                            });
-                            // setCountActive(countActive + 1);
-                          }}
-                        />
-                      )}
-                    </InputAdornment>
-                  </Box>
-
-                  <Box>
-                    <Box>
-                      <InputAdornment
-                        disablePointerEvents={!estado}
-                      >
-                        <Box>
-                          <Box>
-                            <FormControlLabel
-                              label="Activo"
-                              control={
-                                <Checkbox
-                                  checked={checkedBlue}
-                                  onChange={(event) => {
-                                    setCheckedBlue(
-                                      event.target.checked
-                                    );
-                                    setCheckedExt(false);
-                                  }}
-                                />
-                              }
-                            />
-                          </Box>
-                          <Box>
-                            <FormControlLabel
-                              label="Desactivado"
-                              control={
-                                <Checkbox
-                                  checked={checkedExt}
-                                  onChange={(event) => {
-                                    setCheckedExt(event.target.checked);
-                                    setCheckedBlue(false);
-                                  }}
-                                />
-                              }
-                            />
-                          </Box>
-                        </Box>
-                      </InputAdornment>
-                    </Box>
-                  </Box>
-                </Box> */}
               </div>
             </div>
-            <Box className="flex flex-col zerorange:w-[300px]  lg:w-[400px] w-[350px]   m-[20px]">
+            {/* <Box className="flex flex-col zerorange:w-[300px]  lg:w-[400px] w-[350px]   m-[20px]">
               <Box className="flex flex-row">
                 <Typography
                   variant="subtitle1"
@@ -1138,12 +992,68 @@ export default function ModalEditUser({
                   ></InputAdornment>
                 </Box>
               </Box>
-            </Box>
+            </Box> */}
             <div className="flex justify-center">
               <div className="h-[300px]">
                 <Card>
-                  <CardHeader
+                <ListItem
+                            key="{value.id}"
+                            // secondaryAction={
+                            //   <Tooltip title="Revertir Cambios">
+                            //     <IconButton edge="end" aria-label="comments"
+                            //      onClick={() => {
+                            //       RevertirSeleccion();
+                            //     }} 
+                            //     >
+                            //       <CachedIcon />
+                            //     </IconButton>
+                            //   </Tooltip>
+                            // }
+                            disablePadding
+                          >
+                        <ListItemButton
+                          onClick={handleToggleAll(clientDisp)}
+                          disabled={!checked.length === 0}
+                        >
+                          <ListItemIcon>
+                          <Tooltip  
+                              title="Seleccionar todos" 
+                              arrow 
+                              placement="top"
+                              // placement="top-start"
+                            > 
+                          <Checkbox
+                            checked={
+                              checked.length === clientDisp.length &&
+                              checked.length !== 0
+                            }
+                            // onChange={(event) => {
+                            //   setCheckedBlue(
+                            //     event.target.checked
+                            //   );
+                            // }}
+
+                            indeterminate={
+                              checked.length !== clientDisp.length &&
+                              checked.length !== 0
+                            }
+                            disabled={!checked.length === 0}
+                            inputProps={{
+                              "aria-label": "all items selected",
+                            }}
+                          /></Tooltip>
+                          </ListItemIcon>
+                          <ListItemText id="nose" primary="Clientes Disponibles" />
+                      </ListItemButton>
+                    </ListItem>
+                  {/* <CardHeader
                     avatar={
+                      <Tooltip  
+                      title="Seleccionar todos" 
+                      arrow 
+                      placement="top"
+                      // placement="top-start"
+                    >
                       <Checkbox
                         onClick={handleToggleAll(clientDisp)}
                         checked={
@@ -1165,10 +1075,11 @@ export default function ModalEditUser({
                           "aria-label": "all items selected",
                         }}
                       />
+                      </Tooltip>
                     }
                     title={"Clientes Disponibles"}
                     // subheader={`${numberOfChecked(items)}/${items.length} selected`}
-                  />
+                  /> */}
                   <Divider />
                   <List
                     sx={{
@@ -1185,15 +1096,15 @@ export default function ModalEditUser({
                       return (
                         <ListItem
                           key={value.id}
-                          secondaryAction={
-                            <IconButton edge="end" aria-label="comments">
-                              <CommentIcon />
-                            </IconButton>
-                          }
+                          // secondaryAction={
+                          //   <IconButton edge="end" aria-label="comments">
+                          //     <CommentIcon />
+                          //   </IconButton>
+                          // }
                           disablePadding
                         >
                           <ListItemButton
-                            role={undefined}
+                            // role={undefined}
                             onClick={handleToggle(value)}
                             dense
                           >
@@ -1215,9 +1126,15 @@ export default function ModalEditUser({
                 </Card>
               </div>
               <div className="flex flex-col justify-center items-center">
-                <IconButton
+              <Tooltip  
+                title="Agregar a lista" 
+                arrow 
+                placement="top"
+                // placement="top-start"
+              >
+              <IconButton
                   sx={{ "&:hover": { color: "#e4493f" } }}
-                  key="close"
+                  key="chechedRight"
                   aria-label="Close"
                   color="primary"
                   onClick={handleCheckedRight}
@@ -1226,9 +1143,20 @@ export default function ModalEditUser({
                 >
                   <NavigateNextIcon fontSize="large" />
                 </IconButton>
+              </Tooltip>
+               
+                <Tooltip  
+        
+                  title="Eliminar de la lista" 
+                  arrow 
+                  placement="top"
+                
+
+                  // placement="top-start"
+                        >
                 <IconButton
                   sx={{ "&:hover": { color: "#e4493f" } }}
-                  key="close"
+                  key="chechedLeft"
                   aria-label="Close"
                   color="primary"
                   onClick={handleCheckedLeft}
@@ -1237,11 +1165,19 @@ export default function ModalEditUser({
                 >
                   <NavigateBeforeIcon fontSize="large" />
                 </IconButton>
+               </Tooltip>
+                
               </div>
               <div className="max-h-[300px]">
                 <Card>
-                  <CardHeader
+                  {/* <CardHeader
                     avatar={
+                      <Tooltip  
+                      title="Seleccionar todos" 
+                      arrow 
+                      placement="top"
+                      // placement="top-start"
+                      >
                       <Checkbox
                         onClick={handleToggleAlldos(clientAsig)}
                         checked={
@@ -1263,10 +1199,66 @@ export default function ModalEditUser({
                           "aria-label": "all items selected",
                         }}
                       />
+                      </Tooltip>
                     }
                     title={"Clientes Asignados"}
                     // subheader={`${numberOfChecked(items)}/${items.length} selected`}
-                  />
+                  /> */}
+                      <ListItem
+                            key="{value.id}"
+                            secondaryAction={
+                              <Tooltip title="Revertir Cambios">
+                                <IconButton edge="end" aria-label="comments"
+                                 onClick={() => {
+                                  RevertirSeleccion();
+                                }} 
+                                >
+                                  <CachedIcon />
+                                </IconButton>
+                              </Tooltip>
+                            }
+                            disablePadding
+                          >
+                        <ListItemButton
+                           onClick={handleToggleAlldos(clientAsig)}
+                          disabled={!checked.length === 0}
+                        >
+                          <ListItemIcon>
+                          <Tooltip  
+                            title="Seleccionar todos" 
+                            arrow 
+                            placement="top"
+                            // placement="top-start"
+                            >
+                            <Checkbox
+                             
+                              checked={
+                                checkeddos.length === clientAsig.length &&
+                                checkeddos.length !== 0
+                              }
+                              // onChange={(event) => {
+                              //   setCheckedBlue(
+                              //     event.target.checked
+                              //   );
+                              // }}
+
+                              indeterminate={
+                                checkeddos.length !== clientAsig.length &&
+                                checkeddos.length !== 0
+                              }
+                              disabled={!checkeddos.length === 0}
+                              inputProps={{
+                                "aria-label": "all items selected",
+                              }}
+                            />
+                      </Tooltip>
+                          
+                          </ListItemIcon>
+                          <ListItemText id="nose" primary="Clientes Asignados" />
+                      </ListItemButton>
+                    </ListItem>
+
+
                   <Divider />
                   <List
                     sx={{
@@ -1283,15 +1275,15 @@ export default function ModalEditUser({
                       return (
                         <ListItem
                           key={value.id}
-                          secondaryAction={
-                            <IconButton edge="end" aria-label="comments">
-                              <CommentIcon />
-                            </IconButton>
-                          }
+                          // secondaryAction={
+                          //   <IconButton edge="end" aria-label="comments">
+                          //     <CommentIcon />
+                          //   </IconButton>
+                          // }
                           disablePadding
                         >
                           <ListItemButton
-                            role={undefined}
+                            // role={undefined}
                             onClick={handleToggledos(value)}
                             dense
                           >

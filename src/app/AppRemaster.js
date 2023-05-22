@@ -11,7 +11,7 @@ const AppContextProvider = ({ children }) => {
     // Función asincrónica para obtener los datos
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5205/api/Rol/listarRolPagina');
+        const response = await fetch('https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina');
         const result = await response.json();
         setData(result);
         console.log(result)

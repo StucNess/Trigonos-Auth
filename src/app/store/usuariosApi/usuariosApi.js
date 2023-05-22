@@ -3,21 +3,32 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 
 export const usuariosApi = createApi({
     reducerPath:'usuarios',
+    tagTypes:["usuarios","usuariosroles"],
     baseQuery: fetchBaseQuery({
-        baseUrl:'http://localhost:5205/api/Usuarios'
+        baseUrl:'https://trigonosapi.azurewebsites.net/api/Usuarios'
     }),
     endpoints:(builder)=>({
        
         getUsuarios: builder.query({
             query:()=>''
         }),
-        
         //Revisar como utilizar el patch si no cambialo por post en .net
         getUsuariosPagination: builder.query({
-            query:()=>'/Pagination'
+            query:(spec)=> spec? "/Pagination"
+            + (spec.nombre!=undefined?` ?Nombre=${spec.nombre}`: "")
+            + (spec.apellido!=undefined? `?Apellido=${spec.apellido}`: "" )
+            + (spec.sort!=undefined? `?Sort=${spec.sort}` : "" )
+            + (spec.pageIndex!=undefined? `?PageIndex=${spec.pageIndex}`:"" )
+            + (spec.pageSize!=undefined? `?PageSize=${spec.pageSize} `:" " )
+            + (spec.search!=undefined? `?Search=${spec.search}`:"")
+            
+            :"/Pagination",
+            providesTags:["usuarios"]
         }),
+
         getUsuariosRoles: builder.query({
-            query:()=>'/rolesUsers'
+            query:()=>'/rolesUsers',
+            providesTags:["usuarios"]
         }),
         getUsuariosById: builder.query({
             query:(id)=>`/account/${id}`
@@ -52,15 +63,16 @@ export const usuariosApi = createApi({
                 body:data 
             }),
         }),
-        postUsuariosActualizar: builder.mutation({ //  Objeto del body {idUser:"", newData:{email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}}
+        postUsuariosActualizar: builder.mutation({ //  Objeto del body {idUser:"", newData:{email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rolIdAnterior:"",rolIdNuevo:""}}
             query: (data) => ({
                 headers:{
                     'Content-type': 'application/json'
                 },
-                url: `/actualizar/${data.idUser}?registrarDto=`,
+                url: `/actualizar/${data.idUser}?actualizarDto=`,
                 method: 'POST',
                 body:data.newData 
             }),
+            invalidatesTags:["usuarios","usuariosroles"]
         }),
         postUsuariosValidarEmail: builder.mutation({
             query: (email) => ({
@@ -86,4 +98,4 @@ export const usuariosApi = createApi({
        
     })
 })
-export const { useGetUsuariosQuery, useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery}= usuariosApi;
+export const { useGetUsuariosQuery, useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery, usePostUsuariosActualizarMutation,usePostUsuariosRegistrarMutation}= usuariosApi;

@@ -181,7 +181,7 @@ export default function TablaUltimosCambios(props) {
   const [histId, setHistId] = useState(0);
   const [histDate, setHistDate] = useState("");
 
-  let url = ` http://localhost:5205/Historificacion?id=${props.idParticipant}`;
+  let url = ` https://trigonosapi.azurewebsites.net/Historificacion?id=${props.idParticipant}`;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   let rows = [];
   const [data, setData] = useState([]);

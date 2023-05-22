@@ -4,12 +4,25 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 export const participantesApi = createApi({
     reducerPath:'participantes',
     baseQuery: fetchBaseQuery({
-        baseUrl:'http://localhost:5205/'
+        baseUrl:'https://trigonosapi.azurewebsites.net/'
     }),
     endpoints:(builder)=>({
        
         getParticipantes: builder.query({
             query:()=>'/api/Participantes'
+        }),
+        // getParticipantesById: builder.mutation({
+        //     query:(id)=>`/api/Participantes?id=${id}`
+        // }),
+        getParticipantesById: builder.mutation({ //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+            query: (id) => ({
+                headers:{
+                    'Content-type': 'application/json'
+                },
+                url: `/api/Participantes?id=${id}`,
+                method: 'GET',
+               
+            }),
         }),
         //Revisar como utilizar el patch si no cambialo por post en .net
         getBusinessName: builder.query({
@@ -29,4 +42,4 @@ export const participantesApi = createApi({
        
     })
 })
-export const { useGetParticipantesQuery,useGetBusinessNameQuery,useGetRutQuery,useGetParticipantesSpecQuery,useGetHistorificacionQuery }= participantesApi;
+export const { useGetParticipantesQuery,useGetParticipantesByIdMutation,useGetBusinessNameQuery,useGetRutQuery,useGetParticipantesSpecQuery,useGetHistorificacionQuery }= participantesApi;

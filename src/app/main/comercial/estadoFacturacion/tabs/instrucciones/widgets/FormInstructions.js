@@ -117,7 +117,7 @@ const FormInstructions = (props) => {
       return;
     }
     const apiPatchParticipante =
-      ` http://localhost:5205/api/Instrucciones?` +
+      ` https://trigonosapi.azurewebsites.net/api/Instrucciones?` +
       `id=${props.data.id_instruccions}&` +
       // `EstadoEmision=${BillingState.indexOf(billing) + 1}&` +
       // `EstadoRecepcion=${ReceptionState.indexOf(reception) + 1}&` +

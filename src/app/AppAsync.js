@@ -69,6 +69,11 @@ const AppContextProvider = ({ children }) => {
 
   const [data, setData] = useState([]);
   const [routes, setRoutes] = useState([]);
+  const [path, setPath] = useState({
+    path: "/",
+    element:<Navigate to="/comercial/estadoFacturacion" />,
+    auth: [settingsConfig.defaultAuth],
+  })
   const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
   const {data: roles =[],isLoading: isloadingRol =true} = useGetAllRolesQuery();
   const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
@@ -76,9 +81,9 @@ const AppContextProvider = ({ children }) => {
   // selectNavigationAll
 
 
-  
+ 
 
-  ProfileAppConfig()
+  
   function getListRoless(idPagina){
     return (todoshabilit.filter(
       (item) => item.idpagina=== idPagina
@@ -87,10 +92,7 @@ const AppContextProvider = ({ children }) => {
     });
   }
 
-  function getListWebNoAsign(){
-     console.log(getListRoless(9).includes(user.role))
-  }
-  getListWebNoAsign();
+
  
   useEffect(() => {
     let defaultAuth = roles.map(function(el) {
@@ -103,7 +105,7 @@ const AppContextProvider = ({ children }) => {
       return el.name         
     })
     dispatch(setAsyncNavigation(navigationConfigAsync(defaultAuth,todoshabilit)))
-  
+    
   }, [isloadingRol,isloading])
   
 
@@ -134,15 +136,16 @@ const AppContextProvider = ({ children }) => {
     })
     
 
-    // console.log(getListRoless(9).includes(user.role)) No recomiendo borrar esto sirve para guia o explicacion de por que el element del / esta asi
+
+    
     const routes = [
       ...FuseUtils.generateRoutesFromConfigs(
         routeConfigs,defaultAuth
       ),
       {
         path: "/",
-        element: getListRoless(9).includes(user.role)? <Navigate to="/comercial/estadoFacturacion" />: <Error404Page />,
-        auth: settingsConfig.defaultAuth,
+        element:getListRoless(9).includes(user.role)? <Navigate to="/comercial/estadoFacturacion" />: <Error404Page />,
+        auth: defaultAuth,
       },
       {
         path: "loading",
@@ -157,27 +160,9 @@ const AppContextProvider = ({ children }) => {
         element: <Navigate to="404" />,
       },
     ];
+   
     
-      // console.log(data)
-      // setInterval(() => {
-      //   const fetchData = async () => {
-      //     try {
-      //       const response = await fetch('http://localhost:5205/api/Rol/listarRolPagina');
-            
-      //       const result = await response.json();
-      //       let isEqual = JSON.stringify(result) === JSON.stringify(data);
-      //       if(isEqual ==false){
-      //         console.log(isEqual)
-              
-      //       }
-      //       console.log(isEqual)
-      //     } catch (error) {
-      //       console.error('Error al obtener los datos:', error);
-      //     }
-      //   };
-      //   fetchData();
-      // }, 5000);
-      
+    
       return (
      
      
