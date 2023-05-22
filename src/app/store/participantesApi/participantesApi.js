@@ -1,10 +1,13 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const participantesApi = createApi({
-    reducerPath:'participantes',
-    baseQuery: fetchBaseQuery({
-        baseUrl:'https://trigonosapi.azurewebsites.net/'
+  reducerPath: "participantes",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://trigonosapi.azurewebsites.net/",
+  }),
+  endpoints: (builder) => ({
+    getParticipantes: builder.query({
+      query: (id) => `/api/Participantes?id=${id}`,
     }),
     endpoints:(builder)=>({
        

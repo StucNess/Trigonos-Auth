@@ -1,22 +1,32 @@
-import { configureStore } from '@reduxjs/toolkit';
-import createReducer from './rootReducer';
-import { routesApi } from './RoutesRoles/routesApi';
-import { instruccionesApi } from './instrucciones/instruccionesApi';
-import { participantesApi } from './participantesApi/participantesApi';
-import { usuariosApi } from './usuariosApi/usuariosApi';
-import { empresaApi } from './empresaApi/empresaApi';
-if (process.env.NODE_ENV === 'development' && module.hot) {
-  module.hot.accept('./rootReducer', () => {
-    const newRootReducer = require('./rootReducer').default;
+import { configureStore } from "@reduxjs/toolkit";
+import createReducer from "./rootReducer";
+import { routesApi } from "./RoutesRoles/routesApi";
+import { instruccionesApi } from "./instrucciones/instruccionesApi";
+import { participantesApi } from "./participantesApi/participantesApi";
+import { usuariosApi } from "./usuariosApi/usuariosApi";
+import { empresaApi } from "./empresaApi/empresaApi";
+if (process.env.NODE_ENV === "development" && module.hot) {
+  module.hot.accept("./rootReducer", () => {
+    const newRootReducer = require("./rootReducer").default;
     store.replaceReducer(newRootReducer.createReducer());
   });
 }
 
-const middlewares = [routesApi.middleware,instruccionesApi.middleware,participantesApi.middleware, usuariosApi.middleware,empresaApi.middleware];
+// const middlewares = [routesApi.middleware];
 
-if (process.env.NODE_ENV === 'development') {
+const middlewares = [
+  routesApi.middleware,
+  instruccionesApi.middleware,
+  participantesApi.middleware,
+  usuariosApi.middleware,
+  empresaApi.middleware,
+];
+
+if (process.env.NODE_ENV === "development") {
   const { createLogger } = require(`redux-logger`);
-  const logger = createLogger({ collapsed: (getState, action, logEntry) => !logEntry.error });
+  const logger = createLogger({
+    collapsed: (getState, action, logEntry) => !logEntry.error,
+  });
 
   middlewares.push(logger);
 }
@@ -28,7 +38,7 @@ const store = configureStore({
       immutableCheck: false,
       serializableCheck: false,
     }).concat(middlewares),
-  devTools: process.env.NODE_ENV === 'development',
+  devTools: process.env.NODE_ENV === "development",
 });
 
 store.asyncReducers = {};
