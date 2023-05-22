@@ -18,6 +18,7 @@ import themesConfig from "app/configs/themesConfig";
 import { useGetInstruccionesQuery } from "app/store/instrucciones/instruccionesApi";
 import { useState } from "react";
 import { useEffect } from "react";
+
 // PARA EL ESTILO DEL SELECT MULTIPLE
 function getStyles(name, personName, theme) {
   return {
@@ -33,17 +34,13 @@ const steps = [
   "Finalización del proceso",
 ];
 
-export default function HorizontalLinearStepper() {
+export default function HorizontalLinearStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [idParticipant, setIdParticipant] = useState(0);
-
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetInstruccionesQuery(idParticipant);
-  // console.log(dataWeb);
-  useEffect(() => {
-    setIdParticipant(141);
-  }, []);
 
+  console.log(dataWeb);
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     // setSkipped(newSkipped);
@@ -59,7 +56,7 @@ export default function HorizontalLinearStepper() {
   const [cliente, setcliente] = React.useState("");
 
   const handleChange = (event) => {
-    setcliente(event.target.value);
+    setIdParticipant(event.target.value);
   };
 
   return (
@@ -109,7 +106,7 @@ export default function HorizontalLinearStepper() {
                   <Select
                     labelId="demo-simple-select-autowidth-label"
                     id="demo-simple-select-autowidth"
-                    value={cliente}
+                    value={idParticipant}
                     onChange={handleChange}
                     autoWidth
                     label="Seleccionar Cliente"
@@ -117,11 +114,11 @@ export default function HorizontalLinearStepper() {
                     <MenuItem value="">
                       <em>Seleccionar</em>
                     </MenuItem>
-                    <MenuItem value={10}>Abastible S.A.</MenuItem>
-                    <MenuItem value={21}>ANTUKO GENERACIÓN S.A</MenuItem>
-                    <MenuItem value={22}>
-                      AustrianSlar Chile Cuatro P.A.N
-                    </MenuItem>
+                    {props.dataParticipants.map(({ business_Name, id }) => (
+                      <MenuItem key={id} value={id}>
+                        {business_Name}.
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <Box sx={{ m: 1, minWidth: 300 }}>
@@ -179,11 +176,6 @@ export default function HorizontalLinearStepper() {
           )}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
-            {/* {isStepOptional(activeStep) && (
-              <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                Skip
-              </Button>
-            )} */}
             <Button
               color="inherit"
               disabled={activeStep === 0}
