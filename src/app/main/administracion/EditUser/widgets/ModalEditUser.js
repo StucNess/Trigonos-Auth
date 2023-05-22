@@ -93,6 +93,7 @@ export default function ModalEditUser({
   apiResponseProyects,
   dataUser,
   setTable,
+  cargando
   
 }) {
   const [open, setOpen] = useState(true);
@@ -361,6 +362,7 @@ export default function ModalEditUser({
   const handleClose = () => {
     setOpen(false);
     setTable();
+    cargando();
   };
   useEffect(() => {
     setEmailUser(userData.email);

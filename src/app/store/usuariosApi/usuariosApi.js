@@ -28,7 +28,7 @@ export const usuariosApi = createApi({
 
         getUsuariosRoles: builder.query({
             query:()=>'/rolesUsers',
-            providesTags:["usuarios"]
+            providesTags:["usuariosroles"]
         }),
         getUsuariosById: builder.query({
             query:(id)=>`/account/${id}`
