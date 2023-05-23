@@ -339,7 +339,8 @@ function EditUserApp(props) {
 
  
   const {data: getUsuarios,isLoading , refetch, isFetching} = useGetUsuariosPaginationQuery({
-    pageSize:1000
+    pageSize:1000,
+    token: window.localStorage.getItem("token")
   });
   const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
   const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
@@ -447,6 +448,13 @@ function EditUserApp(props) {
   
   
   useEffect(() => {
+    
+    if(isLoading){
+      setCargando(true);
+    }else{
+      setCargando(false);
+    }
+
     if(isLoading===false){
       rows = getUsuarios.data.map(function (el) {
       let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
@@ -470,29 +478,7 @@ function EditUserApp(props) {
     
   }, [isLoading]);
   useEffect(() => {
-    // refreshEmpresa()
-   
-    // if(getUsuarios !=undefined){
-    //   rows = getUsuarios.data.map(function (el) {
-    //     let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
-    //     return {
-    //       estado: estadonew,
-    //       rol: el.role,
-    //       email: el.email,
-    //       nombre: el.nombre,
-    //       apellido: el.apellido,
-    //       codempresa: el.idEmpresa,
-    //       empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-    //       usuario: el.username,
-    //       pais: el.pais,
-    //       id: el.id,
-    //     };
-        
-    //     });
-    //     rowspermanent = rows;
-    //     rowsOnMount();
-        
-    // }
+
     if(table){
       console.log("cargando")
     }
@@ -502,54 +488,54 @@ function EditUserApp(props) {
 
       if(getUsuarios !=undefined){
        
+        rows = getUsuarios.data.map(function (el) {
+          let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+          return {
+            estado: estadonew,
+            rol: el.role,
+            email: el.email,
+            nombre: el.nombre,
+            apellido: el.apellido,
+            codempresa: el.idEmpresa,
+            empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+            usuario: el.username,
+            pais: el.pais,
+            id: el.id,
+          };
           
+          });
+          rowspermanent = rows;
+          rowsOnMount();
+          setRowsPerPage(5);
+          let  newPage= 0;
+          setPage(newPage);
+          console.log(newPage);
+          const sortedRows = stableSort(rows, getComparator(order, orderBy));
+          const updatedRows = sortedRows.slice(
+            newPage * rowsPerPage,
+            newPage * rowsPerPage + rowsPerPage
+          );
+  
+          setVisibleRows(updatedRows);
+  
+          // Avoid a layout jump when reaching the last page with empty rows.
+          const numEmptyRows =
+            newPage > 0
+              ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
+              : 0;
+  
+          const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
+          setPaddingHeight(newPaddingHeight);
+  
+        setTimeout(() => {
+         
+          setCargando(false);
+         
+          
+       
+        }, 1000);
       }
-      rows = getUsuarios.data.map(function (el) {
-        let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
-        return {
-          estado: estadonew,
-          rol: el.role,
-          email: el.email,
-          nombre: el.nombre,
-          apellido: el.apellido,
-          codempresa: el.idEmpresa,
-          empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-          usuario: el.username,
-          pais: el.pais,
-          id: el.id,
-        };
-        
-        });
-        rowspermanent = rows;
-        rowsOnMount();
-        setRowsPerPage(5);
-        let  newPage= 0;
-        setPage(newPage);
-        console.log(newPage);
-        const sortedRows = stableSort(rows, getComparator(order, orderBy));
-        const updatedRows = sortedRows.slice(
-          newPage * rowsPerPage,
-          newPage * rowsPerPage + rowsPerPage
-        );
-
-        setVisibleRows(updatedRows);
-
-        // Avoid a layout jump when reaching the last page with empty rows.
-        const numEmptyRows =
-          newPage > 0
-            ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
-            : 0;
-
-        const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
-        setPaddingHeight(newPaddingHeight);
-
-      setTimeout(() => {
-       
-        setCargando(false);
-       
-        
-     
-      }, 1000);
+      
     }
   }, [cargando])
 

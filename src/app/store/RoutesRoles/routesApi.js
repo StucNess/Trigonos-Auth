@@ -4,10 +4,13 @@ import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 export const routesApi = createApi({
     reducerPath:'routes',
     baseQuery: fetchBaseQuery({
-        baseUrl:'https://trigonosapi.azurewebsites.net/api/Rol/'
+        baseUrl:'http://localhost:5205/api/Rol/'
     }),
     endpoints:(builder)=>({
-        getAllRoles: builder.query({query:()=>''}),
+       
+
+        getAllRoles: builder.query({query:()=>""}),
+        getAllRolesToken: builder.query({query:(token)=>({url:'/Token', headers: {Authorization: `Bearer ${token}` }})}),
         getAllRoutes: builder.query({
             query:()=>'/listarRolPagina'
         }),
@@ -76,4 +79,4 @@ export const routesApi = createApi({
         }),
     })
 })
-export const { useGetAllRoutesQuery, useGetListarPaginaWebQuery,useGetOnlyHabilitRoutesQuery,usePostHabilitarRolMutation ,usePostDeshabilitarRolMutation, usePostNewRolMutation,usePostNewRolPagesMutation,usePostEditRolMutation,useGetAllRolesQuery}= routesApi;
+export const { useGetAllRoutesQuery, useGetListarPaginaWebQuery,useGetOnlyHabilitRoutesQuery,usePostHabilitarRolMutation ,usePostDeshabilitarRolMutation, usePostNewRolMutation,usePostNewRolPagesMutation,usePostEditRolMutation,useGetAllRolesQuery,useGetAllRolesTokenQuery}= routesApi;

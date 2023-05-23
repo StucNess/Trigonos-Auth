@@ -5,7 +5,7 @@ export const usuariosApi = createApi({
     reducerPath:'usuarios',
     tagTypes:["usuarios","usuariosroles"],
     baseQuery: fetchBaseQuery({
-        baseUrl:'https://trigonosapi.azurewebsites.net/api/Usuarios'
+        baseUrl:'http://localhost:5205/api/Usuarios'
     }),
     endpoints:(builder)=>({
        
@@ -14,7 +14,9 @@ export const usuariosApi = createApi({
         }),
         //Revisar como utilizar el patch si no cambialo por post en .net
         getUsuariosPagination: builder.query({
-            query:(spec)=> spec? "/Pagination"
+            query:(spec)=> ({
+            headers: {Authorization: `Bearer ${spec.token}` },
+            url :spec? "/Pagination"
             + (spec.nombre!=undefined?` ?Nombre=${spec.nombre}`: "")
             + (spec.apellido!=undefined? `?Apellido=${spec.apellido}`: "" )
             + (spec.sort!=undefined? `?Sort=${spec.sort}` : "" )
@@ -23,6 +25,9 @@ export const usuariosApi = createApi({
             + (spec.search!=undefined? `?Search=${spec.search}`:"")
             
             :"/Pagination",
+            method: 'GET',
+          
+            }),
             providesTags:["usuarios"]
         }),
 
