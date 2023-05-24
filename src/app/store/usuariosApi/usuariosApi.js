@@ -77,7 +77,7 @@ export const usuariosApi = createApi({
                 method: 'POST',
                 body:data.newData 
             }),
-            invalidatesTags:["usuarios","usuariosroles"]
+            invalidatesTags:["usuarios","usuariosroles","empresas"]
         }),
         postUsuariosValidarEmail: builder.mutation({
             query: (email) => ({
@@ -99,8 +99,29 @@ export const usuariosApi = createApi({
                 body:password
             }),
         }),
-       
+        postUserUnlock: builder.mutation({
+            query: (idUser) => ({
+                headers:{
+                    'Content-type': 'application/json'
+                },
+                url: `/Activar?usuarioId=${idUser}`,
+                method: 'POST',
+                
+            }),
+            invalidatesTags:["usuarios"]
+        }),
+        postUserLock: builder.mutation({
+            query: (idUser) => ({
+                headers:{
+                    'Content-type': 'application/json'
+                },
+                url: `/Desactivar?usuarioId=${idUser}`,
+                method: 'POST',
+            
+            }),
+            invalidatesTags:["usuarios"]
+        }),
        
     })
 })
-export const { useGetUsuariosQuery, useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery, usePostUsuariosActualizarMutation,usePostUsuariosRegistrarMutation}= usuariosApi;
+export const { useGetUsuariosQuery, useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery, usePostUsuariosActualizarMutation,usePostUsuariosRegistrarMutation,usePostUserUnlockMutation,usePostUserLockMutation}= usuariosApi;
