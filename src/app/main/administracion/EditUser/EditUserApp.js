@@ -246,7 +246,7 @@ function EnhancedTableHead(props) {
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
+                <Box component="span" sx={visuallyHidden} id={headCell.id}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
@@ -336,17 +336,19 @@ function EditUserApp(props) {
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
   const [cargando, setCargando] = useState(false);
-
+  
+  const [disableButton, setDisableButton] = useState(false);
   const [dataUser, setDataUser] = useState({});
   const [dataParticipant, setDataParticipant] = useState([]);
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
   const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa} = useGetEmpresasQuery();
 
  
-  const {data: getUsuarios,isLoading , refetch, isFetching} = useGetUsuariosPaginationQuery({
+  const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
     pageSize:1000,
     token: window.localStorage.getItem("token")
   });
+  console.log(isfetchingUsuarios);
   const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
   const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
   const [getParticipantById, data_participant] = useGetParticipantesByIdMutation();
@@ -403,7 +405,8 @@ function EditUserApp(props) {
   function Activar(idUser){
     setOpenDialog(true);
     setLoading(true);
-    setCargando(true);
+
+
     postUserUnlock(idUser).then((response)=>{
       setLoading(false);
 
@@ -413,7 +416,7 @@ function EditUserApp(props) {
         msgError: false,
       });
       setTimeout(() => {
-        setCargando(false);
+     
         setOpenDialog(false);
       }, 1000);
       
@@ -427,7 +430,7 @@ function EditUserApp(props) {
         msgError: true,
       });
       setTimeout(() => {
-        setCargando(false);
+     
         setOpenDialog(false);
       }, 1000);
      
@@ -437,7 +440,7 @@ function EditUserApp(props) {
   function Desactivar(idUser){
     setOpenDialog(true);
     setLoading(true);
-    setCargando(true);
+ 
     postUserlock(idUser).then((response)=>{
       setLoading(false);
       
@@ -447,7 +450,7 @@ function EditUserApp(props) {
         msgError: false,
       });
       setTimeout(() => {
-        setCargando(false);
+   
         setOpenDialog(false);
       }, 1000);
       console.log(response);
@@ -460,7 +463,7 @@ function EditUserApp(props) {
         msgError: true,
       });
       setTimeout(() => {
-        setCargando(false);
+      
         setOpenDialog(false);
       }, 1000);
    
@@ -568,41 +571,33 @@ function EditUserApp(props) {
 
   useEffect(() => {
     
-    if(isLoading){
-      setCargando(true);
-    }else{
-      setCargando(false);
-    }
+   
 
-    if(isLoading===false){
+    if(!isLoading){
       GetUsers()
     }
     
   }, [isLoading]);
   useEffect(() => {
 
-    if(table){
-      console.log("cargando")
+    if(!table){
+      setDisableButton(false);
     }
   }, [table]);
   useEffect(() => {
-    if(cargando){
-
+    if(!isfetchingUsuarios){
       if(getUsuarios !=undefined){
-       
         GetUsers();
-  
         setTimeout(() => {
          
-          setCargando(false);
-         
-          
-       
         }, 1000);
       }
       
     }
-  }, [cargando])
+
+
+
+  }, [isfetchingUsuarios])
 
   const handleSetRow = (event) => {
     const {
@@ -784,7 +779,7 @@ function EditUserApp(props) {
                 <PeopleIcon className="ml-[10px] text-pantoneazul" />
               </div>
               <h1 className="border border-b-pantoneazul w-full"></h1>
-              {cargando?
+              {isfetchingUsuarios?
               <div className="flex items-center">
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
                   {/* <p>Chupa Chupa .....</p> */}
@@ -821,7 +816,7 @@ function EditUserApp(props) {
                         onRequestSort={handleRequestSort}
                         rowCount={rows.length}
                       />
-                      <TableBody>
+                      <TableBody >
                         {visibleRows
                           ? visibleRows.map((row, index) => {
                               const isItemSelected = isSelected(row.id);
@@ -832,6 +827,7 @@ function EditUserApp(props) {
                                   aria-checked={isItemSelected}
                                   tabIndex={-1}
                                   key={row.id}
+                                  id={row.id}
                                 >
                                   <StyledTableCell
                                     align="left"
@@ -883,23 +879,29 @@ function EditUserApp(props) {
                                     </Button> */}
                                     <div className="flex flex-row">
                                     <Tooltip  
+                                
                                       title="Editar" 
                                       arrow 
                                       placement="top"
                                       // placement="top-start"
                                     >
-                                    <IconButton
-                                    sx={{ "&:hover": { color: "#e4493f" } }}
-                                    key="chechedLeft"
-                                    aria-label="Close"
-                                    color="primary"
-                                    onClick={() => {
-                                      CargaDataParticipant(row);
-                                   }}
-                                    size="small"
-                                  >
-                                    <SettingsIcon fontSize="large" />
-                                  </IconButton>
+                                      <span>
+                                      <IconButton
+                                        sx={{ "&:hover": { color: "#e4493f" } }}
+                                        key="chechedLeft"
+                                        aria-label="Close"
+                                        color="primary"
+                                        disabled=  {disableButton}
+                                        onClick={() => {
+                                          CargaDataParticipant(row);
+                                          setDisableButton(true);
+                                        }}
+                                        size="small"
+                                      >
+                                        <SettingsIcon fontSize="large" />
+                                      </IconButton>
+                                      </span>
+                                   
                                   </Tooltip>
                                   {row.estado ==="Desactivado"?   
                                    <Tooltip  
@@ -964,6 +966,7 @@ function EditUserApp(props) {
                           : null}
                         {paddingHeight > 0 && (
                           <TableRow
+                            
                             style={{
                               height: paddingHeight,
                             }}
@@ -976,6 +979,7 @@ function EditUserApp(props) {
                   </TableContainer>
                   
                   <TablePagination
+                  
                   labelRowsPerPage="Filas por página"
                   variant="h5"
                   // rowsPerPageOptions={[
@@ -1014,6 +1018,7 @@ function EditUserApp(props) {
             />
           )}
         <Dialog
+     
         open={openDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"

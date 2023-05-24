@@ -1134,17 +1134,21 @@ export default function ModalEditUser({
                 placement="top"
                 // placement="top-start"
               >
-              <IconButton
+                <span>
+                <IconButton
                   sx={{ "&:hover": { color: "#e4493f" } }}
                   key="chechedRight"
                   aria-label="Close"
                   color="primary"
                   onClick={handleCheckedRight}
                   disabled={checked.length === 0}
+                  
                   size="small"
                 >
                   <NavigateNextIcon fontSize="large" />
                 </IconButton>
+                </span>
+              
               </Tooltip>
                
                 <Tooltip  
@@ -1156,7 +1160,8 @@ export default function ModalEditUser({
 
                   // placement="top-start"
                         >
-                <IconButton
+                  <span>
+                  <IconButton
                   sx={{ "&:hover": { color: "#e4493f" } }}
                   key="chechedLeft"
                   aria-label="Close"
@@ -1167,45 +1172,14 @@ export default function ModalEditUser({
                 >
                   <NavigateBeforeIcon fontSize="large" />
                 </IconButton>
+                  </span>
+               
                </Tooltip>
                 
               </div>
               <div className="max-h-[300px]">
                 <Card>
-                  {/* <CardHeader
-                    avatar={
-                      <Tooltip  
-                      title="Seleccionar todos" 
-                      arrow 
-                      placement="top"
-                      // placement="top-start"
-                      >
-                      <Checkbox
-                        onClick={handleToggleAlldos(clientAsig)}
-                        checked={
-                          checkeddos.length === clientAsig.length &&
-                          checkeddos.length !== 0
-                        }
-                        // onChange={(event) => {
-                        //   setCheckedBlue(
-                        //     event.target.checked
-                        //   );
-                        // }}
-
-                        indeterminate={
-                          checkeddos.length !== clientAsig.length &&
-                          checkeddos.length !== 0
-                        }
-                        disabled={!checkeddos.length === 0}
-                        inputProps={{
-                          "aria-label": "all items selected",
-                        }}
-                      />
-                      </Tooltip>
-                    }
-                    title={"Clientes Asignados"}
-                    // subheader={`${numberOfChecked(items)}/${items.length} selected`}
-                  /> */}
+               
                       <ListItem
                             key="{value.id}"
                             secondaryAction={
