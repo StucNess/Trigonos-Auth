@@ -341,7 +341,7 @@ function EditUserApp(props) {
   const [dataUser, setDataUser] = useState({});
   const [dataParticipant, setDataParticipant] = useState([]);
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
-  const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa} = useGetEmpresasQuery();
+  const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa, isFetching: isFetchEmpresas} = useGetEmpresasQuery();
 
  
   const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
@@ -573,8 +573,17 @@ function EditUserApp(props) {
     
    
 
-    if(!isLoading){
-      GetUsers()
+    // if(!isLoading){
+    //   GetUsers()
+    // }
+    if(!isFetchEmpresas){
+      if(!isfetchingUsuarios){
+        if(getUsuarios !=undefined){
+          GetUsers();
+        
+        }
+        
+      }
     }
     
   }, [isLoading]);
@@ -585,19 +594,33 @@ function EditUserApp(props) {
     }
   }, [table]);
   useEffect(() => {
-    if(!isfetchingUsuarios){
-      if(getUsuarios !=undefined){
-        GetUsers();
-        setTimeout(() => {
-         
-        }, 1000);
+    if(!isFetchEmpresas){
+      if(!isfetchingUsuarios){
+        if(getUsuarios !=undefined){
+          GetUsers();
+        
+        }
+        
       }
-      
     }
 
 
-
   }, [isfetchingUsuarios])
+  useEffect(() => {
+    if(!isFetchEmpresas){
+      if(!isfetchingUsuarios){
+        if(getUsuarios !=undefined){
+          GetUsers();
+        
+        }
+        
+      }
+    }
+    
+
+  }, [isFetchEmpresas])
+  
+
 
   const handleSetRow = (event) => {
     const {

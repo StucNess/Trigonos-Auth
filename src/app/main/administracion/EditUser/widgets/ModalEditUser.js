@@ -2,6 +2,8 @@ import Box from "@mui/material/Box";
 
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import {Stack} from "@mui/material";
+import LinearProgress from "@mui/material/LinearProgress";
 
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
@@ -63,7 +65,7 @@ import { white } from "tailwindcss/colors";
 import jwtServiceConfig from "src/app/auth/services/jwtService/jwtServiceConfig";
 import axios from "axios";
 import { useGetUsuariosRolesQuery, usePostUsuariosActualizarMutation } from "app/store/usuariosApi/usuariosApi";
-import { useGetAllRolesQuery, useGetAllRoutesQuery } from "app/store/RoutesRoles/routesApi";
+import { useGetAllRolesQuery, useGetAllRolesTokenQuery, useGetAllRoutesQuery } from "app/store/RoutesRoles/routesApi";
 import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
 import {Tooltip} from "@mui/material";
 // PARA EL ESTILO DEL SELECT MULTIPLE
@@ -101,6 +103,8 @@ export default function ModalEditUser({
 
   // const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
   const {data: getRoles =[],isLoading: isloadRoles =true} = useGetAllRolesQuery();
+  const {data: getAllRoles, isLoading:isLoadRoles , isFetching: isFetchRoles} = useGetAllRolesTokenQuery(window.localStorage.getItem("token"));
+
   const {data: getEmpresas =[],isLoading: isloadEmp =true} = useGetEmpresasQuery()
   const [postUsuariosActualizar, dataActUser]  = usePostUsuariosActualizarMutation();
 
@@ -573,7 +577,14 @@ export default function ModalEditUser({
                   }}
                   variant="filled"
                 />
-                <div className="h-[20px]">
+                 {isFetchRoles?
+                  <div className="flex items-center ml-[20px] mr-[20px] mb-[20px]">
+                    <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                      {/* <p>Chupa Chupa .....</p> */}
+                      <LinearProgress color="primary" />
+                    </Stack>
+                  </div>:
+                  <><div className="h-[20px]">
                   {rol ? (
                     <>
                       <span className=" text-red-500">
@@ -651,12 +662,13 @@ export default function ModalEditUser({
                     ),
                   }}
                 >
-                  {getRoles.map((data) => (
+                  {getAllRoles.map((data) => (
                     <MenuItem key={data.id} value={data.id}>
                       {data.name}
                     </MenuItem>
                   ))}
-                </TextField>
+                </TextField></>}
+                
                 <div className="h-[20px]">
                   {pais ? (
                     <>
