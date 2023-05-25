@@ -74,7 +74,7 @@ const Filtros = (props) => {
   const [conceptN, setConceptName] = useState([]);
   const [cart, setCart] = useState([]);
   const [codRef, setCodRef] = useState([]);
-  const [value, setValue] = React.useState(null);
+  
   const [selected, setSelected] = useState({
     sBusinessName: "",
     sRut: "",
@@ -107,7 +107,7 @@ const Filtros = (props) => {
   const [disabled, setDisabled] = useState(false);
   const [disabledd, setDisabledd] = useState(false);
   const [limpiar, setLimpiar] = useState(false);
-  const [alert, setAlert] = useState(false);
+  
   const {
     sBusinessName,
     sRut,
@@ -414,8 +414,6 @@ const Filtros = (props) => {
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
                         setSelected({ ...selected, sConcept: newValue });
-                      } else{
-                        setSelected({ ...selected, sConcept: null });
                       } 
                     }}
                     // isOptionEqualToValue={(option, value) => conceptN=== value.id}
@@ -433,8 +431,6 @@ const Filtros = (props) => {
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
                         setSelected({ ...selected, sCarta: newValue });
-                      } else{
-                        setSelected({ ...selected, sCarta: null });
                       } 
                     }}
                     // isOptionEqualToValue={(option, value) => cart === value}
@@ -452,8 +448,6 @@ const Filtros = (props) => {
                     onChange={(event, newValue, reason) => {
                       if (newValue != null) {
                         setSelected({ ...selected, sCodRef: newValue });
-                      }else{
-                        setSelected({ ...selected, sCodRef: null });
                       } 
                     }}
                     // isOptionEqualToValue={(option, value) => codRef === value}

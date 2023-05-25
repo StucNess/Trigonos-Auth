@@ -84,9 +84,9 @@ const AppContextProvider = ({ children }) => {
   const {data: roles =[],isLoading: isloadingRol =true} = useGetAllRolesQuery();
   const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
   const user = useSelector(selectUser);
-  // selectNavigationAll
 
 
+ 
  
 
   
