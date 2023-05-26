@@ -295,8 +295,7 @@ function CreateProfileApp(props) {
     useGetAllRoutesQuery();
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetListarPaginaWebQuery();
-  const { data: getAllRoles, isLoading: isLoadRoles } =
-    useGetAllRolesTokenQuery(window.localStorage.getItem("token"));
+  const {data: getAllRoles, isLoading:isLoadRoles } = useGetAllRolesTokenQuery(window.localStorage.getItem("token"));
 
   function EnviarDatos(row) {
     if (isloadingg != true) {
@@ -342,21 +341,19 @@ function CreateProfileApp(props) {
   }
 
   function CargaDataRol() {
-    fetch(" https://trigonosapi.azurewebsites.net/api/Rol")
-      .then((response) => response.json())
-      .then((data) => {
-        rows = data.map(function (el) {
-          el.bhabilitado = el.bhabilitado === 1 ? "Activo" : "Desactivado";
-          return {
-            estado: el.bhabilitado,
-            nombre: el.name,
-            descripcion: el.descripcion,
-            id: el.id,
-          };
-        });
-        rowspermanent = rows;
-        rowsOnMount();
-      });
+    
+    rows = getAllRoles.map(function (el) {
+      let habilitado = el.bhabilitado === 1 ? "Activo" : "Desactivado";
+      return {
+        estado: habilitado,
+        nombre: el.name,
+        descripcion: el.descripcion,
+        id: el.id,
+      };
+    });
+    rowspermanent = rows;
+    rowsOnMount();
+   
   }
   function rowsOnMount() {
     let rowsOnMount = stableSort(
@@ -371,15 +368,15 @@ function CreateProfileApp(props) {
     setVisibleRows(rowsOnMount);
   }
   useEffect(() => {
-    if (!isLoadRoles) {
-      if (getAllRoles != undefined) {
-        CargaDataRol();
-      }
+    if(!isLoadRoles){
+      CargaDataRol();
     }
+    
   }, [isLoadRoles]);
   useEffect(() => {
-    if (getAllRoles != undefined) {
+    if(getAllRoles !=undefined){
       CargaDataRol();
+
     }
   }, [table]);
 
