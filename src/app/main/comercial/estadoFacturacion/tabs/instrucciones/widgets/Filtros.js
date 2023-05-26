@@ -74,7 +74,7 @@ const Filtros = (props) => {
   const [conceptN, setConceptName] = useState([]);
   const [cart, setCart] = useState([]);
   const [codRef, setCodRef] = useState([]);
-  const [value, setValue] = React.useState(null);
+  
   const [selected, setSelected] = useState({
     sBusinessName: "",
     sRut: "",
@@ -83,7 +83,7 @@ const Filtros = (props) => {
     sMontoBruto: "",
     sFolio: "",
     sCarta: "",
-    sCodeRef: "",
+    sCodRef: "",
     sInicioPeriodo: "",
     sTerminoPeriodo: "",
     buscar: "",
@@ -107,7 +107,7 @@ const Filtros = (props) => {
   const [disabled, setDisabled] = useState(false);
   const [disabledd, setDisabledd] = useState(false);
   const [limpiar, setLimpiar] = useState(false);
-  const [alert, setAlert] = useState(false);
+  
   const {
     sBusinessName,
     sRut,
@@ -412,15 +412,16 @@ const Filtros = (props) => {
                     options={conceptN}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
-                      if (newValue === null) {
-                        setSelected({ ...selected, sConcept: "" });
-                      } else {
+                      if (newValue !=null) {
                         setSelected({ ...selected, sConcept: newValue });
-                      }
+                      }else{
+                        setSelected({ ...selected, sConcept: "" });
+
+                      } 
                     }}
-                    isOptionEqualToValue={(option, value) => conceptN === value}
+                    // isOptionEqualToValue={(option, value) => conceptN=== value.id}
                     renderInput={(params) => (
-                      <TextField {...params} label="Concepto" />
+                      <TextField {...params} key={params.id} label="Concepto" />
                     )}
                   />
                   <Autocomplete
@@ -431,15 +432,16 @@ const Filtros = (props) => {
                     options={cart}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
-                      if (newValue === null) {
-                        setSelected({ ...selected, sCarta: "" });
-                      } else {
+                      if (newValue !=null) {
                         setSelected({ ...selected, sCarta: newValue });
-                      }
+                      } else{
+                        setSelected({ ...selected, sCarta: "" });
+
+                      } 
                     }}
-                    isOptionEqualToValue={(option, value) => cart === value}
+                    // isOptionEqualToValue={(option, value) => cart === value}
                     renderInput={(params) => (
-                      <TextField {...params} label="Carta" />
+                      <TextField {...params}key={params.id} label="Carta" />
                     )}
                   />
                   <Autocomplete
@@ -450,15 +452,16 @@ const Filtros = (props) => {
                     options={codRef}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
-                      if (newValue === null) {
-                        setSelected({ ...selected, sCodRef: "" });
-                      } else {
+                      if (newValue != null) {
                         setSelected({ ...selected, sCodRef: newValue });
-                      }
+                      } else{
+                        setSelected({ ...selected, sCodRef: "" });
+
+                      } 
                     }}
-                    isOptionEqualToValue={(option, value) => codRef === value}
+                    // isOptionEqualToValue={(option, value) => codRef === value}
                     renderInput={(params) => (
-                      <TextField {...params} label="Codigo Referencia" />
+                      <TextField {...params}  key={params.id} label="Codigo Referencia" />
                     )}
                   />
 

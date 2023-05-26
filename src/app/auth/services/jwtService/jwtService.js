@@ -3,6 +3,7 @@ import history from "@history";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import jwtServiceConfig from "./jwtServiceConfig";
+
 /* eslint-disable camelcase */
 let proyectUser;
 class JwtService extends FuseUtils.EventEmitter {
@@ -38,6 +39,21 @@ class JwtService extends FuseUtils.EventEmitter {
   handleAuthentication = () => {
     const access_token = this.getAccessToken();
     const idUser = this.getIdUser();
+    if (!access_token) {
+      this.emit("onNoAccessToken");
+
+      return;
+    }
+
+    if (this.isAuthTokenValid(access_token)) {
+      this.setSession(access_token, idUser);
+      this.emit("onAutoLogin", true);
+    } else {
+      this.setSession(null);
+      this.emit("onAutoLogout", "Tiempo de inactividad sobrepasado");
+    }
+  };
+  handleAuthenticationInactivity = (access_token, idUser) => {
     if (!access_token) {
       this.emit("onNoAccessToken");
 
@@ -91,7 +107,7 @@ class JwtService extends FuseUtils.EventEmitter {
               })
               .catch((error) => {});
             setTimeout(() => {
-              const url = ` http://localhost:5205/api/Participantes?id=${response.data.id}`;
+              const url = ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${response.data.id}`;
               let kaka;
               const prueba = async () => {
                 let pruebaa;
@@ -104,6 +120,8 @@ class JwtService extends FuseUtils.EventEmitter {
                 localStorage.setItem("ProyectUser", value);
               });
               const json = {
+                token: response.data.token,
+                idUser: response.data.id,
                 role: response.data.role,
                 data: {
                   displayName: response.data.username,
@@ -154,6 +172,7 @@ class JwtService extends FuseUtils.EventEmitter {
               })
               .catch((error) => {});
             const json = {
+              role: response.data.role,
               role: response.data.role,
               data: {
                 displayName: response.data.username,

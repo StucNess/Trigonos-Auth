@@ -28,8 +28,7 @@ import BackspaceIcon from "@mui/icons-material/Backspace";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import jwtServiceConfig from "../../../auth/services/jwtService/jwtServiceConfig";
-import { CallApiParticipants } from "../store/CallApiParticipants";
+
 import AdviceModule from "../../comercial/AdviceModule";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import Tooltip from "@mui/material/Tooltip";
@@ -39,8 +38,6 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AddIcon from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import ModalAddCompany from "./widgets/ModalAddCompany";
-import { CallApiEmpresas } from "./store/CallApiEmpresas";
-import { CallApiRole } from "./store/CallApiRole";
 
 import { FormHelperText } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
@@ -54,7 +51,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import LinearProgress from "@mui/material/LinearProgress";
 import { usePostUsuariosRegistrarMutation } from "app/store/usuariosApi/usuariosApi";
+import { useGetAllRolesTokenQuery } from "app/store/RoutesRoles/routesApi";
+import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
+import { useGetParticipantesQuery } from "app/store/participantesApi/participantesApi";
 const schema = yup.object().shape({
   // user: yup.string().required("Debe ingresar su nombre completo"),
   email: yup
@@ -145,7 +146,7 @@ let dataempresas_ = {};
 // export const CreateUserApp = () => {
 export default function CreateUserApp(props) {
   const theme = useTheme();
-  const [apiResponseProyects, setApiResponseProyects] = useState([]);
+
   const { control, formState, handleSubmit, reset } = useForm({
     mode: "onChange",
     defaultValues,
@@ -170,11 +171,12 @@ export default function CreateUserApp(props) {
   const [open, setOpen] = useState(false);
   const [secondDopen, setSecondDopen] = useState(false);
   const [scroll, setScroll] = useState("paper");
-  const [dataEmpresas, setDataEmpresas] = useState([]);
-  const [dataRole, setDataRole] = useState([]);
-  const [projectData, setProjectData] = useState();
   const [postAddUser, data_] = usePostUsuariosRegistrarMutation();
- 
+  const {data: getAllRoles, isLoading:isLoadRoles , isFetching: isFecthRoles} = useGetAllRolesTokenQuery(window.localStorage.getItem("token"));
+  const {data: getEmpresas,isLoading:isLoadEmpresas } = useGetEmpresasQuery();
+  const {data: getParticipants,isLoading:isLoadParticipant} = useGetParticipantesQuery();
+  
+
   const [data, setData] = useState({
     email: "",
     username: "",
@@ -212,23 +214,7 @@ export default function CreateUserApp(props) {
   const handleCloseSecond = () => {
     setSecondDopen(false);
   };
-
-  useEffect(() => {
-    (async () => {
-      const data_ = await CallApiEmpresas();
-      setDataEmpresas(data_);
-    })();
-    (async () => {
-      const data_ = await CallApiRole();
-      setDataRole(data_);
-    })();
-  }, []);
-  useEffect(() => {
-    (async () => {
-      const data_ = await CallApiEmpresas();
-      setDataEmpresas(data_);
-    })();
-  }, [modal]);
+ 
 
   const handleSetEmail = (event) => {
     const {
@@ -247,20 +233,11 @@ export default function CreateUserApp(props) {
         setError(false);
       }, 5000);
     }
-    const fetchData = async () => {
-      let prueba;
-      // eslint-disable-next-line prefer-const
-      prueba = await CallApiParticipants();
-      return prueba;
-    };
-    fetchData().then((value) => {
-      setApiResponseProyects(value);
-    });
   }, [alertt, error]);
 
   useEffect(() => {
-    if (apiResponseProyects != undefined) {
-      let res = apiResponseProyects
+    if (getParticipants != undefined) {
+      let res = getParticipants.data
         .filter((item) => personName.includes(item.id))
         .map(function (el) {
           return {
@@ -482,7 +459,15 @@ export default function CreateUserApp(props) {
                       Rol Usuario:
                     </Typography>
                   </div>
-                  <div className="ml-[20px] mr-[20px] mb-[20px]">
+                  {isFecthRoles?
+                  <div className="flex items-center ml-[20px] mr-[20px] mb-[20px]">
+                    <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                      {/* <p>Chupa Chupa .....</p> */}
+                      <LinearProgress color="primary" />
+                    </Stack>
+                  </div>:
+                  <>
+                   <div className="ml-[20px] mr-[20px] mb-[20px]">
                     <Controller
                       name="rol"
                       control={control}
@@ -502,7 +487,7 @@ export default function CreateUserApp(props) {
                             error={!!errors.rol}
                             variant="outlined"
                           >
-                            {dataRole.map(({ name, id }) => (
+                            {getAllRoles.map(({ name, id }) => (
                               <MenuItem key={id} id={id} value={name}>
                                 {name}
                               </MenuItem>
@@ -515,11 +500,21 @@ export default function CreateUserApp(props) {
                       )}
                     />
                   </div>
+                  </>}
+                 
                   <div className="w-full m-[20px]">
                     <Typography className="text-lg font-medium tracking-tight text-pantoneazul leading-6 truncate">
                       Clientes:
                     </Typography>
                   </div>
+                  {isLoadParticipant?
+                  <div className="flex items-center ml-[20px] mr-[20px] mb-[20px]">
+                    <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                      {/* <p>Chupa Chupa .....</p> */}
+                      <LinearProgress color="primary" />
+                    </Stack>
+                  </div>:
+                  <>
                   <div className="ml-[20px] mr-[20px] mb-[20px]">
                     <Controller
                       name="project"
@@ -547,8 +542,8 @@ export default function CreateUserApp(props) {
                               handleChangeProyect(e);
                             }}
                           >
-                            {apiResponseProyects != undefined ? (
-                              apiResponseProyects.map((e) => (
+                            {getParticipants != undefined ? (
+                              getParticipants.data.map((e) => (
                                 <MenuItem
                                   key={e.id}
                                   value={e.id}
@@ -574,6 +569,8 @@ export default function CreateUserApp(props) {
                       )}
                     />
                   </div>
+                  </>}
+                  
                 </div>
               </div>
 
@@ -714,54 +711,64 @@ export default function CreateUserApp(props) {
                       />
                     )}
                   />
-
+                {isLoadEmpresas?
+                  <div className="flex items-center ml-[20px] mr-[20px]">
+                    <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                      {/* <p>Chupa Chupa .....</p> */}
+                      <LinearProgress color="primary" />
+                    </Stack>
+                  </div>:
+                  <>
                   <div className=" flex justify-evenly ml-[20px] mr-[20px]  ">
-                    <Controller
-                      name="idEmpresa"
-                      control={control}
-                      render={({ field }) => (
-                        <FormControl
-                          className="mb-24 w-full"
-                          type="select"
-                          required
-                        >
-                          <InputLabel id="demo-simple-select-standard-label">
-                            Seleccione Empresa
-                          </InputLabel>
-                          <Select
-                            {...field}
-                            label="Seleccione Empresa"
-                            onChange={(e) => {
-                              field.onChange(e);
-                              dataempresas_ = dataEmpresas.find(
-                                (p) => p.id == e.target.value
-                              );
-                            }}
-                            error={!!errors.idEmpresa}
-                            variant="outlined"
-                          >
-                            {dataEmpresas.map(({ nombreEmpresa, id }) => (
-                              <MenuItem key={id} id={id} value={id}>
-                                {nombreEmpresa}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                          <FormHelperText className="text-red">
-                            {errors?.idEmpresa?.message}
-                          </FormHelperText>
-                        </FormControl>
-                      )}
-                    />
+                 
+                 <Controller
+                   name="idEmpresa"
+                   control={control}
+                   render={({ field }) => (
+                     <FormControl
+                       className="mb-24 w-full"
+                       type="select"
+                       required
+                     >
+                       <InputLabel id="demo-simple-select-standard-label">
+                         Seleccione Empresa
+                       </InputLabel>
+                       <Select
+                         {...field}
+                         label="Seleccione Empresa"
+                         onChange={(e) => {
+                           field.onChange(e);
+                           dataempresas_ = getEmpresas.find(
+                             (p) => p.id == e.target.value
+                           );
+                         }}
+                         error={!!errors.idEmpresa}
+                         variant="outlined"
+                       >
+                         {getEmpresas.map(({ nombreEmpresa, id }) => (
+                           <MenuItem key={id} id={id} value={id}>
+                             {nombreEmpresa}
+                           </MenuItem>
+                         ))}
+                       </Select>
+                       <FormHelperText className="text-red">
+                         {errors?.idEmpresa?.message}
+                       </FormHelperText>
+                     </FormControl>
+                   )}
+                 />
 
-                    <AdviceModule
-                      className="relative w-[34px] ml-[20px]"
-                      classnamesegund=""
-                      textwidth={350}
-                      msg={
-                        "Este campo permite asignar la empresa asociada al usuario, si necesita crear una nueva presione el botón + en la parte inferior del campo."
-                      }
-                    />
-                  </div>
+                 <AdviceModule
+                   className="relative w-[34px] ml-[20px]"
+                   classnamesegund=""
+                   textwidth={350}
+                   msg={
+                     "Este campo permite asignar la empresa asociada al usuario, si necesita crear una nueva presione el botón + en la parte inferior del campo."
+                   }
+                 />
+               </div>
+                  </>}
+                  
                   <div className="ml-[20px] my-[5px] ">
                     <IconButton
                       variant="contained"

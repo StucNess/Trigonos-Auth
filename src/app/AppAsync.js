@@ -73,20 +73,13 @@ export const AppContextRoutes = createContext();
 const AppContextProvider = ({ children }) => {
   const dispatch = useDispatch();
 
-  const [data, setData] = useState([]);
-  const [routes, setRoutes] = useState([]);
-  const [path, setPath] = useState({
-    path: "/",
-    element:<Navigate to="/comercial/estadoFacturacion" />,
-    auth: [settingsConfig.defaultAuth],
-  })
-  const {data: todos =[],isLoading: isloadingg =true} = useGetAllRoutesQuery();
+
   const {data: roles =[],isLoading: isloadingRol =true} = useGetAllRolesQuery();
   const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
   const user = useSelector(selectUser);
-  // selectNavigationAll
 
 
+ console.log(window.localStorage.getItem("idUser"))
  
 
   
@@ -99,12 +92,11 @@ const AppContextProvider = ({ children }) => {
   }
 
 
- 
   useEffect(() => {
-    let defaultAuth = roles.map(function (el) {
-      return el.name;
-    });
+ 
+   
   }, []);
+ 
   useEffect(() => {
     let defaultAuth = roles.map(function(el) {
       return el.name         

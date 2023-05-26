@@ -1,14 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const routesApi = createApi({
-  reducerPath: "routes",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/api/Rol/",
-  }),
-  endpoints: (builder) => ({
-    getAllRoles: builder.query({ query: () => "" }),
-    getAllRoutes: builder.query({
-      query: () => "/listarRolPagina",
+    reducerPath:'routes',
+    baseQuery: fetchBaseQuery({
+        baseUrl:'https://trigonosapi.azurewebsites.net/api/Rol/'
     }),
     getOnlyHabilitRoutes: builder.query({
       query: () => "/listarRolPaginaHabilitada",

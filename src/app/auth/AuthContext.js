@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FuseSplashScreen from "@fuse/core/FuseSplashScreen";
 import { showMessage } from "app/store/fuse/messageSlice";
-import { logoutUser, setUser } from "app/store/userSlice";
+import { logoutUser, selectUser, setUser } from "app/store/userSlice";
 import jwtService from "./services/jwtService";
 import history from "@history";
 
@@ -14,6 +14,9 @@ function AuthProvider({ children }) {
   const [waitAuthCheck, setWaitAuthCheck] = useState(true);
   const dispatch = useDispatch();
 
+  // selectNavigationAll
+ 
+  
   useEffect(() => {
     jwtService.on("onAutoLogin", () => {
       dispatch(showMessage({ message: "iniciando sesión" }));

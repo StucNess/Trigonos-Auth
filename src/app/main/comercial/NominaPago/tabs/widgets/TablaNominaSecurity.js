@@ -347,31 +347,41 @@ export default function TablaNominaSecurity(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) => {
-    rows.push(
-      createData(
-        p.rutAcreedor,
-        p.nombreAcreedor,
-        1,
-        p.sBifAcreedor,
-        p.correoDteAcreedor,
-        `PAGO FACTURA ${p.folio}`,
-        chile.format(p.valorNeto),
-        p.id,
-        p.fechaDesconformidad
-      )
-    );
-    glosas.push(p.glosa);
-  });
+  console.log(props.payRollData)
+ 
+
+  if(props.payRollData.data!=undefined){
+    props.payRollData.data.map((p) => {
+      rows.push(
+        createData(
+          p.rutAcreedor,
+          p.nombreAcreedor,
+          1,
+          p.sBifAcreedor,
+          p.correoDteAcreedor,
+          `PAGO FACTURA ${p.folio}`,
+          chile.format(p.valorNeto),
+          p.id,
+          p.fechaDesconformidad
+        )
+      );
+      glosas.push(p.glosa);
+    });
+  }
+
+ 
 
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    setDataExport(prueba);
-    let pruebaValor = 0;
-    prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
-    setTotal(pruebaValor);
-  }, [selected]);
+    if(props.payRollData.data!=undefined){
 
+      let prueba = props.payRollData.data.filter((p) => selected.includes(p.id));
+      setDataExport(prueba);
+      let pruebaValor = 0;
+      prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
+      setTotal(pruebaValor);
+    }
+    
+  }, [selected]);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -386,6 +396,7 @@ export default function TablaNominaSecurity(props) {
     }
     setSelected([]);
   };
+
   const handleClick = (event, id) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];

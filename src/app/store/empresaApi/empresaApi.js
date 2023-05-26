@@ -1,13 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const empresaApi = createApi({
-  reducerPath: "empresas",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/api/Empresas",
-  }),
-  endpoints: (builder) => ({
-    getEmpresas: builder.query({
-      query: () => "",
+    reducerPath:'empresas',
+    baseQuery: fetchBaseQuery({
+        baseUrl:'https://trigonosapi.azurewebsites.net/api/Empresas'
     }),
     //Revisar como utilizar el patch si no cambialo por post en .net
 

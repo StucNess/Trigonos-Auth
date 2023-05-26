@@ -47,13 +47,17 @@ let participants;
 export default function SelectClientTable(props) {
   const [cliente, setcliente] = useState("");
   const [render, setRender] = useState(false);
+  const [value, setValue] = useState(dayjs());
   const handleChange = (event) => {
     setcliente(event.target.value);
+
+    props.actualizarEstado(event.target.value);
+    setValue(dayjs())
   };
   const handleChangeDate = (newValue) => {
     setValue(newValue);
   };
-  const [value, setValue] = useState(dayjs());
+  
   const [participants, setParticipants] = useState([]);
   const [payrollTable, setPayrollTable] = useState(0);
   const [alertt, setAlertt] = useState(false);
@@ -191,9 +195,9 @@ export default function SelectClientTable(props) {
           <ReportIcon sx={{ color: "#FF5733" }} />
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            <h2>Debe seleccionar un Cliente</h2>
-          </DialogContentText>
+       
+            <h2 className="text-pantoneazul">Debe seleccionar un Cliente</h2>
+       
         </DialogContent>
         <DialogActions>
           {/* <Button onClick={handleClose}>Disagree</Button>

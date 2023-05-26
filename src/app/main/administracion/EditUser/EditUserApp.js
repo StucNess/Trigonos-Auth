@@ -20,6 +20,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 
 import PeopleIcon from "@mui/icons-material/People";
 
@@ -52,9 +53,13 @@ import PropTypes from "prop-types";
 import { Link as RouterLink, MemoryRouter } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
 
-import { useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery } from "app/store/usuariosApi/usuariosApi";
+import { useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery, usePostUserLockMutation, usePostUserUnlockMutation } from "app/store/usuariosApi/usuariosApi";
 import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
 import { useGetParticipantesByIdMutation, useGetParticipantesQuery } from "app/store/participantesApi/participantesApi";
+import Dialog from "@mui/material/Dialog";
+import WarningIcon from "@mui/icons-material/Warning";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const LinkBehavior = forwardRef((props, ref) => (
   <RouterLink ref={ref} to="/" {...props} role={undefined} />
@@ -206,7 +211,7 @@ const headCells = [
 ];
 
 const DEFAULT_ORDER = "asc";
-const DEFAULT_ORDER_BY = "nombre";
+const DEFAULT_ORDER_BY = "rol";
 const DEFAULT_ROWS_PER_PAGE = 5;
 
 function EnhancedTableHead(props) {
@@ -241,7 +246,7 @@ function EnhancedTableHead(props) {
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
+                <Box component="span" sx={visuallyHidden} id={headCell.id}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
@@ -331,22 +336,33 @@ function EditUserApp(props) {
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
   const [cargando, setCargando] = useState(false);
-
+  
+  const [disableButton, setDisableButton] = useState(false);
   const [dataUser, setDataUser] = useState({});
   const [dataParticipant, setDataParticipant] = useState([]);
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
-  const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa} = useGetEmpresasQuery();
+  const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa, isFetching: isFetchEmpresas} = useGetEmpresasQuery();
 
  
-  const {data: getUsuarios,isLoading , refetch, isFetching} = useGetUsuariosPaginationQuery({
-    pageSize:1000
+  const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
+    pageSize:1000,
+    token: window.localStorage.getItem("token")
   });
+  console.log(isfetchingUsuarios);
   const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
   const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
   const [getParticipantById, data_participant] = useGetParticipantesByIdMutation();
   
-
-  
+  const [postUserUnlock, data_unclock] = usePostUserUnlockMutation();
+  const [postUserlock, data_lock] = usePostUserLockMutation();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText: "",
+    msgError: false,
+  });
+  const { msgResp, msgText, msgError } = MsgAlert;
  
   
 
@@ -386,7 +402,74 @@ function EditUserApp(props) {
     });
     return filtered;
   }
+  function Activar(idUser){
+    setOpenDialog(true);
+    setLoading(true);
 
+
+    postUserUnlock(idUser).then((response)=>{
+      setLoading(false);
+
+      setMsgAlert({
+        msgResp: true,
+        msgText: "Exito, Usuario Activado!",
+        msgError: false,
+      });
+      setTimeout(() => {
+     
+        setOpenDialog(false);
+      }, 1000);
+      
+      console.log(response);
+    }).catch((error)=>{
+      setLoading(false);
+  
+      setMsgAlert({
+        msgResp: true,
+        msgText: "No se pudo activar el usuario",
+        msgError: true,
+      });
+      setTimeout(() => {
+     
+        setOpenDialog(false);
+      }, 1000);
+     
+      console.log(error);
+    })
+  }
+  function Desactivar(idUser){
+    setOpenDialog(true);
+    setLoading(true);
+ 
+    postUserlock(idUser).then((response)=>{
+      setLoading(false);
+      
+      setMsgAlert({
+        msgResp: true,
+        msgText: "Exito, Usuario Desactivado!",
+        msgError: false,
+      });
+      setTimeout(() => {
+   
+        setOpenDialog(false);
+      }, 1000);
+      console.log(response);
+    
+    }).catch((error)=>{
+      setLoading(false);
+      setMsgAlert({
+        msgResp: true,
+        msgText: "No se pudo desactivar el usuario",
+        msgError: true,
+      });
+      setTimeout(() => {
+      
+        setOpenDialog(false);
+      }, 1000);
+   
+      console.log(error);
+    })
+  }
   function CargaDataParticipant(row) {
     const idRolUser = (dataUserRoles.filter(
       (item) => item.userId=== row.id
@@ -445,10 +528,8 @@ function EditUserApp(props) {
     }
   }, [loadParticipant])
   
-  
-  useEffect(() => {
-    if(isLoading===false){
-      rows = getUsuarios.data.map(function (el) {
+  function GetUsers(){
+    rows = getUsuarios.data.map(function (el) {
       let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
       return {
         estado: estadonew,
@@ -466,92 +547,80 @@ function EditUserApp(props) {
       });
       rowspermanent = rows;
       rowsOnMount();
+      setRowsPerPage(5);
+      let  newPage= 0;
+      setPage(newPage);
+      console.log(newPage);
+      const sortedRows = stableSort(rows, getComparator(order, orderBy));
+      const updatedRows = sortedRows.slice(
+        newPage * rowsPerPage,
+        newPage * rowsPerPage + rowsPerPage
+      );
+
+      setVisibleRows(updatedRows);
+
+      // Avoid a layout jump when reaching the last page with empty rows.
+      const numEmptyRows =
+        newPage > 0
+          ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
+          : 0;
+
+      const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
+      setPaddingHeight(newPaddingHeight);
+  }
+
+  useEffect(() => {
+    
+   
+
+    // if(!isLoading){
+    //   GetUsers()
+    // }
+    if(!isFetchEmpresas){
+      if(!isfetchingUsuarios){
+        if(getUsuarios !=undefined){
+          GetUsers();
+        
+        }
+        
+      }
     }
     
   }, [isLoading]);
   useEffect(() => {
-    // refreshEmpresa()
-   
-    // if(getUsuarios !=undefined){
-    //   rows = getUsuarios.data.map(function (el) {
-    //     let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
-    //     return {
-    //       estado: estadonew,
-    //       rol: el.role,
-    //       email: el.email,
-    //       nombre: el.nombre,
-    //       apellido: el.apellido,
-    //       codempresa: el.idEmpresa,
-    //       empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-    //       usuario: el.username,
-    //       pais: el.pais,
-    //       id: el.id,
-    //     };
-        
-    //     });
-    //     rowspermanent = rows;
-    //     rowsOnMount();
-        
-    // }
-    if(table){
-      console.log("cargando")
+
+    if(!table){
+      setDisableButton(false);
     }
   }, [table]);
   useEffect(() => {
-    if(cargando){
-
-      if(getUsuarios !=undefined){
-       
-          
+    if(!isFetchEmpresas){
+      if(!isfetchingUsuarios){
+        if(getUsuarios !=undefined){
+          GetUsers();
+        
+        }
+        
       }
-      rows = getUsuarios.data.map(function (el) {
-        let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
-        return {
-          estado: estadonew,
-          rol: el.role,
-          email: el.email,
-          nombre: el.nombre,
-          apellido: el.apellido,
-          codempresa: el.idEmpresa,
-          empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-          usuario: el.username,
-          pais: el.pais,
-          id: el.id,
-        };
-        
-        });
-        rowspermanent = rows;
-        rowsOnMount();
-        setRowsPerPage(5);
-        let  newPage= 0;
-        setPage(newPage);
-        console.log(newPage);
-        const sortedRows = stableSort(rows, getComparator(order, orderBy));
-        const updatedRows = sortedRows.slice(
-          newPage * rowsPerPage,
-          newPage * rowsPerPage + rowsPerPage
-        );
-
-        setVisibleRows(updatedRows);
-
-        // Avoid a layout jump when reaching the last page with empty rows.
-        const numEmptyRows =
-          newPage > 0
-            ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
-            : 0;
-
-        const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
-        setPaddingHeight(newPaddingHeight);
-
-      setTimeout(() => {
-       
-        setCargando(false);
-       
-        
-     
-      }, 1000);
     }
-  }, [cargando])
+
+
+  }, [isfetchingUsuarios])
+  useEffect(() => {
+    if(!isFetchEmpresas){
+      if(!isfetchingUsuarios){
+        if(getUsuarios !=undefined){
+          GetUsers();
+        
+        }
+        
+      }
+    }
+    
+
+  }, [isFetchEmpresas])
+  
+
 
   const handleSetRow = (event) => {
     const {
@@ -733,7 +802,7 @@ function EditUserApp(props) {
                 <PeopleIcon className="ml-[10px] text-pantoneazul" />
               </div>
               <h1 className="border border-b-pantoneazul w-full"></h1>
-              {cargando?
+              {isfetchingUsuarios?
               <div className="flex items-center">
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
                   {/* <p>Chupa Chupa .....</p> */}
@@ -770,7 +839,7 @@ function EditUserApp(props) {
                         onRequestSort={handleRequestSort}
                         rowCount={rows.length}
                       />
-                      <TableBody>
+                      <TableBody >
                         {visibleRows
                           ? visibleRows.map((row, index) => {
                               const isItemSelected = isSelected(row.id);
@@ -781,6 +850,7 @@ function EditUserApp(props) {
                                   aria-checked={isItemSelected}
                                   tabIndex={-1}
                                   key={row.id}
+                                  id={row.id}
                                 >
                                   <StyledTableCell
                                     align="left"
@@ -832,43 +902,72 @@ function EditUserApp(props) {
                                     </Button> */}
                                     <div className="flex flex-row">
                                     <Tooltip  
+                                
                                       title="Editar" 
                                       arrow 
                                       placement="top"
                                       // placement="top-start"
                                     >
-                                    <IconButton
-                                    sx={{ "&:hover": { color: "#e4493f" } }}
-                                    key="chechedLeft"
-                                    aria-label="Close"
-                                    color="primary"
-                                    onClick={() => {
-                                      CargaDataParticipant(row);
-                                   }}
-                                    size="small"
-                                  >
-                                    <SettingsIcon fontSize="large" />
-                                  </IconButton>
-                                  </Tooltip> 
+                                      <span>
+                                      <IconButton
+                                        sx={{ "&:hover": { color: "#e4493f" } }}
+                                        key="chechedLeft"
+                                        aria-label="Close"
+                                        color="primary"
+                                        disabled=  {disableButton}
+                                        onClick={() => {
+                                          CargaDataParticipant(row);
+                                          setDisableButton(true);
+                                        }}
+                                        size="small"
+                                      >
+                                        <SettingsIcon fontSize="large" />
+                                      </IconButton>
+                                      </span>
+                                   
+                                  </Tooltip>
+                                  {row.estado ==="Desactivado"?   
+                                   <Tooltip  
+                                   title="Activar" 
+                                   arrow 
+                                   placement="top"
+                                   // placement="top-start"
+                                 >
+                                 <IconButton
+                                 sx={{ "&:hover": { color: "#e4493f" } }}
+                                 key="chechedLeft"
+                                 aria-label="Close"
+                                 color="primary"
+                                 onClick={() => {
+                                  Activar(row.id);
+                                }}
+                                 size="small"
+                               >
+                                 <RestoreFromTrashIcon fontSize="large" />
+                               </IconButton>
+                               </Tooltip> :  
                                   <Tooltip  
-                                      title="Desactivar" 
-                                      arrow 
-                                      placement="top"
-                                      // placement="top-start"
-                                    >
-                                    <IconButton
-                                    sx={{ "&:hover": { color: "#e4493f" } }}
-                                    key="chechedLeft"
-                                    aria-label="Close"
-                                    color="primary"
-                                    onClick={() => {
-                                      CargaDataParticipant(row);
-                                   }}
-                                    size="small"
-                                  >
-                                    <DeleteForeverIcon fontSize="large" />
-                                  </IconButton>
-                                  </Tooltip> 
+                                  title="Desactivar" 
+                                  arrow 
+                                  placement="top"
+                                  // placement="top-start"
+                                >
+                                <IconButton
+                                sx={{ "&:hover": { color: "#e4493f" } }}
+                                key="chechedLeft"
+                                aria-label="Close"
+                                color="primary"
+                                onClick={() => {
+                                  Desactivar(row.id);
+                               }}
+                                size="small"
+                              >
+                                <DeleteForeverIcon fontSize="large" />
+                              </IconButton>
+                              </Tooltip> 
+                                  
+                                  } 
+                                
 
                                     </div>
                                     
@@ -890,6 +989,7 @@ function EditUserApp(props) {
                           : null}
                         {paddingHeight > 0 && (
                           <TableRow
+                            
                             style={{
                               height: paddingHeight,
                             }}
@@ -902,6 +1002,7 @@ function EditUserApp(props) {
                   </TableContainer>
                   
                   <TablePagination
+                  
                   labelRowsPerPage="Filas por página"
                   variant="h5"
                   // rowsPerPageOptions={[
@@ -939,6 +1040,43 @@ function EditUserApp(props) {
               cargando={() => setCargando(true)}
             />
           )}
+        <Dialog
+     
+        open={openDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        scroll={"paper"}
+      >
+        {loading ? (
+          <div className="flex justify-center items-center h-[250px] w-[300px]">
+            <CircularProgress color="secondary" />
+          </div>
+        ) : (
+          <div>
+            {msgResp && (
+              <div className="flex justify-center items-center h-[250px] w-[300px]">
+                {msgError ? (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    <WarningIcon className="w-[68px] h-[68px] text-red" />
+                    <span className="absolute bottom-[70px] text-red">
+                      {" "}
+                      <b>{msgText}</b>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                    <span className="absolute bottom-[70px] text-green">
+                      {" "}
+                      <b>{msgText}</b>
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </Dialog>
         </div>
       }
       scroll="content"

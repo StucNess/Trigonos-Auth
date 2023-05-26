@@ -41,6 +41,8 @@ import { visuallyHidden } from "@mui/utils";
 import { useCallback, useEffect, useState } from "react";
 import ModalAddProfile from "./Widgets/ModalAddProfile";
 import {
+  useGetAllRolesQuery,
+  useGetAllRolesTokenQuery,
   useGetAllRoutesQuery,
   useGetListarPaginaWebQuery,
 } from "app/store/RoutesRoles/routesApi";
@@ -288,11 +290,13 @@ function CreateProfileApp(props) {
   const [dataRol, setDataRol] = useState({});
   const [dataAsing, setDataAsing] = useState({});
   const [dataNoAsing, setDataNoAsing] = useState({});
-  const [rowss, setRowss] = useState([]);
+
   const { data: todos = [], isLoading: isloadingg = true } =
     useGetAllRoutesQuery();
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetListarPaginaWebQuery();
+  const { data: getAllRoles, isLoading: isLoadRoles } =
+    useGetAllRolesTokenQuery(window.localStorage.getItem("token"));
 
   function EnviarDatos(row) {
     if (isloadingg != true) {
@@ -338,7 +342,7 @@ function CreateProfileApp(props) {
   }
 
   function CargaDataRol() {
-    fetch(" http://localhost:5205/api/Rol")
+    fetch(" https://trigonosapi.azurewebsites.net/api/Rol")
       .then((response) => response.json())
       .then((data) => {
         rows = data.map(function (el) {
@@ -367,20 +371,24 @@ function CreateProfileApp(props) {
     setVisibleRows(rowsOnMount);
   }
   useEffect(() => {
-    CargaDataRol();
-  }, []);
+    if (!isLoadRoles) {
+      if (getAllRoles != undefined) {
+        CargaDataRol();
+      }
+    }
+  }, [isLoadRoles]);
   useEffect(() => {
-    CargaDataRol();
+    if (getAllRoles != undefined) {
+      CargaDataRol();
+    }
   }, [table]);
-  useEffect(() => {
-    rows = rowss;
-    rowsOnMount();
-  }, [rowss]);
+
   const handleSetRow = (event) => {
     const {
       target: { value },
     } = event;
-    setRowss(search(value.trim()));
+    rows = search(value.trim());
+    rowsOnMount();
   };
   const handleRequestSort = useCallback(
     (event, newOrderBy) => {

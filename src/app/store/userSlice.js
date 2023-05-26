@@ -85,6 +85,8 @@ export const updateUserData = (user) => async (dispatch, getState) => {
 };
 
 const initialState = {
+  token:"",
+  idUser:"",
   role: [], // guest
   data: {
     nombre: "",
@@ -101,6 +103,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     userLoggedOut: (state, action) => initialState,
+    
   },
   extraReducers: {
     [updateUserSettings.fulfilled]: (state, action) => action.payload,

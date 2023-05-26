@@ -17,8 +17,8 @@ function FooterLayout2(props) {
         color="default"
         sx={{ backgroundColor: footerTheme.palette.background.paper }}
       >
-        <Toolbar className="container min-h-48 md:min-h-64 px-8 sm:px-12 py-0 flex items-center overflow-x-auto">
-          Footer
+        <Toolbar className="container min-h-48 md:min-h-38 px-8 sm:px-12 py-0 flex items-center justify-center overflow-x-auto">
+        <img className="w-full max-w-64" src="assets/images/logo/logoTRGNS.png" alt="footer logo" /> Trígonos Energy & Prisma Solutions
         </Toolbar>
       </AppBar>
     </ThemeProvider>
