@@ -666,6 +666,297 @@ function TabInstrucciones(props) {
     currency: "CLP",
     style: "currency",
   });
+  let headersExcel1 = [
+    [
+      "ID_CSV",
+      "DTE",
+      "ID_DTE",
+      "Doc",
+      "FolioReferencia",
+      "RazonReferencia",
+      "EstadoEmision",
+      "EstadoPagado",
+      "SiglaCen",
+      "RazonSocial",
+      "Rut",
+      "Folio",
+      "NNC",
+      "NND",
+      "FechaEmision",
+      "FechaPago",
+      "FechaVencimiento",
+      "FechaReception",
+      "FechaCarta",
+      "CartaN",
+      "Concepto",
+      "MesConsumido",
+      "Codcuadro",
+      "CodigoCP",
+      "Version",
+      "neto",
+      "iva",
+      "total",
+      "OrdenCompra",
+      "FechaEstimaP",
+      "Glosa",
+      "MacroEmitFact",
+      "MacroCobranza",
+      "FechaEnviEmit",
+      "MacroGenerarDTE",
+      "giro",
+      "DireccionesRecepcion",
+      "ComunaRecepcion",
+    ],
+  ];
+
+  let headersExcel2 = [
+    [
+      "Tipo",
+      "Folio",
+      "Secuencia",
+      "FechaEmision",
+      "Rut",
+      "RazonSocial",
+      "giro",
+      "ComunaRecepcion",
+      "DireccionesRecepcion",
+      "Afecto",
+      "RazonReferencia",
+      "Descripcion",
+      "Cantidad",
+      "neto",
+      "Porcentaje",
+      "Email",
+      "TipoServicio",
+      "PeriodoDesde",
+      "PeriodoHasta",
+      "FechaVencimiento",
+      "Tipo2",
+      "Folio2",
+      "Secuencia2",
+      "TipoDocumento",
+      "FolioReferencia",
+      "FechaCarta",
+      "MotivoRef",
+      "RazonReferencia2",
+    ],
+  ];
+  let headersExcel3 = [
+    [
+      "Rut",
+      "Tipo",
+      "Folio",
+      "FechaEmision",
+      "Rutreceptor",
+      "RazonSocial",
+      "giro",
+      "DireccionesRecepcion",
+      "ComunaRecepcion",
+      "Email",
+      "Exento",
+      "neto",
+      "iva",
+      "total",
+      "TipoReferencia",
+      "CodReferencia",
+      "DES1",
+      "GLO1",
+      "MNT1",
+      "DES2",
+      "GLO2",
+      "MNT2",
+      "DES3",
+      "GLO3",
+      "MNT3",
+      "DES4",
+      "GLO4",
+      "MNT4",
+      "DES5",
+      "GLO5",
+      "MNT5",
+      "DES6",
+      "GLO6",
+      "MNT6",
+      "DES7",
+      "GLO7",
+      "MNT7",
+      "DES8",
+      "GLO8",
+      "MNT8",
+      "DES9",
+      "GLO9",
+      "MNT9",
+      "DES10",
+      "GLO10",
+      "MNT10",
+      "GlosaLarga",
+      "FechaVencimiento",
+      "GlosaReferencia",
+      "FechaCarta",
+    ],
+  ];
+  let headersExcel4 = [
+    [
+      "DestinodelDocumento",
+      "Documentoimpresosegeneranulo",
+      "DocumentoimpresoGeneraRebajaStock",
+      "TipodeDocumento",
+      "NúmeroCorrelativo",
+      "Nimerofinalsiloboletas",
+      "Fech",
+      "Local",
+      "Vendedor",
+      "MonedaReferencia",
+      "TasaReferencia",
+      "CondicióndePago",
+      "FechadeVencimiento",
+      "CódigodelCliente",
+      "TipodeCliente",
+      "CentrodeNegocios",
+      "Clasificador1",
+      "Clasificador2",
+      "OrigendelDocumento",
+      "ListadePrecio",
+      "CódigodelProyecto",
+      "Afecto",
+      "Exento",
+      "Total",
+      "BodegaInventario",
+      "MotivodemovimientoInventario",
+      "CentrodeNegociosInventario",
+      "TipodeCuentaInventario",
+      "ProveedorInventario",
+      "DireccióndeDespacho",
+      "Clasificador1Inventario",
+      "Clasificador2Inventario",
+      "CódigoLegal",
+      "Nombre",
+      "Giros",
+      "Dirección",
+      "Ciudads",
+      "Rubro",
+      "Glosa",
+      "LíneadeDetalle",
+      "ArticuloServicio",
+      "CodigodelProducto",
+      "Cantidad",
+      "PrecioUnitario",
+      "Descuento",
+      "TipodeDescuento",
+      "TipodeVenta",
+      "TotaldelProducto",
+      "PrecioLista",
+      "TotalNeto",
+      "FichaProducto",
+      "CentrodeNegociosProducto",
+      "Clasificador1Producto",
+      "Clasificador2Producto",
+      "CantidaddeUnidadEquivalente",
+      "CantidaddePeriodos",
+      "ComentarioProducto",
+      "AnálisisAtributo1Producto",
+      "AnálisisAtributo2Producto",
+      "AnálisisAtributo3Producto",
+      "AnálisisAtributo4Producto",
+      "AnálisisAtributo5Producto",
+      "AnálisisLoteProducto",
+      "FechadeVencimientoLote",
+      "IngresoManual",
+      "TipodeInventario",
+      "Clasificador1InventarioLinea",
+      "Clasificador2InventarioLinea",
+      "NúmerodeDescuento",
+      "Descuento2",
+      "TipodeDescuento2",
+      "NumerodeImpuesto",
+      "CódigodeImpuesto",
+      "ValordeImpuesto",
+      "MontodeImpuesto",
+      "CentrodeNegociosProducto2",
+      "Clasificador1Impuesto",
+      "Clasificador2Impuesto",
+      "NúmerodeCuota",
+      "FechadeCuota",
+      "MontodeCuota",
+      "RelaciónlineaSeries",
+      "SufijoArtículoInventario",
+      "TipodeRecargoyDescuento",
+      "PrefijoArtículoInventario",
+      "SerieArtículoInventario",
+      "Distrito",
+      "Transacción",
+      "FechaFacturaciónDesde",
+      "FechaFacturaciónHasta",
+      "VíadeTransporte",
+      "PaísDestinoReceptor",
+      "PaísDestinoEmbarque",
+      "ModalidadVenta",
+      "TipoDespacho",
+      "IndicadordeServicio",
+      "ClaúsuladeVenta",
+      "TotalClaúsuladeVenta",
+      "PuertoEmbarque",
+      "PuertoDesembarque",
+      "UnidaddeMedidaTara",
+      "TotalMedidaTara",
+      "UnidadPesoBruto",
+      "TotalPesoBruto",
+      "UnidadPesoNeto",
+      "TotalPesoNeto",
+      "TipodeBulto",
+      "TotaldeBultos",
+      "FormadePago",
+      "TipoDocumentoAsociado",
+      "FolioDocumentoAsociado",
+      "FechaDocumentoAsociado",
+      "ComentarioDocumentoAsociado",
+      "email",
+      "EsdocumentodetraspasoSsiNno",
+    ],
+  ];
+  // // Avoid a layout jump when reaching the last page with empty rows.
+  // const emptyRows =
+  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  // function convertToSheet(data) {
+  //   const wb = XLSX.utils.book_new();
+  //   const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+  //   XLSX.utils.sheet_add_aoa(ws, headersExcel);
+  //   const sheet = XLSX.utils.sheet_add_json(ws, data, {
+  //     origin: "A2",
+  //     skipHeader: true,
+  //   });
+
+  //   XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+  //   XLSX.writeFile(wb, "filename.xlsx");
+  // }
+  // function downloadExcelFile(filename, data) {
+  //   let dataPrueba = [];
+  //   for (let i in data) {
+  //     let obj = new Object();
+
+  //     obj.Rut = data[i].rutAcreedor;
+  //     obj.Nombre_Beneficiario = data[i].nombreAcreedor;
+  //     obj.Fp = "CCT";
+  //     obj.Bco = data[i].sBifAcreedor;
+  //     obj.NumeroCuenta = data[i].cuentaBancoAcreedor;
+  //     obj.NumeroDocumento = data[i].folio;
+  //     obj.MontoPago = data[i].valorNeto;
+  //     obj.OfBci = "";
+  //     obj.Fecha = "23/03/2023";
+  //     obj.ApPaterno = "";
+  //     obj.ApMaterno = "";
+  //     obj.Nombre = data[i].cuentaBancoAcreedor;
+  //     obj.RutRetirador = "";
+  //     obj.Tipo = "FAC";
+  //     obj.Glosa = data[i].glosa;
+  //     obj.Convenio = "";
+  //     obj.Email = data[i].correoDteAcreedor;
+  //     dataPrueba.push(obj);
+  //   }
+  //   convertToSheet(dataPrueba);
+  // }
   return (
     <Box className="m-[20px]">
       {isLoadinginstructions ? (
@@ -676,6 +967,7 @@ function TabInstrucciones(props) {
       ) : (
         <>
           <Box>
+            <Button onClick={() => console.log("hola")}>pruebaaaa</Button>
             <TableContainer>
               {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
               <Table
