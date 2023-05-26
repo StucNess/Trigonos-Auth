@@ -439,18 +439,19 @@ function TabInstrucciones(props) {
             precio: data.montoNeto,
           };
         });
-      } else {
+      } else if (props.erp == 1) {
         rows = dataInstructions.data.map((data) => {
           return {
             // id: data.id,
-            folioReferencia: data.glosa,
-            razonReferencia: data.nombreDeudor,
-            razonSocial: data.rutDeudor,
+            folioReferencia: data.codigoRef,
+            razonReferencia: data.glosa,
+            razonSocial: data.nombreDeudor,
+            rut: data.rutDeudor,
             folio: data.folio,
             fechaCarta: data.fecha_carta,
             concepto: data.glosa,
             neto: data.montoNeto,
-            iva: montoNeto * 0.19,
+            iva: data.montoNeto * 0.19,
             total: data.montoBruto,
             giro: data.giroDeudor,
             direccion: data.direccionDeudor,
@@ -596,7 +597,10 @@ function TabInstrucciones(props) {
   return (
     <Box className="m-[20px]">
       {isLoadinginstructions ? (
-        <h1>{props.erp}</h1>
+        <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+          {/* <p>Chupa Chupa .....</p> */}
+          <LinearProgress color="primary" />
+        </Stack>
       ) : (
         <>
           <Box>
