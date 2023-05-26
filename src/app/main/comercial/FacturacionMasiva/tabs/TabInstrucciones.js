@@ -519,9 +519,9 @@ function TabInstrucciones(props) {
         rows = dataInstructions.data.map((data) => {
           return {
             // id: data.id,
-            numeroCorrelativo: 00000,
-            fecha: 0000,
-            fechaVencimiento: 0000,
+            numeroCorrelativo: "00000",
+            fecha: "0000",
+            fechaVencimiento: "0000",
             codigoCliente: data.rutDeudor,
             afecto: data.montoNeto,
             total: data.montoNeto * 0.19,
