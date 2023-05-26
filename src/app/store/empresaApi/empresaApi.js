@@ -1,9 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const empresaApi = createApi({
-    reducerPath:'empresas',
-    baseQuery: fetchBaseQuery({
-        baseUrl:'https://trigonosapi.azurewebsites.net/api/Empresas'
+  reducerPath: "empresas",
+  tagTypes: ["empresas", "addempresa"],
+  baseQuery: fetchBaseQuery({
+    baseUrl: "https://trigonosapi.azurewebsites.net/api/Empresas",
+  }),
+  endpoints: (builder) => ({
+    getEmpresas: builder.query({
+      query: () => "",
+      providesTags: ["empresas"],
     }),
     //Revisar como utilizar el patch si no cambialo por post en .net
 
@@ -17,6 +23,8 @@ export const empresaApi = createApi({
         method: "POST",
         body: asing,
       }),
+      providesTags: ["addempresa"],
+      invalidatesTags: ["empresas"],
     }),
   }),
 });
