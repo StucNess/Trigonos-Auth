@@ -367,11 +367,13 @@ function EnhancedTableHead(props) {
             align="left"
             // align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}>
+              onClick={createSortHandler(headCell.id)}
+            >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <Box component="span" sx={visuallyHidden}>
@@ -413,7 +415,8 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         }),
-      }}>
+      }}
+    >
       <Box className="flex flex-col w-full">
         <Box className="flex flex-row w-full">
           <Typography className=" text-4xl font-extrabold text-center  tracking-tight leading-tight w-full">
@@ -466,7 +469,7 @@ export default function TablaUltimosCambios(props) {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  let url = ` https://trigonosapi.azurewebsites.net/Historificacion?id=${props.idParticipant}`;
+  let url = ` http://localhost:5205/Historificacion?id=${props.idParticipant}`;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   let rows = [];
   const [data, setData] = useState([]);
@@ -647,7 +650,8 @@ export default function TablaUltimosCambios(props) {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}>
+                  style={{ minWidth: column.minWidth }}
+                >
                   {column.label}
                 </TableCell>
               ))}
@@ -670,7 +674,8 @@ export default function TablaUltimosCambios(props) {
                           //     ? () => getModal(valuee)
                           //     : () => setTable(true)
                           // }
-                          align={column.align}>
+                          align={column.align}
+                        >
                           {column.format && typeof value === "number"
                             ? column.format(value)
                             : value}

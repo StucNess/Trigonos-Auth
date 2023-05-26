@@ -1,7 +1,8 @@
 import axios from "axios";
 
 export const callParticipants = async () => {
-  let url = ` https://trigonosapi.azurewebsites.net/api/Participantes`;
+  const idUser = localStorage.getItem("idUser");
+  let url = `http://localhost:5205/api/Participantes?id=${idUser}`;
   let response = await axios.get(url);
   let prueba = await response.data.data;
 

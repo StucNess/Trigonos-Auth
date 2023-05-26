@@ -50,16 +50,14 @@ const NominaPagoApp = () => {
   const callApiPayroll = (id, glosa = "") => {
     if (discPrueba == false) {
       axios
-        .get(
-          ` https://trigonosapi.azurewebsites.net/api/Nominas?id=${id}&Glosa=${glosa}`
-        )
+        .get(` http://localhost:5205/api/Nominas?id=${id}&Glosa=${glosa}`)
         .then((response) => {
           setPayRollData(response.data);
         });
     } else {
       axios
         .get(
-          ` https://trigonosapi.azurewebsites.net/api/Nominas?id=${id}&Disc=si&Glosa=${glosa}`
+          ` http://localhost:5205/api/Nominas?id=${id}&Disc=si&Glosa=${glosa}`
         )
         .then((response) => {
           setPayRollData(response.data);

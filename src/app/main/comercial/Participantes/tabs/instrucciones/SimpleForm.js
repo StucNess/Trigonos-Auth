@@ -117,7 +117,7 @@ export const SimpleForm = ({ cerrar, diccionariop }) => {
   };
   const ApiPatch = () => {
     const apiPatchParticipante =
-      ` https://trigonosapi.azurewebsites.net/api/Participantes?` +
+      ` http://localhost:5205/api/Participantes?` +
       `id=${id}&` +
       `Name=${name}&` +
       `Rut=${rut}&` +
@@ -383,7 +383,8 @@ export const SimpleForm = ({ cerrar, diccionariop }) => {
               </InputAdornment>
             ),
           }}
-          sx={{ marginRight: 5, width: 250 }}>
+          sx={{ marginRight: 5, width: 250 }}
+        >
           {banks.map((data) => (
             <MenuItem key={data.id} value={data.name}>
               {data.name}
@@ -783,7 +784,8 @@ export const SimpleForm = ({ cerrar, diccionariop }) => {
           sx={{ ml: 32, mr: 3, width: 200 }}
           onClick={ApiPatch}
           variant="contained"
-          color="success">
+          color="success"
+        >
           {" "}
           Modificar
         </Button>
@@ -792,7 +794,8 @@ export const SimpleForm = ({ cerrar, diccionariop }) => {
           sx={{ width: 200 }}
           onClick={cerrar}
           variant="contained"
-          color="error">
+          color="error"
+        >
           {" "}
           Atras{" "}
         </Button>

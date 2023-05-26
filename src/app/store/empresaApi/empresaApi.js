@@ -1,31 +1,27 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
-
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const empresaApi = createApi({
-    reducerPath:'empresas',
-    baseQuery: fetchBaseQuery({
-        baseUrl:'https://trigonosapi.azurewebsites.net/api/Empresas'
+  reducerPath: "empresas",
+  baseQuery: fetchBaseQuery({
+    baseUrl: "http://localhost:5205/api/Empresas",
+  }),
+  endpoints: (builder) => ({
+    getEmpresas: builder.query({
+      query: () => "",
     }),
-    endpoints:(builder)=>({
-       
-        getEmpresas: builder.query({
-            query:()=>''
-        }),
-        //Revisar como utilizar el patch si no cambialo por post en .net
-        
-        postAddEmpresa: builder.mutation({ //  Objeto del body {idProyect:0,idUser:""}
-            query: (asing) => ({
-                headers:{
-                    'Content-type': 'application/json'
-                },
-                url: `/Agregar/`,
-                method: 'POST',
-                body:asing 
-            }),
-        }),
-       
-       
-       
-    })
-})
-export const { useGetEmpresasQuery, usePostAddEmpresaMutation}= empresaApi;
+    //Revisar como utilizar el patch si no cambialo por post en .net
+
+    postAddEmpresa: builder.mutation({
+      //  Objeto del body {idProyect:0,idUser:""}
+      query: (asing) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/Agregar/`,
+        method: "POST",
+        body: asing,
+      }),
+    }),
+  }),
+});
+export const { useGetEmpresasQuery, usePostAddEmpresaMutation } = empresaApi;

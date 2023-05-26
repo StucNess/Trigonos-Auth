@@ -6,7 +6,6 @@ import {
   Box,
   Alert,
   Tooltip,
-  
 } from "@mui/material";
 import * as React from "react";
 import axios from "axios";
@@ -15,26 +14,23 @@ import { MobileDatePicker } from "@mui/x-date-pickers/MobileDatePicker";
 import AdapterDateFns from "@date-io/date-fns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { es } from "date-fns/locale";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ArrowCircleRightOutlinedIcon from '@mui/icons-material/ArrowCircleRightOutlined';
-import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import IconButton from '@mui/material/IconButton';
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import IconButton from "@mui/material/IconButton";
 
-const componentsProps={
+const componentsProps = {
   tooltip: {
     sx: {
-      
-      userSelect:'none',
-     
-      bgcolor: 'primary.main',
-      '& .MuiTooltip-arrow': {
-      color: 'primary.main',
-      
+      userSelect: "none",
+
+      bgcolor: "primary.main",
+      "& .MuiTooltip-arrow": {
+        color: "primary.main",
       },
     },
   },
 };
-
 
 let emisione;
 let buss;
@@ -43,7 +39,6 @@ const AceptationState = ["Aceptado", "Rechazado", "Pendiente"];
 const BillingState = ["No Facturado", "Facturado", "Facturado con Atraso"];
 const PaymentState = ["No Pagado", "Pagado", "Pagado con Atraso"];
 const FormInstructions = (props) => {
-  
   const [value, setValue] = React.useState(
     new Date("December 01, 1995 03:24:00")
   );
@@ -117,7 +112,7 @@ const FormInstructions = (props) => {
       return;
     }
     const apiPatchParticipante =
-      ` https://trigonosapi.azurewebsites.net/api/Instrucciones?` +
+      ` http://localhost:5205/api/Instrucciones?` +
       `id=${props.data.id_instruccions}&` +
       // `EstadoEmision=${BillingState.indexOf(billing) + 1}&` +
       // `EstadoRecepcion=${ReceptionState.indexOf(reception) + 1}&` +
@@ -332,60 +327,60 @@ const FormInstructions = (props) => {
           Modificar
         </Button> */}
         {/* absolute top-0 right-0 */}
-        <Tooltip  
-        
-        title="Actualizar Instrucción" 
-        arrow 
-        placement="top"
-        componentsProps={componentsProps}
+        <Tooltip
+          title="Actualizar Instrucción"
+          arrow
+          placement="top"
+          componentsProps={componentsProps}
 
-        // placement="top-start"
-               >
-               
-        <IconButton 
-        className=""
-        size="medium" 
-        variant="contained" 
-        color="success"   
-        onClick={() => {
-            ApiPatch();
-          }} >
-                <CheckCircleOutlineIcon   fontSize="large" />
-        </IconButton>
-        </Tooltip> 
-
-        <Tooltip 
-      
-        title="Nose que poner uwu"  followCursor
-        // placement="top"
-        componentsProps={componentsProps}
-        // placement="top-start"
-               >
-        <IconButton 
-        className=""
-        size="medium" 
-        variant="contained" 
-        color="info"
-        // onClick={props.onClose}
+          // placement="top-start"
         >
-                <ErrorOutlineOutlinedIcon   fontSize="large" />
-        </IconButton>
+          <IconButton
+            className=""
+            size="medium"
+            variant="contained"
+            color="success"
+            onClick={() => {
+              ApiPatch();
+            }}
+          >
+            <CheckCircleOutlineIcon fontSize="large" />
+          </IconButton>
         </Tooltip>
 
-        
-        <Tooltip  title="Regresar a instrucciones" 
-        placement="top"
-        componentsProps={componentsProps}
-        // placement="top-start"
-               >
-        <IconButton 
-        className=""
-        size="medium" 
-        variant="contained" 
-        color="primary" 
-        onClick={props.onClose}>
-                <ArrowCircleRightOutlinedIcon   fontSize="large" />
-        </IconButton>
+        <Tooltip
+          title="Nose que poner uwu"
+          followCursor
+          // placement="top"
+          componentsProps={componentsProps}
+          // placement="top-start"
+        >
+          <IconButton
+            className=""
+            size="medium"
+            variant="contained"
+            color="info"
+            // onClick={props.onClose}
+          >
+            <ErrorOutlineOutlinedIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
+
+        <Tooltip
+          title="Regresar a instrucciones"
+          placement="top"
+          componentsProps={componentsProps}
+          // placement="top-start"
+        >
+          <IconButton
+            className=""
+            size="medium"
+            variant="contained"
+            color="primary"
+            onClick={props.onClose}
+          >
+            <ArrowCircleRightOutlinedIcon fontSize="large" />
+          </IconButton>
         </Tooltip>
         {/* <Button
           sx={{ width: 200 }}

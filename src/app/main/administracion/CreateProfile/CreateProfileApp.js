@@ -70,100 +70,89 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-      
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-  }));
-  // function createData(estado,codReferencia,nombre,descripcion,id) {
-  //   return {
-  //       estado,codReferencia,nombre,descripcion,id
-  //   };
-  // }
-  
-   
-  let rows = [];
-  let rowspermanent = [];
-  
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+// function createData(estado,codReferencia,nombre,descripcion,id) {
+//   return {
+//       estado,codReferencia,nombre,descripcion,id
+//   };
+// }
 
-     
+let rows = [];
+let rowspermanent = [];
 
- 
- 
-  // async function CargaData(){
-    
-  //   const data = await CallApiRoles();
-  //   console.log(data);
-  //   data.map(
-  //     ({
-  //       id, codReferencia, nombre, descripcion, bhabilitado,
-  //     }) =>
-  //     rows.push(
-  //         createData(
-  //           // createData('Activo', 4849, 'Trabajadores Prisma', 'Perfil para trabajadores de Prisma')
-  //           bhabilitado ===1 ? 'Activo':'Desactivado', codReferencia, nombre, descripcion,id
-  //         )
-  //       )
-      
-  //   );
-  // }
+// async function CargaData(){
 
-   
-  
-  
-  
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
+//   const data = await CallApiRoles();
+//   console.log(data);
+//   data.map(
+//     ({
+//       id, codReferencia, nombre, descripcion, bhabilitado,
+//     }) =>
+//     rows.push(
+//         createData(
+//           // createData('Activo', 4849, 'Trabajadores Prisma', 'Perfil para trabajadores de Prisma')
+//           bhabilitado ===1 ? 'Activo':'Desactivado', codReferencia, nombre, descripcion,id
+//         )
+//       )
+
+//   );
+// }
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
     }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-  
-  function getComparator(order, orderBy) {
-    return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
-  function stableSort(array, comparator) {
-    const stabilizedThis = array.map((el, index) => [el, index]);
-    stabilizedThis.sort((a, b) => {
-      const order = comparator(a[0], b[0]);
-      if (order !== 0) {
-        return order;
-      }
-      return a[1] - b[1];
-    });
-    return stabilizedThis.map((el) => el[0]);
-  }
-  
-  const headCells = [
-    {
-      id: 'estado', 
-      numeric: false,
-      disablePadding: true,
-      label: 'Estado',
-    },
-    {
-      id: 'nombre',
-      numeric: false,
-      disablePadding: false,
-      label: 'Nombre',
-    },
-    {
-      id: 'descripcion',
-      numeric: false,
-      disablePadding: false,
-      label: 'Descripción',
-    },
-    {
-    id: 'action',
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+const headCells = [
+  {
+    id: "estado",
+    numeric: false,
+    disablePadding: true,
+    label: "Estado",
+  },
+  {
+    id: "nombre",
+    numeric: false,
+    disablePadding: false,
+    label: "Nombre",
+  },
+  {
+    id: "descripcion",
+    numeric: false,
+    disablePadding: false,
+    label: "Descripción",
+  },
+  {
+    id: "action",
     numeric: false,
     disablePadding: false,
     label: "Accciones",
@@ -349,7 +338,7 @@ function CreateProfileApp(props) {
   }
 
   function CargaDataRol() {
-    fetch(" https://trigonosapi.azurewebsites.net/api/Rol")
+    fetch(" http://localhost:5205/api/Rol")
       .then((response) => response.json())
       .then((data) => {
         rows = data.map(function (el) {

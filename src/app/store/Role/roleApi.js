@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 export const roleApi = axios.create({
-    baseURL:'https://trigonosapi.azurewebsites.net/api/Rol'
-})
+  baseURL: "http://localhost:5205/api/Rol",
+});

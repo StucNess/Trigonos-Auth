@@ -34,19 +34,16 @@ const steps = [
   "Listado de instrucciones",
   "Finalización del proceso",
 ];
-
+// let idErp = 0;
 export default function HorizontalLinearStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [idParticipant, setIdParticipant] = useState(0);
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetInstruccionesQuery(idParticipant);
-
-  console.log(dataWeb);
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
     // setSkipped(newSkipped);
   };
-
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -58,6 +55,7 @@ export default function HorizontalLinearStepper(props) {
 
   const handleChange = (event) => {
     setIdParticipant(event.target.value);
+    // idErp = props.dataParticipants.find((d) => d.id);
   };
 
   return (
@@ -115,11 +113,13 @@ export default function HorizontalLinearStepper(props) {
                     <MenuItem value="">
                       <em>Seleccionar</em>
                     </MenuItem>
-                    {props.dataParticipants.map(({ business_Name, id }) => (
-                      <MenuItem key={id} value={id}>
-                        {business_Name}.
-                      </MenuItem>
-                    ))}
+                    {props.dataParticipants
+                      .filter((data) => data.trgns_erp != 5)
+                      .map(({ business_Name, id }) => (
+                        <MenuItem key={id} value={id}>
+                          {business_Name}.
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
                 <Box sx={{ m: 1, minWidth: 300 }}>
@@ -129,13 +129,21 @@ export default function HorizontalLinearStepper(props) {
               </div>
             </Box>
           ) : activeStep === 1 ? ( //descarga de folio/instrucciones
-            <Box>
+            <>
               {/* <Box> */}
 
-              <TabInstrucciones />
+              <TabInstrucciones
+                erp={
+                  props.dataParticipants.find((d) => d.id == idParticipant)
+                    .trgns_erp
+                }
+                id={
+                  props.dataParticipants.find((d) => d.id == idParticipant).id
+                }
+              />
 
               {/* </Box> */}
-            </Box>
+            </>
           ) : (
             //finalizacion del proceso
             <Box>

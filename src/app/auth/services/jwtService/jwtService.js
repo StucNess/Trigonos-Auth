@@ -68,7 +68,6 @@ class JwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithEmailAndPassword = (email, password) => {
-   
     return new Promise((resolve, reject) => {
       axios
         .post(jwtServiceConfig.signIn, {
@@ -79,12 +78,12 @@ class JwtService extends FuseUtils.EventEmitter {
           if (response.data.username) {
             localStorage.removeItem("pagina");
             axios
-              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
+              .get("http://localhost:5205/api/Rol/listarRolPagina")
               .then((response) => {
                 // console.log(response.data[0].nombrePagina);
                 // console.log(response.data[0].nombrePagina);
                 localStorage.setItem("pagina", response.data[0].nombrePagina);
-        
+
                 // array.push(response.data[0].nombrePagina);
                 // if (array.includes("Facturacion")) {
                 //   console.log("correctooo");
@@ -92,7 +91,7 @@ class JwtService extends FuseUtils.EventEmitter {
               })
               .catch((error) => {});
             setTimeout(() => {
-              const url = ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${response.data.id}`;
+              const url = ` http://localhost:5205/api/Participantes?id=${response.data.id}`;
               let kaka;
               const prueba = async () => {
                 let pruebaa;
@@ -129,7 +128,6 @@ class JwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithToken = () => {
-   
     return new Promise((resolve, reject) => {
       axios
         .get(jwtServiceConfig.accessToken, {
@@ -143,12 +141,12 @@ class JwtService extends FuseUtils.EventEmitter {
             // console.log(response);
             localStorage.removeItem("pagina");
             axios
-              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
+              .get("http://localhost:5205/api/Rol/listarRolPagina")
               .then((response) => {
                 // console.log(response.data[0].nombrePagina);
                 // console.log(response.data[0].nombrePagina);
                 localStorage.setItem("pagina", response.data[0].nombrePagina);
-        
+
                 // array.push(response.data[0].nombrePagina);
                 // if (array.includes("Facturacion")) {
                 //   console.log("correctooo");
@@ -192,7 +190,6 @@ class JwtService extends FuseUtils.EventEmitter {
       localStorage.removeItem("token");
       localStorage.removeItem("idUser");
 
-
       delete axios.defaults.headers.common.Authorization;
     }
   };
@@ -211,8 +208,8 @@ class JwtService extends FuseUtils.EventEmitter {
       return false;
     }
     const decoded = jwtDecode(access_token);
-    console.log(decoded)
-    console.log(decoded.exp)
+    console.log(decoded);
+    console.log(decoded.exp);
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
       console.warn("Tiempo de inactividad sobrepasado");

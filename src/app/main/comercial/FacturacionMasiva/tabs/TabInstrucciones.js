@@ -126,70 +126,6 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
-const headCells = [
-  {
-    id: "estado",
-    numeric: false,
-    disablePadding: true,
-    label: "Estado",
-  },
-  {
-    id: "rol",
-    numeric: false,
-    disablePadding: false,
-    label: "Rol",
-  },
-  {
-    id: "email",
-    numeric: false,
-    disablePadding: false,
-    label: "Email",
-  },
-  {
-    id: "nombre",
-    numeric: false,
-    disablePadding: false,
-    label: "Nombre",
-  },
-  {
-    id: "apellido",
-    numeric: false,
-    disablePadding: false,
-    label: "Apellido",
-  },
-  {
-    id: "codempresa",
-    numeric: true,
-    disablePadding: false,
-    label: "Código Empresa",
-  },
-  {
-    id: "empresa",
-    numeric: true,
-    disablePadding: false,
-    label: "Empresa",
-  },
-  {
-    id: "usuario",
-    numeric: false,
-    disablePadding: false,
-    label: "Usuario",
-  },
-
-  {
-    id: "pais",
-    numeric: false,
-    disablePadding: false,
-    label: "País",
-  },
-
-  {
-    id: "Acciones",
-    numeric: false,
-    disablePadding: false,
-    label: "Acciones",
-  },
-];
 
 const DEFAULT_ORDER = "asc";
 const DEFAULT_ORDER_BY = "nombre";
@@ -203,10 +139,139 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    erp,
   } = props;
   const createSortHandler = (newOrderBy) => (event) => {
     onRequestSort(event, newOrderBy);
   };
+  let headCells;
+  if (erp == 2) {
+    headCells = [
+      {
+        id: "rut",
+        numeric: false,
+        disablePadding: false,
+        label: "Rut",
+      },
+      {
+        id: "razonSocial",
+        numeric: false,
+        disablePadding: false,
+        label: "Razón Social",
+      },
+      {
+        id: "giro",
+        numeric: false,
+        disablePadding: false,
+        label: "Giro",
+      },
+      {
+        id: "comuna",
+        numeric: false,
+        disablePadding: false,
+        label: "Comuna",
+      },
+      {
+        id: "direccion",
+        numeric: false,
+        disablePadding: false,
+        label: "Dirección",
+      },
+      {
+        id: "producto",
+        numeric: false,
+        disablePadding: false,
+        label: "Producto",
+      },
+      {
+        id: "precio",
+        numeric: false,
+        disablePadding: false,
+        label: "Precio",
+      },
+    ];
+  } else {
+    headCells = [
+      {
+        id: "folioReferencia",
+        numeric: false,
+        disablePadding: false,
+        label: "Folio Referencia",
+      },
+      {
+        id: "razonReferencia",
+        numeric: false,
+        disablePadding: false,
+        label: "Razón Referencia",
+      },
+      {
+        id: "razonSocial",
+        numeric: false,
+        disablePadding: false,
+        label: "Razón Social",
+      },
+      {
+        id: "rut",
+        numeric: false,
+        disablePadding: false,
+        label: "Rut",
+      },
+      {
+        id: "folio",
+        numeric: false,
+        disablePadding: false,
+        label: "Folio",
+      },
+      {
+        id: "fechaCarta",
+        numeric: false,
+        disablePadding: false,
+        label: "Fecha Carta",
+      },
+      {
+        id: "concepto",
+        numeric: false,
+        disablePadding: false,
+        label: "Concepto",
+      },
+      {
+        id: "neto",
+        numeric: false,
+        disablePadding: false,
+        label: "Neto",
+      },
+      {
+        id: "iva",
+        numeric: false,
+        disablePadding: false,
+        label: "Iva",
+      },
+      {
+        id: "total",
+        numeric: false,
+        disablePadding: false,
+        label: "Total",
+      },
+      {
+        id: "giro",
+        numeric: false,
+        disablePadding: false,
+        label: "Giro",
+      },
+      {
+        id: "direccion",
+        numeric: false,
+        disablePadding: false,
+        label: "Dirección",
+      },
+      {
+        id: "comuna",
+        numeric: false,
+        disablePadding: false,
+        label: "Comuna",
+      },
+    ];
+  }
 
   return (
     <TableHead>
@@ -241,7 +306,7 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  //   onSelectAllClick: PropTypes.func.isRequired,
+  erp: PropTypes.number.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
@@ -315,87 +380,30 @@ function TabInstrucciones(props) {
   const [visibleRows, setVisibleRows] = useState(null);
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
-  const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(true);
   const {
     data: dataInstructions = [],
     isLoading: isLoadinginstructions = true,
-  } = useGetInstruccionesQuery(141);
-
-  console.log(dataInstructions);
-  //   const [dataUser, setDataUser] = useState({});
-  //   const [dataParticipant, setDataParticipant] = useState([]);
-  //   const [apiResponseProyects, setApiResponseProyects] = useState([]);
-  //   const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa} = useGetEmpresasQuery();
-
-  //   const {data: getUsuarios,isLoading , refetch, isFetching} = useGetUsuariosPaginationQuery({
-  //     pageSize:1000
-  //   });
-  //   const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
-  //   const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
-  //   const [getParticipantById, data_participant] = useGetParticipantesByIdMutation();
-
+  } = useGetInstruccionesQuery(props.id);
+  console.log(props.id);
   function search(searchString) {
     if (typeof searchString !== "string" || searchString.length === 0) {
       return rowspermanent;
     }
     let searchLower = searchString.toString().toLowerCase();
     let filtered = rowspermanent.filter((key) => {
-      if (key.estado.toLowerCase().includes(searchLower)) {
+      if (key.id.toLowerCase().includes(searchLower)) {
         return true;
       }
-      if (key.rol.toLowerCase().includes(searchLower)) {
+      if (key.nombreAcreedor.toLowerCase().includes(searchLower)) {
         return true;
       }
-      if (key.email.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.nombre.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.apellido.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.codempresa.toString().toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.empresa.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.usuario.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.pais.toLowerCase().includes(searchLower)) {
+      if (key.rutAcreedor.toLowerCase().includes(searchLower)) {
         return true;
       }
     });
     return filtered;
   }
-
-  //   function CargaDataParticipant(row) {
-  //     const idRolUser = dataUserRoles
-  //       .filter((item) => item.userId === row.id)
-  //       .map(function (el) {
-  //         return el.roleId;
-  //       })[0];
-
-  //     getParticipantById(row.id).then(({ data }) => {
-  //       let ids = data.data.map(function (el) {
-  //         return el.id;
-  //       });
-  //       let newArray = apiResponseProyects.filter(
-  //         (item) => !ids.includes(item.id)
-  //       );
-  //       setDataUser({
-  //         userData: row,
-  //         participantData: data.data.map(function (el) {
-  //           return { id: el.id, name: el.name };
-  //         }),
-  //         participantFullData: newArray,
-  //         roleid: idRolUser,
-  //       });
-  //       setTable(true);
-  //     });
-  //   }
 
   function rowsOnMount() {
     let rowsOnMount = stableSort(
@@ -409,69 +417,53 @@ function TabInstrucciones(props) {
     );
     setVisibleRows(rowsOnMount);
   }
-
-  //   useEffect(() => {
-  //     if(loadParticipant==false){
-  //       setApiResponseProyects(
-  //         getParticipant.data.map(function (el) {
-  //           return {
-  //             id: el.id,
-  //             name: el.name,
-  //           };
-  //         })
-  //       );
-  //     }
-  //   }, [loadParticipant])
-
-  //   useEffect(() => {
-  //     if(isLoading===false){
-  //       rows = getUsuarios.data.map(function (el) {
-  //       let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
-  //       return {
-  //         estado: estadonew,
-  //         rol: el.role,
-  //         email: el.email,
-  //         nombre: el.nombre,
-  //         apellido: el.apellido,
-  //         codempresa: el.idEmpresa,
-  //         empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-  //         usuario: el.username,
-  //         pais: el.pais,
-  //         id: el.id,
-  //       };
-
-  //       });
-  //       rowspermanent = rows;
-  //       rowsOnMount();
-  //     }
-
-  //   }, [isLoading]);
+  // useEffect(() => {
+  //   return () => {
+  //     rows = [];
+  //     dataInstructions = [];
+  //     console.log("Me ejecute");
+  //   };
+  // }, []);
   useEffect(() => {
-    if (cargando) {
-      //   if (getUsuarios != undefined) {
-      //   }
-      rows = dataInstructions.data.map(function (el) {
-        //   let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
-        return {
-          // estado: estadonew,
-          rol: el.id,
-          email: el.id,
-          nombre: el.id,
-          apellido: el.id,
-          codempresa: el.id,
-          // empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
-          empresa: el.id,
-          usuario: el.id,
-          pais: el.id,
-          id: el.id,
-        };
-      });
+    if (!isLoadinginstructions) {
+      if (props.erp == 2) {
+        rows = dataInstructions.data.map((data) => {
+          return {
+            // id: data.id,
+            rut: data.rutDeudor,
+            razonSocial: data.nombreDeudor,
+            giro: data.giroDeudor,
+            comuna: "Las Condes",
+            direccion: data.direccionDeudor,
+            producto: data.glosa,
+            precio: data.montoNeto,
+          };
+        });
+      } else {
+        rows = dataInstructions.data.map((data) => {
+          return {
+            // id: data.id,
+            folioReferencia: data.glosa,
+            razonReferencia: data.nombreDeudor,
+            razonSocial: data.rutDeudor,
+            folio: data.folio,
+            fechaCarta: data.fecha_carta,
+            concepto: data.glosa,
+            neto: data.montoNeto,
+            iva: montoNeto * 0.19,
+            total: data.montoBruto,
+            giro: data.giroDeudor,
+            direccion: data.direccionDeudor,
+            comuna: "Las Condes",
+          };
+        });
+      }
+
       rowspermanent = rows;
       rowsOnMount();
       setRowsPerPage(5);
       let newPage = 0;
       setPage(newPage);
-      console.log(newPage);
       const sortedRows = stableSort(rows, getComparator(order, orderBy));
       const updatedRows = sortedRows.slice(
         newPage * rowsPerPage,
@@ -488,7 +480,7 @@ function TabInstrucciones(props) {
         setCargando(false);
       }, 1000);
     }
-  }, [cargando]);
+  }, [isLoadinginstructions]);
 
   const handleSetRow = (event) => {
     const {
@@ -597,14 +589,16 @@ function TabInstrucciones(props) {
   };
 
   const isSelected = (codreferencia) => selected.indexOf(codreferencia) !== -1;
-
+  const chile = new Intl.NumberFormat("es-CL", {
+    currency: "CLP",
+    style: "currency",
+  });
   return (
-    <Root
-      // header={<div>
-      //     Header
-      // </div>}
-      content={
-        <Box className="m-[20px]">
+    <Box className="m-[20px]">
+      {isLoadinginstructions ? (
+        <h1>{props.erp}</h1>
+      ) : (
+        <>
           <Box>
             <TableContainer>
               {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
@@ -615,6 +609,7 @@ function TabInstrucciones(props) {
                 stickyHeader
               >
                 <EnhancedTableHead
+                  erp={props.erp}
                   numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
@@ -627,118 +622,100 @@ function TabInstrucciones(props) {
                     ? visibleRows.map((row, index) => {
                         const isItemSelected = isSelected(row.id);
                         const labelId = `enhanced-table-checkbox-${index}`;
-
-                        return (
-                          <StyledTableRow
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.id}
-                          >
-                            <StyledTableCell
-                              align="left"
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                            >
-                              {row.estado}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.rol}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.email}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.nombre}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.apellido}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.codempresa}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.empresa}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.usuario}
-                            </StyledTableCell>
-                            <StyledTableCell align="left">
-                              {row.pais}
-                            </StyledTableCell>
-
-                            <StyledTableCell align="left">
-                              {/* <Button
-                                      variant="contained"
-                                      color="secondary"
-                                      className=" h-[28px]  w-[100px] mr-[20px]"
-                                      onClick={() => {
-                                         CargaDataParticipant(row);
-                                      }}
-                                      type="submit"
-                                      size="small"
-                                    >
-                                      <SettingsIcon />
-                                      Editar
-                                    </Button> */}
-                              <div className="flex flex-row">
-                                <Tooltip
-                                  title="Editar"
-                                  arrow
-                                  placement="top"
-                                  // placement="top-start"
+                        {
+                          if (props.erp == 2) {
+                            return (
+                              <StyledTableRow
+                                aria-checked={isItemSelected}
+                                tabIndex={-1}
+                                key={row.id}
+                              >
+                                <StyledTableCell
+                                  align="left"
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
                                 >
-                                  <IconButton
-                                    sx={{
-                                      "&:hover": { color: "#e4493f" },
-                                    }}
-                                    key="chechedLeft"
-                                    aria-label="Close"
-                                    color="primary"
-                                    onClick={() => {
-                                      CargaDataParticipant(row);
-                                    }}
-                                    size="small"
-                                  >
-                                    <SettingsIcon fontSize="large" />
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip
-                                  title="Desactivar"
-                                  arrow
-                                  placement="top"
-                                  // placement="top-start"
+                                  {row.rut}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.razonSocial}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.giro}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.comuna}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.direccion}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.producto}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {chile.format(row.precio)}
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            );
+                          } else {
+                            return (
+                              <StyledTableRow
+                                aria-checked={isItemSelected}
+                                tabIndex={-1}
+                                key={row.id}
+                              >
+                                <StyledTableCell
+                                  align="left"
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
                                 >
-                                  <IconButton
-                                    sx={{
-                                      "&:hover": { color: "#e4493f" },
-                                    }}
-                                    key="chechedLeft"
-                                    aria-label="Close"
-                                    color="primary"
-                                    onClick={() => {
-                                      CargaDataParticipant(row);
-                                    }}
-                                    size="small"
-                                  >
-                                    <DeleteForeverIcon fontSize="large" />
-                                  </IconButton>
-                                </Tooltip>
-                              </div>
-
-                              {/* <Button
-                                      variant="contained"
-                                      color="secondary"
-                                      className=" h-[28px]  w-[100px] mr-[20px]"
-                                      type="submit"
-                                      size="small"
-                                    >
-                                      <DeleteForeverIcon />
-                                      Desactivar
-                                    </Button> */}
-                            </StyledTableCell>
-                          </StyledTableRow>
-                        );
+                                  {row.folioReferencia}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.razonReferencia}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.razonSocial}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.rut}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.folio}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.fechaCarta}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.concepto}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.neto}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.iva}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.total}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.giro}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.direccion}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.comuna}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {chile.format(row.precio)}
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            );
+                          }
+                        }
                       })
                     : null}
                   {paddingHeight > 0 && (
@@ -757,12 +734,6 @@ function TabInstrucciones(props) {
             <TablePagination
               labelRowsPerPage="Filas por página"
               variant="h5"
-              // rowsPerPageOptions={[
-              //   5,
-              //   10,
-              //   25,
-              //   { value: -1, label: "All" },
-              // ]}
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
               count={rows.length}
@@ -776,281 +747,9 @@ function TabInstrucciones(props) {
             control={<Switch checked={dense} onChange={handleChangeDense} />}
             label="Disminuir espacio"
           />
-        </Box>
-
-        // <div className="p-12 pt-16 sm:pt-24 lg:pt-24 md:pt-24 lg:ltr:pr-0 lg:rtl:pl-0 w-full ">
-        //   <div className="grid auto-cols-auto smmax:grid-cols-2 sm:grid-cols-12 gap-2 w-full min-w-0 p-24   ">
-        //     <div className="  col-span-12 mb-[20px]">
-        //       {/* Box de titulo y guía */}
-        //       <Box className="  bg-white rounded-sm p-[10px] ">
-        //         <h1 className="ml-[5px]">Lista y edición de usuarios</h1>
-        //         <h1 className="border border-b-pantoneazul"></h1>
-        //         <Box className="flex flex-auto bg-white rounded-sm bg-grey-300 m-[10px] p-[10px]">
-        //           <div>
-        //             <ErrorOutlinedIcon className="text-pantonerojo mr-[20px]" />
-        //           </div>
-        //           <div>
-        //             <span className="text-grey-700">
-        //               En la sección superior tendrá el botón con el enlace para
-        //               agregar un <b>Nuevo Usuario</b> en la sección inferior
-        //               tendrá el <b>Listado de Usuarios</b> y en donde podra
-        //               filtrar para encontrar a el usuario y proceder su edición
-        //               o desactivación con los botones correspondientes.
-        //             </span>
-        //           </div>
-        //         </Box>
-        //       </Box>
-        //     </div>
-
-        //     <div className=" col-span-12   bg-white">
-        //       {/*  lg:col-span-3 tvxxl:col-span-2 */}
-
-        //       <div className="flex justify-between w-full">
-        //         <div className="flex flex-row  m-[20px]">
-        //           <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
-        //             Agregar Usuario
-        //           </Typography>
-
-        //           <PersonAddAltIcon className="ml-[10px] text-pantoneazul" />
-        //         </div>
-
-        //         <div className=" m-[20px] ">
-        //           <Button
-        //             variant="contained"
-        //             color="secondary"
-        //             className=" h-[28px]  w-[160px] mr-[20px]"
-        //             aria-label="Register"
-        //             size="small"
-        //             // component={RouterLink}
-        //             // to="/administracion/CreateUser"
-        //           >
-        //             <AddIcon />
-        //             Nuevo Usuario
-        //           </Button>
-        //         </div>
-        //       </div>
-        //     </div>
-
-        //     <div className=" col-span-12  bg-white mt-[20px]">
-        //       <div className="flex flex-row  m-[20px]">
-        //         <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
-        //           Listado de Usuarios
-        //         </Typography>
-
-        //         <PeopleIcon className="ml-[10px] text-pantoneazul" />
-        //       </div>
-        //       <h1 className="border border-b-pantoneazul w-full"></h1>
-        //       {cargando ? (
-        //         <div className="flex items-center">
-        //           <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-        //             <p>Chupa Chupa .....</p>
-        //             <LinearProgress color="primary" />
-        //           </Stack>
-        //         </div>
-        //       ) : (
-        //         <>
-        //           <div className="flex flex-row m-[20px]">
-        //             <TextField
-        //               id="outlined-basic"
-        //               label="Filtrar"
-        //               variant="filled"
-        //               onChange={(e) => {
-        //                 handleSetRow(e);
-        //               }}
-        //             />
-        //           </div>
-
-        //           <Box className="m-[20px]">
-        //             <Box>
-        //               <TableContainer>
-        //                 {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
-        //                 <Table
-        //                   sx={{ minWidth: 750 }}
-        //                   aria-labelledby="tableTitle"
-        //                   size={dense ? "small" : "medium"}
-        //                   stickyHeader
-        //                 >
-        //                   <EnhancedTableHead
-        //                     numSelected={selected.length}
-        //                     order={order}
-        //                     orderBy={orderBy}
-        //                     // onSelectAllClick={handleSelectAllClick}
-        //                     onRequestSort={handleRequestSort}
-        //                     rowCount={rows.length}
-        //                   />
-        //                   <TableBody>
-        //                     {visibleRows
-        //                       ? visibleRows.map((row, index) => {
-        //                           const isItemSelected = isSelected(row.id);
-        //                           const labelId = `enhanced-table-checkbox-${index}`;
-
-        //                           return (
-        //                             <StyledTableRow
-        //                               aria-checked={isItemSelected}
-        //                               tabIndex={-1}
-        //                               key={row.id}
-        //                             >
-        //                               <StyledTableCell
-        //                                 align="left"
-        //                                 component="th"
-        //                                 id={labelId}
-        //                                 scope="row"
-        //                               >
-        //                                 {row.estado}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.rol}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.email}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.nombre}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.apellido}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.codempresa}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.empresa}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.usuario}
-        //                               </StyledTableCell>
-        //                               <StyledTableCell align="left">
-        //                                 {row.pais}
-        //                               </StyledTableCell>
-
-        //                               <StyledTableCell align="left">
-        //                                 {/* <Button
-        //                               variant="contained"
-        //                               color="secondary"
-        //                               className=" h-[28px]  w-[100px] mr-[20px]"
-        //                               onClick={() => {
-        //                                  CargaDataParticipant(row);
-        //                               }}
-        //                               type="submit"
-        //                               size="small"
-        //                             >
-        //                               <SettingsIcon />
-        //                               Editar
-        //                             </Button> */}
-        //                                 <div className="flex flex-row">
-        //                                   <Tooltip
-        //                                     title="Editar"
-        //                                     arrow
-        //                                     placement="top"
-        //                                     // placement="top-start"
-        //                                   >
-        //                                     <IconButton
-        //                                       sx={{
-        //                                         "&:hover": { color: "#e4493f" },
-        //                                       }}
-        //                                       key="chechedLeft"
-        //                                       aria-label="Close"
-        //                                       color="primary"
-        //                                       onClick={() => {
-        //                                         CargaDataParticipant(row);
-        //                                       }}
-        //                                       size="small"
-        //                                     >
-        //                                       <SettingsIcon fontSize="large" />
-        //                                     </IconButton>
-        //                                   </Tooltip>
-        //                                   <Tooltip
-        //                                     title="Desactivar"
-        //                                     arrow
-        //                                     placement="top"
-        //                                     // placement="top-start"
-        //                                   >
-        //                                     <IconButton
-        //                                       sx={{
-        //                                         "&:hover": { color: "#e4493f" },
-        //                                       }}
-        //                                       key="chechedLeft"
-        //                                       aria-label="Close"
-        //                                       color="primary"
-        //                                       onClick={() => {
-        //                                         CargaDataParticipant(row);
-        //                                       }}
-        //                                       size="small"
-        //                                     >
-        //                                       <DeleteForeverIcon fontSize="large" />
-        //                                     </IconButton>
-        //                                   </Tooltip>
-        //                                 </div>
-
-        //                                 {/* <Button
-        //                               variant="contained"
-        //                               color="secondary"
-        //                               className=" h-[28px]  w-[100px] mr-[20px]"
-        //                               type="submit"
-        //                               size="small"
-        //                             >
-        //                               <DeleteForeverIcon />
-        //                               Desactivar
-        //                             </Button> */}
-        //                               </StyledTableCell>
-        //                             </StyledTableRow>
-        //                           );
-        //                         })
-        //                       : null}
-        //                     {paddingHeight > 0 && (
-        //                       <TableRow
-        //                         style={{
-        //                           height: paddingHeight,
-        //                         }}
-        //                       >
-        //                         <TableCell colSpan={6} />
-        //                       </TableRow>
-        //                     )}
-        //                   </TableBody>
-        //                 </Table>
-        //               </TableContainer>
-
-        //               <TablePagination
-        //                 labelRowsPerPage="Filas por página"
-        //                 variant="h5"
-        //                 // rowsPerPageOptions={[
-        //                 //   5,
-        //                 //   10,
-        //                 //   25,
-        //                 //   { value: -1, label: "All" },
-        //                 // ]}
-        //                 rowsPerPageOptions={[5, 10, 25]}
-        //                 component="div"
-        //                 count={rows.length}
-        //                 rowsPerPage={rowsPerPage}
-        //                 page={page}
-        //                 onPageChange={handleChangePage}
-        //                 onRowsPerPageChange={handleChangeRowsPerPage}
-        //               />
-        //             </Box>
-        //             <FormControlLabel
-        //               control={
-        //                 <Switch checked={dense} onChange={handleChangeDense} />
-        //               }
-        //               label="Disminuir espacio"
-        //             />
-        //           </Box>
-        //         </>
-        //       )}
-        //     </div>
-        //   </div>
-        //   {/* {table && (
-        //     <ModalEditUser
-        //       apiResponseProyects={apiResponseProyects}
-        //       dataUser={dataUser}
-        //       setTable={() => setTable(false)}
-        //       cargando={() => setCargando(true)}
-        //     />
-        //   )} */}
-        // </div>
-      }
-      scroll="content"
-    />
+        </>
+      )}
+    </Box>
   );
 }
 export default TabInstrucciones;
