@@ -190,7 +190,7 @@ function EnhancedTableHead(props) {
         label: "Precio",
       },
     ];
-  } else {
+  } else if (erp == 1) {
     headCells = [
       {
         id: "folioReferencia",
@@ -269,6 +269,63 @@ function EnhancedTableHead(props) {
         numeric: false,
         disablePadding: false,
         label: "Comuna",
+      },
+    ];
+  } else if (erp == 7) {
+    headCells = [
+      {
+        id: "numeroCorrelativo",
+        numeric: false,
+        disablePadding: false,
+        label: "Número (Correlativo)",
+      },
+      {
+        id: "fecha",
+        numeric: false,
+        disablePadding: false,
+        label: "Fecha",
+      },
+      {
+        id: "fechaVencimiento",
+        numeric: false,
+        disablePadding: false,
+        label: "Fecha de Vencimiento",
+      },
+      {
+        id: "codigoCliente",
+        numeric: false,
+        disablePadding: false,
+        label: "Código del Cliente",
+      },
+      {
+        id: "afecto",
+        numeric: false,
+        disablePadding: false,
+        label: "Afecto",
+      },
+      {
+        id: "total",
+        numeric: false,
+        disablePadding: false,
+        label: "Total",
+      },
+      {
+        id: "nombre",
+        numeric: false,
+        disablePadding: false,
+        label: "Nombre",
+      },
+      {
+        id: "direccion",
+        numeric: false,
+        disablePadding: false,
+        label: "Drección",
+      },
+      {
+        id: "comentarioProducto",
+        numeric: false,
+        disablePadding: false,
+        label: "Comentario Producto",
       },
     ];
   }
@@ -456,6 +513,21 @@ function TabInstrucciones(props) {
             giro: data.giroDeudor,
             direccion: data.direccionDeudor,
             comuna: "Las Condes",
+          };
+        });
+      } else if (props.erp == 7) {
+        rows = dataInstructions.data.map((data) => {
+          return {
+            // id: data.id,
+            numeroCorrelativo: 00000,
+            fecha: 0000,
+            fechaVencimiento: 0000,
+            codigoCliente: data.rutDeudor,
+            afecto: data.montoNeto,
+            total: data.montoNeto * 0.19,
+            nombre: data.nombreDeudor,
+            direccion: data.direccionDeudor,
+            comentarioProducto: data.glosa,
           };
         });
       }
@@ -662,7 +734,7 @@ function TabInstrucciones(props) {
                                 </StyledTableCell>
                               </StyledTableRow>
                             );
-                          } else {
+                          } else if (props.erp == 1) {
                             return (
                               <StyledTableRow
                                 aria-checked={isItemSelected}
@@ -715,6 +787,47 @@ function TabInstrucciones(props) {
                                 </StyledTableCell>
                                 <StyledTableCell key={row.id} align="left">
                                   {chile.format(row.precio)}
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            );
+                          } else if (props.erp == 7) {
+                            return (
+                              <StyledTableRow
+                                aria-checked={isItemSelected}
+                                tabIndex={-1}
+                                key={row.id}
+                              >
+                                <StyledTableCell
+                                  align="left"
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                >
+                                  {row.numeroCorrelativo}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.fecha}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.fechaVencimiento}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.codigoCliente}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {chile.format(row.afecto)}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {chile.format(row.total)}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.nombre}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.direccion}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.id} align="left">
+                                  {row.comentarioProducto}
                                 </StyledTableCell>
                               </StyledTableRow>
                             );
