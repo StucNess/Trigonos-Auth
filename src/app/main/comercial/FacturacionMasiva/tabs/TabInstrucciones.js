@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 //ICONS
 import Stack from "@mui/material/Stack";
+import { SiMicrosoftexcel } from "react-icons/si";
 
 import LinearProgress from "@mui/material/LinearProgress";
 
@@ -984,7 +985,8 @@ function TabInstrucciones(props) {
       ) : (
         <>
           <Box>
-          <TextField
+            <Box className="flex flex-row mb-[20px]  w-full">
+            <TextField
                   id="outlined-basic"
                   label="Filtrar"
                   variant="filled"
@@ -992,6 +994,38 @@ function TabInstrucciones(props) {
                     handleSetRow(e);
                   }}
                 />
+            <Box className="flex justify-center mb-[5px] w-full">
+            {props.erp==2? 
+            <>
+              <Button
+              className=" rounded flex justify-start min-w-[170px] m-[5px]"
+              variant="contained"
+              color="customdos"
+              // onClick={exportToExcel}
+            >
+              <SiMicrosoftexcel size={30} className="mr-[10px] "/>Descargar
+            </Button> 
+            <Button
+              className=" rounded flex justify-start min-w-[170px] m-[5px]"
+              variant="contained"
+              color="customdos"
+              // onClick={exportToExcel}
+            >
+              <SiMicrosoftexcel size={30} className="mr-[10px] "/>Folio
+            </Button>
+            </>:
+            <Button
+              className=" rounded flex justify-start min-w-[170px] m-[5px]"
+              variant="contained"
+              color="customdos"
+              // onClick={exportToExcel}
+            >
+              <SiMicrosoftexcel size={30} className="mr-[10px] "/>Descargar
+            </Button>}
+            
+            </Box>
+            </Box>
+         
             <TableContainer>
               {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
               <Table

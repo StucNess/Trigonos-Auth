@@ -376,7 +376,6 @@ function EditUserApp(props) {
     }
     const filtered = rowspermanent.filter((obj) => {
       return Object.values(obj).some((value) => {
-    
         if (typeof value === 'string') {
           return value.toLowerCase().includes(searchString.toString().toLowerCase());
         } else if (typeof value === 'number' ) {
@@ -388,11 +387,7 @@ function EditUserApp(props) {
           }else{
             return  value.toString().toLowerCase().includes(searchString.toString().toLowerCase());
           }
-          
-       
         }
-       
-
         return false;
       });
     })

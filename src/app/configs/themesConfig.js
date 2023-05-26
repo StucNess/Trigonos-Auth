@@ -44,6 +44,18 @@ const themesConfig = {
         main: '#f44336',
         dark: '#b71c1c',
       },
+      customuno: {
+        light: '#002554',
+        main: '#89CFF0',
+        dark: '#6082B6',
+        contrastText: darkPaletteText.primary,
+      },
+      customdos: {
+        light: '#002554',
+        main: '#7393B3', //color principal
+        dark: '#6082B6', //hover
+        contrastText: darkPaletteText.primary, //color del texto
+      },
     },
     status: {
       danger: 'orange',
