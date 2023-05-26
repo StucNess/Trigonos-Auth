@@ -367,40 +367,38 @@ function EditUserApp(props) {
   
 
   function search(searchString) {
-    if (typeof searchString !== "string" || searchString.length === 0) {
+    if (searchString.length === 0) {
       return rowspermanent;
     }
-    let searchLower = searchString.toString().toLowerCase();
-    let filtered = rowspermanent.filter((key) => {
-      if (key.estado.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.rol.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.email.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.nombre.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.apellido.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.codempresa.toString().toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.empresa.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.usuario.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.pais.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-    });
+    // let searchLower = searchString.toString().toLowerCase();
+    function isFloat(number) {
+      return number % 1 !== 0;
+    }
+    const filtered = rowspermanent.filter((obj) => {
+      return Object.values(obj).some((value) => {
+    
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(searchString.toString().toLowerCase());
+        } else if (typeof value === 'number' ) {
+          if(isFloat(value)){
+              console.log(searchString)
+            console.log(value)
+            return  value.toString().toLowerCase().includes(searchString.toString().toLowerCase());
+          
+          }else{
+            return  value.toString().toLowerCase().includes(searchString.toString().toLowerCase());
+          }
+          
+       
+        }
+       
+
+        return false;
+      });
+    })
+    
     return filtered;
+   
   }
   function Activar(idUser){
     setOpenDialog(true);

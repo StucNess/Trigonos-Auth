@@ -22,7 +22,7 @@ const NominaPagoApp = () => {
   const idUser = localStorage.getItem("idUser");
   const { data: getParticipants, isLoading: loadparticipant } =
     useGetParticipantesById_Query(idUser);
-
+  console.log(getParticipants)
   return (
     <Root
       // header={<FacturacionMasivaAppHeader />}

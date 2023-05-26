@@ -440,26 +440,43 @@ function TabInstrucciones(props) {
   const [cargando, setCargando] = useState(true);
   const {
     data: dataInstructions = [],
-    isLoading: isLoadinginstructions = true,
+    isLoading: isLoadinginstructions = true,isFetching: isfetchInstructions
   } = useGetInstruccionesQuery(props.id);
-  console.log(props.id);
+  
   function search(searchString) {
-    if (typeof searchString !== "string" || searchString.length === 0) {
+    if (searchString.length === 0) {
       return rowspermanent;
     }
+  
     let searchLower = searchString.toString().toLowerCase();
-    let filtered = rowspermanent.filter((key) => {
-      if (key.id.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.nombreAcreedor.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-      if (key.rutAcreedor.toLowerCase().includes(searchLower)) {
-        return true;
-      }
-    });
+    function isFloat(number) {
+      return number % 1 !== 0;
+    }
+    const filtered = rowspermanent.filter((obj) => {
+      return Object.values(obj).some((value) => {
+    
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(searchString.toString().toLowerCase());
+        } else if (typeof value === 'number' ) {
+          if(isFloat(value)){
+              console.log(searchString)
+            console.log(value)
+            return  value.toString().toLowerCase().includes(searchString.toString().toLowerCase());
+          
+          }else{
+            return  value.toString().toLowerCase().includes(searchString.toString().toLowerCase());
+          }
+          
+       
+        }
+       
+
+        return false;
+      });
+    })
+    
     return filtered;
+   
   }
 
   function rowsOnMount() {
@@ -676,6 +693,14 @@ function TabInstrucciones(props) {
       ) : (
         <>
           <Box>
+          <TextField
+                  id="outlined-basic"
+                  label="Filtrar"
+                  variant="filled"
+                  onChange={(e) => {
+                    handleSetRow(e);
+                  }}
+                />
             <TableContainer>
               {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
               <Table
