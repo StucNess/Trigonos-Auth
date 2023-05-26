@@ -176,7 +176,7 @@ export default function CreateUserApp(props) {
   const {data: getEmpresas,isLoading:isLoadEmpresas } = useGetEmpresasQuery();
   const {data: getParticipants,isLoading:isLoadParticipant} = useGetParticipantesQuery();
   
- console.log(getParticipants)
+
   const [data, setData] = useState({
     email: "",
     username: "",

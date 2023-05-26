@@ -291,28 +291,36 @@ export default function EnhancedTable(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) => {
-    rows.push(
-      createData(
-        p.rutAcreedor,
-        p.nombreAcreedor,
-        p.folio,
-        chile.format(p.valorNeto),
-        "29-07-2022",
-        p.glosa,
-        p.id,
-        p.fechaDesconformidad
-      )
-    );
-    glosas.push(p.glosa);
-  });
+  console.log(props.isLoading)
+  if(props.payRollData.data!=undefined){
+    props.payRollData.data.map((p) => {
+      rows.push(
+        createData(
+          p.rutAcreedor,
+          p.nombreAcreedor,
+          p.folio,
+          chile.format(p.valorNeto),
+          "29-07-2022",
+          p.glosa,
+          p.id,
+          p.fechaDesconformidad
+        )
+      );
+      glosas.push(p.glosa);
+    });
+  }
+  
 
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    setDataExport(prueba);
-    let pruebaValor = 0;
-    prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
-    setTotal(pruebaValor);
+    if(props.payRollData.data!=undefined){
+
+      let prueba = props.payRollData.data.filter((p) => selected.includes(p.id));
+      setDataExport(prueba);
+      let pruebaValor = 0;
+      prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
+      setTotal(pruebaValor);
+    }
+    
   }, [selected]);
 
   const handleRequestSort = (event, property) => {
@@ -444,7 +452,7 @@ export default function EnhancedTable(props) {
   // console.log(glosas.filter(onlyUnique));
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      
         <Box className="w-full text-center  p-[20px]">
           <Typography
             className="bg-grey-50"
@@ -674,7 +682,7 @@ export default function EnhancedTable(props) {
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
-      </Paper>
+     
     </Box>
   );
 }

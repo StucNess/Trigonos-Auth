@@ -7,6 +7,7 @@ import { instruccionesApi } from './instrucciones/instruccionesApi';
 import { participantesApi } from './participantesApi/participantesApi';
 import { usuariosApi } from './usuariosApi/usuariosApi';
 import { empresaApi } from './empresaApi/empresaApi';
+import { nominasApi } from './nominasApi/nominasApi';
 
 const createReducer = (asyncReducers) => (state, action) => {
   
@@ -16,6 +17,7 @@ const createReducer = (asyncReducers) => (state, action) => {
     [participantesApi.reducerPath]: participantesApi.reducer,
     [usuariosApi.reducerPath]: usuariosApi.reducer,
     [empresaApi.reducerPath]: empresaApi.reducer,
+    [nominasApi.reducerPath]: nominasApi.reducer,
     
     fuse,
     i18n,

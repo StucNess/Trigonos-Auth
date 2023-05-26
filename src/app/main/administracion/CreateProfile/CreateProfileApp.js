@@ -380,7 +380,11 @@ function CreateProfileApp(props) {
   }
   useEffect(() => {
     if(!isLoadRoles){
-      CargaDataRol();
+      if(getAllRoles !=undefined){
+        CargaDataRol();
+  
+      }
+    
     }
     
   }, [isLoadRoles]);

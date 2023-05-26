@@ -35,6 +35,7 @@ export default function FiltrosParticipant(props) {
     (async () => {
       participants = await CallApi(1, 1000, 1);
       setNameParticipants(participants);
+      console.log(participants)
       setDataParticipant(participants[parseInt(refreshValue - 1)]);
       props.sendParticipants(participants[parseInt(refreshValue - 1)]);
       // props.sendParticipants(participants[parseInt(refreshValue-1)]);

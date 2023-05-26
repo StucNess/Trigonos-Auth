@@ -287,30 +287,36 @@ export default function TablaNominaSantander(props) {
       setDisabledDateEnd(true);
     }
   };
-  props.payRollData.map((p) => {
-    rows.push(
-      createData(
-        p.rutAcreedor,
-        p.nombreAcreedor,
-        3,
-        p.sBifAcreedor,
-        p.folio,
-        chile.format(p.valorNeto),
-        p.id,
-        p.fechaDesconformidad
-      )
-    );
-    glosas.push(p.glosa);
-  });
+
+ 
+  if(props.payRollData.data!=undefined){
+    props.payRollData.data.map((p) => {
+      rows.push(
+        createData(
+          p.rutAcreedor,
+          p.nombreAcreedor,
+          3,
+          p.sBifAcreedor,
+          p.folio,
+          chile.format(p.valorNeto),
+          p.id,
+          p.fechaDesconformidad
+        )
+      );
+      glosas.push(p.glosa);
+    });
+  }
 
   useEffect(() => {
-    let prueba = props.payRollData.filter((p) => selected.includes(p.id));
-    setDataExport(prueba);
-    let pruebaValor = 0;
-    prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
-    setTotal(pruebaValor);
+    if(props.payRollData.data!=undefined){
+      let prueba = props.payRollData.data.filter((p) => selected.includes(p.id));
+      setDataExport(prueba);
+      let pruebaValor = 0;
+      prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
+      setTotal(pruebaValor);
+    }
+    
   }, [selected]);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");

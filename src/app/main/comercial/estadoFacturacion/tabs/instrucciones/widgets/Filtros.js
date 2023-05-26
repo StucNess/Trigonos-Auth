@@ -78,12 +78,12 @@ const Filtros = (props) => {
   const [selected, setSelected] = useState({
     sBusinessName: "",
     sRut: "",
-    sConcept: null,
+    sConcept: "",
     sMontoNeto: "",
     sMontoBruto: "",
     sFolio: "",
-    sCarta: null,
-    sCodRef: null,
+    sCarta: "",
+    sCodRef: "",
     sInicioPeriodo: "",
     sTerminoPeriodo: "",
     buscar: "",
@@ -414,6 +414,9 @@ const Filtros = (props) => {
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
                         setSelected({ ...selected, sConcept: newValue });
+                      }else{
+                        setSelected({ ...selected, sConcept: "" });
+
                       } 
                     }}
                     // isOptionEqualToValue={(option, value) => conceptN=== value.id}
@@ -431,6 +434,9 @@ const Filtros = (props) => {
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
                         setSelected({ ...selected, sCarta: newValue });
+                      } else{
+                        setSelected({ ...selected, sCarta: "" });
+
                       } 
                     }}
                     // isOptionEqualToValue={(option, value) => cart === value}
@@ -448,6 +454,9 @@ const Filtros = (props) => {
                     onChange={(event, newValue, reason) => {
                       if (newValue != null) {
                         setSelected({ ...selected, sCodRef: newValue });
+                      } else{
+                        setSelected({ ...selected, sCodRef: "" });
+
                       } 
                     }}
                     // isOptionEqualToValue={(option, value) => codRef === value}

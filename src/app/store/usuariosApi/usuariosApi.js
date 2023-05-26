@@ -17,7 +17,7 @@ export const usuariosApi = createApi({
             query:(spec)=> ({
             headers: {Authorization: `Bearer ${spec.token}` },
             url :spec? "/Pagination"
-            + (spec.nombre!=undefined?` ?Nombre=${spec.nombre}`: "")
+            + (spec.nombre!=undefined?`?Nombre=${spec.nombre}`: "")
             + (spec.apellido!=undefined? `?Apellido=${spec.apellido}`: "" )
             + (spec.sort!=undefined? `?Sort=${spec.sort}` : "" )
             + (spec.pageIndex!=undefined? `?PageIndex=${spec.pageIndex}`:"" )
