@@ -94,7 +94,7 @@ class JwtService extends FuseUtils.EventEmitter {
           if (response.data.username) {
             localStorage.removeItem("pagina");
             axios
-              .get("http://localhost:5205/api/Rol/listarRolPagina")
+              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
               .then((response) => {
                 // console.log(response.data[0].nombrePagina);
                 // console.log(response.data[0].nombrePagina);
@@ -159,7 +159,7 @@ class JwtService extends FuseUtils.EventEmitter {
             // console.log(response);
             localStorage.removeItem("pagina");
             axios
-              .get("http://localhost:5205/api/Rol/listarRolPagina")
+              .get("https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina")
               .then((response) => {
                 // console.log(response.data[0].nombrePagina);
                 // console.log(response.data[0].nombrePagina);

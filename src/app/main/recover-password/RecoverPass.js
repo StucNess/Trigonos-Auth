@@ -56,7 +56,7 @@ function RecoverPass() {
   const ApiValidarEmail = ({ email }) => {
     setMsgAlert(false);
     setLoading(true);
-    let url = ` http://localhost:5205/api/Usuarios/ValidarEmail?email=${email}`;
+    let url = ` https://trigonosapi.azurewebsites.net/api/Usuarios/ValidarEmail?email=${email}`;
     let error = 0;
 
     axios

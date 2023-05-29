@@ -123,6 +123,7 @@ const EstadoFacturacionAppHeader = (props) => {
         >
           {_.find(projects, ["id", selectedProject.id]).business_Name}
         </Button>
+        
         <Menu
           id="project-menu"
           anchorEl={selectedProject.menuEl}
