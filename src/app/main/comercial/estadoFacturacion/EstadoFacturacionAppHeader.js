@@ -16,7 +16,7 @@ const EstadoFacturacionAppHeader = (props) => {
   const dispatch = useDispatch();
   const projects = useSelector(selectProjects);
   const idProyecto = window.localStorage.getItem("ProyectUser");
-
+  console.log(idProyecto)
   const [selectedProject, setSelectedProject] = useState({
     // eslint-disable-next-line radix
     id: parseInt(idProyecto) /* Dinamico -  */,
@@ -42,12 +42,13 @@ const EstadoFacturacionAppHeader = (props) => {
       id: selectedProject.id,
       menuEl: event.currentTarget,
     });
+    
   }
 
   function handleCloseProjectMenu() {
     // console.log(selectedProject.id);
     setSelectedProject({
-      id: selectedProject,
+      id: selectedProject.id,
       menuEl: null,
     });
   }
