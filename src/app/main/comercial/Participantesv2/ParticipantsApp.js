@@ -48,23 +48,20 @@ const NominaPagoApp = () => {
                   superiores para encontrar al <b>cliente</b> que requiera{" "}
                   gestionar su información, luego en la parte inferior se
                   cargaran los datos asociados.
-                  {/* puede proceder a modificar sus datos asociados. */}
+             
                 </span>
               </div>
             </Box>
           </Box>
           <Paper className="w-full p-[20px] mb-[20px]">
-            {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
+         
             <FiltrosParticipant
               change={change}
               sendParticipants={getDataParticipants}
               idParticipant={idParticipant}
             />
           </Paper>
-          {/* <Paper className="w-full p-[20px] mb-[20px]"> */}
-          {/* AGREGAR LOS FILTROS PARA BÚSQUEDA */}
-          {/* <PruebasStepper/> */}
-          {/* </Paper> */}
+       
           <Paper className="w-full p-[20px] ">
             <VerticalStepper
               dataParticipant={dataParticipant}
