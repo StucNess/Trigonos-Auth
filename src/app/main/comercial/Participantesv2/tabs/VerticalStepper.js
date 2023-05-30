@@ -203,12 +203,18 @@ export default function HorizontalNonLinearStepper(props) {
         payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
         payContactLastName: props.dataParticipant.pay_contact_last_name,
         payContactAddress: props.dataParticipant.pay_contact_address,
-        payContactPhones: props.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g,""),
+        payContactPhones: props.dataParticipant.pay_contact_phones.replace(
+          /["\[\]"]/g,
+          ""
+        ),
         payContactEmail: props.dataParticipant.pay_contact_email,
         billsContactLastName: props.dataParticipant.bills_contact_last_name,
         billsContactFirstName: props.dataParticipant.bills_contact_first_name,
         billsContactAddress: props.dataParticipant.bills_contact_address,
-        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g,""),
+        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(
+          /["\[\]"]/g,
+          ""
+        ),
         billsContactEmail: props.dataParticipant.bills_contact_email,
       });
       setDataConfirm({
@@ -484,7 +490,7 @@ export default function HorizontalNonLinearStepper(props) {
         '["' + formState.payContactPhones.replace(/,/g, '","') + '"]';
 
       const apiPatchParticipante =
-        ` http://localhost:5205/api/Participantes?` +
+        ` https://trigonosapi.azurewebsites.net/api/Participantes?` +
         `id=${formState.id}&` +
         `Name=${formState.name}&` +
         `Rut=${formState.rut}&` +
