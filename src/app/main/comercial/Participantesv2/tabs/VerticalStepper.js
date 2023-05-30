@@ -1673,68 +1673,7 @@ export default function HorizontalNonLinearStepper(props) {
                         variant="filled"
                         name="nominaName"
                         disabled={true}
-                        // InputProps={{
-                        //   startAdornment: (
-                        //     <InputAdornment position="start">
-                        //       {banksName ? (
-                        //         <>
-                        //           <CheckBoxIcon
-                        //             onClick={() => {
-                        //               setUpdate({
-                        //                 ...update,
-                        //                 banksName: false,
-                        //               });
-                        //               setFormState({
-                        //                 ...formState,
-                        //                 banksName:
-                        //                   props.dataParticipant.banksName,
-                        //                 bank: props.dataParticipant.bank,
-                        //               });
-                        //               setBankk(props.dataParticipant.banksName);
-                        //             }}
-                        //           />
-                        //           <DisabledByDefaultIcon
-                        //             onClick={() => {
-                        //               // setFormState({
-                        //               //   ...formState,
-                        //               //   email:
-                        //               //     props.dataParticipant
-                        //               //       .dte_Reception_Email,
-                        //               // });
-                        //               setFormState({
-                        //                 ...formState,
-                        //                 banksName:
-                        //                   props.dataParticipant.banksName,
-                        //                 bank: props.dataParticipant.bank,
-                        //               });
-                        //               setBankk(props.dataParticipant.banksName);
-                        //               setUpdate({
-                        //                 ...update,
-                        //                 banksName: false,
-                        //               });
-                        //             }}
-                        //           />
-                        //         </>
-                        //       ) : (
-                        //         <EditIcon
-                        //           onClick={() => {
-                        //             setUpdate({
-                        //               ...update,
-                        //               banksName: true,
-                        //               // });
-                        //               // setFormState({
-                        //               //   ...formState,
-                        //               //   bank: idBank,
-                        //               //   banksName: bankk,
-                        //               // });
-
-                        //             });
-                        //           }}
-                        //         />
-                        //       )}
-                        //     </InputAdornment>
-                        //   ),
-                        // }}
+                    
                       >
                         {banks.map((data) => (
                           <MenuItem key={data.id} value={data.name}>
@@ -1749,107 +1688,63 @@ export default function HorizontalNonLinearStepper(props) {
                     <Typography variant="h6" className="mb-4" color="primary">
                       Gestión Trígonos
                     </Typography>
-
-                    <Box className="flex flex-wrap justify-between  zerorange:justify-center ml-[0 auto] mb-[20px]">
-                      <Box className="flex flex-col">
-                        <Box className="flex flex-col zerorange:w-[190px]  lg:w-[190px] w-[100px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px]">
-                          <Box className="flex flex-row">
-                            <Typography
-                              variant="subtitle1"
-                              color="primary"
-                              className="mb-[40px]"
-                            >
-                              Tipo de cliente
-                            </Typography>
-                            <InputAdornment className="m-[10px]">
-                              {typeClient ? (
-                                <>
-                                  <CheckBoxIcon
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => {
-                                      setUpdate({
-                                        ...update,
-                                        typeClient: false,
-                                      });
-                                      setCountActive(
-                                        countActive > 0
-                                          ? countActive - 1
-                                          : countActive
-                                      );
-                                    }}
-                                  />
-                                  <DisabledByDefaultIcon
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => {
-                                      setUpdate({
-                                        ...update,
-                                        typeClient: false,
-                                      });
-                                      setCountActive(
-                                        countActive > 0
-                                          ? countActive - 1
-                                          : countActive
-                                      );
-                                    }}
-                                  />
-                                </>
-                              ) : (
-                                <EditIcon
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setUpdate({
-                                      ...update,
-                                      typeClient: true,
-                                    });
-                                    setCountActive(countActive + 1);
-                                  }}
-                                />
-                              )}
-                            </InputAdornment>
-                          </Box>
-
-                          <Box>
-                            <Box>
-                              <InputAdornment
-                                disablePointerEvents={!typeClient}
-                              >
-                                <Box>
-                                  <Box>
-                                    <FormControlLabel
-                                      label="Bluetree"
-                                      control={
-                                        <Checkbox
-                                          checked={checkedBlue}
-                                          onChange={(event) => {
-                                            setCheckedBlue(
-                                              event.target.checked
-                                            );
-                                            setCheckedExt(false);
-                                          }}
-                                        />
-                                      }
-                                    />
-                                  </Box>
-                                  <Box>
-                                    <FormControlLabel
-                                      label="Externo"
-                                      control={
-                                        <Checkbox
-                                          checked={checkedExt}
-                                          onChange={(event) => {
-                                            setCheckedExt(event.target.checked);
-                                            setCheckedBlue(false);
-                                          }}
-                                        />
-                                      }
-                                    />
-                                  </Box>
-                                </Box>
-                              </InputAdornment>
-                            </Box>
-                          </Box>
-                        </Box>
-                        <div className="absolute ">
+                    {/* Tipo usuario */}
+                   
+                    <Box className="flex flex-col  w-full ml-[20px] mb-[20px] ">
+                      <Box className="flex flex-row">
+                        <Typography
+                          variant="subtitle1"
+                          color="primary"
+                          className=""
+                        >
+                          Tipo de cliente
+                        </Typography>
+                        <InputAdornment className="m-[10px]">
+                          {typeClient ? (
+                            <>
+                              <CheckBoxIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    typeClient: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                              <DisabledByDefaultIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    typeClient: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <EditIcon
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setUpdate({
+                                  ...update,
+                                  typeClient: true,
+                                });
+                                setCountActive(countActive + 1);
+                              }}
+                            />
+                          )}
+                        </InputAdornment>
+                        <div className=" ">
                           {typeClient ? (
                             <>
                               <span className="ml-[20px] text-red-500">
@@ -1861,264 +1756,406 @@ export default function HorizontalNonLinearStepper(props) {
                           )}
                         </div>
                       </Box>
-
-                      <TextField
-                        className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
-                        label="Token"
-                        type="text"
-                        value={"Vacio"}
-                        defaultValue="Vacio"
-                        variant="filled"
-                      />
-                    </Box>
-
+                        <div className={`relative flex justify-stretch w-full h-full pointer-events-${typeClient?"auto":"none"} select-${typeClient?"auto":"none"}` }  >
+                          
+                             
+                          <Box className="flex flex-wrap  ml-[10px]">
+                      
+                          <Box>
+                                <Box>
+                                  <FormControlLabel
+                                    label="Bluetree"
+                                    control={
+                                      <Checkbox
+                                        checked={checkedBlue}
+                                        onChange={(event) => {
+                                          setCheckedBlue(
+                                            event.target.checked
+                                          );
+                                          setCheckedExt(false);
+                                        }}
+                                      />
+                                    }
+                                  />
+                                </Box>
+                                <Box>
+                                  <FormControlLabel
+                                    label="Externo"
+                                    control={
+                                      <Checkbox
+                                        checked={checkedExt}
+                                        onChange={(event) => {
+                                          setCheckedExt(event.target.checked);
+                                          setCheckedBlue(false);
+                                        }}
+                                      />
+                                    }
+                                  />
+                                </Box>
+                              </Box>
+                            <TextField
+                              className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
+                              label="Token"
+                              type="text"
+                              value={"Vacio"}
+                            
+                              variant="filled"
+                            />
+                          </Box>
+                        
+                        
+                          {!typeClient ? ( <div className="absolute inset-0 bg-[#f0f0f0] opacity-50 rounded-lg  ">
+                          </div>):<></>}
+                          
+                        </div>
+                      
+                    </Box>         
                     {/* Facturación cl */}
                    
                     
-                        <Box className="flex flex-col  w-full mdmax:m-[20px] m-[20px] zerorange:m-[10px]">
-                          <Box className="flex flex-row">
+                    <Box className="flex flex-col  w-full ml-[20px]  ">
+                      <Box className="flex flex-row">
+                        <Typography
+                          variant="subtitle1"
+                          color="primary"
+                          className=""
+                        >
+                          Facturación.CL
+                        </Typography>
+                        <InputAdornment className="m-[10px]">
+                          {facturacioncl ? (
+                            <>
+                              <CheckBoxIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    facturacioncl: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                              <DisabledByDefaultIcon
+                                style={{ cursor: "pointer" }}
+                                onClick={() => {
+                                  setUpdate({
+                                    ...update,
+                                    facturacioncl: false,
+                                  });
+                                  setCountActive(
+                                    countActive > 0
+                                      ? countActive - 1
+                                      : countActive
+                                  );
+                                }}
+                              />
+                            </>
+                          ) : (
+                            <EditIcon
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                setUpdate({
+                                  ...update,
+                                  facturacioncl: true,
+                                });
+                                setCountActive(countActive + 1);
+                              }}
+                            />
+                          )}
+                        </InputAdornment>
+                        <div className=" ">
+                          {facturacioncl ? (
+                            <>
+                              <span className="ml-[20px] text-red-500">
+                                Recuerde aceptar o cancelar el cambio realizado
+                              </span>
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                      </Box>
+                        <div className={`relative flex justify-stretch w-full h-full pointer-events-${facturacioncl?"auto":"none"} select-${facturacioncl?"auto":"none"}` }  >
+                          
+
+                          
+                          <Box className="flex flex-col w-full h-full ml-[10px]">
+                          <Typography
+                            variant="subtitle1"
+                            color="primary"
+                            className="flex justify-center w-ful"
+                          >
+                            Producción
+                          </Typography>
+                            <div className="flex justify-center w-full">
+                              
+                              <Checkbox
+                                  checked={checkProduccion}
+                                  // onChange={(event) => {
+                                  
+                                  // }}
+                                  onClick={()=>{
+                                    setCheckProduccion(true);
+                                    setCheckPrueba(false);
+                                  }
+
+                                  }
+                                />
+                            </div>
+                            <TextField
+                                className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
+                                label="Usuario de Producción"
+                                type="text"
+                                value={formState.fact_userProduccion}
+                                onChange={onInputChange}
+                                name="fact_userProduccion"
+                                disabled={fact_userProduccion ? false : true}
+                                InputProps={{
+                                  defaultValue:formState.fact_userProduccion != undefined? formState.fact_userProduccion:"vacio",
+                                  startAdornment: checkProduccion?(
+
+                                    <InputAdornment position="start">
+                                      {fact_userProduccion ? (
+                                        <>
+                                          <CheckBoxIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setUpdate({
+                                                ...update,
+                                                fact_userProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              
+                                              // setFormState({
+                                              //   ...formState,
+                                              //   bankAccount:
+                                              //     props.dataParticipant.bank_Account,
+                                              // });
+                                              setUpdate({
+                                                ...update,
+                                                fact_userProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_userProduccion: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ):(<></>),
+                                }}
+                                defaultValue="Vacio"
+                                variant="filled"
+                              />
+                            <TextField
+                                className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
+                                label="Clave de Producción"
+                                type="text"
+                                value={formState.fact_claveProduccion}
+                                onChange={onInputChange}
+                                name="fact_claveProduccion"
+                                disabled={fact_claveProduccion ? false : true}
+                                InputProps={{
+                                  defaultValue:formState.fact_claveProduccion != undefined? formState.fact_claveProduccion:"vacio",
+                                  startAdornment:checkProduccion? (
+                                    <InputAdornment position="start">
+                                      {fact_claveProduccion ? (
+                                        <>
+                                          <CheckBoxIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setUpdate({
+                                                ...update,
+                                                fact_claveProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              
+                                              // setFormState({
+                                              //   ...formState,
+                                              //   bankAccount:
+                                              //     props.dataParticipant.bank_Account,
+                                              // });
+                                              setUpdate({
+                                                ...update,
+                                                fact_claveProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_claveProduccion: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ):(<></>),
+                                }}
+                                defaultValue="Vacio"
+                                variant="filled"
+                              />
+                            <TextField
+                            className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
+                            label="Rut de Producción"
+                            type="text"
+                            value={formState.fact_rutProduccion}
+                            onChange={onInputChange}
+                            name="fact_rutProduccion"
+                            disabled={fact_rutProduccion ? false : true}
+                            InputProps={{
+                              defaultValue:formState.fact_rutProduccion != undefined? formState.fact_rutProduccion:"vacio",
+                              startAdornment: checkProduccion? (
+                                <InputAdornment position="start">
+                                  {fact_rutProduccion ? (
+                                    <>
+                                      <CheckBoxIcon
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          setUpdate({
+                                            ...update,
+                                            fact_rutProduccion: false,
+                                          });
+                                          setCountActive(
+                                            countActive > 0
+                                              ? countActive - 1
+                                              : countActive
+                                          );
+                                        }}
+                                      />
+                                      <DisabledByDefaultIcon
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          
+                                          // setFormState({
+                                          //   ...formState,
+                                          //   bankAccount:
+                                          //     props.dataParticipant.bank_Account,
+                                          // });
+                                          setUpdate({
+                                            ...update,
+                                            fact_rutProduccion: false,
+                                          });
+                                          setCountActive(
+                                            countActive > 0
+                                              ? countActive - 1
+                                              : countActive
+                                          );
+                                        }}
+                                      />
+                                    </>
+                                  ) : (
+                                    <EditIcon
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        setUpdate({
+                                          ...update,
+                                          fact_rutProduccion: true,
+                                        });
+                                        setCountActive(countActive + 1);
+                                      }}
+                                    />
+                                  )}
+                                </InputAdornment>
+                              ):(<></>),
+                            }}
+                            
+                            variant="filled"
+                            />
+                            
+                            
+                            
+                          </Box>
+                            
+                          <Box className="flex flex-col w-full h-full">
                             <Typography
                               variant="subtitle1"
                               color="primary"
-                              className=""
+                              className="flex justify-center w-ful"
                             >
-                              Facturación.CL
+                              Testing
                             </Typography>
-                            <InputAdornment className="m-[10px]">
-                              {facturacioncl ? (
-                                <>
-                                  <CheckBoxIcon
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => {
-                                      setUpdate({
-                                        ...update,
-                                        facturacioncl: false,
-                                      });
-                                      setCountActive(
-                                        countActive > 0
-                                          ? countActive - 1
-                                          : countActive
-                                      );
+                            <div className="flex justify-center w-full">
+                                
+                              <Checkbox
+                                    checked={checkPrueba}
+                                    // onChange={(event) => {
+                                    //   setCheckPrueba(true);
+                                    //   setCheckProduccion(false);
+                                    // }}
+                                    onClick={()=>{
+                                      setCheckPrueba(true);
+                                      setCheckProduccion(false);
                                     }}
                                   />
-                                  <DisabledByDefaultIcon
-                                    style={{ cursor: "pointer" }}
-                                    onClick={() => {
-                                      setUpdate({
-                                        ...update,
-                                        facturacioncl: false,
-                                      });
-                                      setCountActive(
-                                        countActive > 0
-                                          ? countActive - 1
-                                          : countActive
-                                      );
-                                    }}
-                                  />
-                                </>
-                              ) : (
-                                <EditIcon
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setUpdate({
-                                      ...update,
-                                      facturacioncl: true,
-                                    });
-                                    setCountActive(countActive + 1);
-                                  }}
-                                />
-                              )}
-                            </InputAdornment>
-                            <div className=" ">
-                              {facturacioncl ? (
-                                <>
-                                  <span className="ml-[20px] text-red-500">
-                                    Recuerde aceptar o cancelar el cambio realizado
-                                  </span>
-                                </>
-                              ) : (
-                                <></>
-                              )}
-                            </div>
-                          </Box>
-                            <div className={`flex justify-evenly pointer-events-${facturacioncl?"auto":"none"}`}  >
-                              <Box className="flex flex-col w-full h-full">
-                              <Typography
-                                variant="subtitle1"
-                                color="primary"
-                                className="flex justify-center w-ful"
-                              >
-                                Producción
-                              </Typography>
-                                <div className="flex justify-center w-full">
-                                  
-                                  <Checkbox
-                                      checked={checkProduccion}
-                                      // onChange={(event) => {
-                                      
-                                      // }}
-                                      onClick={()=>{
-                                        setCheckProduccion(true);
-                                        setCheckPrueba(false);
-                                      }
-
-                                      }
-                                    />
-                                </div>
-                                <TextField
-                                    className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
-                                    label="Usuario de Producción"
-                                    type="text"
-                                    value={formState.fact_userProduccion}
-                                    onChange={onInputChange}
-                                    name="fact_userProduccion"
-                                    disabled={fact_userProduccion ? false : true}
-                                    InputProps={{
-                                      defaultValue:formState.fact_userProduccion != undefined? formState.fact_userProduccion:"vacio",
-                                      startAdornment: (
-                                        <InputAdornment position="start">
-                                          {fact_userProduccion ? (
-                                            <>
-                                              <CheckBoxIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_userProduccion: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                              <DisabledByDefaultIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  
-                                                  // setFormState({
-                                                  //   ...formState,
-                                                  //   bankAccount:
-                                                  //     props.dataParticipant.bank_Account,
-                                                  // });
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_userProduccion: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                            </>
-                                          ) : (
-                                            <EditIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_userProduccion: true,
-                                                });
-                                                setCountActive(countActive + 1);
-                                              }}
-                                            />
-                                          )}
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                    defaultValue="Vacio"
-                                    variant="filled"
-                                  />
-                                <TextField
-                                    className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
-                                    label="Clave de Producción"
-                                    type="text"
-                                    value={formState.fact_claveProduccion}
-                                    onChange={onInputChange}
-                                    name="fact_claveProduccion"
-                                    disabled={fact_claveProduccion ? false : true}
-                                    InputProps={{
-                                      defaultValue:formState.fact_claveProduccion != undefined? formState.fact_claveProduccion:"vacio",
-                                      startAdornment: (
-                                        <InputAdornment position="start">
-                                          {fact_claveProduccion ? (
-                                            <>
-                                              <CheckBoxIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_claveProduccion: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                              <DisabledByDefaultIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  
-                                                  // setFormState({
-                                                  //   ...formState,
-                                                  //   bankAccount:
-                                                  //     props.dataParticipant.bank_Account,
-                                                  // });
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_claveProduccion: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                            </>
-                                          ) : (
-                                            <EditIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_claveProduccion: true,
-                                                });
-                                                setCountActive(countActive + 1);
-                                              }}
-                                            />
-                                          )}
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                    defaultValue="Vacio"
-                                    variant="filled"
-                                  />
-                                <TextField
-                                className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
-                                label="Rut de Producción"
+                              </div>
+                            <TextField
+                                className="zerorange:w-[250px] lg:w-[400px] w-[300px]  mb-[10px] "
+                                label="Usuario de Pruebas"
                                 type="text"
-                                value={formState.fact_rutProduccion}
+                                value={formState.fact_userPruebas}
                                 onChange={onInputChange}
-                                name="fact_rutProduccion"
-                                disabled={fact_rutProduccion ? false : true}
+                                name="fact_userPruebas"
+                                disabled={fact_userPruebas ? false : true}
                                 InputProps={{
-                                  defaultValue:formState.fact_rutProduccion != undefined? formState.fact_rutProduccion:"vacio",
-                                  startAdornment: (
+                                  defaultValue:formState.fact_userPruebas != undefined? formState.fact_userPruebas:"vacio",
+                                  startAdornment:checkPrueba? (
                                     <InputAdornment position="start">
-                                      {fact_rutProduccion ? (
+                                      {fact_userPruebas ? (
                                         <>
                                           <CheckBoxIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
                                               setUpdate({
                                                 ...update,
-                                                fact_rutProduccion: false,
+                                                fact_userPruebas: false,
                                               });
                                               setCountActive(
                                                 countActive > 0
@@ -2138,7 +2175,7 @@ export default function HorizontalNonLinearStepper(props) {
                                               // });
                                               setUpdate({
                                                 ...update,
-                                                fact_rutProduccion: false,
+                                                fact_userPruebas: false,
                                               });
                                               setCountActive(
                                                 countActive > 0
@@ -2154,249 +2191,162 @@ export default function HorizontalNonLinearStepper(props) {
                                           onClick={() => {
                                             setUpdate({
                                               ...update,
-                                              fact_rutProduccion: true,
+                                              fact_userPruebas: true,
                                             });
                                             setCountActive(countActive + 1);
                                           }}
                                         />
                                       )}
                                     </InputAdornment>
-                                  ),
+                                  ):(<></>),
                                 }}
-                                
+                                defaultValue="Vacio"
                                 variant="filled"
                               />
-                              </Box>
-                          
-                              <Box className="flex flex-col w-full h-full">
-                                <Typography
-                                  variant="subtitle1"
-                                  color="primary"
-                                  className="flex justify-center w-ful"
-                                >
-                                  Testing
-                                </Typography>
-                                <div className="flex justify-center w-full">
-                                    
-                                  <Checkbox
-                                        checked={checkPrueba}
-                                        // onChange={(event) => {
-                                        //   setCheckPrueba(true);
-                                        //   setCheckProduccion(false);
-                                        // }}
-                                        onClick={()=>{
-                                          setCheckPrueba(true);
-                                          setCheckProduccion(false);
+                            <TextField
+                                className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
+                                label="Clave de Pruebas"
+                                type="text"
+                                value={formState.fact_clavePruebas}
+                                onChange={onInputChange}
+                                name="fact_clavePruebas"
+                                disabled={fact_clavePruebas ? false : true}
+                                InputProps={{
+                                  defaultValue:formState.fact_clavePruebas != undefined? formState.fact_clavePruebas:"vacio",
+                                  startAdornment: checkPrueba?(
+                                    <InputAdornment position="start">
+                                      {fact_clavePruebas ? (
+                                        <>
+                                          <CheckBoxIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setUpdate({
+                                                ...update,
+                                                fact_clavePruebas: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              
+                                              // setFormState({
+                                              //   ...formState,
+                                              //   bankAccount:
+                                              //     props.dataParticipant.bank_Account,
+                                              // });
+                                              setUpdate({
+                                                ...update,
+                                                fact_clavePruebas: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_clavePruebas: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ):(<></>),
+                                }}
+                              
+                                variant="filled"
+                              />
+                            <TextField
+                            className="zerorange:w-[250px] lg:w-[400px] w-[300px]  mb-[10px] "
+                            label="Rut de Pruebas"
+                            type="text"
+                            value={formState.fact_rutPruebas}
+                            onChange={onInputChange}
+                            name="fact_rutPruebas"
+                            disabled={fact_rutPruebas ? false : true}
+                            InputProps={{
+                              defaultValue:formState.fact_rutPruebas != undefined? formState.fact_rutPruebas:"vacio",
+                              startAdornment: checkPrueba?(
+                                <InputAdornment position="start">
+                                  {fact_rutPruebas ? (
+                                    <>
+                                      <CheckBoxIcon
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          setUpdate({
+                                            ...update,
+                                            fact_rutPruebas: false,
+                                          });
+                                          setCountActive(
+                                            countActive > 0
+                                              ? countActive - 1
+                                              : countActive
+                                          );
                                         }}
                                       />
-                                  </div>
-                                <TextField
-                                    className="zerorange:w-[250px] lg:w-[400px] w-[300px]  mb-[10px] "
-                                    label="Usuario de Pruebas"
-                                    type="text"
-                                    value={formState.fact_userPruebas}
-                                    onChange={onInputChange}
-                                    name="fact_userPruebas"
-                                    disabled={fact_userPruebas ? false : true}
-                                    InputProps={{
-                                      defaultValue:formState.fact_userPruebas != undefined? formState.fact_userPruebas:"vacio",
-                                      startAdornment: (
-                                        <InputAdornment position="start">
-                                          {fact_userPruebas ? (
-                                            <>
-                                              <CheckBoxIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_userPruebas: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                              <DisabledByDefaultIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  
-                                                  // setFormState({
-                                                  //   ...formState,
-                                                  //   bankAccount:
-                                                  //     props.dataParticipant.bank_Account,
-                                                  // });
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_userPruebas: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                            </>
-                                          ) : (
-                                            <EditIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_userPruebas: true,
-                                                });
-                                                setCountActive(countActive + 1);
-                                              }}
-                                            />
-                                          )}
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                    defaultValue="Vacio"
-                                    variant="filled"
-                                  />
-                                <TextField
-                                    className="zerorange:w-[250px] lg:w-[400px] w-[300px] mb-[10px]  "
-                                    label="Clave de Pruebas"
-                                    type="text"
-                                    value={formState.fact_clavePruebas}
-                                    onChange={onInputChange}
-                                    name="fact_clavePruebas"
-                                    disabled={fact_clavePruebas ? false : true}
-                                    InputProps={{
-                                      defaultValue:formState.fact_clavePruebas != undefined? formState.fact_clavePruebas:"vacio",
-                                      startAdornment: (
-                                        <InputAdornment position="start">
-                                          {fact_clavePruebas ? (
-                                            <>
-                                              <CheckBoxIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_clavePruebas: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                              <DisabledByDefaultIcon
-                                                style={{ cursor: "pointer" }}
-                                                onClick={() => {
-                                                  
-                                                  // setFormState({
-                                                  //   ...formState,
-                                                  //   bankAccount:
-                                                  //     props.dataParticipant.bank_Account,
-                                                  // });
-                                                  setUpdate({
-                                                    ...update,
-                                                    fact_clavePruebas: false,
-                                                  });
-                                                  setCountActive(
-                                                    countActive > 0
-                                                      ? countActive - 1
-                                                      : countActive
-                                                  );
-                                                }}
-                                              />
-                                            </>
-                                          ) : (
-                                            <EditIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_clavePruebas: true,
-                                                });
-                                                setCountActive(countActive + 1);
-                                              }}
-                                            />
-                                          )}
-                                        </InputAdornment>
-                                      ),
-                                    }}
-                                  
-                                    variant="filled"
-                                  />
-                                <TextField
-                                className="zerorange:w-[250px] lg:w-[400px] w-[300px]  mb-[10px] "
-                                label="Rut de Pruebas"
-                                type="text"
-                                value={formState.fact_rutPruebas}
-                                onChange={onInputChange}
-                                name="fact_rutPruebas"
-                                disabled={fact_rutPruebas ? false : true}
-                                InputProps={{
-                                  defaultValue:formState.fact_rutPruebas != undefined? formState.fact_rutPruebas:"vacio",
-                                  startAdornment: (
-                                    <InputAdornment position="start">
-                                      {fact_rutPruebas ? (
-                                        <>
-                                          <CheckBoxIcon
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => {
-                                              setUpdate({
-                                                ...update,
-                                                fact_rutPruebas: false,
-                                              });
-                                              setCountActive(
-                                                countActive > 0
-                                                  ? countActive - 1
-                                                  : countActive
-                                              );
-                                            }}
-                                          />
-                                          <DisabledByDefaultIcon
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => {
-                                              
-                                              // setFormState({
-                                              //   ...formState,
-                                              //   bankAccount:
-                                              //     props.dataParticipant.bank_Account,
-                                              // });
-                                              setUpdate({
-                                                ...update,
-                                                fact_rutPruebas: false,
-                                              });
-                                              setCountActive(
-                                                countActive > 0
-                                                  ? countActive - 1
-                                                  : countActive
-                                              );
-                                            }}
-                                          />
-                                        </>
-                                      ) : (
-                                        <EditIcon
-                                          style={{ cursor: "pointer" }}
-                                          onClick={() => {
-                                            setUpdate({
-                                              ...update,
-                                              fact_rutPruebas: true,
-                                            });
-                                            setCountActive(countActive + 1);
-                                          }}
-                                        />
-                                      )}
-                                    </InputAdornment>
-                                  ),
-                                }}
-                                
-                                variant="filled"
-                              />
-                              </Box>
-                            </div>
+                                      <DisabledByDefaultIcon
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          
+                                          // setFormState({
+                                          //   ...formState,
+                                          //   bankAccount:
+                                          //     props.dataParticipant.bank_Account,
+                                          // });
+                                          setUpdate({
+                                            ...update,
+                                            fact_rutPruebas: false,
+                                          });
+                                          setCountActive(
+                                            countActive > 0
+                                              ? countActive - 1
+                                              : countActive
+                                          );
+                                        }}
+                                      />
+                                    </>
+                                  ) : (
+                                    <EditIcon
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        setUpdate({
+                                          ...update,
+                                          fact_rutPruebas: true,
+                                        });
+                                        setCountActive(countActive + 1);
+                                      }}
+                                    />
+                                  )}
+                                </InputAdornment>
+                              ):(<></>),
+                            }}
+                            
+                            variant="filled"
+                          />
+                          </Box>
+                        
+                          {!facturacioncl ? ( <div className="absolute inset-0 bg-[#f0f0f0] opacity-50 rounded-lg  ">
+                          </div>):<></>}
                           
-                        </Box>
-                       
-                      </Box>
+                        </div>
+                      
+                    </Box>
+                    
+                  </Box>
 
                      
              
