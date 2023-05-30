@@ -291,8 +291,7 @@ export default function EnhancedTable(props) {
       setDisabledDateEnd(true);
     }
   };
-  console.log(props.isLoading)
-  if(props.payRollData.data!=undefined){
+  if (props.payRollData.data != undefined) {
     props.payRollData.data.map((p) => {
       rows.push(
         createData(
@@ -309,18 +308,17 @@ export default function EnhancedTable(props) {
       glosas.push(p.glosa);
     });
   }
-  
 
   useEffect(() => {
-    if(props.payRollData.data!=undefined){
-
-      let prueba = props.payRollData.data.filter((p) => selected.includes(p.id));
+    if (props.payRollData.data != undefined) {
+      let prueba = props.payRollData.data.filter((p) =>
+        selected.includes(p.id)
+      );
       setDataExport(prueba);
       let pruebaValor = 0;
       prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
       setTotal(pruebaValor);
     }
-    
   }, [selected]);
 
   const handleRequestSort = (event, property) => {
@@ -449,240 +447,241 @@ export default function EnhancedTable(props) {
     props.sendDiscData(checked, glosa);
     render ? setRender(false) : setRender(true);
   };
-  // console.log(glosas.filter(onlyUnique));
   return (
     <Box sx={{ width: "100%" }}>
-      
-        <Box className="w-full text-center  p-[20px]">
-          <Typography
-            className="bg-grey-50"
-            variant="h6"
-            id="tableTitle"
-            component="div"
-          >
-            Tabla de Nominas "BCI"
-          </Typography>
-          <h1 className="border border-b-pantoneazul"></h1>
-          <div className="flex flex-row justify-center align-middle  ">
-            <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
-              <Typography
-                className="mt-[11px]"
-                variant="subtitle1"
-                id="tableTitle"
-                component="div"
-              >
-                Disconformidad
-              </Typography>
-              <Switch
-                checked={checked}
-                onChange={(e) => activarDisc(e, "")}
-                inputProps={{ "aria-label": "controlled" }}
-                sx={{ mt: 1 }}
-              />
-            </div>
-            <Autocomplete
-              disablePortal
-              value={glosa}
-              id="combo-box-demo"
-              options={glosas.filter(onlyUnique)}
-              onChange={(event, newValue) =>
-                newValue != undefined && setGlosa(newValue)
-              }
-              onInputChange={(event, newInputValue) => {
-                setInputValue(newInputValue);
-              }}
-              sx={{ width: 300, mt: 2 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Concepto" />
-              )}
-            />
-            <LocalizationProvider
-              dateAdapter={AdapterDateFns}
-              adapterLocale={es}
-            >
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Desde"
-                disabled
-                checked
-                name="desde"
-                sx={{ ml: 2, mt: 1 }}
-              />
-              <DatePicker
-                views={["year", "month"]}
-                label="Fecha inicio"
-                openTo="year"
-                minDate={new Date("2017-02-01")}
-                maxDate={new Date("2023-01-01")}
-                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
-                // onChange={(value) => {
-                //   value != null &&
-                //     setSelected({
-                //       ...selected,
-                //       sInicioPeriodo: value,
-                //     });
-                // }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    helperText={null}
-                    sx={{ mt: 2, width: 300 }}
-                  />
-                )}
-              />
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Hasta"
-                onChange={(e) => conditionalPeriods(e)}
-                name="hasta"
-                sx={{ ml: 2, mt: 1 }}
-              />
-              <DatePicker
-                views={["year", "month"]}
-                label="Fecha termino"
-                openTo="year"
-                disabled={disabledDateEnd ? true : false}
-                minDate={new Date("2017-02-01")}
-                maxDate={new Date("2023-01-01")}
-                // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
-                // onChange={(value) => {
-                //   value != null &&
-                //     setSelected({
-                //       ...selected,
-                //       sInicioPeriodo: value,
-                //     });
-                // }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    helperText={null}
-                    sx={{ mt: 2, width: 300 }}
-                  />
-                )}
-              />
-            </LocalizationProvider>
-          </div>
-          <h1 className="border border-b-pantoneazul"></h1>
-          <div className="flex flex-row justify-center align-middle  ">
-            <Button
-              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] mr-[100px] "
-              variant="contained"
-              color="secondary"
-              onClick={() => limpiarFiltros()}
-            >
-              Limpiar Filtros
-            </Button>
-            <Button
-              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
-              variant="contained"
-              color="secondary"
-              onClick={() => activarDisc(checked, glosa)}
-            >
-              {/* <SiMicrosoftexcel className="mr-3 " /> */}
-              Buscar
-            </Button>
-
-            <Button
-              className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] ml-[100px]"
-              variant="contained"
-              color="secondary"
-              onClick={() => downloadExcelFile("mydata", dataExport)}
-            >
-              <SiMicrosoftexcel className="mr-3 " />
-              Nomina de pago <HiDownload />
-            </Button>
-          </div>
-        </Box>
-        <h1 className="border border-b-pantoneazul"></h1>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                 rows.sort(getComparator(order, orderBy)).slice() */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.id)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.id}
-                      selected={isItemSelected}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": "Disconformidad",
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                        align="left"
-                      >
-                        {row.rut}
-                      </TableCell>
-                      <TableCell align="left">{row.nombre}</TableCell>
-                      <TableCell align="left">{row.nro_documento}</TableCell>
-                      <TableCell align="left">{row.monto_pago}</TableCell>
-                      <TableCell align="left">{row.fecha_acept}</TableCell>
-                      <TableCell align="left">{row.glosa}</TableCell>
-                      <TableCell align="left">{row.disc}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-              <TableRow>
-                <TableCell colSpan={2}>Total a pagar</TableCell>
-                <TableCell align="left">{chile.format(total)}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          // label="prueba"
-          labelRowsPerPage="Filas por página"
-          rowsPerPageOptions={[5, 10, 25]}
+      <Box className="w-full text-center  p-[20px]">
+        <Typography
+          className="bg-grey-50"
+          variant="h6"
+          id="tableTitle"
           component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-     
+        >
+          Tabla de Nominas "BCI"
+        </Typography>
+        <h1 className="border border-b-pantoneazul"></h1>
+        <div className="flex flex-row justify-center align-middle  ">
+          <div className="bg-grey-100 flex flex-row p-[5px] m-[10px] rounded-lg">
+            <Typography
+              className="mt-[11px]"
+              variant="subtitle1"
+              id="tableTitle"
+              component="div"
+            >
+              Disconformidad
+            </Typography>
+            <Switch
+              checked={checked}
+              onChange={(e) => activarDisc(e, "")}
+              inputProps={{ "aria-label": "controlled" }}
+              sx={{ mt: 1 }}
+            />
+          </div>
+          <Autocomplete
+            disablePortal
+            value={glosa}
+            id="combo-box-demo"
+            options={glosas.filter(onlyUnique)}
+            onChange={(event, newValue) =>
+              newValue != undefined && setGlosa(newValue)
+            }
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+            }}
+            sx={{ width: 300, mt: 2 }}
+            renderInput={(params) => <TextField {...params} label="Concepto" />}
+          />
+          <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
+            <FormControlLabel
+              control={<Checkbox />}
+              label="Desde"
+              disabled
+              checked
+              name="desde"
+              sx={{ ml: 2, mt: 1 }}
+            />
+            <DatePicker
+              views={["year", "month"]}
+              label="Fecha inicio"
+              openTo="year"
+              minDate={new Date("2017-02-01")}
+              maxDate={new Date("2023-01-01")}
+              // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+              // onChange={(value) => {
+              //   value != null &&
+              //     setSelected({
+              //       ...selected,
+              //       sInicioPeriodo: value,
+              //     });
+              // }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  helperText={null}
+                  sx={{ mt: 2, width: 300 }}
+                />
+              )}
+            />
+            <FormControlLabel
+              control={<Checkbox />}
+              label="Hasta"
+              onChange={(e) => conditionalPeriods(e)}
+              name="hasta"
+              sx={{ ml: 2, mt: 1 }}
+            />
+            <DatePicker
+              views={["year", "month"]}
+              label="Fecha termino"
+              openTo="year"
+              disabled={disabledDateEnd ? true : false}
+              minDate={new Date("2017-02-01")}
+              maxDate={new Date("2023-01-01")}
+              // value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+              // onChange={(value) => {
+              //   value != null &&
+              //     setSelected({
+              //       ...selected,
+              //       sInicioPeriodo: value,
+              //     });
+              // }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  helperText={null}
+                  sx={{ mt: 2, width: 300 }}
+                />
+              )}
+            />
+          </LocalizationProvider>
+        </div>
+        <h1 className="border border-b-pantoneazul"></h1>
+        <div className="flex flex-row justify-center align-middle  ">
+          <Button
+            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] mr-[100px] "
+            variant="contained"
+            color="secondary"
+            onClick={() => limpiarFiltros()}
+          >
+            Limpiar Filtros
+          </Button>
+          <Button
+            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] "
+            variant="contained"
+            color="secondary"
+            onClick={() => activarDisc(checked, glosa)}
+          >
+            {/* <SiMicrosoftexcel className="mr-3 " /> */}
+            Buscar
+          </Button>
+
+          <Button
+            className="sm:w-[200px] lg:w-[300px] max-w-[300px] mt-[10px] ml-[100px]"
+            variant="contained"
+            color="secondary"
+            onClick={() => downloadExcelFile("mydata", dataExport)}
+          >
+            <SiMicrosoftexcel className="mr-3 " />
+            Nomina de pago <HiDownload />
+          </Button>
+        </div>
+      </Box>
+      <h1 className="border border-b-pantoneazul"></h1>
+      <EnhancedTableToolbar numSelected={selected.length} />
+      <TableContainer>
+        <Table
+          sx={{ minWidth: 750 }}
+          aria-labelledby="tableTitle"
+          size={dense ? "small" : "medium"}
+        >
+          <EnhancedTableHead
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={rows.length}
+          />
+          <TableBody>
+            {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                 rows.sort(getComparator(order, orderBy)).slice() */}
+            {stableSort(rows, getComparator(order, orderBy))
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, index) => {
+                const isItemSelected = isSelected(row.id);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          "aria-labelledby": "Disconformidad",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
+                      align="left"
+                    >
+                      {row.id}
+                    </TableCell>
+                    <TableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none"
+                      align="left"
+                    >
+                      {row.rut}
+                    </TableCell>
+                    <TableCell align="left">{row.nombre}</TableCell>
+                    <TableCell align="left">{row.nro_documento}</TableCell>
+                    <TableCell align="left">{row.monto_pago}</TableCell>
+                    <TableCell align="left">{row.fecha_acept}</TableCell>
+                    <TableCell align="left">{row.glosa}</TableCell>
+                    <TableCell align="left">{row.disc}</TableCell>
+                  </TableRow>
+                );
+              })}
+            {emptyRows > 0 && (
+              <TableRow
+                style={{
+                  height: (dense ? 33 : 53) * emptyRows,
+                }}
+              >
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+            <TableRow>
+              <TableCell colSpan={2}>Total a pagar</TableCell>
+              <TableCell align="left">{chile.format(total)}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <TablePagination
+        // label="prueba"
+        labelRowsPerPage="Filas por página"
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Box>
   );
 }

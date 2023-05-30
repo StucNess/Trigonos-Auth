@@ -1,6 +1,6 @@
 import { styled, useTheme } from "@mui/material/styles";
 import FusePageSimple from "@fuse/core/FusePageSimple";
-
+import * as XLSX from "xlsx";
 import {
   createTheme,
   ThemeProvider,
@@ -14,7 +14,7 @@ import TextField from "@mui/material/TextField";
 //ICONS
 import Stack from "@mui/material/Stack";
 import { SiMicrosoftexcel } from "react-icons/si";
-
+import Checkbox from "@mui/material/Checkbox";
 import LinearProgress from "@mui/material/LinearProgress";
 
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
@@ -62,6 +62,7 @@ import {
   useGetParticipantesQuery,
 } from "app/store/participantesApi/participantesApi";
 import { useGetInstruccionesQuery } from "app/store/instrucciones/instruccionesApi";
+import { id } from "date-fns/locale";
 
 let theme = createTheme(esES);
 
@@ -134,7 +135,7 @@ const DEFAULT_ROWS_PER_PAGE = 5;
 
 function EnhancedTableHead(props) {
   const {
-    // onSelectAllClick,
+    onSelectAllClick,
     order,
     orderBy,
     numSelected,
@@ -148,6 +149,12 @@ function EnhancedTableHead(props) {
   let headCells;
   if (erp == 2) {
     headCells = [
+      {
+        id: "id",
+        numeric: false,
+        disablePadding: false,
+        label: "id",
+      },
       {
         id: "rut",
         numeric: false,
@@ -193,6 +200,12 @@ function EnhancedTableHead(props) {
     ];
   } else if (erp == 1) {
     headCells = [
+      {
+        id: "id",
+        numeric: false,
+        disablePadding: false,
+        label: "id",
+      },
       {
         id: "folioReferencia",
         numeric: false,
@@ -275,6 +288,12 @@ function EnhancedTableHead(props) {
   } else if (erp == 7) {
     headCells = [
       {
+        id: "id",
+        numeric: false,
+        disablePadding: false,
+        label: "id",
+      },
+      {
         id: "numeroCorrelativo",
         numeric: false,
         disablePadding: false,
@@ -334,11 +353,28 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
+        <TableCell padding="checkbox">
+          <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{
+              "aria-label": "select all desserts",
+            }}
+          />
+        </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             id={headCell.id}
             key={headCell.id}
+            disabled={true}
             align="left"
+            sx={
+              headCell.id == "id"
+                ? { display: { xl: "none", xs: "block" } }
+                : {}
+            }
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -441,43 +477,44 @@ function TabInstrucciones(props) {
   const [cargando, setCargando] = useState(true);
   const {
     data: dataInstructions = [],
-    isLoading: isLoadinginstructions = true,isFetching: isfetchInstructions
+    isLoading: isLoadinginstructions = true,
+    isFetching: isfetchInstructions,
   } = useGetInstruccionesQuery(props.id);
-  
+
   function search(searchString) {
     if (searchString.length === 0) {
       return rowspermanent;
     }
-  
+
     let searchLower = searchString.toString().toLowerCase();
     function isFloat(number) {
       return number % 1 !== 0;
     }
     const filtered = rowspermanent.filter((obj) => {
       return Object.values(obj).some((value) => {
-    
-        if (typeof value === 'string') {
-          return value.toLowerCase().includes(searchString.toString().toLowerCase());
-        } else if (typeof value === 'number' ) {
-          if(isFloat(value)){
-              console.log(searchString)
-            console.log(value)
-            return  value.toString().toLowerCase().includes(searchString.toString().toLowerCase());
-          
-          }else{
-            return  value.toString().toLowerCase().includes(searchString.toString().toLowerCase());
+        if (typeof value === "string") {
+          return value
+            .toLowerCase()
+            .includes(searchString.toString().toLowerCase());
+        } else if (typeof value === "number") {
+          if (isFloat(value)) {
+            return value
+              .toString()
+              .toLowerCase()
+              .includes(searchString.toString().toLowerCase());
+          } else {
+            return value
+              .toString()
+              .toLowerCase()
+              .includes(searchString.toString().toLowerCase());
           }
-          
-       
         }
-       
 
         return false;
       });
-    })
-    
+    });
+
     return filtered;
-   
   }
 
   function rowsOnMount() {
@@ -500,11 +537,27 @@ function TabInstrucciones(props) {
   //   };
   // }, []);
   useEffect(() => {
+    const devuelveFechaHoy = (param = 0) => {
+      let fechaActual = new Date();
+      param === 1 && fechaActual.setDate(fechaActual.getDate() + 2);
+      let dia = fechaActual.getDate();
+      let mes = fechaActual.getMonth() + 1; // Los meses comienzan desde 0, por lo que se suma 1
+      let año = fechaActual.getFullYear();
+
+      if (dia < 10) {
+        dia = "0" + dia;
+      }
+      if (mes < 10) {
+        mes = "0" + mes;
+      }
+      let fechaCorta = dia + "/" + mes + "/" + año;
+      return fechaCorta;
+    };
     if (!isLoadinginstructions) {
       if (props.erp == 2) {
         rows = dataInstructions.data.map((data) => {
           return {
-            // id: data.id,
+            id: data.id,
             rut: data.rutDeudor,
             razonSocial: data.nombreDeudor,
             giro: data.giroDeudor,
@@ -517,7 +570,7 @@ function TabInstrucciones(props) {
       } else if (props.erp == 1) {
         rows = dataInstructions.data.map((data) => {
           return {
-            // id: data.id,
+            id: data.id,
             folioReferencia: data.codigoRef,
             razonReferencia: data.glosa,
             razonSocial: data.nombreDeudor,
@@ -536,10 +589,10 @@ function TabInstrucciones(props) {
       } else if (props.erp == 7) {
         rows = dataInstructions.data.map((data) => {
           return {
-            // id: data.id,
-            numeroCorrelativo: "00000",
-            fecha: "0000",
-            fechaVencimiento: "0000",
+            id: data.id,
+            numeroCorrelativo: data.id,
+            fecha: devuelveFechaHoy(),
+            fechaVencimiento: devuelveFechaHoy(1),
             codigoCliente: data.rutDeudor,
             afecto: data.montoNeto,
             total: data.montoNeto * 0.19,
@@ -549,7 +602,6 @@ function TabInstrucciones(props) {
           };
         });
       }
-
       rowspermanent = rows;
       rowsOnMount();
       setRowsPerPage(5);
@@ -679,12 +731,12 @@ function TabInstrucciones(props) {
     setDense(event.target.checked);
   };
 
-  const isSelected = (codreferencia) => selected.indexOf(codreferencia) !== -1;
+  const isSelected = (rut) => selected.indexOf(rut) !== -1;
   const chile = new Intl.NumberFormat("es-CL", {
     currency: "CLP",
     style: "currency",
   });
-  let headersExcel1 = [
+  let headersExcelF1 = [
     [
       "ID_CSV",
       "DTE",
@@ -727,7 +779,7 @@ function TabInstrucciones(props) {
     ],
   ];
 
-  let headersExcel2 = [
+  let headersExcelF2 = [
     [
       "Tipo",
       "Folio",
@@ -759,7 +811,7 @@ function TabInstrucciones(props) {
       "RazonReferencia2",
     ],
   ];
-  let headersExcel3 = [
+  let headersExcelF3 = [
     [
       "Rut",
       "Tipo",
@@ -813,7 +865,7 @@ function TabInstrucciones(props) {
       "FechaCarta",
     ],
   ];
-  let headersExcel4 = [
+  let headersExcelF7 = [
     [
       "DestinodelDocumento",
       "Documentoimpresosegeneranulo",
@@ -932,49 +984,194 @@ function TabInstrucciones(props) {
       "EsdocumentodetraspasoSsiNno",
     ],
   ];
-  // // Avoid a layout jump when reaching the last page with empty rows.
-  // const emptyRows =
-  //   page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const descargarExcel = () => {
+    console.log("DESCARGANDO EXCEL");
+  };
+  function convertToSheet(data) {
+    const wb = XLSX.utils.book_new();
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(ws, headersExcelF7);
+    const sheet = XLSX.utils.sheet_add_json(ws, data, {
+      origin: "A2",
+      skipHeader: true,
+    });
 
-  // function convertToSheet(data) {
-  //   const wb = XLSX.utils.book_new();
-  //   const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
-  //   XLSX.utils.sheet_add_aoa(ws, headersExcel);
-  //   const sheet = XLSX.utils.sheet_add_json(ws, data, {
-  //     origin: "A2",
-  //     skipHeader: true,
-  //   });
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
 
-  //   XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    XLSX.writeFile(wb, "filename.xlsx");
+  }
+  function downloadExcelFile(filename, data) {
+    let dataPrueba = [];
+    const devuelveFechaHoy = (param = 0) => {
+      let fechaActual = new Date();
+      param === 1 && fechaActual.setDate(fechaActual.getDate() + 2);
+      let dia = fechaActual.getDate();
+      let mes = fechaActual.getMonth() + 1; // Los meses comienzan desde 0, por lo que se suma 1
+      let año = fechaActual.getFullYear();
 
-  //   XLSX.writeFile(wb, "filename.xlsx");
-  // }
-  // function downloadExcelFile(filename, data) {
-  //   let dataPrueba = [];
-  //   for (let i in data) {
-  //     let obj = new Object();
+      if (dia < 10) {
+        dia = "0" + dia;
+      }
+      if (mes < 10) {
+        mes = "0" + mes;
+      }
+      let fechaCorta = año + "-" + mes + "-" + dia;
+      return fechaCorta;
+    };
+    for (let i in dataInstructions.data.filter((p) =>
+      selected.includes(p.id)
+    )) {
+      console.log(i);
+      let obj = new Object();
+      obj.DestinodelDocumento = "A";
+      obj.Documentoimpresosegeneranulo = "N";
+      obj.DocumentoimpresoGeneraRebajaStock = "N";
+      obj.TipodeDocumento = "FVAELECT";
+      obj.NúmeroCorrelativo = dataInstructions.data[i].id_instruccions;
+      obj.Nimerofinalsiloboletas = "";
+      obj.Fecha = devuelveFechaHoy();
+      obj.Local = "Local";
+      obj.Vendedor = "VENDEDOR";
+      obj.MonedaReferencia = "PESO";
+      obj.TasaReferencia = "1";
+      obj.CondicióndePago = "CR2";
+      obj.FechadeVencimiento = devuelveFechaHoy(1);
+      obj.CódigodelCliente = dataInstructions.data[i].rutDeudor;
+      obj.TipodeCliente = "";
+      obj.CentrodeNegocios = "";
+      obj.Clasificador1 = "";
+      obj.Clasificador2 = "";
+      obj.OrigendelDocumento = "";
+      obj.ListadePrecio = "";
+      obj.CódigodelProyecto = "";
+      obj.Afecto = dataInstructions.data[i].montoNeto;
+      obj.Exento = "0";
+      obj.Total = dataInstructions.data[i].montoBruto;
+      obj.BodegaInventario = "";
+      obj.MotivodemovimientoInventario = "";
+      obj.CentrodeNegociosInventario = "";
+      obj.TipodeCuentaInventario = "";
+      obj.ProveedorInventario = "";
+      obj.DireccióndeDespacho = "";
+      obj.Clasificador1Inventario = "";
+      obj.Clasificador2Inventario = "";
+      obj.CódigoLegal = dataInstructions.data[i].rutDeudor;
+      obj.Nombre = dataInstructions.data[i].nombreDeudor;
+      obj.Giros = dataInstructions.data[i].giroDeudor;
+      obj.Dirección = dataInstructions.data[i].direccionDeudor;
+      obj.Ciudads = "Las condes";
+      obj.Rubro = "1";
+      obj.Glosa = "";
+      obj.LíneadeDetalle = "1";
+      obj.ArticuloServicio = "S";
+      obj.CodigodelProducto = dataInstructions.data[i].glosa;
+      obj.Cantidad = "1";
+      obj.PrecioUnitario = dataInstructions.data[i].montoNeto;
+      obj.Descuento = "0";
+      obj.TipodeDescuento = "P";
+      obj.TipodeVenta = "";
+      obj.TotaldelProducto = dataInstructions.data[i].montoBruto;
+      obj.PrecioLista = "";
+      obj.TotalNeto = dataInstructions.data[i].montoNeto;
+      obj.FichaProducto = "";
+      obj.CentrodeNegociosProducto = "EMPADM000000000";
+      obj.Clasificador1Producto = "";
+      obj.Clasificador2Producto = "";
+      obj.CantidaddeUnidadEquivalente = "";
+      obj.CantidaddePeriodos = "";
+      obj.ComentarioProducto = dataInstructions.data[i].concepto;
+      obj.AnálisisAtributo1Producto = "";
+      obj.AnálisisAtributo2Producto = "";
+      obj.AnálisisAtributo3Producto = "";
+      obj.AnálisisAtributo4Producto = "";
+      obj.AnálisisAtributo5Producto = "";
+      obj.AnálisisLoteProducto = "";
+      obj.FechadeVencimientoLote = "";
+      obj.IngresoManual = "";
+      obj.TipodeInventario = "";
+      obj.Clasificador1InventarioLinea = "";
+      obj.Clasificador2InventarioLinea = "";
+      obj.NúmerodeDescuento = "";
+      obj.Descuento2 = "";
+      obj.TipodeDescuento2 = "";
+      obj.NumerodeImpuesto = "1";
+      obj.CódigodeImpuesto = "IVA";
+      obj.ValordeImpuesto = "19";
+      obj.MontodeImpuesto = dataInstructions.data[i].montoBruto - i.montoNeto;
+      obj.CentrodeNegociosProducto2 = "";
+      obj.Clasificador1Impuesto = "";
+      obj.Clasificador2Impuesto = "";
+      obj.NúmerodeCuota = "1";
+      obj.FechadeCuota = devuelveFechaHoy(1);
+      obj.MontodeCuota = dataInstructions.data[i].montoBruto;
+      obj.RelaciónlineaSeries = "";
+      obj.SufijoArtículoInventario = "";
+      obj.TipodeRecargoyDescuento = "";
+      obj.PrefijoArtículoInventario = "";
+      obj.SerieArtículoInventario = "";
+      obj.Distrito = "";
+      obj.Transacción = "";
+      obj.FechaFacturaciónDesde = "";
+      obj.FechaFacturaciónHasta = "";
+      obj.VíadeTransporte = "";
+      obj.PaísDestinoReceptor = "";
+      obj.PaísDestinoEmbarque = "";
+      obj.ModalidadVenta = "";
+      obj.TipoDespacho = "";
+      obj.IndicadordeServicio = "";
+      obj.ClaúsuladeVenta = "";
+      obj.TotalClaúsuladeVenta = "";
+      obj.PuertoEmbarque = "";
+      obj.PuertoDesembarque = "";
+      obj.UnidaddeMedidaTara = "";
+      obj.TotalMedidaTara = "";
+      obj.UnidadPesoBruto = "";
+      obj.TotalPesoBruto = "";
+      obj.UnidadPesoNeto = "";
+      obj.TotalPesoNeto = "";
+      obj.TipodeBulto = "";
+      obj.TotaldeBultos = "";
+      obj.FormadePago = "";
+      obj.TipoDocumentoAsociado = "SEN";
+      obj.FolioDocumentoAsociado = dataInstructions.data[i].codigoRef;
+      obj.FechaDocumentoAsociado = dataInstructions.data[i].fecha_carta;
+      obj.ComentarioDocumentoAsociado = dataInstructions.data[i].concepto;
+      obj.email = "";
+      obj.EsdocumentodetraspasoSsiNno = "S";
+      // dataPrueba.push(obj);
+      dataPrueba.push(obj);
+    }
 
-  //     obj.Rut = data[i].rutAcreedor;
-  //     obj.Nombre_Beneficiario = data[i].nombreAcreedor;
-  //     obj.Fp = "CCT";
-  //     obj.Bco = data[i].sBifAcreedor;
-  //     obj.NumeroCuenta = data[i].cuentaBancoAcreedor;
-  //     obj.NumeroDocumento = data[i].folio;
-  //     obj.MontoPago = data[i].valorNeto;
-  //     obj.OfBci = "";
-  //     obj.Fecha = "23/03/2023";
-  //     obj.ApPaterno = "";
-  //     obj.ApMaterno = "";
-  //     obj.Nombre = data[i].cuentaBancoAcreedor;
-  //     obj.RutRetirador = "";
-  //     obj.Tipo = "FAC";
-  //     obj.Glosa = data[i].glosa;
-  //     obj.Convenio = "";
-  //     obj.Email = data[i].correoDteAcreedor;
-  //     dataPrueba.push(obj);
-  //   }
-  //   convertToSheet(dataPrueba);
-  // }
+    convertToSheet(dataPrueba);
+  }
+
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = rows.map((n) => n.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+
+    setSelected(newSelected);
+  };
   return (
     <Box className="m-[20px]">
       {isLoadinginstructions ? (
@@ -986,46 +1183,61 @@ function TabInstrucciones(props) {
         <>
           <Box>
             <Box className="flex flex-row mb-[20px]  w-full">
-            <TextField
-                  id="outlined-basic"
-                  label="Filtrar"
-                  variant="filled"
-                  onChange={(e) => {
-                    handleSetRow(e);
-                  }}
-                />
-            <Box className="flex justify-center mb-[5px] w-full">
-            {props.erp==2? 
-            <>
-              <Button
-              className=" rounded flex justify-start min-w-[170px] m-[5px]"
-              variant="contained"
-              color="customdos"
-              // onClick={exportToExcel}
-            >
-              <SiMicrosoftexcel size={30} className="mr-[10px] "/>Descargar
-            </Button> 
-            <Button
-              className=" rounded flex justify-start min-w-[170px] m-[5px]"
-              variant="contained"
-              color="customdos"
-              // onClick={exportToExcel}
-            >
-              <SiMicrosoftexcel size={30} className="mr-[10px] "/>Folio
-            </Button>
-            </>:
-            <Button
-              className=" rounded flex justify-start min-w-[170px] m-[5px]"
-              variant="contained"
-              color="customdos"
-              // onClick={exportToExcel}
-            >
-              <SiMicrosoftexcel size={30} className="mr-[10px] "/>Descargar
-            </Button>}
-            
+              <TextField
+                id="outlined-basic"
+                label="Filtrar"
+                variant="filled"
+                onChange={(e) => {
+                  handleSetRow(e);
+                }}
+              />
+              <Box className="flex justify-center mb-[5px] w-full">
+                {props.erp == 2 ? (
+                  <>
+                    <Button
+                      className=" rounded flex justify-start min-w-[170px] m-[5px]"
+                      variant="contained"
+                      color="customdos"
+                      onClick={() => downloadExcelFile("mydata")}
+                    >
+                      <SiMicrosoftexcel size={30} className="mr-[10px] " />
+                      Descargar
+                    </Button>
+                    <Button
+                      className=" rounded flex justify-start min-w-[170px] m-[5px]"
+                      variant="contained"
+                      color="customdos"
+                      // onClick={exportToExcel}
+                      onClick={() => downloadExcelFile("mydata")}
+                    >
+                      <SiMicrosoftexcel size={30} className="mr-[10px] " />
+                      Folio
+                    </Button>
+                  </>
+                ) : props.erp == 1 ? (
+                  <Button
+                    className=" rounded flex justify-start min-w-[170px] m-[5px]"
+                    variant="contained"
+                    color="customdos"
+                    onClick={() => downloadExcelFile("mydata")}
+                  >
+                    <SiMicrosoftexcel size={30} className="mr-[10px] " />
+                    Descargar
+                  </Button>
+                ) : (
+                  <Button
+                    className=" rounded flex justify-start min-w-[170px] m-[5px]"
+                    variant="contained"
+                    color="customdos"
+                    onClick={() => downloadExcelFile("mydata")}
+                  >
+                    <SiMicrosoftexcel size={30} className="mr-[10px]" />
+                    Descargar
+                  </Button>
+                )}
+              </Box>
             </Box>
-            </Box>
-         
+
             <TableContainer>
               {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
               <Table
@@ -1039,7 +1251,7 @@ function TabInstrucciones(props) {
                   numSelected={selected.length}
                   order={order}
                   orderBy={orderBy}
-                  // onSelectAllClick={handleSelectAllClick}
+                  onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
                   rowCount={rows.length}
                 />
@@ -1052,10 +1264,23 @@ function TabInstrucciones(props) {
                           if (props.erp == 2) {
                             return (
                               <StyledTableRow
+                                hover
+                                onClick={(event) => handleClick(event, row.id)}
+                                role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
                                 key={row.id}
+                                selected={isItemSelected}
                               >
+                                <StyledTableCell padding="checkbox">
+                                  <Checkbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": "Disconformidad",
+                                    }}
+                                  />
+                                </StyledTableCell>
                                 <StyledTableCell
                                   align="left"
                                   component="th"
@@ -1064,22 +1289,31 @@ function TabInstrucciones(props) {
                                 >
                                   {row.rut}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.razonSocial}
+                                  align="left"
+                                >
                                   {row.razonSocial}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.giro} align="left">
                                   {row.giro}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.comuna} align="left">
                                   {row.comuna}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.direccion}
+                                  align="left"
+                                >
                                   {row.direccion}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.producto}
+                                  align="left"
+                                >
                                   {row.producto}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.precio} align="left">
                                   {chile.format(row.precio)}
                                 </StyledTableCell>
                               </StyledTableRow>
@@ -1087,10 +1321,23 @@ function TabInstrucciones(props) {
                           } else if (props.erp == 1) {
                             return (
                               <StyledTableRow
+                                hover
+                                role="checkbox"
+                                onClick={(event) => handleClick(event, row.id)}
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
                                 key={row.id}
+                                selected={isItemSelected}
                               >
+                                <StyledTableCell padding="checkbox">
+                                  <Checkbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": "Disconformidad",
+                                    }}
+                                  />
+                                </StyledTableCell>
                                 <StyledTableCell
                                   align="left"
                                   component="th"
@@ -1099,43 +1346,58 @@ function TabInstrucciones(props) {
                                 >
                                   {row.folioReferencia}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.razonReferencia}
+                                  align="left"
+                                >
                                   {row.razonReferencia}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.razonSocial}
+                                  align="left"
+                                >
                                   {row.razonSocial}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.rut} align="left">
                                   {row.rut}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.folio} align="left">
                                   {row.folio}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.fechaCarta}
+                                  align="left"
+                                >
                                   {row.fechaCarta}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.concepto}
+                                  align="left"
+                                >
                                   {row.concepto}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.neto} align="left">
                                   {row.neto}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.iva} align="left">
                                   {row.iva}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.total} align="left">
                                   {row.total}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.giro} align="left">
                                   {row.giro}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.direccion}
+                                  align="left"
+                                >
                                   {row.direccion}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.comuna} align="left">
                                   {row.comuna}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.precio} align="left">
                                   {chile.format(row.precio)}
                                 </StyledTableCell>
                               </StyledTableRow>
@@ -1143,10 +1405,23 @@ function TabInstrucciones(props) {
                           } else if (props.erp == 7) {
                             return (
                               <StyledTableRow
+                                hover
+                                role="checkbox"
+                                onClick={(event) => handleClick(event, row.id)}
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
                                 key={row.id}
+                                selected={isItemSelected}
                               >
+                                <StyledTableCell padding="checkbox">
+                                  <Checkbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": "Disconformidad",
+                                    }}
+                                  />
+                                </StyledTableCell>
                                 <StyledTableCell
                                   align="left"
                                   component="th"
@@ -1155,28 +1430,40 @@ function TabInstrucciones(props) {
                                 >
                                   {row.numeroCorrelativo}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.fecha} align="left">
                                   {row.fecha}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.fechaVencimiento}
+                                  align="left"
+                                >
                                   {row.fechaVencimiento}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.codigoCliente}
+                                  align="left"
+                                >
                                   {row.codigoCliente}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.afecto} align="left">
                                   {chile.format(row.afecto)}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.total} align="left">
                                   {chile.format(row.total)}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell key={row.nombre} align="left">
                                   {row.nombre}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.direccion}
+                                  align="left"
+                                >
                                   {row.direccion}
                                 </StyledTableCell>
-                                <StyledTableCell key={row.id} align="left">
+                                <StyledTableCell
+                                  key={row.comentarioProducto}
+                                  align="left"
+                                >
                                   {row.comentarioProducto}
                                 </StyledTableCell>
                               </StyledTableRow>
