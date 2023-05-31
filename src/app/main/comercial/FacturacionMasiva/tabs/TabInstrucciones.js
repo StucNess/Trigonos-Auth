@@ -990,7 +990,13 @@ function TabInstrucciones(props) {
   function convertToSheet(data) {
     const wb = XLSX.utils.book_new();
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
-    XLSX.utils.sheet_add_aoa(ws, headersExcelF7);
+    if (props.erp == 1) {
+      XLSX.utils.sheet_add_aoa(ws, headersExcelF1);
+    } else if (props.erp == 2) {
+      XLSX.utils.sheet_add_aoa(ws, headersExcelF2);
+    } else if (props.ers == 7) {
+      XLSX.utils.sheet_add_aoa(ws, headersExcelF7);
+    }
     const sheet = XLSX.utils.sheet_add_json(ws, data, {
       origin: "A2",
       skipHeader: true,
@@ -1021,124 +1027,248 @@ function TabInstrucciones(props) {
     for (let i in dataInstructions.data.filter((p) =>
       selected.includes(p.id)
     )) {
-      console.log(i);
       let obj = new Object();
-      obj.DestinodelDocumento = "A";
-      obj.Documentoimpresosegeneranulo = "N";
-      obj.DocumentoimpresoGeneraRebajaStock = "N";
-      obj.TipodeDocumento = "FVAELECT";
-      obj.NúmeroCorrelativo = dataInstructions.data[i].id_instruccions;
-      obj.Nimerofinalsiloboletas = "";
-      obj.Fecha = devuelveFechaHoy();
-      obj.Local = "Local";
-      obj.Vendedor = "VENDEDOR";
-      obj.MonedaReferencia = "PESO";
-      obj.TasaReferencia = "1";
-      obj.CondicióndePago = "CR2";
-      obj.FechadeVencimiento = devuelveFechaHoy(1);
-      obj.CódigodelCliente = dataInstructions.data[i].rutDeudor;
-      obj.TipodeCliente = "";
-      obj.CentrodeNegocios = "";
-      obj.Clasificador1 = "";
-      obj.Clasificador2 = "";
-      obj.OrigendelDocumento = "";
-      obj.ListadePrecio = "";
-      obj.CódigodelProyecto = "";
-      obj.Afecto = dataInstructions.data[i].montoNeto;
-      obj.Exento = "0";
-      obj.Total = dataInstructions.data[i].montoBruto;
-      obj.BodegaInventario = "";
-      obj.MotivodemovimientoInventario = "";
-      obj.CentrodeNegociosInventario = "";
-      obj.TipodeCuentaInventario = "";
-      obj.ProveedorInventario = "";
-      obj.DireccióndeDespacho = "";
-      obj.Clasificador1Inventario = "";
-      obj.Clasificador2Inventario = "";
-      obj.CódigoLegal = dataInstructions.data[i].rutDeudor;
-      obj.Nombre = dataInstructions.data[i].nombreDeudor;
-      obj.Giros = dataInstructions.data[i].giroDeudor;
-      obj.Dirección = dataInstructions.data[i].direccionDeudor;
-      obj.Ciudads = "Las condes";
-      obj.Rubro = "1";
-      obj.Glosa = "";
-      obj.LíneadeDetalle = "1";
-      obj.ArticuloServicio = "S";
-      obj.CodigodelProducto = dataInstructions.data[i].glosa;
-      obj.Cantidad = "1";
-      obj.PrecioUnitario = dataInstructions.data[i].montoNeto;
-      obj.Descuento = "0";
-      obj.TipodeDescuento = "P";
-      obj.TipodeVenta = "";
-      obj.TotaldelProducto = dataInstructions.data[i].montoBruto;
-      obj.PrecioLista = "";
-      obj.TotalNeto = dataInstructions.data[i].montoNeto;
-      obj.FichaProducto = "";
-      obj.CentrodeNegociosProducto = "EMPADM000000000";
-      obj.Clasificador1Producto = "";
-      obj.Clasificador2Producto = "";
-      obj.CantidaddeUnidadEquivalente = "";
-      obj.CantidaddePeriodos = "";
-      obj.ComentarioProducto = dataInstructions.data[i].concepto;
-      obj.AnálisisAtributo1Producto = "";
-      obj.AnálisisAtributo2Producto = "";
-      obj.AnálisisAtributo3Producto = "";
-      obj.AnálisisAtributo4Producto = "";
-      obj.AnálisisAtributo5Producto = "";
-      obj.AnálisisLoteProducto = "";
-      obj.FechadeVencimientoLote = "";
-      obj.IngresoManual = "";
-      obj.TipodeInventario = "";
-      obj.Clasificador1InventarioLinea = "";
-      obj.Clasificador2InventarioLinea = "";
-      obj.NúmerodeDescuento = "";
-      obj.Descuento2 = "";
-      obj.TipodeDescuento2 = "";
-      obj.NumerodeImpuesto = "1";
-      obj.CódigodeImpuesto = "IVA";
-      obj.ValordeImpuesto = "19";
-      obj.MontodeImpuesto = dataInstructions.data[i].montoBruto - i.montoNeto;
-      obj.CentrodeNegociosProducto2 = "";
-      obj.Clasificador1Impuesto = "";
-      obj.Clasificador2Impuesto = "";
-      obj.NúmerodeCuota = "1";
-      obj.FechadeCuota = devuelveFechaHoy(1);
-      obj.MontodeCuota = dataInstructions.data[i].montoBruto;
-      obj.RelaciónlineaSeries = "";
-      obj.SufijoArtículoInventario = "";
-      obj.TipodeRecargoyDescuento = "";
-      obj.PrefijoArtículoInventario = "";
-      obj.SerieArtículoInventario = "";
-      obj.Distrito = "";
-      obj.Transacción = "";
-      obj.FechaFacturaciónDesde = "";
-      obj.FechaFacturaciónHasta = "";
-      obj.VíadeTransporte = "";
-      obj.PaísDestinoReceptor = "";
-      obj.PaísDestinoEmbarque = "";
-      obj.ModalidadVenta = "";
-      obj.TipoDespacho = "";
-      obj.IndicadordeServicio = "";
-      obj.ClaúsuladeVenta = "";
-      obj.TotalClaúsuladeVenta = "";
-      obj.PuertoEmbarque = "";
-      obj.PuertoDesembarque = "";
-      obj.UnidaddeMedidaTara = "";
-      obj.TotalMedidaTara = "";
-      obj.UnidadPesoBruto = "";
-      obj.TotalPesoBruto = "";
-      obj.UnidadPesoNeto = "";
-      obj.TotalPesoNeto = "";
-      obj.TipodeBulto = "";
-      obj.TotaldeBultos = "";
-      obj.FormadePago = "";
-      obj.TipoDocumentoAsociado = "SEN";
-      obj.FolioDocumentoAsociado = dataInstructions.data[i].codigoRef;
-      obj.FechaDocumentoAsociado = dataInstructions.data[i].fecha_carta;
-      obj.ComentarioDocumentoAsociado = dataInstructions.data[i].concepto;
-      obj.email = "";
-      obj.EsdocumentodetraspasoSsiNno = "S";
-      // dataPrueba.push(obj);
+      if (props.erp == 1) {
+        obj.id_csv = "";
+        obj.dte = "";
+        obj.id_dte = "";
+        obj.Doc = "";
+        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
+        obj.RazonReferencia = dataInstructions.data[i].glosa;
+        obj.EstadoEmision = "";
+        obj.EstadoPagado = "";
+        obj.SiglaCen = "";
+        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
+        obj.Rut = dataInstructions.data[i].rutDeudor;
+        obj.Folio = "";
+        obj.nnc = "";
+        obj.nnd = "";
+        obj.FechaEmision = devuelveFechaHoy();
+        obj.FechaPago = "";
+        obj.FechaVencimiento = devuelveFechaHoy(1);
+        obj.FechaReception = "";
+        obj.FechaCarta = dataInstructions.data[i].fecha_carta;
+        obj.CartaN = "";
+        obj.Concepto = dataInstructions.data[i].glosa;
+        obj.MesConsumido = "";
+        obj.Codcuadro = "";
+        obj.CodigoCP = "";
+        obj.Version = "";
+        obj.neto = dataInstructions.data[i].montoNeto;
+        obj.iva =
+          dataInstructions.data[i].montoBruto -
+          dataInstructions.data[i].montoNeto;
+        obj.total = dataInstructions.data[i].montoBruto;
+        obj.OrdenCompra = "";
+        obj.FechaEstimaP = "";
+        obj.Glosa = dataInstructions.data[i].glosa;
+        obj.MacroEmitFact = "";
+        obj.MacroCobranza = "";
+        obj.FechaEnviEmit = "";
+        obj.MacroGenerarDTE = "";
+        obj.giro = dataInstructions.data[i].giroDeudor;
+        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
+        obj.ComunaRecepcion = "Los leones";
+      } else if (props.erp == 2) {
+        obj.Tipo = "33";
+        obj.Folio = dataInstructions.data[i].id_instruccions;
+        obj.Secuencia = 1;
+        obj.FechaEmision = devuelveFechaHoy();
+        obj.Rut = dataInstructions.data[i].rutDeudor;
+        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
+        obj.giro = dataInstructions.data[i].giroDeudor;
+        obj.ComunaRecepcion = "Las condes";
+        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
+        obj.Afecto = "SI";
+        obj.RazonReferencia = dataInstructions.data[i].glosa;
+        obj.Descripcion = "";
+        obj.Cantidad = "1";
+        obj.neto = dataInstructions.data[i].montoNeto;
+        obj.Porcentaje = 0;
+        obj.Email = "";
+        obj.TipoServicio = "";
+        obj.PeriodoDesde = "";
+        obj.PeriodoHasta = "";
+        obj.FechaVencimiento = "";
+        obj.Tipo2 = "33";
+        obj.Folio2 = dataInstructions.data[i].id_instruccions;
+        obj.Secuencia2 = 1;
+        obj.TipoDocumento = "SEN";
+        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
+        obj.FechaCarta = dataInstructions.data[i].fecha_carta;
+        obj.MotivoRef = "";
+        obj.RazonReferencia2 = dataInstructions.data[i].glosa;
+      } else if (props.erp == 7) {
+        obj.DestinodelDocumento = "A";
+        obj.Documentoimpresosegeneranulo = "N";
+        obj.DocumentoimpresoGeneraRebajaStock = "N";
+        obj.TipodeDocumento = "FVAELECT";
+        obj.NúmeroCorrelativo = dataInstructions.data[i].id_instruccions;
+        obj.Nimerofinalsiloboletas = "";
+        obj.Fecha = devuelveFechaHoy();
+        obj.Local = "Local";
+        obj.Vendedor = "VENDEDOR";
+        obj.MonedaReferencia = "PESO";
+        obj.TasaReferencia = "1";
+        obj.CondicióndePago = "CR2";
+        obj.FechadeVencimiento = devuelveFechaHoy(1);
+        obj.CódigodelCliente = dataInstructions.data[i].rutDeudor;
+        obj.TipodeCliente = "";
+        obj.CentrodeNegocios = "";
+        obj.Clasificador1 = "";
+        obj.Clasificador2 = "";
+        obj.OrigendelDocumento = "";
+        obj.ListadePrecio = "";
+        obj.CódigodelProyecto = "";
+        obj.Afecto = dataInstructions.data[i].montoNeto;
+        obj.Exento = "0";
+        obj.Total = dataInstructions.data[i].montoBruto;
+        obj.BodegaInventario = "";
+        obj.MotivodemovimientoInventario = "";
+        obj.CentrodeNegociosInventario = "";
+        obj.TipodeCuentaInventario = "";
+        obj.ProveedorInventario = "";
+        obj.DireccióndeDespacho = "";
+        obj.Clasificador1Inventario = "";
+        obj.Clasificador2Inventario = "";
+        obj.CódigoLegal = dataInstructions.data[i].rutDeudor;
+        obj.Nombre = dataInstructions.data[i].nombreDeudor;
+        obj.Giros = dataInstructions.data[i].giroDeudor;
+        obj.Dirección = dataInstructions.data[i].direccionDeudor;
+        obj.Ciudads = "Las condes";
+        obj.Rubro = "1";
+        obj.Glosa = "";
+        obj.LíneadeDetalle = "1";
+        obj.ArticuloServicio = "S";
+        obj.CodigodelProducto = dataInstructions.data[i].glosa;
+        obj.Cantidad = "1";
+        obj.PrecioUnitario = dataInstructions.data[i].montoNeto;
+        obj.Descuento = "0";
+        obj.TipodeDescuento = "P";
+        obj.TipodeVenta = "";
+        obj.TotaldelProducto = dataInstructions.data[i].montoBruto;
+        obj.PrecioLista = "";
+        obj.TotalNeto = dataInstructions.data[i].montoNeto;
+        obj.FichaProducto = "";
+        obj.CentrodeNegociosProducto = "EMPADM000000000";
+        obj.Clasificador1Producto = "";
+        obj.Clasificador2Producto = "";
+        obj.CantidaddeUnidadEquivalente = "";
+        obj.CantidaddePeriodos = "";
+        obj.ComentarioProducto = dataInstructions.data[i].concepto;
+        obj.AnálisisAtributo1Producto = "";
+        obj.AnálisisAtributo2Producto = "";
+        obj.AnálisisAtributo3Producto = "";
+        obj.AnálisisAtributo4Producto = "";
+        obj.AnálisisAtributo5Producto = "";
+        obj.AnálisisLoteProducto = "";
+        obj.FechadeVencimientoLote = "";
+        obj.IngresoManual = "";
+        obj.TipodeInventario = "";
+        obj.Clasificador1InventarioLinea = "";
+        obj.Clasificador2InventarioLinea = "";
+        obj.NúmerodeDescuento = "";
+        obj.Descuento2 = "";
+        obj.TipodeDescuento2 = "";
+        obj.NumerodeImpuesto = "1";
+        obj.CódigodeImpuesto = "IVA";
+        obj.ValordeImpuesto = "19";
+        obj.MontodeImpuesto = dataInstructions.data[i].montoBruto - i.montoNeto;
+        obj.CentrodeNegociosProducto2 = "";
+        obj.Clasificador1Impuesto = "";
+        obj.Clasificador2Impuesto = "";
+        obj.NúmerodeCuota = "1";
+        obj.FechadeCuota = devuelveFechaHoy(1);
+        obj.MontodeCuota = dataInstructions.data[i].montoBruto;
+        obj.RelaciónlineaSeries = "";
+        obj.SufijoArtículoInventario = "";
+        obj.TipodeRecargoyDescuento = "";
+        obj.PrefijoArtículoInventario = "";
+        obj.SerieArtículoInventario = "";
+        obj.Distrito = "";
+        obj.Transacción = "";
+        obj.FechaFacturaciónDesde = "";
+        obj.FechaFacturaciónHasta = "";
+        obj.VíadeTransporte = "";
+        obj.PaísDestinoReceptor = "";
+        obj.PaísDestinoEmbarque = "";
+        obj.ModalidadVenta = "";
+        obj.TipoDespacho = "";
+        obj.IndicadordeServicio = "";
+        obj.ClaúsuladeVenta = "";
+        obj.TotalClaúsuladeVenta = "";
+        obj.PuertoEmbarque = "";
+        obj.PuertoDesembarque = "";
+        obj.UnidaddeMedidaTara = "";
+        obj.TotalMedidaTara = "";
+        obj.UnidadPesoBruto = "";
+        obj.TotalPesoBruto = "";
+        obj.UnidadPesoNeto = "";
+        obj.TotalPesoNeto = "";
+        obj.TipodeBulto = "";
+        obj.TotaldeBultos = "";
+        obj.FormadePago = "";
+        obj.TipoDocumentoAsociado = "SEN";
+        obj.FolioDocumentoAsociado = dataInstructions.data[i].codigoRef;
+        obj.FechaDocumentoAsociado = dataInstructions.data[i].fecha_carta;
+        obj.ComentarioDocumentoAsociado = dataInstructions.data[i].concepto;
+        obj.email = "";
+        obj.EsdocumentodetraspasoSsiNno = "S";
+      } else if (props.erp == 3) {
+        obj.Rut = dataInstructions.data[i].rutDeudor.replace("-", "");
+        obj.Tipo = "33";
+        obj.Folio = dataInstructions.data[i].folio;
+        obj.FechaEmision = devuelveFechaHoy();
+        obj.Rutreceptor = dataInstructions.data[i].rutDeudor;
+        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
+        obj.giro = dataInstructions.data[i].giroDeudor;
+        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
+        obj.ComunaRecepcion = "Las condes";
+        obj.Email = "";
+        obj.Exento = "0";
+        obj.neto = dataInstructions.data[i].montoNeto;
+        obj.iva =
+          dataInstructions.data[i].montoBruto -
+          idataInstructions.data[i].montoNeto;
+        obj.total = dataInstructions.data[i].montoBruto;
+        obj.TipoReferencia = "SEN";
+        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
+        obj.CodReferencia = "0";
+        obj.DES1 = dataInstructions.data[i].glosa;
+        obj.GLO1 = "";
+        obj.MNT1 = dataInstructions.data[i].montoNeto;
+        obj.DES2 = "";
+        obj.GLO2 = "";
+        obj.MNT2 = "0";
+        obj.DES3 = "";
+        obj.GLO3 = "";
+        obj.MNT3 = "0";
+        obj.DES4 = "";
+        obj.GLO4 = "";
+        obj.MNT4 = "0";
+        obj.DES5 = "";
+        obj.GLO5 = "";
+        obj.MNT5 = "0";
+        obj.DES6 = "";
+        obj.GLO6 = "";
+        obj.MNT6 = "0";
+        obj.DES7 = "";
+        obj.GLO7 = "";
+        obj.MNT7 = "0";
+        obj.DES8 = "";
+        obj.GLO8 = "";
+        obj.MNT8 = "0";
+        obj.DES9 = "";
+        obj.GLO9 = "";
+        obj.MNT9 = "0";
+        obj.DES10 = "";
+        obj.GLO10 = "";
+        obj.MNT10 = "0";
+        obj.GlosaLarga = "";
+        obj.FechaVencimiento = devuelveFechaHoy(2);
+        obj.GlosaReferencia = dataInstructions.data[i].glosa;
+        obj.FechaCarta = dataInstructions.data[i].fecha_carta;
+      }
       dataPrueba.push(obj);
     }
 
@@ -1377,13 +1507,13 @@ function TabInstrucciones(props) {
                                   {row.concepto}
                                 </StyledTableCell>
                                 <StyledTableCell key={row.neto} align="left">
-                                  {row.neto}
+                                  {chile.format(row.neto)}
                                 </StyledTableCell>
                                 <StyledTableCell key={row.iva} align="left">
-                                  {row.iva}
+                                  {chile.format(row.iva)}
                                 </StyledTableCell>
                                 <StyledTableCell key={row.total} align="left">
-                                  {row.total}
+                                  {chile.format(row.total)}
                                 </StyledTableCell>
                                 <StyledTableCell key={row.giro} align="left">
                                   {row.giro}
