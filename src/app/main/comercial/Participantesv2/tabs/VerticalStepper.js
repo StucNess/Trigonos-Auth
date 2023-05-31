@@ -51,6 +51,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useGetProyectoByIdMutation, usePostActivarProyectoMutation, usePostDesactivarProyectoMutation,usePostActualizarTipoClienteMutation } from "app/store/participantesApi/participantesApi";
 
 //MODAL TABLA CAMBIOS
 function createData(campo, antiguo, nuevo) {
@@ -78,6 +79,9 @@ let dataBank;
 let banks;
 
 export default function HorizontalNonLinearStepper(props) {
+  const [postActProyect, dataActivarProyect] = usePostActivarProyectoMutation();
+  const [postDescProyect, dataDesactivarProyect] = usePostDesactivarProyectoMutation();
+  const [postActTipoClient, dataActTipoClient] = usePostActualizarTipoClienteMutation();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [activeLabel, setActiveLabel] = useState("");
@@ -111,6 +115,7 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactAddress: props.dataParticipant.bills_contact_address,
     billsContactPhones: props.dataParticipant.bills_contact_phones,
     billsContactEmail: props.dataParticipant.bills_contact_email,
+    isclient: undefined,
     fact_userProduccion: undefined,
     fact_claveProduccion: undefined,
     fact_rutProduccion: undefined,
@@ -145,6 +150,7 @@ export default function HorizontalNonLinearStepper(props) {
     fact_userPruebas: false,
     fact_clavePruebas: false,
     fact_rutPruebas: false,
+   
   });
   const [dataConfirm, setDataConfirm] = useState({
     id: props.dataParticipant.id,
@@ -170,10 +176,18 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactAddress: props.dataParticipant.bills_contact_address,
     billsContactPhones: props.dataParticipant.bills_contact_phones,
     billsContactEmail: props.dataParticipant.bills_contact_email,
+    isclient: undefined,
+    fact_userProduccion: undefined,
+    fact_claveProduccion: undefined,
+    fact_rutProduccion: undefined,
+    fact_userPruebas: undefined,
+    fact_clavePruebas: undefined,
+    fact_rutPruebas: undefined,
   });
   const [activeButton, setActiveButton] = useState(false);
   const [countActive, setCountActive] = useState(0);
   const [open, setOpen] = useState(false);
+  const [getProyect, dataProyect] = useGetProyectoByIdMutation();
 
   const [checkedBlue, setCheckedBlue] = React.useState(false);
   const [checkedExt, setCheckedExt] = React.useState(false);
@@ -196,74 +210,113 @@ export default function HorizontalNonLinearStepper(props) {
       [name]: value,
     });
   };
-
+  function isOurClient(number){
+    if(number ===0){
+      setCheckedExt(true);
+      setCheckedBlue(false);
+      
+    }else{
+      setCheckedExt(false);
+      setCheckedBlue(true);
+    }
+  }
   useEffect(() => {
+   
     (async () => {
       dataBank = await CallBanks(props.dataParticipant.bank);
       setBankk(dataBank.name);
-      console.log(props.dataParticipant);
-      setFormState({
-        id: props.dataParticipant.id,
-        name: props.dataParticipant.name,
-        rut: props.dataParticipant.rut,
-        verificationCode: props.dataParticipant.verification_Code,
-        businessName: props.dataParticipant.business_Name,
-        commercialBusiness: props.dataParticipant.commercial_Business,
-        email: props.dataParticipant.dte_Reception_Email,
-        bankAccount: props.dataParticipant.bank_Account,
-        bank: props.dataParticipant.bank,
-        banksName: props.dataParticipant.banksName,
-        commercialAddress: props.dataParticipant.commercial_address,
-        postalAddress: props.dataParticipant.postal_address, //REVISAR
-        manager: props.dataParticipant.manager,
-        payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
-        payContactLastName: props.dataParticipant.pay_contact_last_name,
-        payContactAddress: props.dataParticipant.pay_contact_address,
-        payContactPhones: props.dataParticipant.pay_contact_phones.replace(
-          /["\[\]"]/g,
-          ""
-        ),
-        payContactEmail: props.dataParticipant.pay_contact_email,
-        billsContactLastName: props.dataParticipant.bills_contact_last_name,
-        billsContactFirstName: props.dataParticipant.bills_contact_first_name,
-        billsContactAddress: props.dataParticipant.bills_contact_address,
-        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(
-          /["\[\]"]/g,
-          ""
-        ),
-        billsContactEmail: props.dataParticipant.bills_contact_email,
+      // console.log(props.dataParticipant);
+      getProyect(props.dataParticipant.id || 1).then((response)=>{
+      
+         
+        // setFormState({
+        //   ...formState,isclient:data.vHabilitado})
+        // setDataConfirm({
+        //   ...dataConfirm,isclient:data.vHabilitado})
+       
+       
+        setFormState({
+        
+          id: props.dataParticipant.id,
+          name: props.dataParticipant.name,
+          rut: props.dataParticipant.rut,
+          verificationCode: props.dataParticipant.verification_Code,
+          businessName: props.dataParticipant.business_Name,
+          commercialBusiness: props.dataParticipant.commercial_Business,
+          email: props.dataParticipant.dte_Reception_Email,
+          bankAccount: props.dataParticipant.bank_Account,
+          bank: props.dataParticipant.bank,
+          banksName: props.dataParticipant.banksName,
+          commercialAddress: props.dataParticipant.commercial_address,
+          postalAddress: props.dataParticipant.postal_address, //REVISAR
+          manager: props.dataParticipant.manager,
+          payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
+          payContactLastName: props.dataParticipant.pay_contact_last_name,
+          payContactAddress: props.dataParticipant.pay_contact_address,
+          payContactPhones: props.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g,""),
+          payContactEmail: props.dataParticipant.pay_contact_email,
+          billsContactLastName: props.dataParticipant.bills_contact_last_name,
+          billsContactFirstName: props.dataParticipant.bills_contact_first_name,
+          billsContactAddress: props.dataParticipant.bills_contact_address,
+          billsContactPhones: props.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g,""),
+          billsContactEmail: props.dataParticipant.bills_contact_email,
+          isclient:response.data.vHabilitado,
+          fact_userProduccion: undefined,
+          fact_claveProduccion: undefined,
+          fact_rutProduccion: undefined,
+          fact_userPruebas: undefined,
+          fact_clavePruebas: undefined,
+          fact_rutPruebas: undefined,
+        });
+        setDataConfirm({
+        
+          id: props.dataParticipant.id,
+          name: props.dataParticipant.name,
+          rut: props.dataParticipant.rut,
+          verificationCode: props.dataParticipant.verification_Code,
+          businessName: props.dataParticipant.business_Name,
+          commercialBusiness: props.dataParticipant.commercial_Business,
+          email: props.dataParticipant.dte_Reception_Email,
+          bankAccount: props.dataParticipant.bank_Account,
+          bank: props.dataParticipant.bank,
+          banksName: props.dataParticipant.banksName,
+          commercialAddress: props.dataParticipant.commercial_address,
+          postalAddress: props.dataParticipant.postal_address, //REVISAR
+          manager: props.dataParticipant.manager,
+          payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
+          payContactLastName: props.dataParticipant.pay_contact_last_name,
+          payContactAddress: props.dataParticipant.pay_contact_address,
+          payContactPhones: props.dataParticipant.pay_contact_phones.replace(
+            /["\[\]"]/g,
+            ""
+          ),
+          payContactEmail: props.dataParticipant.pay_contact_email,
+          billsContactLastName: props.dataParticipant.bills_contact_last_name,
+          billsContactFirstName: props.dataParticipant.bills_contact_first_name,
+          billsContactAddress: props.dataParticipant.bills_contact_address,
+          billsContactPhones: props.dataParticipant.bills_contact_phones.replace(
+            /["\[\]"]/g,
+            ""
+          ),
+          billsContactEmail: props.dataParticipant.bills_contact_email,
+          isclient:response.data.vHabilitado,
+          fact_userProduccion: undefined,
+          fact_claveProduccion: undefined,
+          fact_rutProduccion: undefined,
+          fact_userPruebas: undefined,
+          fact_clavePruebas: undefined,
+          fact_rutPruebas: undefined,
+        });
+        if(response.data.vHabilitado ===0 ){
+          setCheckedExt(true);
+          setCheckedBlue(false);
+          
+        }else{
+          setCheckedExt(false);
+          setCheckedBlue(true);
+        }
       });
-      setDataConfirm({
-        id: props.dataParticipant.id,
-        name: props.dataParticipant.name,
-        rut: props.dataParticipant.rut,
-        verificationCode: props.dataParticipant.verification_Code,
-        businessName: props.dataParticipant.business_Name,
-        commercialBusiness: props.dataParticipant.commercial_Business,
-        email: props.dataParticipant.dte_Reception_Email,
-        bankAccount: props.dataParticipant.bank_Account,
-        bank: props.dataParticipant.bank,
-        banksName: props.dataParticipant.banksName,
-        commercialAddress: props.dataParticipant.commercial_address,
-        postalAddress: props.dataParticipant.postal_address, //REVISAR
-        manager: props.dataParticipant.manager,
-        payContactFirstName: props.dataParticipant.pay_Contact_First_Name,
-        payContactLastName: props.dataParticipant.pay_contact_last_name,
-        payContactAddress: props.dataParticipant.pay_contact_address,
-        payContactPhones: props.dataParticipant.pay_contact_phones.replace(
-          /["\[\]"]/g,
-          ""
-        ),
-        payContactEmail: props.dataParticipant.pay_contact_email,
-        billsContactLastName: props.dataParticipant.bills_contact_last_name,
-        billsContactFirstName: props.dataParticipant.bills_contact_first_name,
-        billsContactAddress: props.dataParticipant.bills_contact_address,
-        billsContactPhones: props.dataParticipant.bills_contact_phones.replace(
-          /["\[\]"]/g,
-          ""
-        ),
-        billsContactEmail: props.dataParticipant.bills_contact_email,
-      });
+      
     })();
   }, [props.dataParticipant.id, alertOk]);
   useEffect(() => {
@@ -466,6 +519,13 @@ export default function HorizontalNonLinearStepper(props) {
             dataConfirm.bankAccount,
             formState.bankAccount
           ),
+      dataConfirm.isclient === formState.isclient
+        ? undefined
+        : createData(
+            "Tipo de Cliente",
+            dataConfirm.isclient === 0? 'Externo':'Bluetree',
+            formState.isclient=== 0? 'Externo':'Bluetree'
+          ),
     ];
     rows = rows.filter((x) => x !== undefined);
     if (isEqual) {
@@ -504,9 +564,16 @@ export default function HorizontalNonLinearStepper(props) {
   const ApiPatch = () => {
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
     if (isEqual) {
-      console.log("No se realiza envio a API");
+      // console.log("No se realiza envio a API");
       setAlertError(true);
     } else {
+      
+      postActTipoClient(props.dataParticipant.id).then((response)=>{
+        
+      }).catch((error)=>{
+        setAlertError(true);
+      })
+      
       let formatBillsContactPhones =
         '["' + formState.billsContactPhones.replace(/,/g, '","') + '"]';
       let formatpayContactPhones =
@@ -544,7 +611,11 @@ export default function HorizontalNonLinearStepper(props) {
         .catch((error) => {
           setAlertError(true);
         });
+        console.log(props.dataParticipant.id);
+        
+      
     }
+    
   };
   useEffect(() => {
     countActive === 0 ? setActiveButton(false) : setActiveButton(true);
@@ -1729,6 +1800,11 @@ export default function HorizontalNonLinearStepper(props) {
                                     ...update,
                                     typeClient: false,
                                   });
+                                  setFormState({
+                                    ...formState,
+                                    isclient:dataConfirm.isclient,
+                                  });
+                                  isOurClient(dataConfirm.isclient)
                                   setCountActive(
                                     countActive > 0
                                       ? countActive - 1
@@ -1774,12 +1850,16 @@ export default function HorizontalNonLinearStepper(props) {
                                     control={
                                       <Checkbox
                                         checked={checkedBlue}
-                                        onChange={(event) => {
-                                          setCheckedBlue(
-                                            event.target.checked
-                                          );
+                                       
+                                        onClick={()=>{
+                                          setCheckedBlue(true);
                                           setCheckedExt(false);
-                                        }}
+                                          setFormState({
+                                            ...formState,
+                                            isclient: 1
+                                          })
+                                        }
+                                        }
                                       />
                                     }
                                   />
@@ -1790,9 +1870,13 @@ export default function HorizontalNonLinearStepper(props) {
                                     control={
                                       <Checkbox
                                         checked={checkedExt}
-                                        onChange={(event) => {
-                                          setCheckedExt(event.target.checked);
+                                        onClick={()=>{
+                                          setCheckedExt(true);
                                           setCheckedBlue(false);
+                                          setFormState({
+                                            ...formState,
+                                            isclient: 0
+                                          })
                                         }}
                                       />
                                     }

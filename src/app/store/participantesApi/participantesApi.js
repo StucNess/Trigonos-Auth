@@ -12,6 +12,56 @@ export const participantesApi = createApi({
     getParticipantesById_: builder.query({
       query: (id) => `/api/Participantes?id=${id}`,
     }),
+    getProyectoAll: builder.mutation({
+      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      query: (spec) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/api/Participantes?All=s&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
+        method: "GET",
+      }),
+    }),
+    getProyectoById: builder.mutation({
+      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      query: (id) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/api/Participantes/ProyectosBy/${id}`,
+        method: "GET",
+      }),
+    }),
+    postActualizarTipoCliente: builder.mutation({
+      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      query: (id) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `api/Participantes/ActualizarTipoCliente/${id}`,
+        method: "POST",
+      }),
+    }),
+    postActivarProyecto: builder.mutation({
+      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      query: (id) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/api/Participantes/ActHabilitadoProyect/id=${id}`,
+        method: "POST",
+      }),
+    }),
+    postDesactivarProyecto: builder.mutation({
+      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      query: (id) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/api/Participantes/DesacHabilitadoProyect/id=${id}`,
+        method: "POST",
+      }),
+    }),
 
     getParticipantesById: builder.mutation({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
@@ -42,6 +92,11 @@ export const participantesApi = createApi({
 export const {
   useGetParticipantesQuery,
   useGetParticipantesById_Query,
+  useGetProyectoAllMutation,
+  useGetProyectoByIdMutation,
+  usePostActualizarTipoClienteMutation,
+  usePostActivarProyectoMutation,
+  usePostDesactivarProyectoMutation,
   useGetParticipantesByIdMutation,
   useGetBusinessNameQuery,
   useGetRutQuery,

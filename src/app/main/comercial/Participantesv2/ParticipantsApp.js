@@ -18,9 +18,11 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 let participants = [];
 const NominaPagoApp = () => {
+  const [isloading, setIsloading] = useState(true);
   const [dataParticipant, setDataParticipant] = useState([]);
   const [change, setChange] = useState(false);
   const [idParticipant, setIdParticipant] = useState();
+  const [tipoCliente, setTipoCliente] = useState([]);
   const getIdParticipant = (data) => {
     setIdParticipant(data);
   };
@@ -29,6 +31,12 @@ const NominaPagoApp = () => {
   };
   const getChange = (data) => {
     setChange(data);
+  };
+  const getTipoCliente = (data) => {
+    setTipoCliente(data);
+  };
+  const getIsloading = (data) => {
+    setIsloading(data);
   };
   return (
     <Root
@@ -59,14 +67,18 @@ const NominaPagoApp = () => {
               change={change}
               sendParticipants={getDataParticipants}
               idParticipant={idParticipant}
+              isLoading={getIsloading}
+              tipoCliente ={getTipoCliente}
             />
           </Paper>
        
           <Paper className="w-full p-[20px] ">
             <VerticalStepper
               dataParticipant={dataParticipant}
+              tipoCliente={tipoCliente}
               sendChange={getChange}
               sendIdParticipant={getIdParticipant}
+              isLoading ={isloading}
             />
           </Paper>
         </Box>
