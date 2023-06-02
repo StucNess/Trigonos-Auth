@@ -217,6 +217,7 @@ const TablaInstrucciones = (props) => {
           if (response.data != [] && response.data != undefined) {
             let json = await response.data;
             pagination = response.count;
+            console.log(response);
             json.map(
               ({
                 id_instruccions,
