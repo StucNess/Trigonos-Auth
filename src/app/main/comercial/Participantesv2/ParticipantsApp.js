@@ -6,9 +6,13 @@ import FacturacionMasivaAppHeader from "./ParticipantsAppHeader";
 import VerticalStepper from "./tabs/VerticalStepper";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import FiltrosParticipant from "./tabs/FiltrosParticipant";
-
+import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 import { CallApi } from "./store/CallApi";
 import { useEffect, useState } from "react";
+import { useGetPartAllQuery, useGetProyAllQuery } from "app/store/participantesApi/participantesApi";
+import { useGetFactCLAllQuery } from "app/store/facturacionClApi/facturacionClApi";
+import { useGetFacturadorERPTableQuery, useGetNominaPagoTableQuery } from "app/store/nominasApi/nominasApi";
 
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
@@ -20,11 +24,55 @@ let participants = [];
 const NominaPagoApp = () => {
   const [isloading, setIsloading] = useState(true);
   const [dataParticipant, setDataParticipant] = useState([]);
+  const [fullData, setFullData] = useState(undefined);
+  const {data: getParticipant, isFetching: fetchParticipant }= useGetPartAllQuery({PageIndex:1,PageSize:1000});
+  const {data: getProject, isFetching: fetchProject }= useGetProyAllQuery({PageIndex:1,PageSize:1000});
+  const {data: getFactCl, isFetching: fetchFact }= useGetFactCLAllQuery();
+  const {data: getFactErp, isFetching: fetchFactErp }= useGetFacturadorERPTableQuery();
+  const {data: getNomPago, isFetching: fetchNomPag }= useGetNominaPagoTableQuery();
+  console.log(getProject)
+
+  let ArrayFetchs = [fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag];
+  let ArrayDatas = [getParticipant,getProject,getFactCl,getFactErp,getNomPago];
+  function verificarLista() {
+    if (ArrayFetchs.every((valor) => valor === true)) {
+      return true;
+    } else {
+      if(ArrayDatas.every((valor) => valor != undefined)){
+        return false;
+      }else{
+        
+        return true;
+        
+      }
+      
+    }
+  }
+  
+  let isLoadingApis = verificarLista()
+ 
+  useEffect(() => {
+    
+    if(fullData != undefined){
+      setIsloading(false);
+      console.log({
+        dataParticipant: [getParticipant.data[0]],
+        dataProject:getProject.data.filter((data) => data.id_participants ===getParticipant.data[0].id)||{},
+        dataFactCl:getFactCl.filter((data) => data.idParticipante ===getParticipant.data[0].id)||{}
+      })
+    }
+  }, [fullData])
+  
+ 
+
   const [change, setChange] = useState(false);
   const [idParticipant, setIdParticipant] = useState();
-  const [tipoCliente, setTipoCliente] = useState([]);
+  const [tipoCliente, setTipoCliente] = useState({id: 7455, id_participants: 2, vHabilitado: 0});
   const getIdParticipant = (data) => {
     setIdParticipant(data);
+  };
+  const getFullData = (data) => {
+    setFullData(data);
   };
   const getDataParticipants = (data) => {
     setDataParticipant(data);
@@ -35,9 +83,9 @@ const NominaPagoApp = () => {
   const getTipoCliente = (data) => {
     setTipoCliente(data);
   };
-  const getIsloading = (data) => {
-    setIsloading(data);
-  };
+  // const getIsloading = (data) => {
+  //   setIsloading(data);
+  // };
   return (
     <Root
       // header={<FacturacionMasivaAppHeader />}
@@ -61,26 +109,46 @@ const NominaPagoApp = () => {
               </div>
             </Box>
           </Box>
-          <Paper className="w-full p-[20px] mb-[20px]">
+          {isLoadingApis?<Paper className="w-full p-[20px] mb-[20px]">
+            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                  
+                    <LinearProgress color="primary" />
+            </Stack>
+         </Paper>:
+
+         <>
+         <Paper className="w-full p-[20px] mb-[20px]">
          
-            <FiltrosParticipant
-              change={change}
-              sendParticipants={getDataParticipants}
-              idParticipant={idParticipant}
-              isLoading={getIsloading}
-              tipoCliente ={getTipoCliente}
-            />
-          </Paper>
-       
+         <FiltrosParticipant
+           allparticipants={getParticipant.data}
+           allprojects={getProject.data}
+           allfactcl={getFactCl}
+           sendFullData={getFullData}
+           change={change}
+           idParticipant={idParticipant}
+          //  isLoading={getIsloading}
+         
+         />
+       </Paper>
+        {isloading?  <Paper className="w-full p-[20px] mb-[20px]">
+       <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+             
+               <LinearProgress color="primary" />
+       </Stack>
+       </Paper>:
           <Paper className="w-full p-[20px] ">
-            <VerticalStepper
-              dataParticipant={dataParticipant}
-              tipoCliente={tipoCliente}
-              sendChange={getChange}
-              sendIdParticipant={getIdParticipant}
-              isLoading ={isloading}
-            />
-          </Paper>
+         <VerticalStepper
+          
+           fullData={fullData}
+           nominaPago={getNomPago}
+           facturadorErp={getFactErp}
+           sendChange={getChange}
+           sendIdParticipant={getIdParticipant}
+           
+          //  isLoading ={isloading}
+         />
+       </Paper>
+       }</>} 
         </Box>
       }
       scroll="content"

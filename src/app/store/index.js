@@ -6,6 +6,7 @@ import { participantesApi } from "./participantesApi/participantesApi";
 import { usuariosApi } from "./usuariosApi/usuariosApi";
 import { empresaApi } from "./empresaApi/empresaApi";
 import { nominasApi } from "./nominasApi/nominasApi";
+import { facturacionClApi } from "./facturacionClApi/facturacionClApi";
 if (process.env.NODE_ENV === "development" && module.hot) {
   module.hot.accept("./rootReducer", () => {
     const newRootReducer = require("./rootReducer").default;
@@ -22,6 +23,7 @@ const middlewares = [
   usuariosApi.middleware,
   empresaApi.middleware,
   nominasApi.middleware,
+  facturacionClApi.middleware,
 ];
 
 if (process.env.NODE_ENV === "development") {

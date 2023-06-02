@@ -12,7 +12,7 @@ export const participantesApi = createApi({
     getParticipantesById_: builder.query({
       query: (id) => `/api/Participantes?id=${id}`,
     }),
-    getProyectoAll: builder.mutation({
+    getParticipantell: builder.mutation({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
       query: (spec) => ({
         headers: {
@@ -32,36 +32,30 @@ export const participantesApi = createApi({
         method: "GET",
       }),
     }),
-    postActualizarTipoCliente: builder.mutation({
+    getProyectoAll: builder.mutation({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
-      query: (id) => ({
+      query: (spec) => ({
         headers: {
           "Content-type": "application/json",
         },
-        url: `api/Participantes/ActualizarTipoCliente/${id}`,
-        method: "POST",
+        url: `/api/Participantes/PaginationProyectos?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
+        method: "GET",
       }),
     }),
-    postActivarProyecto: builder.mutation({
+    postActualizarProyecto: builder.mutation({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
-      query: (id) => ({
+      query: (spec) => ({
         headers: {
           "Content-type": "application/json",
         },
-        url: `/api/Participantes/ActHabilitadoProyect/id=${id}`,
+        url: "/api/Participantes/ActualizarProyecto",
         method: "POST",
+        body: spec
       }),
+     
     }),
-    postDesactivarProyecto: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
-      query: (id) => ({
-        headers: {
-          "Content-type": "application/json",
-        },
-        url: `/api/Participantes/DesacHabilitadoProyect/id=${id}`,
-        method: "POST",
-      }),
-    }),
+   
+  
 
     getParticipantesById: builder.mutation({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
@@ -87,19 +81,32 @@ export const participantesApi = createApi({
     getHistorificacion: builder.query({
       query: (id) => `/Historificacion?${id}`,
     }),
+
+    //Optimos
+    getPartAll: builder.query({
+      query: (spec) => `/api/Participantes?All=s&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
+    }),
+    getProyAll: builder.query({
+      query: (spec) => `/api/Participantes/PaginationProyectos?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`
+      
+    }),
+
   }),
 });
 export const {
   useGetParticipantesQuery,
   useGetParticipantesById_Query,
-  useGetProyectoAllMutation,
+  useGetParticipantellMutation,
   useGetProyectoByIdMutation,
-  usePostActualizarTipoClienteMutation,
-  usePostActivarProyectoMutation,
-  usePostDesactivarProyectoMutation,
+  useGetProyectoAllMutation,
+  usePostActualizarProyectoMutation,
+
   useGetParticipantesByIdMutation,
   useGetBusinessNameQuery,
   useGetRutQuery,
   useGetParticipantesSpecQuery,
   useGetHistorificacionQuery,
+
+  useGetPartAllQuery,
+  useGetProyAllQuery
 } = participantesApi;

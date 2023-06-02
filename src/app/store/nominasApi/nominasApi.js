@@ -25,9 +25,23 @@ export const nominasApi = createApi({
             }),
             providesTags:["nominas"]
         }),
-
+        getNominaPagoTable: builder.query({
+            //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+            query: () =>`/Nominas/NominasPago`,
+            
+        }),
+        getFacturadorERPTable: builder.query({
+            //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+            query: () =>`/Nominas/FacturadorERP`,
+            
+        }),
         
        
     })
 })
-export const { useGetNominasMutation}= nominasApi;
+export const { 
+useGetNominasMutation,
+useGetNominaPagoTableQuery,
+useGetFacturadorERPTableQuery
+
+}= nominasApi;
