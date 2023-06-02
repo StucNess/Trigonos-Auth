@@ -484,7 +484,11 @@ const TablaInstrucciones = (props) => {
         </div>
         <div className="flex flex-col flex-auto mt-9">
           <TableContainer component={Paper}>
-            <Table stickyHeader sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table
+              stickyHeader
+              sx={{ minWidth: 650 }}
+              aria-label="simple table"
+            >
               <TableHead>
                 <TableRow>
                   {columns.map((column) =>

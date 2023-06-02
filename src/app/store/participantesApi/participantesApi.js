@@ -50,12 +50,9 @@ export const participantesApi = createApi({
         },
         url: "/api/Participantes/ActualizarProyecto",
         method: "POST",
-        body: spec
+        body: spec,
       }),
-     
     }),
-   
-  
 
     getParticipantesById: builder.mutation({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
@@ -84,13 +81,13 @@ export const participantesApi = createApi({
 
     //Optimos
     getPartAll: builder.query({
-      query: (spec) => `/api/Participantes?All=s&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
+      query: (spec) =>
+        `/api/Participantes?All=s&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
     }),
     getProyAll: builder.query({
-      query: (spec) => `/api/Participantes/PaginationProyectos?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`
-      
+      query: (spec) =>
+        `/api/Participantes/PaginationProyectos?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
     }),
-
   }),
 });
 export const {
@@ -108,5 +105,5 @@ export const {
   useGetHistorificacionQuery,
 
   useGetPartAllQuery,
-  useGetProyAllQuery
+  useGetProyAllQuery,
 } = participantesApi;

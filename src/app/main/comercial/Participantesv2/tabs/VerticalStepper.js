@@ -51,8 +51,15 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useGetProyectoByIdMutation, usePostActualizarProyectoMutation } from "app/store/participantesApi/participantesApi";
-import { usePostFacturaAgregarMutation, useGetFacturaByIdMutation, usePostFacturaActualizarMutation } from "app/store/facturacionClApi/facturacionClApi";
+import {
+  useGetProyectoByIdMutation,
+  usePostActualizarProyectoMutation,
+} from "app/store/participantesApi/participantesApi";
+import {
+  usePostFacturaAgregarMutation,
+  useGetFacturaByIdMutation,
+  usePostFacturaActualizarMutation,
+} from "app/store/facturacionClApi/facturacionClApi";
 
 //MODAL TABLA CAMBIOS
 function createData(campo, antiguo, nuevo) {
@@ -80,48 +87,77 @@ let dataBank;
 let banks;
 
 export default function HorizontalNonLinearStepper(props) {
-
   const [postActProyect, dataActProyect] = usePostActualizarProyectoMutation();
   const [postAddFactCl, dataAddFactCl] = usePostFacturaAgregarMutation();
-  const [postActFactCl, dataActFactCl] =usePostFacturaActualizarMutation();
+  const [postActFactCl, dataActFactCl] = usePostFacturaActualizarMutation();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [activeLabel, setActiveLabel] = useState("");
   const [grupo, setGrupo] = useState("");
- 
+
   const [bankk, setBankk] = useState("");
   const [checkPrueba, setCheckPrueba] = useState(false); //este proviene de una prop pHabilitado
   const [checkProduccion, setCheckProduccion] = useState(false); //este proviene de una prop pHabilitado
   //formStateProjects es para actualizar datos de la tabla de proyectos tiene su data confirm
   const [formStateFactCl, setformStateFactCl] = useState({
-    fact_pHabilitado: props.fullData.dataFactCl !=={}?props.fullData.dataFactCl.phabilitado : undefined,
-    fact_userProduccion: props.fullData.dataFactCl.usuario64?props.fullData.dataFactCl.usuario64:undefined,
-    fact_claveProduccion:props.fullData.dataFactCl.clave64? props.fullData.dataFactCl.clave64:undefined,
-    fact_rutProduccion: props.fullData.dataFactCl.ruT64?  props.fullData.dataFactCl.ruT64:undefined,
-    fact_userPruebas: props.fullData.dataFactCl.usuarioTest? props.fullData.dataFactCl.usuarioTest:undefined,
-    fact_clavePruebas: props.fullData.dataFactCl.claveTest?  props.fullData.dataFactCl.claveTest:undefined,
-    fact_rutPruebas: props.fullData.dataFactCl.rutTest? props.fullData.dataFactCl.rutTest: undefined,
-  })
+    fact_pHabilitado:
+      props.fullData.dataFactCl !== {}
+        ? props.fullData.dataFactCl.phabilitado
+        : undefined,
+    fact_userProduccion: props.fullData.dataFactCl.usuario64
+      ? props.fullData.dataFactCl.usuario64
+      : undefined,
+    fact_claveProduccion: props.fullData.dataFactCl.clave64
+      ? props.fullData.dataFactCl.clave64
+      : undefined,
+    fact_rutProduccion: props.fullData.dataFactCl.ruT64
+      ? props.fullData.dataFactCl.ruT64
+      : undefined,
+    fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+      ? props.fullData.dataFactCl.usuarioTest
+      : undefined,
+    fact_clavePruebas: props.fullData.dataFactCl.claveTest
+      ? props.fullData.dataFactCl.claveTest
+      : undefined,
+    fact_rutPruebas: props.fullData.dataFactCl.rutTest
+      ? props.fullData.dataFactCl.rutTest
+      : undefined,
+  });
   const [dataconfirmFactCl, setDataconfirmFactCl] = useState({
-    fact_pHabilitado: props.fullData.dataFactCl !=={}?props.fullData.dataFactCl.phabilitado : undefined,
-    fact_userProduccion: props.fullData.dataFactCl.usuario64?props.fullData.dataFactCl.usuario64:undefined,
-    fact_claveProduccion:props.fullData.dataFactCl.clave64? props.fullData.dataFactCl.clave64:undefined,
-    fact_rutProduccion: props.fullData.dataFactCl.ruT64?  props.fullData.dataFactCl.ruT64:undefined,
-    fact_userPruebas: props.fullData.dataFactCl.usuarioTest? props.fullData.dataFactCl.usuarioTest:undefined,
-    fact_clavePruebas: props.fullData.dataFactCl.claveTest?  props.fullData.dataFactCl.claveTest:undefined,
-    fact_rutPruebas: props.fullData.dataFactCl.rutTest? props.fullData.dataFactCl.rutTest: undefined,
-  })
+    fact_pHabilitado:
+      props.fullData.dataFactCl !== {}
+        ? props.fullData.dataFactCl.phabilitado
+        : undefined,
+    fact_userProduccion: props.fullData.dataFactCl.usuario64
+      ? props.fullData.dataFactCl.usuario64
+      : undefined,
+    fact_claveProduccion: props.fullData.dataFactCl.clave64
+      ? props.fullData.dataFactCl.clave64
+      : undefined,
+    fact_rutProduccion: props.fullData.dataFactCl.ruT64
+      ? props.fullData.dataFactCl.ruT64
+      : undefined,
+    fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+      ? props.fullData.dataFactCl.usuarioTest
+      : undefined,
+    fact_clavePruebas: props.fullData.dataFactCl.claveTest
+      ? props.fullData.dataFactCl.claveTest
+      : undefined,
+    fact_rutPruebas: props.fullData.dataFactCl.rutTest
+      ? props.fullData.dataFactCl.rutTest
+      : undefined,
+  });
   //formStateFactCl es para actualizar datos de la tabla de [REACT_TRGNS_FACTCLDATA]
   const [formStateProjects, setformStateProjects] = useState({
-    erp:props.fullData.dataProject.erp,
-    id_nomina_pago:props.fullData.dataProject.id_nomina_pago,
-    isclient:props.fullData.dataProject.vHabilitado,
-  })
+    erp: props.fullData.dataProject.erp,
+    id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+    isclient: props.fullData.dataProject.vHabilitado,
+  });
   const [dataconfirmProjects, setDataconfirmProjects] = useState({
-    erp:props.fullData.dataProject.erp,
-    id_nomina_pago:props.fullData.dataProject.id_nomina_pago,
-    isclient:props.fullData.dataProject.vHabilitado,
-  })
+    erp: props.fullData.dataProject.erp,
+    id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+    isclient: props.fullData.dataProject.vHabilitado,
+  });
   //formState es para actualizar datos de la tabla de participantes
   const [formState, setFormState] = useState({
     id: props.fullData.dataParticipant.id,
@@ -142,12 +178,13 @@ export default function HorizontalNonLinearStepper(props) {
     payContactAddress: props.fullData.dataParticipant.pay_contact_address,
     payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
     payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-    billsContactLastName: props.fullData.dataParticipant.bills_contact_last_name,
-    billsContactFirstName: props.fullData.dataParticipant.bills_contact_first_name,
+    billsContactLastName:
+      props.fullData.dataParticipant.bills_contact_last_name,
+    billsContactFirstName:
+      props.fullData.dataParticipant.bills_contact_first_name,
     billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
     billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
     billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
-  
   });
   const [alertOk, setAlertOk] = useState(false);
   const [alertError, setAlertError] = useState(false);
@@ -167,18 +204,17 @@ export default function HorizontalNonLinearStepper(props) {
     billsContactFirstName: false,
     billsContactPhones: false,
     billsContactEmail: false,
-    erp:false,
-    id_nomina_pago:false,
+    erp: false,
+    id_nomina_pago: false,
     typeClient: false,
     facturacioncl: false,
-    fact_pHabilitado: false,//esta variable luego debe provenir del
+    fact_pHabilitado: false, //esta variable luego debe provenir del
     fact_userProduccion: false,
     fact_claveProduccion: false,
     fact_rutProduccion: false,
     fact_userPruebas: false,
     fact_clavePruebas: false,
     fact_rutPruebas: false,
-   
   });
   const [dataConfirm, setDataConfirm] = useState({
     id: props.fullData.dataParticipant.id,
@@ -199,17 +235,17 @@ export default function HorizontalNonLinearStepper(props) {
     payContactAddress: props.fullData.dataParticipant.pay_contact_address,
     payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
     payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-    billsContactLastName: props.fullData.dataParticipant.bills_contact_last_name,
-    billsContactFirstName: props.fullData.dataParticipant.bills_contact_first_name,
+    billsContactLastName:
+      props.fullData.dataParticipant.bills_contact_last_name,
+    billsContactFirstName:
+      props.fullData.dataParticipant.bills_contact_first_name,
     billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
     billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
     billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
-   
   });
   const [activeButton, setActiveButton] = useState(false);
   const [countActive, setCountActive] = useState(0);
   const [open, setOpen] = useState(false);
-
 
   const [checkedBlue, setCheckedBlue] = React.useState(false);
   const [checkedExt, setCheckedExt] = React.useState(false);
@@ -239,47 +275,40 @@ export default function HorizontalNonLinearStepper(props) {
       [name]: value,
     });
   };
-  function isOurClient(number){    
-    if(number ===0){
+  function isOurClient(number) {
+    if (number === 0) {
       setCheckedExt(true);
       setCheckedBlue(false);
-      
-    }else{
+    } else {
       setCheckedExt(false);
       setCheckedBlue(true);
     }
   }
-  function haveFactCl(bool){
+  function haveFactCl(bool) {
     // console.log(bool)
-    if(bool!= undefined){
-      if(bool){
-    
+    if (bool != undefined) {
+      if (bool) {
         setCheckProduccion(true);
         setCheckPrueba(false);
-      }else{
+      } else {
         setCheckProduccion(false);
-       
+
         setCheckPrueba(true);
       }
-    }else{
+    } else {
       setCheckProduccion(false);
       setCheckPrueba(false);
     }
- 
-   
   }
 
- 
   useEffect(() => {
-    
     (async () => {
       dataBank = await CallBanks(props.fullData.dataParticipant.bank);
       setBankk(dataBank.name);
-      isOurClient(props.fullData.dataProject.vHabilitado)
-      haveFactCl(props.fullData.dataFactCl.phabilitado)
+      isOurClient(props.fullData.dataProject.vHabilitado);
+      haveFactCl(props.fullData.dataFactCl.phabilitado);
       // console.log(props.fullData.dataFactCl.usuario64?props.fullData.dataFactCl.usuario64:"vacio" )
       setFormState({
-        
         id: props.fullData.dataParticipant.id,
         name: props.fullData.dataParticipant.name,
         rut: props.fullData.dataParticipant.rut,
@@ -293,20 +322,31 @@ export default function HorizontalNonLinearStepper(props) {
         commercialAddress: props.fullData.dataParticipant.commercial_address,
         postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
         manager: props.fullData.dataParticipant.manager,
-        payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
-        payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
+        payContactFirstName:
+          props.fullData.dataParticipant.pay_Contact_First_Name,
+        payContactLastName:
+          props.fullData.dataParticipant.pay_contact_last_name,
         payContactAddress: props.fullData.dataParticipant.pay_contact_address,
-        payContactPhones: props.fullData.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g,""),
+        payContactPhones:
+          props.fullData.dataParticipant.pay_contact_phones.replace(
+            /["\[\]"]/g,
+            ""
+          ),
         payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-        billsContactLastName: props.fullData.dataParticipant.bills_contact_last_name,
-        billsContactFirstName: props.fullData.dataParticipant.bills_contact_first_name,
-        billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
-        billsContactPhones: props.fullData.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g,""),
+        billsContactLastName:
+          props.fullData.dataParticipant.bills_contact_last_name,
+        billsContactFirstName:
+          props.fullData.dataParticipant.bills_contact_first_name,
+        billsContactAddress:
+          props.fullData.dataParticipant.bills_contact_address,
+        billsContactPhones:
+          props.fullData.dataParticipant.bills_contact_phones.replace(
+            /["\[\]"]/g,
+            ""
+          ),
         billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
-      
       });
       setDataConfirm({
-      
         id: props.fullData.dataParticipant.id,
         name: props.fullData.dataParticipant.name,
         rut: props.fullData.dataParticipant.rut,
@@ -320,61 +360,98 @@ export default function HorizontalNonLinearStepper(props) {
         commercialAddress: props.fullData.dataParticipant.commercial_address,
         postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
         manager: props.fullData.dataParticipant.manager,
-        payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
-        payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
+        payContactFirstName:
+          props.fullData.dataParticipant.pay_Contact_First_Name,
+        payContactLastName:
+          props.fullData.dataParticipant.pay_contact_last_name,
         payContactAddress: props.fullData.dataParticipant.pay_contact_address,
-        payContactPhones: props.fullData.dataParticipant.pay_contact_phones.replace(/["\[\]"]/g,""),
+        payContactPhones:
+          props.fullData.dataParticipant.pay_contact_phones.replace(
+            /["\[\]"]/g,
+            ""
+          ),
         payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-        billsContactLastName: props.fullData.dataParticipant.bills_contact_last_name,
-        billsContactFirstName: props.fullData.dataParticipant.bills_contact_first_name,
-        billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
-        billsContactPhones: props.fullData.dataParticipant.bills_contact_phones.replace(/["\[\]"]/g,""),
+        billsContactLastName:
+          props.fullData.dataParticipant.bills_contact_last_name,
+        billsContactFirstName:
+          props.fullData.dataParticipant.bills_contact_first_name,
+        billsContactAddress:
+          props.fullData.dataParticipant.bills_contact_address,
+        billsContactPhones:
+          props.fullData.dataParticipant.bills_contact_phones.replace(
+            /["\[\]"]/g,
+            ""
+          ),
         billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
-       
-        
       });
 
       setformStateFactCl({
-        fact_pHabilitado: props.fullData.dataFactCl !=={}?props.fullData.dataFactCl.phabilitado :  "Vacio",
-        fact_userProduccion: props.fullData.dataFactCl.usuario64?props.fullData.dataFactCl.usuario64: "Vacio",
-        fact_claveProduccion:props.fullData.dataFactCl.clave64? props.fullData.dataFactCl.clave64: "Vacio",
-        fact_rutProduccion: props.fullData.dataFactCl.ruT64?  props.fullData.dataFactCl.ruT64: "Vacio",
-        fact_userPruebas: props.fullData.dataFactCl.usuarioTest? props.fullData.dataFactCl.usuarioTest: "Vacio",
-        fact_clavePruebas: props.fullData.dataFactCl.claveTest?  props.fullData.dataFactCl.claveTest: "Vacio",
-        fact_rutPruebas: props.fullData.dataFactCl.rutTest? props.fullData.dataFactCl.rutTest:  "Vacio",
-      })
+        fact_pHabilitado:
+          props.fullData.dataFactCl !== {}
+            ? props.fullData.dataFactCl.phabilitado
+            : "Vacio",
+        fact_userProduccion: props.fullData.dataFactCl.usuario64
+          ? props.fullData.dataFactCl.usuario64
+          : "Vacio",
+        fact_claveProduccion: props.fullData.dataFactCl.clave64
+          ? props.fullData.dataFactCl.clave64
+          : "Vacio",
+        fact_rutProduccion: props.fullData.dataFactCl.ruT64
+          ? props.fullData.dataFactCl.ruT64
+          : "Vacio",
+        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+          ? props.fullData.dataFactCl.usuarioTest
+          : "Vacio",
+        fact_clavePruebas: props.fullData.dataFactCl.claveTest
+          ? props.fullData.dataFactCl.claveTest
+          : "Vacio",
+        fact_rutPruebas: props.fullData.dataFactCl.rutTest
+          ? props.fullData.dataFactCl.rutTest
+          : "Vacio",
+      });
       setDataconfirmFactCl({
-        fact_pHabilitado: props.fullData.dataFactCl !=={}?props.fullData.dataFactCl.phabilitado :  "Vacio",
-        fact_userProduccion: props.fullData.dataFactCl.usuario64?props.fullData.dataFactCl.usuario64: "Vacio",
-        fact_claveProduccion:props.fullData.dataFactCl.clave64? props.fullData.dataFactCl.clave64: "Vacio",
-        fact_rutProduccion: props.fullData.dataFactCl.ruT64?  props.fullData.dataFactCl.ruT64: "Vacio",
-        fact_userPruebas: props.fullData.dataFactCl.usuarioTest? props.fullData.dataFactCl.usuarioTest: "Vacio",
-        fact_clavePruebas: props.fullData.dataFactCl.claveTest?  props.fullData.dataFactCl.claveTest: "Vacio",
-        fact_rutPruebas: props.fullData.dataFactCl.rutTest? props.fullData.dataFactCl.rutTest:  "Vacio",
-      })
-      
+        fact_pHabilitado:
+          props.fullData.dataFactCl !== {}
+            ? props.fullData.dataFactCl.phabilitado
+            : "Vacio",
+        fact_userProduccion: props.fullData.dataFactCl.usuario64
+          ? props.fullData.dataFactCl.usuario64
+          : "Vacio",
+        fact_claveProduccion: props.fullData.dataFactCl.clave64
+          ? props.fullData.dataFactCl.clave64
+          : "Vacio",
+        fact_rutProduccion: props.fullData.dataFactCl.ruT64
+          ? props.fullData.dataFactCl.ruT64
+          : "Vacio",
+        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+          ? props.fullData.dataFactCl.usuarioTest
+          : "Vacio",
+        fact_clavePruebas: props.fullData.dataFactCl.claveTest
+          ? props.fullData.dataFactCl.claveTest
+          : "Vacio",
+        fact_rutPruebas: props.fullData.dataFactCl.rutTest
+          ? props.fullData.dataFactCl.rutTest
+          : "Vacio",
+      });
+
       setformStateProjects({
-        erp:props.fullData.dataProject.erp,
-        id_nomina_pago:props.fullData.dataProject.id_nomina_pago,
-        isclient:props.fullData.dataProject.vHabilitado,
-      })
+        erp: props.fullData.dataProject.erp,
+        id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+        isclient: props.fullData.dataProject.vHabilitado,
+      });
       setDataconfirmProjects({
-        erp:props.fullData.dataProject.erp,
-        id_nomina_pago:props.fullData.dataProject.id_nomina_pago,
-        isclient:props.fullData.dataProject.vHabilitado,
-      })
-    
- 
+        erp: props.fullData.dataProject.erp,
+        id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+        isclient: props.fullData.dataProject.vHabilitado,
+      });
     })();
   }, [props.fullData.dataParticipant.id, alertOk]);
   useEffect(() => {
     (async () => {
       banks = await CallBanks(1, 2);
     })();
-    isOurClient(props.fullData.dataProject.vHabilitado)
-    haveFactCl(props.fullData.dataFactCl.phabilitado)
-
-    
+    isOurClient(props.fullData.dataProject.vHabilitado);
+    haveFactCl(props.fullData.dataFactCl.phabilitado);
   }, []);
   useEffect(() => {
     if (alertOk === true) {
@@ -415,9 +492,8 @@ export default function HorizontalNonLinearStepper(props) {
     fact_userPruebas,
     fact_clavePruebas,
     fact_rutPruebas,
-    erp, 
-    id_nomina_pago
-   
+    erp,
+    id_nomina_pago,
   } = update;
   const handleChangeCheck = (event) => {
     setChecked(event.target.checked);
@@ -436,24 +512,21 @@ export default function HorizontalNonLinearStepper(props) {
       bank: idBank,
     });
     setBankk(event.target.value);
-   
   };
   const handleChangeNomina = (event) => {
     setformStateProjects({
       ...formStateProjects,
       id_nomina_pago: event.target.value,
-      
     });
   };
   const handleChangeERP = (event) => {
     setformStateProjects({
       ...formStateProjects,
       erp: event.target.value,
-      
     });
 
-    if(event.target.value !=5){
-      haveFactCl(props.fullData.dataFactCl.phabilitado)
+    if (event.target.value != 5) {
+      haveFactCl(props.fullData.dataFactCl.phabilitado);
       setUpdate({
         ...update,
         facturacioncl: false,
@@ -472,8 +545,6 @@ export default function HorizontalNonLinearStepper(props) {
         fact_userPruebas: dataconfirmFactCl.fact_userPruebas,
         fact_clavePruebas: dataconfirmFactCl.fact_clavePruebas,
         fact_rutPruebas: dataconfirmFactCl.fact_rutPruebas,
-
-          
       });
     }
     // setErp(event.target.value);
@@ -553,9 +624,11 @@ export default function HorizontalNonLinearStepper(props) {
   }
   const FetchDatas = () => {
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    let isEqualdos = JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
-    let isEqualtres = JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
-    
+    let isEqualdos =
+      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
+    let isEqualtres =
+      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+
     rows = [
       dataConfirm.name === formState.name
         ? undefined
@@ -612,72 +685,83 @@ export default function HorizontalNonLinearStepper(props) {
             formState.bankAccount
           ),
       dataconfirmProjects.isclient === formStateProjects.isclient
-      ? undefined
-      : createData(
-          "Tipo de Cliente",
-          dataconfirmProjects.isclient === 0? 'Externo':'Bluetree',
-          formStateProjects.isclient=== 0? 'Externo':'Bluetree'
-        ),
+        ? undefined
+        : createData(
+            "Tipo de Cliente",
+            dataconfirmProjects.isclient === 0 ? "Externo" : "Bluetree",
+            formStateProjects.isclient === 0 ? "Externo" : "Bluetree"
+          ),
       dataconfirmProjects.erp === formStateProjects.erp
-      ? undefined
-      : createData(
-          "Tipo de Facturador",
-          props.facturadorErp.filter((data) => data.id ===dataconfirmProjects.erp)[0].nombreErp,
-          props.facturadorErp.filter((data) => data.id ===formStateProjects.erp)[0].nombreErp
-        ),
+        ? undefined
+        : createData(
+            "Tipo de Facturador",
+            props.facturadorErp.filter(
+              (data) => data.id === dataconfirmProjects.erp
+            )[0].nombreErp,
+            props.facturadorErp.filter(
+              (data) => data.id === formStateProjects.erp
+            )[0].nombreErp
+          ),
       dataconfirmProjects.id_nomina_pago === formStateProjects.id_nomina_pago
-      ? undefined
-      : createData(
-          "Tipo de Nomina",
-          props.nominaPago.filter((data) => data.id ===dataconfirmProjects.id_nomina_pago)[0].nombreBanco,
-          props.nominaPago.filter((data) => data.id ===formStateProjects.id_nomina_pago)[0].nombreBanco
-        ),
-      dataconfirmFactCl.fact_userProduccion === formStateFactCl.fact_userProduccion
-      ? undefined
-      : createData(
-          "Usuario de Producción",
-          dataconfirmFactCl.fact_userProduccion,
-          formStateFactCl.fact_userProduccion
-        ),
-      dataconfirmFactCl.fact_rutProduccion === formStateFactCl.fact_rutProduccion
-      ? undefined
-      : createData(
-          "Rut de Producción",
-          dataconfirmFactCl.fact_rutProduccion,
-          formStateFactCl.fact_rutProduccion
-        ),
-      dataconfirmFactCl.fact_claveProduccion === formStateFactCl.fact_claveProduccion
-      ? undefined
-      : createData(
-          "Clave de Producción",
-          dataconfirmFactCl.fact_claveProduccion,
-          formStateFactCl.fact_claveProduccion
-        ),
+        ? undefined
+        : createData(
+            "Tipo de Nomina",
+            props.nominaPago.filter(
+              (data) => data.id === dataconfirmProjects.id_nomina_pago
+            )[0].nombreBanco,
+            props.nominaPago.filter(
+              (data) => data.id === formStateProjects.id_nomina_pago
+            )[0].nombreBanco
+          ),
+      dataconfirmFactCl.fact_userProduccion ===
+      formStateFactCl.fact_userProduccion
+        ? undefined
+        : createData(
+            "Usuario de Producción",
+            dataconfirmFactCl.fact_userProduccion,
+            formStateFactCl.fact_userProduccion
+          ),
+      dataconfirmFactCl.fact_rutProduccion ===
+      formStateFactCl.fact_rutProduccion
+        ? undefined
+        : createData(
+            "Rut de Producción",
+            dataconfirmFactCl.fact_rutProduccion,
+            formStateFactCl.fact_rutProduccion
+          ),
+      dataconfirmFactCl.fact_claveProduccion ===
+      formStateFactCl.fact_claveProduccion
+        ? undefined
+        : createData(
+            "Clave de Producción",
+            dataconfirmFactCl.fact_claveProduccion,
+            formStateFactCl.fact_claveProduccion
+          ),
       dataconfirmFactCl.fact_userPruebas === formStateFactCl.fact_userPruebas
-      ? undefined
-      : createData(
-          "Usuario de Pruebas",
-          dataconfirmFactCl.fact_userPruebas,
-          formStateFactCl.fact_userPruebas
-        ),
+        ? undefined
+        : createData(
+            "Usuario de Pruebas",
+            dataconfirmFactCl.fact_userPruebas,
+            formStateFactCl.fact_userPruebas
+          ),
       dataconfirmFactCl.fact_rutPruebas === formStateFactCl.fact_rutPruebas
-      ? undefined
-      : createData(
-          "Rut de Pruebas",
-          dataconfirmFactCl.fact_rutPruebas,
-          formStateFactCl.fact_rutPruebas
-        ),
+        ? undefined
+        : createData(
+            "Rut de Pruebas",
+            dataconfirmFactCl.fact_rutPruebas,
+            formStateFactCl.fact_rutPruebas
+          ),
       dataconfirmFactCl.fact_clavePruebas === formStateFactCl.fact_clavePruebas
-      ? undefined
-      : createData(
-          "Clave de Pruebas",
-          dataconfirmFactCl.fact_clavePruebas,
-          formStateFactCl.fact_clavePruebas
-        ),
+        ? undefined
+        : createData(
+            "Clave de Pruebas",
+            dataconfirmFactCl.fact_clavePruebas,
+            formStateFactCl.fact_clavePruebas
+          ),
     ];
-    console.log(props.fullData.dataFactCl.phabilitado)
+    console.log(props.fullData.dataFactCl.phabilitado);
     rows = rows.filter((x) => x !== undefined);
-    if (isEqual  && isEqualdos && isEqualtres) {
+    if (isEqual && isEqualdos && isEqualtres) {
       return <div>No se han encontrado cambios</div>;
     } else {
       return (
@@ -712,70 +796,120 @@ export default function HorizontalNonLinearStepper(props) {
 
   const ApiPatch = () => {
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    let isEqualdos = JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
-    let isEqualtres = JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+    let isEqualdos =
+      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
+    let isEqualtres =
+      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
 
-    if(!isEqualtres){
+    if (!isEqualtres) {
       postActProyect({
-        id_participants:  props.fullData.dataParticipant.id,
-        erp: formStateProjects.erp != dataconfirmProjects.erp? formStateProjects.erp:null,
-        vHabilitado:formStateProjects.isclient!= dataconfirmProjects.isclient? formStateProjects.isclient:null,
-        id_nomina_pago:formStateProjects.id_nomina_pago != dataconfirmProjects.id_nomina_pago? formStateProjects.id_nomina_pago:null,
-      }).then((response)=>{
-
-      })
+        id_participants: props.fullData.dataParticipant.id,
+        erp:
+          formStateProjects.erp != dataconfirmProjects.erp
+            ? formStateProjects.erp
+            : null,
+        vHabilitado:
+          formStateProjects.isclient != dataconfirmProjects.isclient
+            ? formStateProjects.isclient
+            : null,
+        id_nomina_pago:
+          formStateProjects.id_nomina_pago != dataconfirmProjects.id_nomina_pago
+            ? formStateProjects.id_nomina_pago
+            : null,
+      }).then((response) => {});
     }
 
-    if(props.fullData.dataFactCl.phabilitado != undefined){
+    if (props.fullData.dataFactCl.phabilitado != undefined) {
       //ejecuta el post de actualizar
-      if(!isEqualdos){
-         
-        
+      if (!isEqualdos) {
         postActFactCl({
           idParticipante: props.fullData.dataParticipant.id,
-          usuario64:   (formStateFactCl.fact_userProduccion).trim() != (dataconfirmFactCl.fact_userProduccion).trim()? formStateFactCl.fact_userProduccion:null,
-          ruT64: (formStateFactCl.fact_rutProduccion).trim() != (dataconfirmFactCl.fact_rutProduccion).trim()? formStateFactCl.fact_rutProduccion:null, 
-          clave64: (formStateFactCl.fact_claveProduccion).trim() != (dataconfirmFactCl.fact_claveProduccion).trim()? formStateFactCl.fact_claveProduccion:null,  
+          usuario64:
+            formStateFactCl.fact_userProduccion.trim() !=
+            dataconfirmFactCl.fact_userProduccion.trim()
+              ? formStateFactCl.fact_userProduccion
+              : null,
+          ruT64:
+            formStateFactCl.fact_rutProduccion.trim() !=
+            dataconfirmFactCl.fact_rutProduccion.trim()
+              ? formStateFactCl.fact_rutProduccion
+              : null,
+          clave64:
+            formStateFactCl.fact_claveProduccion.trim() !=
+            dataconfirmFactCl.fact_claveProduccion.trim()
+              ? formStateFactCl.fact_claveProduccion
+              : null,
           puerto64: null,
           incluyeLink64: null,
-          usuarioTest: (formStateFactCl.fact_userPruebas).trim() != (dataconfirmFactCl.fact_userPruebas).trim()? formStateFactCl.fact_userPruebas:null, 
-          claveTest: (formStateFactCl.fact_clavePruebas).trim() != (dataconfirmFactCl.fact_clavePruebas).trim()? formStateFactCl.fact_clavePruebas:null, 
-          rutTest:  (formStateFactCl.fact_rutPruebas).trim() != (dataconfirmFactCl.fact_rutPruebas).trim()? formStateFactCl.fact_rutPruebas:null,
-          phabilitado: formStateFactCl.fact_pHabilitado != dataconfirmFactCl.fact_pHabilitado? formStateFactCl.fact_pHabilitado:dataconfirmFactCl.fact_pHabilitado,
+          usuarioTest:
+            formStateFactCl.fact_userPruebas.trim() !=
+            dataconfirmFactCl.fact_userPruebas.trim()
+              ? formStateFactCl.fact_userPruebas
+              : null,
+          claveTest:
+            formStateFactCl.fact_clavePruebas.trim() !=
+            dataconfirmFactCl.fact_clavePruebas.trim()
+              ? formStateFactCl.fact_clavePruebas
+              : null,
+          rutTest:
+            formStateFactCl.fact_rutPruebas.trim() !=
+            dataconfirmFactCl.fact_rutPruebas.trim()
+              ? formStateFactCl.fact_rutPruebas
+              : null,
+          phabilitado:
+            formStateFactCl.fact_pHabilitado !=
+            dataconfirmFactCl.fact_pHabilitado
+              ? formStateFactCl.fact_pHabilitado
+              : dataconfirmFactCl.fact_pHabilitado,
         });
-
       }
-
-    }else{
+    } else {
       //ejecuta el post de agregar
-      if(checkProduccion || checkPrueba){
-        if(!isEqualdos){
+      if (checkProduccion || checkPrueba) {
+        if (!isEqualdos) {
           postAddFactCl({
             idParticipante: props.fullData.dataParticipant.id,
-            usuario64:   (formStateFactCl.fact_userProduccion).trim() != (dataconfirmFactCl.fact_userProduccion).trim()? formStateFactCl.fact_userProduccion:null,
-            ruT64: (formStateFactCl.fact_rutProduccion).trim() != (dataconfirmFactCl.fact_rutProduccion).trim()? formStateFactCl.fact_rutProduccion:null, 
-            clave64: (formStateFactCl.fact_claveProduccion).trim() != (dataconfirmFactCl.fact_claveProduccion).trim()? formStateFactCl.fact_claveProduccion:null,  
+            usuario64:
+              formStateFactCl.fact_userProduccion.trim() !=
+              dataconfirmFactCl.fact_userProduccion.trim()
+                ? formStateFactCl.fact_userProduccion
+                : null,
+            ruT64:
+              formStateFactCl.fact_rutProduccion.trim() !=
+              dataconfirmFactCl.fact_rutProduccion.trim()
+                ? formStateFactCl.fact_rutProduccion
+                : null,
+            clave64:
+              formStateFactCl.fact_claveProduccion.trim() !=
+              dataconfirmFactCl.fact_claveProduccion.trim()
+                ? formStateFactCl.fact_claveProduccion
+                : null,
             puerto64: null,
             incluyeLink64: null,
-            usuarioTest: (formStateFactCl.fact_userPruebas).trim() != (dataconfirmFactCl.fact_userPruebas).trim()? formStateFactCl.fact_userPruebas:null, 
-            claveTest: (formStateFactCl.fact_clavePruebas).trim() != (dataconfirmFactCl.fact_clavePruebas).trim()? formStateFactCl.fact_clavePruebas:null, 
-            rutTest:  (formStateFactCl.fact_rutPruebas).trim() != (dataconfirmFactCl.fact_rutPruebas).trim()? formStateFactCl.fact_rutPruebas:null,
-            phabilitado:  formStateFactCl.fact_pHabilitado,
+            usuarioTest:
+              formStateFactCl.fact_userPruebas.trim() !=
+              dataconfirmFactCl.fact_userPruebas.trim()
+                ? formStateFactCl.fact_userPruebas
+                : null,
+            claveTest:
+              formStateFactCl.fact_clavePruebas.trim() !=
+              dataconfirmFactCl.fact_clavePruebas.trim()
+                ? formStateFactCl.fact_clavePruebas
+                : null,
+            rutTest:
+              formStateFactCl.fact_rutPruebas.trim() !=
+              dataconfirmFactCl.fact_rutPruebas.trim()
+                ? formStateFactCl.fact_rutPruebas
+                : null,
+            phabilitado: formStateFactCl.fact_pHabilitado,
           });
         }
-
-       
       }
     }
     if (isEqual) {
       // console.log("No se realiza envio a API");
       setAlertError(true);
     } else {
-      
-      
-     
-      
-      
       let formatBillsContactPhones =
         '["' + formState.billsContactPhones.replace(/,/g, '","') + '"]';
       let formatpayContactPhones =
@@ -813,11 +947,7 @@ export default function HorizontalNonLinearStepper(props) {
         .catch((error) => {
           setAlertError(true);
         });
-       
-        
-      
     }
-    
   };
   useEffect(() => {
     countActive === 0 ? setActiveButton(false) : setActiveButton(true);
@@ -955,7 +1085,8 @@ export default function HorizontalNonLinearStepper(props) {
                                       onClick={() => {
                                         setFormState({
                                           ...formState,
-                                          name: props.fullData.dataParticipant.name,
+                                          name: props.fullData.dataParticipant
+                                            .name,
                                         });
                                         setUpdate({
                                           ...update,
@@ -1034,7 +1165,8 @@ export default function HorizontalNonLinearStepper(props) {
                                         setFormState({
                                           ...formState,
                                           businessName:
-                                            props.fullData.dataParticipant.business_Name,
+                                            props.fullData.dataParticipant
+                                              .business_Name,
                                         });
                                         setUpdate({
                                           ...update,
@@ -1249,7 +1381,8 @@ export default function HorizontalNonLinearStepper(props) {
                                         setFormState({
                                           ...formState,
                                           manager:
-                                            props.fullData.dataParticipant.manager,
+                                            props.fullData.dataParticipant
+                                              .manager,
                                         });
                                         setUpdate({
                                           ...update,
@@ -1566,7 +1699,7 @@ export default function HorizontalNonLinearStepper(props) {
                           defaultValue="Vacio"
                           name="billsContactPhones"
                           disabled={billsContactPhones ? false : true}
-                          value={formState.billsContactPhones }
+                          value={formState.billsContactPhones}
                           onChange={onInputChange}
                           InputProps={{
                             startAdornment: (
@@ -1715,11 +1848,14 @@ export default function HorizontalNonLinearStepper(props) {
                                         setFormState({
                                           ...formState,
                                           banksName:
-                                            props.fullData.dataParticipant.banksName,
-                                          bank: props.fullData.dataParticipant.bank,
+                                            props.fullData.dataParticipant
+                                              .banksName,
+                                          bank: props.fullData.dataParticipant
+                                            .bank,
                                         });
                                         setBankk(
-                                          props.fullData.dataParticipant.banksName
+                                          props.fullData.dataParticipant
+                                            .banksName
                                         );
                                         setUpdate({
                                           ...update,
@@ -1812,7 +1948,8 @@ export default function HorizontalNonLinearStepper(props) {
                                         // });
                                         setFormState({
                                           ...formState,
-                                          rut: props.fullData.dataParticipant.rut,
+                                          rut: props.fullData.dataParticipant
+                                            .rut,
                                         });
                                         setUpdate({
                                           ...update,
@@ -1896,7 +2033,8 @@ export default function HorizontalNonLinearStepper(props) {
                                         setFormState({
                                           ...formState,
                                           bankAccount:
-                                            props.fullData.dataParticipant.bank_Account,
+                                            props.fullData.dataParticipant
+                                              .bank_Account,
                                         });
                                         setUpdate({
                                           ...update,
@@ -1940,8 +2078,6 @@ export default function HorizontalNonLinearStepper(props) {
                           )}
                         </div>
                       </Box>
-
-                    
                     </Box>
                   </Box>
                 ) : activeStep === 3 ? (
@@ -1951,472 +2087,473 @@ export default function HorizontalNonLinearStepper(props) {
                     </Typography>
                     {/* Tipo usuario */}
                     <Box className="flex flex-wrap">
-                    <Box>
-                      <Box className="flex flex-col  w-full p-[10px] ">
-                        <Box className="flex flex-row">
-                          <Typography
-                            variant="subtitle1"
-                            color="primary"
-                            className=""
+                      <Box>
+                        <Box className="flex flex-col  w-full p-[10px] ">
+                          <Box className="flex flex-row">
+                            <Typography
+                              variant="subtitle1"
+                              color="primary"
+                              className=""
+                            >
+                              Tipo de cliente
+                            </Typography>
+                            <InputAdornment className="m-[10px]">
+                              {typeClient ? (
+                                <>
+                                  <CheckBoxIcon
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        typeClient: false,
+                                      });
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
+                                    }}
+                                  />
+                                  <DisabledByDefaultIcon
+                                    style={{ cursor: "pointer" }}
+                                    onClick={() => {
+                                      setUpdate({
+                                        ...update,
+                                        typeClient: false,
+                                      });
+                                      setformStateProjects({
+                                        ...formStateProjects,
+                                        isclient: dataconfirmProjects.isclient,
+                                      });
+                                      isOurClient(dataconfirmProjects.isclient);
+                                      setCountActive(
+                                        countActive > 0
+                                          ? countActive - 1
+                                          : countActive
+                                      );
+                                    }}
+                                  />
+                                </>
+                              ) : (
+                                <EditIcon
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() => {
+                                    setUpdate({
+                                      ...update,
+                                      typeClient: true,
+                                    });
+                                    setCountActive(countActive + 1);
+                                  }}
+                                />
+                              )}
+                            </InputAdornment>
+                            <div className=" ">
+                              {typeClient ? (
+                                <>
+                                  <span className="ml-[20px] text-red-500">
+                                    Recuerde aceptar o cancelar el cambio
+                                    realizado
+                                  </span>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </div>
+                          </Box>
+                          <div
+                            className={`relative flex justify-stretch w-full h-full pointer-events-${
+                              typeClient ? "auto" : "none"
+                            } select-${typeClient ? "auto" : "none"}`}
                           >
-                            Tipo de cliente
-                          </Typography>
-                          <InputAdornment className="m-[10px]">
-                            {typeClient ? (
-                              <>
-                                <CheckBoxIcon
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setUpdate({
-                                      ...update,
-                                      typeClient: false,
-                                    });
-                                    setCountActive(
-                                      countActive > 0
-                                        ? countActive - 1
-                                        : countActive
-                                    );
-                                  }}
-                                />
-                                <DisabledByDefaultIcon
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setUpdate({
-                                      ...update,
-                                      typeClient: false,
-                                    });
-                                    setformStateProjects({
-                                      ...formStateProjects,
-                                      isclient:dataconfirmProjects.isclient,
-                                    });
-                                    isOurClient(dataconfirmProjects.isclient)
-                                    setCountActive(
-                                      countActive > 0
-                                        ? countActive - 1
-                                        : countActive
-                                    );
-                                  }}
-                                />
-                              </>
-                            ) : (
-                              <EditIcon
-                                style={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  setUpdate({
-                                    ...update,
-                                    typeClient: true,
-                                  });
-                                  setCountActive(countActive + 1);
-                                }}
-                              />
-                            )}
-                          </InputAdornment>
-                          <div className=" ">
-                            {typeClient ? (
-                              <>
-                                <span className="ml-[20px] text-red-500">
-                                  Recuerde aceptar o cancelar el cambio realizado
-                                </span>
-                              </>
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-                        </Box>
-                          <div className={`relative flex justify-stretch w-full h-full pointer-events-${typeClient?"auto":"none"} select-${typeClient?"auto":"none"}` }  >
-                            
-                              
                             <Box className="flex flex-wrap  ml-[10px]">
-                        
-                            <Box>
-                                  <Box>
-                                    <FormControlLabel
-                                      label="Bluetree"
-                                      control={
-                                        <Checkbox
-                                          checked={checkedBlue}
-                                        
-                                          onClick={()=>{
-                                            setCheckedBlue(true);
-                                            setCheckedExt(false);
-                                            setformStateProjects({
-                                              ...formStateProjects,
-                                              isclient: 1
-                                            })
-                                          }
-                                          }
-                                        />
-                                      }
-                                    />
-                                  </Box>
-                                  <Box>
-                                    <FormControlLabel
-                                      label="Externo"
-                                      control={
-                                        <Checkbox
-                                          checked={checkedExt}
-                                          onClick={()=>{
-                                            setCheckedExt(true);
-                                            setCheckedBlue(false);
-                                            setformStateProjects({
-                                              ...formStateProjects,
-                                              isclient: 0
-                                            })
-                                          }}
-                                        />
-                                      }
-                                    />
-                                  </Box>
+                              <Box>
+                                <Box>
+                                  <FormControlLabel
+                                    label="Bluetree"
+                                    control={
+                                      <Checkbox
+                                        checked={checkedBlue}
+                                        onClick={() => {
+                                          setCheckedBlue(true);
+                                          setCheckedExt(false);
+                                          setformStateProjects({
+                                            ...formStateProjects,
+                                            isclient: 1,
+                                          });
+                                        }}
+                                      />
+                                    }
+                                  />
                                 </Box>
+                                <Box>
+                                  <FormControlLabel
+                                    label="Externo"
+                                    control={
+                                      <Checkbox
+                                        checked={checkedExt}
+                                        onClick={() => {
+                                          setCheckedExt(true);
+                                          setCheckedBlue(false);
+                                          setformStateProjects({
+                                            ...formStateProjects,
+                                            isclient: 0,
+                                          });
+                                        }}
+                                      />
+                                    }
+                                  />
+                                </Box>
+                              </Box>
                               <TextField
                                 className="zerorange:w-[200px]  lg:w-[400px] w-[350px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                                 label="Token"
                                 type="text"
                                 value={"Vacio"}
-                              
                                 variant="filled"
                               />
                             </Box>
-                          
-                          
-                            {!typeClient ? ( <div className="absolute inset-0 bg-[#f0f0f0] opacity-50 rounded-lg  ">
-                            </div>):<></>}
-                            
-                          </div>
-                        
-                      </Box>         
-                      {/* Facturación cl */}
-                    
-                      
-                      <Box className="flex flex-col  w-full p-[10px]   ">
-                        <Box className="flex flex-row">
-                          <Typography
-                            variant="subtitle1"
-                            color="primary"
-                            className=""
-                          >
-                            Facturación.CL
-                          </Typography>
 
-                         {formStateProjects.erp ===5 && erp===false?
-                         <>
-                         <InputAdornment className="m-[10px]">
-                            {facturacioncl ? (
-                              <>
-                                <CheckBoxIcon
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setUpdate({
-                                      ...update,
-                                      facturacioncl: false,
-                                    });
-                                    setCountActive(
-                                      countActive > 0
-                                        ? countActive - 1
-                                        : countActive
-                                    );
-                                  }}
-                                />
-                                <DisabledByDefaultIcon
-                                  style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    setUpdate({
-                                      ...update,
-                                      facturacioncl: false,
-                                      fact_userProduccion: false,
-                                      fact_claveProduccion: false,
-                                      fact_rutProduccion: false,
-                                      fact_userPruebas: false,
-                                      fact_clavePruebas: false,
-                                      fact_rutPruebas: false,
-                                    });
-                                    setformStateFactCl({
-                                      ...formStateFactCl,
-                                      fact_userProduccion: dataconfirmFactCl.fact_userProduccion,
-                                      fact_claveProduccion: dataconfirmFactCl.fact_claveProduccion,
-                                      fact_rutProduccion: dataconfirmFactCl.fact_rutProduccion,
-                                      fact_userPruebas: dataconfirmFactCl.fact_userPruebas,
-                                      fact_clavePruebas: dataconfirmFactCl.fact_clavePruebas,
-                                      fact_rutPruebas: dataconfirmFactCl.fact_rutPruebas,
-                            
-                                        
-                                    });
-                                    setCountActive(
-                                      countActive > 0
-                                        ? countActive - 1
-                                        : countActive
-                                    );
-                                  }}
-                                />
-                              </>
+                            {!typeClient ? (
+                              <div className="absolute inset-0 bg-[#f0f0f0] opacity-50 rounded-lg  "></div>
                             ) : (
-                              <EditIcon
-                                style={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  setUpdate({
-                                    ...update,
-                                    facturacioncl: true,
-                                  });
-                                  setCountActive(countActive + 1);
-                                }}
-                              />
+                              <></>
                             )}
-                          </InputAdornment>
-                          <div className=" ">
-                          {facturacioncl ? (
-                            <>
-                              <span className="ml-[20px] text-red-500">
-                                Recuerde aceptar o cancelar el cambio realizado
-                              </span>
-                            </>
-                          ) : (
-                            <></>
-                          )}
-                        </div>
-                        </>
-                          :<></>}
-                          
+                          </div>
                         </Box>
-                          <div className={`relative flex justify-stretch w-full h-full pointer-events-${facturacioncl?"auto":"none"} select-${facturacioncl?"auto":"none"}` }  >
-                            
+                        {/* Facturación cl */}
 
-                            
-                            <Box className="flex flex-col w-full h-full p-[10px]  ">
+                        <Box className="flex flex-col  w-full p-[10px]   ">
+                          <Box className="flex flex-row">
                             <Typography
                               variant="subtitle1"
                               color="primary"
-                              className="flex justify-center w-ful"
+                              className=""
                             >
-                              Producción
+                              Facturación.CL
                             </Typography>
-                              <div className="flex justify-center w-full ">
-                                
-                                <Checkbox
-                                    checked={checkProduccion}
-                                    // onChange={(event) => {
-                                    
-                                    // }}
-                                    onClick={()=>{
-                                      setCheckProduccion(true);
-                                      setCheckPrueba(false);
-                                      setformStateFactCl({
-                                        ...formStateFactCl,
-                                        fact_pHabilitado: true
-                                      })
-                                    }
 
-                                    }
-                                  />
-                              </div>
-                              <TextField
-                                  className="w-full mb-[10px]"
-                                  label="Usuario de Producción"
-                                  type="text"
-                                  value={formStateFactCl.fact_userProduccion}
-                                  onChange={onInputChangeFact}
-                                  name="fact_userProduccion"
-                                  disabled={fact_userProduccion ? false : true}
-                                  InputProps={{
-                                    defaultValue:formStateFactCl.fact_userProduccion,
-                                    startAdornment: checkProduccion?(
-
-                                      <InputAdornment position="start">
-                                        {fact_userProduccion ? (
-                                          <>
-                                            <CheckBoxIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_userProduccion: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                            <DisabledByDefaultIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                
-                                                setformStateFactCl({
-                                                  ...formStateFactCl,
-                                                  fact_userProduccion:
-                                                    dataconfirmFactCl.fact_userProduccion,
-                                                });
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_userProduccion: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                          </>
-                                        ) : (
-                                          <EditIcon
-                                            style={{ cursor: "pointer" }}
-                                            
-                                            onClick={() => {
-                                              setUpdate({
-                                                ...update,
-                                                fact_userProduccion: true,
-                                              });
-                                              setCountActive(countActive + 1);
-                                            }}
-                                          />
-                                        )}
-                                      </InputAdornment>
-                                    ):(<></>),
-                                  }}
-                                  defaultValue="Vacio"
-                                  variant="filled"
-                                />
-                              <TextField
-                                  className="w-full mb-[10px]"
-                                  label="Clave de Producción"
-                                  type="text"
-                                  value={formStateFactCl.fact_claveProduccion}
-                                  onChange={onInputChangeFact}
-                                  name="fact_claveProduccion"
-                                  disabled={fact_claveProduccion ? false : true}
-                                  InputProps={{
-                                    defaultValue:formStateFactCl.fact_claveProduccion,
-                                    startAdornment:checkProduccion? (
-                                      <InputAdornment position="start">
-                                        {fact_claveProduccion ? (
-                                          <>
-                                            <CheckBoxIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_claveProduccion: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                            <DisabledByDefaultIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                
-                                                
-                                                setformStateFactCl({
-                                                  ...formStateFactCl,
-                                                  fact_claveProduccion:
-                                                    dataconfirmFactCl.fact_claveProduccion,
-                                                });
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_claveProduccion: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                          </>
-                                        ) : (
-                                          <EditIcon
-                                            style={{ cursor: "pointer" }}
-                                            onClick={() => {
-                                              setUpdate({
-                                                ...update,
-                                                fact_claveProduccion: true,
-                                              });
-                                              setCountActive(countActive + 1);
-                                            }}
-                                          />
-                                        )}
-                                      </InputAdornment>
-                                    ):(<></>),
-                                  }}
-                                  defaultValue="Vacio"
-                                  variant="filled"
-                                />
-                              <TextField
-                                className="w-full"
-                              label="Rut de Producción"
-                              type="text"
-                              value={formStateFactCl.fact_rutProduccion}
-                              onChange={onInputChangeFact}
-                              name="fact_rutProduccion"
-                              disabled={fact_rutProduccion ? false : true}
-                              InputProps={{
-                                defaultValue:formStateFactCl.fact_rutProduccion,
-                                startAdornment: checkProduccion? (
-                                  <InputAdornment position="start">
-                                    {fact_rutProduccion ? (
-                                      <>
-                                        <CheckBoxIcon
-                                          style={{ cursor: "pointer" }}
-                                          onClick={() => {
-                                            setUpdate({
-                                              ...update,
-                                              fact_rutProduccion: false,
-                                            });
-                                            setCountActive(
-                                              countActive > 0
-                                                ? countActive - 1
-                                                : countActive
-                                            );
-                                          }}
-                                        />
-                                        <DisabledByDefaultIcon
-                                          style={{ cursor: "pointer" }}
-                                          onClick={() => {
-                                            
-                                            setformStateFactCl({
-                                              ...formStateFactCl,
-                                              fact_rutProduccion:
-                                                dataconfirmFactCl.fact_rutProduccion,
-                                            });
-                                            setUpdate({
-                                              ...update,
-                                              fact_rutProduccion: false,
-                                            });
-                                            setCountActive(
-                                              countActive > 0
-                                                ? countActive - 1
-                                                : countActive
-                                            );
-                                          }}
-                                        />
-                                      </>
-                                    ) : (
-                                      <EditIcon
+                            {formStateProjects.erp === 5 && erp === false ? (
+                              <>
+                                <InputAdornment className="m-[10px]">
+                                  {facturacioncl ? (
+                                    <>
+                                      <CheckBoxIcon
                                         style={{ cursor: "pointer" }}
                                         onClick={() => {
                                           setUpdate({
                                             ...update,
-                                            fact_rutProduccion: true,
+                                            facturacioncl: false,
                                           });
-                                          setCountActive(countActive + 1);
+                                          setCountActive(
+                                            countActive > 0
+                                              ? countActive - 1
+                                              : countActive
+                                          );
                                         }}
                                       />
-                                    )}
-                                  </InputAdornment>
-                                ):(<></>),
-                              }}
-                              
-                              variant="filled"
+                                      <DisabledByDefaultIcon
+                                        style={{ cursor: "pointer" }}
+                                        onClick={() => {
+                                          setUpdate({
+                                            ...update,
+                                            facturacioncl: false,
+                                            fact_userProduccion: false,
+                                            fact_claveProduccion: false,
+                                            fact_rutProduccion: false,
+                                            fact_userPruebas: false,
+                                            fact_clavePruebas: false,
+                                            fact_rutPruebas: false,
+                                          });
+                                          setformStateFactCl({
+                                            ...formStateFactCl,
+                                            fact_userProduccion:
+                                              dataconfirmFactCl.fact_userProduccion,
+                                            fact_claveProduccion:
+                                              dataconfirmFactCl.fact_claveProduccion,
+                                            fact_rutProduccion:
+                                              dataconfirmFactCl.fact_rutProduccion,
+                                            fact_userPruebas:
+                                              dataconfirmFactCl.fact_userPruebas,
+                                            fact_clavePruebas:
+                                              dataconfirmFactCl.fact_clavePruebas,
+                                            fact_rutPruebas:
+                                              dataconfirmFactCl.fact_rutPruebas,
+                                          });
+                                          setCountActive(
+                                            countActive > 0
+                                              ? countActive - 1
+                                              : countActive
+                                          );
+                                        }}
+                                      />
+                                    </>
+                                  ) : (
+                                    <EditIcon
+                                      style={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        setUpdate({
+                                          ...update,
+                                          facturacioncl: true,
+                                        });
+                                        setCountActive(countActive + 1);
+                                      }}
+                                    />
+                                  )}
+                                </InputAdornment>
+                                <div className=" ">
+                                  {facturacioncl ? (
+                                    <>
+                                      <span className="ml-[20px] text-red-500">
+                                        Recuerde aceptar o cancelar el cambio
+                                        realizado
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <></>
+                                  )}
+                                </div>
+                              </>
+                            ) : (
+                              <></>
+                            )}
+                          </Box>
+                          <div
+                            className={`relative flex justify-stretch w-full h-full pointer-events-${
+                              facturacioncl ? "auto" : "none"
+                            } select-${facturacioncl ? "auto" : "none"}`}
+                          >
+                            <Box className="flex flex-col w-full h-full p-[10px]  ">
+                              <Typography
+                                variant="subtitle1"
+                                color="primary"
+                                className="flex justify-center w-ful"
+                              >
+                                Producción
+                              </Typography>
+                              <div className="flex justify-center w-full ">
+                                <Checkbox
+                                  checked={checkProduccion}
+                                  // onChange={(event) => {
+
+                                  // }}
+                                  onClick={() => {
+                                    setCheckProduccion(true);
+                                    setCheckPrueba(false);
+                                    setformStateFactCl({
+                                      ...formStateFactCl,
+                                      fact_pHabilitado: true,
+                                    });
+                                  }}
+                                />
+                              </div>
+                              <TextField
+                                className="w-full mb-[10px]"
+                                label="Usuario de Producción"
+                                type="text"
+                                value={formStateFactCl.fact_userProduccion}
+                                onChange={onInputChangeFact}
+                                name="fact_userProduccion"
+                                disabled={fact_userProduccion ? false : true}
+                                InputProps={{
+                                  defaultValue:
+                                    formStateFactCl.fact_userProduccion,
+                                  startAdornment: checkProduccion ? (
+                                    <InputAdornment position="start">
+                                      {fact_userProduccion ? (
+                                        <>
+                                          <CheckBoxIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setUpdate({
+                                                ...update,
+                                                fact_userProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setformStateFactCl({
+                                                ...formStateFactCl,
+                                                fact_userProduccion:
+                                                  dataconfirmFactCl.fact_userProduccion,
+                                              });
+                                              setUpdate({
+                                                ...update,
+                                                fact_userProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_userProduccion: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ) : (
+                                    <></>
+                                  ),
+                                }}
+                                defaultValue="Vacio"
+                                variant="filled"
                               />
-                              
-                              
-                              
+                              <TextField
+                                className="w-full mb-[10px]"
+                                label="Clave de Producción"
+                                type="text"
+                                value={formStateFactCl.fact_claveProduccion}
+                                onChange={onInputChangeFact}
+                                name="fact_claveProduccion"
+                                disabled={fact_claveProduccion ? false : true}
+                                InputProps={{
+                                  defaultValue:
+                                    formStateFactCl.fact_claveProduccion,
+                                  startAdornment: checkProduccion ? (
+                                    <InputAdornment position="start">
+                                      {fact_claveProduccion ? (
+                                        <>
+                                          <CheckBoxIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setUpdate({
+                                                ...update,
+                                                fact_claveProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setformStateFactCl({
+                                                ...formStateFactCl,
+                                                fact_claveProduccion:
+                                                  dataconfirmFactCl.fact_claveProduccion,
+                                              });
+                                              setUpdate({
+                                                ...update,
+                                                fact_claveProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_claveProduccion: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ) : (
+                                    <></>
+                                  ),
+                                }}
+                                defaultValue="Vacio"
+                                variant="filled"
+                              />
+                              <TextField
+                                className="w-full"
+                                label="Rut de Producción"
+                                type="text"
+                                value={formStateFactCl.fact_rutProduccion}
+                                onChange={onInputChangeFact}
+                                name="fact_rutProduccion"
+                                disabled={fact_rutProduccion ? false : true}
+                                InputProps={{
+                                  defaultValue:
+                                    formStateFactCl.fact_rutProduccion,
+                                  startAdornment: checkProduccion ? (
+                                    <InputAdornment position="start">
+                                      {fact_rutProduccion ? (
+                                        <>
+                                          <CheckBoxIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setUpdate({
+                                                ...update,
+                                                fact_rutProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setformStateFactCl({
+                                                ...formStateFactCl,
+                                                fact_rutProduccion:
+                                                  dataconfirmFactCl.fact_rutProduccion,
+                                              });
+                                              setUpdate({
+                                                ...update,
+                                                fact_rutProduccion: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_rutProduccion: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ) : (
+                                    <></>
+                                  ),
+                                }}
+                                variant="filled"
+                              />
                             </Box>
-                              
+
                             <Box className="flex flex-col w-full h-full  p-[10px] ">
                               <Typography
                                 variant="subtitle1"
@@ -2426,330 +2563,327 @@ export default function HorizontalNonLinearStepper(props) {
                                 Testing
                               </Typography>
                               <div className="flex justify-center w-full">
-                                  
                                 <Checkbox
-                                      checked={checkPrueba}
-                                      // onChange={(event) => {
-                                      //   setCheckPrueba(true);
-                                      //   setCheckProduccion(false);
-                                      // }}
-                                      onClick={()=>{
-                                        setCheckPrueba(true);
-                                        setCheckProduccion(false);
-                                        setformStateFactCl({
-                                          ...formStateFactCl,
-                                          fact_pHabilitado: false
-                                        })
-                                      }}
-                                    />
-                                </div>
+                                  checked={checkPrueba}
+                                  // onChange={(event) => {
+                                  //   setCheckPrueba(true);
+                                  //   setCheckProduccion(false);
+                                  // }}
+                                  onClick={() => {
+                                    setCheckPrueba(true);
+                                    setCheckProduccion(false);
+                                    setformStateFactCl({
+                                      ...formStateFactCl,
+                                      fact_pHabilitado: false,
+                                    });
+                                  }}
+                                />
+                              </div>
                               <TextField
-                                  className="w-full mb-[10px] "
-                                  label="Usuario de Pruebas"
-                                  type="text"
-                                  value={formStateFactCl.fact_userPruebas}
-                                  onChange={onInputChangeFact}
-                                  name="fact_userPruebas"
-                                  disabled={fact_userPruebas ? false : true}
-                                  InputProps={{
-                                    defaultValue:formStateFactCl.fact_userPruebas,
-                                    startAdornment:checkPrueba? (
-                                      <InputAdornment position="start">
-                                        {fact_userPruebas ? (
-                                          <>
-                                            <CheckBoxIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_userPruebas: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                            <DisabledByDefaultIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setformStateFactCl({
-                                                  ...formStateFactCl,
-                                                  fact_userPruebas:
-                                                    dataconfirmFactCl.fact_userPruebas,
-                                                });
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_userPruebas: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                          </>
-                                        ) : (
-                                          <EditIcon
+                                className="w-full mb-[10px] "
+                                label="Usuario de Pruebas"
+                                type="text"
+                                value={formStateFactCl.fact_userPruebas}
+                                onChange={onInputChangeFact}
+                                name="fact_userPruebas"
+                                disabled={fact_userPruebas ? false : true}
+                                InputProps={{
+                                  defaultValue:
+                                    formStateFactCl.fact_userPruebas,
+                                  startAdornment: checkPrueba ? (
+                                    <InputAdornment position="start">
+                                      {fact_userPruebas ? (
+                                        <>
+                                          <CheckBoxIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
                                               setUpdate({
                                                 ...update,
-                                                fact_userPruebas: true,
+                                                fact_userPruebas: false,
                                               });
-                                              setCountActive(countActive + 1);
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
                                             }}
                                           />
-                                        )}
-                                      </InputAdornment>
-                                    ):(<></>),
-                                  }}
-                                  defaultValue="Vacio"
-                                  variant="filled"
-                                />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setformStateFactCl({
+                                                ...formStateFactCl,
+                                                fact_userPruebas:
+                                                  dataconfirmFactCl.fact_userPruebas,
+                                              });
+                                              setUpdate({
+                                                ...update,
+                                                fact_userPruebas: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_userPruebas: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ) : (
+                                    <></>
+                                  ),
+                                }}
+                                defaultValue="Vacio"
+                                variant="filled"
+                              />
                               <TextField
-                                  className="w-full mb-[10px] "
-                                  label="Clave de Pruebas"
-                                  type="text"
-                                  value={formStateFactCl.fact_clavePruebas}
-                                  onChange={onInputChangeFact}
-                                  name="fact_clavePruebas"
-                                  disabled={fact_clavePruebas ? false : true}
-                                  InputProps={{
-                                    defaultValue:formStateFactCl.fact_clavePruebas,
-                                    startAdornment: checkPrueba?(
-                                      <InputAdornment position="start">
-                                        {fact_clavePruebas ? (
-                                          <>
-                                            <CheckBoxIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_clavePruebas: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                            <DisabledByDefaultIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                
-                                                setformStateFactCl({
-                                                  ...formStateFactCl,
-                                                  fact_clavePruebas:
-                                                    dataconfirmFactCl.fact_clavePruebas,
-                                                });
-                                                setUpdate({
-                                                  ...update,
-                                                  fact_clavePruebas: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                          </>
-                                        ) : (
-                                          <EditIcon
+                                className="w-full mb-[10px] "
+                                label="Clave de Pruebas"
+                                type="text"
+                                value={formStateFactCl.fact_clavePruebas}
+                                onChange={onInputChangeFact}
+                                name="fact_clavePruebas"
+                                disabled={fact_clavePruebas ? false : true}
+                                InputProps={{
+                                  defaultValue:
+                                    formStateFactCl.fact_clavePruebas,
+                                  startAdornment: checkPrueba ? (
+                                    <InputAdornment position="start">
+                                      {fact_clavePruebas ? (
+                                        <>
+                                          <CheckBoxIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
                                               setUpdate({
                                                 ...update,
-                                                fact_clavePruebas: true,
+                                                fact_clavePruebas: false,
                                               });
-                                              setCountActive(countActive + 1);
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
                                             }}
                                           />
-                                        )}
-                                      </InputAdornment>
-                                    ):(<></>),
-                                  }}
-                                
-                                  variant="filled"
-                                />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setformStateFactCl({
+                                                ...formStateFactCl,
+                                                fact_clavePruebas:
+                                                  dataconfirmFactCl.fact_clavePruebas,
+                                              });
+                                              setUpdate({
+                                                ...update,
+                                                fact_clavePruebas: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              fact_clavePruebas: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ) : (
+                                    <></>
+                                  ),
+                                }}
+                                variant="filled"
+                              />
                               <TextField
-                              className="w-full "
-                              label="Rut de Pruebas"
-                              type="text"
-                              value={formStateFactCl.fact_rutPruebas}
-                              onChange={onInputChangeFact}
-                              name="fact_rutPruebas"
-                              disabled={fact_rutPruebas ? false : true}
-                              InputProps={{
-                                defaultValue:formStateFactCl.fact_rutPruebas,
-                                startAdornment: checkPrueba?(
-                                  <InputAdornment position="start">
-                                    {fact_rutPruebas ? (
-                                      <>
-                                        <CheckBoxIcon
+                                className="w-full "
+                                label="Rut de Pruebas"
+                                type="text"
+                                value={formStateFactCl.fact_rutPruebas}
+                                onChange={onInputChangeFact}
+                                name="fact_rutPruebas"
+                                disabled={fact_rutPruebas ? false : true}
+                                InputProps={{
+                                  defaultValue: formStateFactCl.fact_rutPruebas,
+                                  startAdornment: checkPrueba ? (
+                                    <InputAdornment position="start">
+                                      {fact_rutPruebas ? (
+                                        <>
+                                          <CheckBoxIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setUpdate({
+                                                ...update,
+                                                fact_rutPruebas: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setformStateFactCl({
+                                                ...formStateFactCl,
+                                                fact_rutPruebas:
+                                                  dataconfirmFactCl.fact_rutPruebas,
+                                              });
+                                              setUpdate({
+                                                ...update,
+                                                fact_rutPruebas: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
                                           style={{ cursor: "pointer" }}
                                           onClick={() => {
                                             setUpdate({
                                               ...update,
-                                              fact_rutPruebas: false,
+                                              fact_rutPruebas: true,
                                             });
-                                            setCountActive(
-                                              countActive > 0
-                                                ? countActive - 1
-                                                : countActive
-                                            );
+                                            setCountActive(countActive + 1);
                                           }}
                                         />
-                                        <DisabledByDefaultIcon
-                                          style={{ cursor: "pointer" }}
-                                          onClick={() => {
-                                            
-                                            setformStateFactCl({
-                                              ...formStateFactCl,
-                                              fact_rutPruebas:
-                                                dataconfirmFactCl.fact_rutPruebas,
-                                            });
-                                            setUpdate({
-                                              ...update,
-                                              fact_rutPruebas: false,
-                                            });
-                                            setCountActive(
-                                              countActive > 0
-                                                ? countActive - 1
-                                                : countActive
-                                            );
-                                          }}
-                                        />
-                                      </>
-                                    ) : (
-                                      <EditIcon
-                                        style={{ cursor: "pointer" }}
-                                        onClick={() => {
-                                          setUpdate({
-                                            ...update,
-                                            fact_rutPruebas: true,
-                                          });
-                                          setCountActive(countActive + 1);
-                                        }}
-                                      />
-                                    )}
-                                  </InputAdornment>
-                                ):(<></>),
-                              }}
-                              
-                              variant="filled"
-                            />
+                                      )}
+                                    </InputAdornment>
+                                  ) : (
+                                    <></>
+                                  ),
+                                }}
+                                variant="filled"
+                              />
                             </Box>
-                          
-                            {!facturacioncl ? ( <div className="absolute inset-0 bg-[#f0f0f0] opacity-50 rounded-lg  ">
-                            </div>):<></>}
-                            
-                          </div>
-                        
-                      </Box>
-                    </Box>
-                    <Box>
-                      <Box className="flex flex-col  w-full p-[10px]  ">
-                      
-                          <div className={`relative flex justify-stretch w-full h-full ` }  >
-                          {/* pointer-events-${facturacioncl?"auto":"none"} select-${facturacioncl?"auto":"none"} */}
-                            
 
-                            
+                            {!facturacioncl ? (
+                              <div className="absolute inset-0 bg-[#f0f0f0] opacity-50 rounded-lg  "></div>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                        </Box>
+                      </Box>
+                      <Box>
+                        <Box className="flex flex-col  w-full p-[10px]  ">
+                          <div
+                            className={`relative flex justify-stretch w-full h-full `}
+                          >
+                            {/* pointer-events-${facturacioncl?"auto":"none"} select-${facturacioncl?"auto":"none"} */}
+
                             <Box className="flex flex-col w-full h-full mr-[10px]">
-                            <Typography
-                              variant="subtitle1"
-                              color="primary"
-                              // className="flex justify-center w-ful"
-                            >
-                              Facturador ERP
-                            </Typography>
+                              <Typography
+                                variant="subtitle1"
+                                color="primary"
+                                // className="flex justify-center w-ful"
+                              >
+                                Facturador ERP
+                              </Typography>
                               <TextField
-                                  // disabled={banksName1 ? false : true}
-                                  className="min-w-[250px]"
-                                  id="standard-select-currency"
-                                  select
-                                  label="Facturador"
-                                  value={formStateProjects.erp}
-                                  onChange={handleChangeERP}
-                                  variant="filled"
-                                  name="erp"
-                                  disabled={erp ? false : true}
-                                  InputProps={{
-                                    startAdornment: (
-                                      <InputAdornment position="start">
-                                        {erp ? (
-                                          <>
-                                            <CheckBoxIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                                setUpdate({
-                                                  ...update,
-                                                  erp: false,
-                                                });
-                                            
-                                            
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                            <DisabledByDefaultIcon
-                                              style={{ cursor: "pointer" }}
-                                              onClick={() => {
-                                             
-                                                setformStateProjects({
-                                                  ...formStateProjects,
-                                                  erp:props.fullData.dataProject.erp,
-                                      
-                                                });
-                                                
-                                                setUpdate({
-                                                  ...update,
-                                                  erp: false,
-                                                });
-                                                setCountActive(
-                                                  countActive > 0
-                                                    ? countActive - 1
-                                                    : countActive
-                                                );
-                                              }}
-                                            />
-                                          </>
-                                        ) : (
-                                          <EditIcon
+                                // disabled={banksName1 ? false : true}
+                                className="min-w-[250px]"
+                                id="standard-select-currency"
+                                select
+                                label="Facturador"
+                                value={formStateProjects.erp}
+                                onChange={handleChangeERP}
+                                variant="filled"
+                                name="erp"
+                                disabled={erp ? false : true}
+                                InputProps={{
+                                  startAdornment: (
+                                    <InputAdornment position="start">
+                                      {erp ? (
+                                        <>
+                                          <CheckBoxIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
                                               setUpdate({
                                                 ...update,
-                                                erp: true,
-                                               
+                                                erp: false,
                                               });
-                                              setCountActive(countActive + 1);
+
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
                                             }}
                                           />
-                                        )}
-                                      </InputAdornment>
-                                    ),
-                                  }}
-                                >   
-                                  {props.facturadorErp.map((data) => (
-                                    <MenuItem key={data.id} value={data.id}>
-                                      {data.nombreErp}
-                                    </MenuItem>
-                                  ))}
+                                          <DisabledByDefaultIcon
+                                            style={{ cursor: "pointer" }}
+                                            onClick={() => {
+                                              setformStateProjects({
+                                                ...formStateProjects,
+                                                erp: props.fullData.dataProject
+                                                  .erp,
+                                              });
+
+                                              setUpdate({
+                                                ...update,
+                                                erp: false,
+                                              });
+                                              setCountActive(
+                                                countActive > 0
+                                                  ? countActive - 1
+                                                  : countActive
+                                              );
+                                            }}
+                                          />
+                                        </>
+                                      ) : (
+                                        <EditIcon
+                                          style={{ cursor: "pointer" }}
+                                          onClick={() => {
+                                            setUpdate({
+                                              ...update,
+                                              erp: true,
+                                            });
+                                            setCountActive(countActive + 1);
+                                          }}
+                                        />
+                                      )}
+                                    </InputAdornment>
+                                  ),
+                                }}
+                              >
+                                {props.facturadorErp.map((data) => (
+                                  <MenuItem key={data.id} value={data.id}>
+                                    {data.nombreErp}
+                                  </MenuItem>
+                                ))}
                               </TextField>
-                              
-                              
-                              
                             </Box>
-                              
+
                             <Box className="flex flex-col w-full h-full">
                               <Typography
                                 variant="subtitle1"
@@ -2758,8 +2892,8 @@ export default function HorizontalNonLinearStepper(props) {
                               >
                                 Nomina de Pago
                               </Typography>
-                             
-                             <TextField
+
+                              <TextField
                                 // disabled={banksName1 ? false : true}
                                 className="min-w-[250px]"
                                 id="standard-select-currency"
@@ -2782,8 +2916,7 @@ export default function HorizontalNonLinearStepper(props) {
                                                 ...update,
                                                 id_nomina_pago: false,
                                               });
-                                          
-                                          
+
                                               setCountActive(
                                                 countActive > 0
                                                   ? countActive - 1
@@ -2794,13 +2927,13 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                           
                                               setformStateProjects({
                                                 ...formStateProjects,
-                                                id_nomina_pago:props.fullData.dataProject.id_nomina_pago,
-                                    
+                                                id_nomina_pago:
+                                                  props.fullData.dataProject
+                                                    .id_nomina_pago,
                                               });
-                                              
+
                                               setUpdate({
                                                 ...update,
                                                 id_nomina_pago: false,
@@ -2841,27 +2974,15 @@ export default function HorizontalNonLinearStepper(props) {
                                   </MenuItem>
                                 ))}
                               </TextField>
-                              
-                             
                             </Box>
-                          
+
                             {/* {!facturacioncl ? ( <div className="absolute inset-0 bg-[#f0f0f0] opacity-50 rounded-lg  ">
                             </div>):<></>} */}
-                            
                           </div>
-                        
+                        </Box>
                       </Box>
                     </Box>
-                    </Box>
-                    
-                    
-                    
                   </Box>
-
-                     
-             
-
-             
                 ) : (
                   //HACER LA HISTORIFICACION TERMINARLA ANTES DE LAS 4
                   <Box>

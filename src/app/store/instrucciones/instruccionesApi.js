@@ -11,7 +11,7 @@ export const instruccionesApi = createApi({
     }),
     getInstrucciones: builder.query({
       query: (id) =>
-        `/api/Instrucciones/${id}?Folio=0&EstadoEmision=No Facturado`,
+        `/api/Instrucciones/InstruccionesDef/${id}?Folio=0&EstadoEmision=No Facturado`,
     }),
 
     // getInstrucciones: builder.mutation({

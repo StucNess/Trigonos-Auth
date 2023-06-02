@@ -8,18 +8,18 @@ export const facturacionClApi = createApi({
   }),
   endpoints: (builder) => ({
     getFacturaById: builder.mutation({
-        //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
-        query: (id) => ({
-          headers: {
-            "Content-type": "application/json",
-          },
-          url: `/FacturacionBy/${id}`,
-          method: "GET",
-        }),
+      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      query: (id) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/FacturacionBy/${id}`,
+        method: "GET",
       }),
+    }),
     getFactCLAll: builder.query({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
-      query: () =>`/NpaginationDecode`,
+      query: () => `/NpaginationDecode`,
       providesTags: ["FacturacionesCl"],
     }),
     postFacturaAgregar: builder.mutation({
@@ -49,8 +49,8 @@ export const facturacionClApi = createApi({
   }),
 });
 export const {
-usePostFacturaAgregarMutation,
-usePostFacturaActualizarMutation,
-useGetFacturaByIdMutation,
-useGetFactCLAllQuery
+  usePostFacturaAgregarMutation,
+  usePostFacturaActualizarMutation,
+  useGetFacturaByIdMutation,
+  useGetFactCLAllQuery,
 } = facturacionClApi;
