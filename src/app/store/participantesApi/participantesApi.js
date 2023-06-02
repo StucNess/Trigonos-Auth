@@ -22,6 +22,37 @@ export const participantesApi = createApi({
         method: "GET",
       }),
     }),
+    patchPartcipant: builder.mutation({
+      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      query: (spec) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url:`/api/Participantes?id=${spec.id}&` +
+        `Name=${spec.name}&` +
+        `Rut=${spec.rut}&` +
+        `Verification_Code=${spec.verificationCode}&` +
+        `Business_Name=${spec.businessName}&` +
+        `Commercial_Business=${spec.commercialBusiness}&` +
+        `Dte_Reception_Email=${spec.email}&` +
+        `Bank_Account=${spec.bankAccount}&` +
+        `bank=${spec.bank}&` +
+        `Commercial_address=${spec.commercialAddress}&` +
+        `Postal_address=${spec.postalAddress}&` +
+        `Manager=${spec.manager}&` +
+        `Pay_Contact_First_Name=${spec.payContactFirstName}&` +
+        `Pay_contact_last_name=${spec.payContactLastName}&` +
+        `Pay_contact_address=${spec.payContactAddress}&` +
+        `Pay_contact_phones=${spec.formatpayContactPhones}&` +
+        `Pay_contact_email=${spec.payContactEmail}&` +
+        `Bills_contact_first_name=${spec.billsContactFirstName}&` +
+        `Bills_contact_last_name=${spec.billsContactLastName}&` +
+        `Bills_contact_address=${spec.billsContactAddress}&` +
+        `Bills_contact_phones=${spec.formatBillsContactPhones}&` +
+        `Bills_contact_email=${spec.billsContactEmail}`,
+        method: "PATCH",
+      }),
+    }),
     getProyectoById: builder.mutation({
       //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
       query: (id) => ({
@@ -97,7 +128,7 @@ export const {
   useGetProyectoByIdMutation,
   useGetProyectoAllMutation,
   usePostActualizarProyectoMutation,
-
+  usePatchPartcipantMutation,
   useGetParticipantesByIdMutation,
   useGetBusinessNameQuery,
   useGetRutQuery,

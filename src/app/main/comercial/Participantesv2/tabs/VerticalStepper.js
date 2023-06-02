@@ -53,6 +53,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import {
   useGetProyectoByIdMutation,
+  usePatchPartcipantMutation,
   usePostActualizarProyectoMutation,
 } from "app/store/participantesApi/participantesApi";
 import {
@@ -60,7 +61,9 @@ import {
   useGetFacturaByIdMutation,
   usePostFacturaActualizarMutation,
 } from "app/store/facturacionClApi/facturacionClApi";
-
+import WarningIcon from "@mui/icons-material/Warning";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 //MODAL TABLA CAMBIOS
 function createData(campo, antiguo, nuevo) {
   return { campo, antiguo, nuevo };
@@ -87,9 +90,19 @@ let dataBank;
 let banks;
 
 export default function HorizontalNonLinearStepper(props) {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText: "",
+    msgError: false,
+  });
+  const { msgResp, msgText, msgError } = MsgAlert;
+ 
   const [postActProyect, dataActProyect] = usePostActualizarProyectoMutation();
   const [postAddFactCl, dataAddFactCl] = usePostFacturaAgregarMutation();
   const [postActFactCl, dataActFactCl] = usePostFacturaActualizarMutation();
+  const [patchActPart, dataActPart] = usePatchPartcipantMutation();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [activeLabel, setActiveLabel] = useState("");
@@ -250,7 +263,29 @@ export default function HorizontalNonLinearStepper(props) {
   const [checkedBlue, setCheckedBlue] = React.useState(false);
   const [checkedExt, setCheckedExt] = React.useState(false);
   const handleClickOpen = () => {
-    setOpen(true);
+    //condiciones antes de enviar algo
+    if((formStateProjects.erp === 5) &&  JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl)){
+      
+      setOpenDialog(true);
+      setMsgAlert({
+        msgResp: true,
+        msgText: "Debe completar Facturación.CL",
+        msgError: true,
+      });
+      setTimeout(() => {
+        setMsgAlert({
+          msgResp: undefined,
+          msgText: "",
+          msgError: undefined,
+        });
+        setOpenDialog(false);
+      }, 1500);
+
+    }else{
+      setOpen(true);
+    }
+
+   
   };
 
   const handleCloseAlert = () => {
@@ -793,15 +828,31 @@ export default function HorizontalNonLinearStepper(props) {
       );
     }
   };
+ 
+  
+  function verificarLista(list) {
+    if(list.every((valor) => valor === false)) {
+      return true;
+    } else {
+     
+      return false;
+      
+      
+    }
+  }
+  
+  useEffect(() => {
+    let ver = verificarLista([dataActFactCl.isLoading,dataActProyect.isLoading,dataActPart.isLoading])
+    if(ver){
+      setOpenDialog(false);
+      setLoading(false);
+    }
 
-  const ApiPatch = () => {
-    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    let isEqualdos =
-      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
-    let isEqualtres =
-      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+  }, [dataActFactCl.isLoading,dataActProyect.isLoading,dataActPart.isLoading])
+  console.log(dataActProyect.isLoading)
 
-    if (!isEqualtres) {
+  function SubmitActProject(isEqual){
+    if (!isEqual) {
       postActProyect({
         id_participants: props.fullData.dataParticipant.id,
         erp:
@@ -816,12 +867,19 @@ export default function HorizontalNonLinearStepper(props) {
           formStateProjects.id_nomina_pago != dataconfirmProjects.id_nomina_pago
             ? formStateProjects.id_nomina_pago
             : null,
-      }).then((response) => {});
+      }).then((response) => {
+        
+      });
+    }else{
+     
     }
-
+  }
+  function SubmitFactCl(isEqual){
     if (props.fullData.dataFactCl.phabilitado != undefined) {
       //ejecuta el post de actualizar
-      if (!isEqualdos) {
+      
+
+      if (!isEqual) {
         postActFactCl({
           idParticipante: props.fullData.dataParticipant.id,
           usuario64:
@@ -861,12 +919,15 @@ export default function HorizontalNonLinearStepper(props) {
             dataconfirmFactCl.fact_pHabilitado
               ? formStateFactCl.fact_pHabilitado
               : dataconfirmFactCl.fact_pHabilitado,
-        });
+        }).then((response) => {
+
+         
+        });;
       }
     } else {
       //ejecuta el post de agregar
       if (checkProduccion || checkPrueba) {
-        if (!isEqualdos) {
+        if (!isEqual) {
           postAddFactCl({
             idParticipante: props.fullData.dataParticipant.id,
             usuario64:
@@ -902,52 +963,101 @@ export default function HorizontalNonLinearStepper(props) {
                 ? formStateFactCl.fact_rutPruebas
                 : null,
             phabilitado: formStateFactCl.fact_pHabilitado,
-          });
+          }).then((response) => {
+
+          });;
         }
       }
     }
+  }
+  function SubmitActParticipant(isEqual){
     if (isEqual) {
       // console.log("No se realiza envio a API");
-      setAlertError(true);
+     
     } else {
       let formatBillsContactPhones =
         '["' + formState.billsContactPhones.replace(/,/g, '","') + '"]';
       let formatpayContactPhones =
         '["' + formState.payContactPhones.replace(/,/g, '","') + '"]';
 
-      const apiPatchParticipante =
-        ` https://trigonosapi.azurewebsites.net/api/Participantes?` +
-        `id=${formState.id}&` +
-        `Name=${formState.name}&` +
-        `Rut=${formState.rut}&` +
-        `Verification_Code=${formState.verificationCode}&` +
-        `Business_Name=${formState.businessName}&` +
-        `Commercial_Business=${formState.commercialBusiness}&` +
-        `Dte_Reception_Email=${formState.email}&` +
-        `Bank_Account=${formState.bankAccount}&` +
-        `bank=${formState.bank}&` +
-        `Commercial_address=${formState.commercialAddress}&` +
-        `Postal_address=${formState.postalAddress}&` +
-        `Manager=${formState.manager}&` +
-        `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
-        `Pay_contact_last_name=${formState.payContactLastName}&` +
-        `Pay_contact_address=${formState.payContactAddress}&` +
-        `Pay_contact_phones=${formatpayContactPhones}&` +
-        `Pay_contact_email=${formState.payContactEmail}&` +
-        `Bills_contact_first_name=${formState.billsContactFirstName}&` +
-        `Bills_contact_last_name=${formState.billsContactLastName}&` +
-        `Bills_contact_address=${formState.billsContactAddress}&` +
-        `Bills_contact_phones=${formatBillsContactPhones}&` +
-        `Bills_contact_email=${formState.billsContactEmail}`;
-      const res = axios
-        .patch(apiPatchParticipante)
-        .then((response) => {
-          setAlertOk(true);
-        })
-        .catch((error) => {
-          setAlertError(true);
-        });
+      patchActPart({
+        id: formState.id,
+        name:formState.name,
+        rut:formState.rut,
+        verificationCode:formState.verificationCode,
+        businessName:formState.businessName,
+        commercialBusiness:formState.commercialBusiness,
+        email:formState.email,
+        bankAccount:formState.bankAccount,
+        bank:formState.bank,
+        commercialAddress:formState.commercialAddress,
+        postalAddress:formState.postalAddress,
+        manager:formState.manager,
+        payContactFirstName:formState.payContactFirstName,
+        payContactLastName:formState.payContactLastName,
+        payContactAddress:formState.payContactAddress,
+        formatpayContactPhones:formatpayContactPhones,
+        payContactEmail:formState.payContactEmail,
+        billsContactFirstName:formState.billsContactFirstName,
+        billsContactLastName:formState.billsContactLastName,
+        billsContactAddress:formState.billsContactAddress,
+        formatBillsContactPhones:formatBillsContactPhones,
+        billsContactEmail:formState.billsContactEmail
+      }).then((response)=>{
+
+      }).catch((error)=>{
+
+      })
+      // const apiPatchParticipante =
+      //   ` https://trigonosapi.azurewebsites.net/api/Participantes?` +
+      //   `id=${formState.id}&` +
+      //   `Name=${formState.name}&` +
+      //   `Rut=${formState.rut}&` +
+      //   `Verification_Code=${formState.verificationCode}&` +
+      //   `Business_Name=${formState.businessName}&` +
+      //   `Commercial_Business=${formState.commercialBusiness}&` +
+      //   `Dte_Reception_Email=${formState.email}&` +
+      //   `Bank_Account=${formState.bankAccount}&` +
+      //   `bank=${formState.bank}&` +
+      //   `Commercial_address=${formState.commercialAddress}&` +
+      //   `Postal_address=${formState.postalAddress}&` +
+      //   `Manager=${formState.manager}&` +
+      //   `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
+      //   `Pay_contact_last_name=${formState.payContactLastName}&` +
+      //   `Pay_contact_address=${formState.payContactAddress}&` +
+      //   `Pay_contact_phones=${formatpayContactPhones}&` +
+      //   `Pay_contact_email=${formState.payContactEmail}&` +
+      //   `Bills_contact_first_name=${formState.billsContactFirstName}&` +
+      //   `Bills_contact_last_name=${formState.billsContactLastName}&` +
+      //   `Bills_contact_address=${formState.billsContactAddress}&` +
+      //   `Bills_contact_phones=${formatBillsContactPhones}&` +
+      //   `Bills_contact_email=${formState.billsContactEmail}`;
+      // const res = axios
+      //   .patch(apiPatchParticipante)
+      //   .then((response) => {
+          
+      //   })
+      //   .catch((error) => {
+         
+      //   });
     }
+  }
+  
+  
+  const ApiPatch = () => {
+    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
+    let isEqualdos = JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
+    let isEqualtres = JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+    
+    setOpenDialog(true);
+    setLoading(true);
+    SubmitActProject(isEqualtres);
+    SubmitFactCl(isEqualdos);
+    SubmitActParticipant(isEqual);
+
+   
+   
+   
   };
   useEffect(() => {
     countActive === 0 ? setActiveButton(false) : setActiveButton(true);
@@ -3093,6 +3203,43 @@ export default function HorizontalNonLinearStepper(props) {
                 : "completar"}
             </Button>
           ))} */}
+          <Dialog
+     
+     open={openDialog}
+     aria-labelledby="alert-dialog-title"
+     aria-describedby="alert-dialog-description"
+     scroll={"paper"}
+   >
+     {loading ? (
+       <div className="flex justify-center items-center h-[250px] w-[300px]">
+         <CircularProgress color="secondary" />
+       </div>
+     ) : (
+       <div>
+         {msgResp && (
+           <div className="flex justify-center items-center h-[250px] w-[300px]">
+             {msgError ? (
+               <div className="flex justify-center items-center h-[250px] w-[300px]">
+                 <WarningIcon className="w-[68px] h-[68px] text-red" />
+                 <span className="absolute bottom-[70px] text-red">
+                   {" "}
+                   <b>{msgText}</b>
+                 </span>
+               </div>
+             ) : (
+               <div className="flex justify-center items-center h-[250px] w-[300px]">
+                 <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                 <span className="absolute bottom-[70px] text-green">
+                   {" "}
+                   <b>{msgText}</b>
+                 </span>
+               </div>
+             )}
+           </div>
+         )}
+       </div>
+     )}
+   </Dialog>
       </Box>
     </Box>
   );
