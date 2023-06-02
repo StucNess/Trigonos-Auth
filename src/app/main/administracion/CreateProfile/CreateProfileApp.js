@@ -31,7 +31,11 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
-
+import Dialog from "@mui/material/Dialog";
+import WarningIcon from "@mui/icons-material/Warning";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import Tooltip from "@mui/material/Tooltip";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
@@ -45,6 +49,7 @@ import {
   useGetAllRolesTokenQuery,
   useGetAllRoutesQuery,
   useGetListarPaginaWebQuery,
+  usePostActDesacDinamicRolMutation,
 } from "app/store/RoutesRoles/routesApi";
 
 let theme = createTheme(esES);
@@ -290,13 +295,72 @@ function CreateProfileApp(props) {
   const [dataRol, setDataRol] = useState({});
   const [dataAsing, setDataAsing] = useState({});
   const [dataNoAsing, setDataNoAsing] = useState({});
+  const [disableButton, setDisableButton] = useState(false);
 
   const { data: todos = [], isLoading: isloadingg = true } =
     useGetAllRoutesQuery();
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetListarPaginaWebQuery();
   const {data: getAllRoles, isLoading:isLoadRoles } = useGetAllRolesTokenQuery(window.localStorage.getItem("token"));
+  const [postActDesact, data_act_desc] = usePostActDesacDinamicRolMutation();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText: "",
+    msgError: false,
+  });
+  const { msgResp, msgText, msgError } = MsgAlert;
+ 
+  
+  function ActivarDesactivar(idRol){
+    setOpenDialog(true);
+    setLoading(true);
 
+    postActDesact(idRol).then((response)=>{
+      setLoading(false);
+      console.log()
+      if(response.error === undefined){
+        setMsgAlert({
+          msgResp: true,
+          msgText: "Exito, Operación Realizada",
+          msgError: false,
+        });
+        setTimeout(() => {
+       
+          setOpenDialog(false);
+          setTimeout(() => {
+            window.location.reload();
+          }, 100);
+        }, 1000);
+      }else{
+        setMsgAlert({
+          msgResp: true,
+          msgText: "No se logró realizar la operación",
+          msgError: true,
+        });
+        setTimeout(() => {
+       
+          setOpenDialog(false);
+        }, 1000);
+      }
+     
+    }).catch((error)=>{
+      setLoading(false);
+  
+      setMsgAlert({
+        msgResp: true,
+        msgText: "No se logró realizar la operación",
+        msgError: true,
+      });
+      setTimeout(() => {
+     
+        setOpenDialog(false);
+      }, 1000);
+    })
+    
+  }
+  
   function EnviarDatos(row) {
     if (isloadingg != true) {
       function getListRoles(idrol) {
@@ -377,6 +441,9 @@ function CreateProfileApp(props) {
     if(getAllRoles !=undefined){
       CargaDataRol();
 
+    }
+    if(!table){
+      setDisableButton(false);
     }
   }, [table]);
 
@@ -611,32 +678,79 @@ function CreateProfileApp(props) {
                                       {row.descripcion}
                                     </StyledTableCell>
                                     <StyledTableCell align="left">
-                                      <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        className=" h-[28px]  w-[100px] mr-[20px]"
-                                        onClick={
-                                          // () => window.location.reload(true)
-                                          () => {
-                                            EnviarDatos(row);
-                                          }
-                                        }
-                                        type="submit"
+                                    <div className="flex flex-row">
+                                    <Tooltip  
+                                    title="Editar" 
+                                    arrow 
+                                    placement="top"
+                                    // placement="top-start"
+                                      >
+                                    <span>
+                                    <IconButton
+                                      sx={{ "&:hover": { color: "#e4493f" } }}
+                                      key="chechedLeft"
+                                      aria-label="Close"
+                                      color="primary"
+                                      type="submit"
+                                      disabled=  {disableButton}
+                                      onClick={() => {
+                                        EnviarDatos(row);
+                                        setDisableButton(true);
+                                      }}
+                                      size="small"
+                                    >
+                                      <SettingsIcon fontSize="large" />
+                                    </IconButton>
+                                    </span>
+                             
+                                     </Tooltip>
+
+                                     {row.estado ==="Desactivado"?   
+                                          <Tooltip  
+                                          title="Activar" 
+                                          arrow 
+                                          placement="top"
+                                          // placement="top-start"
+                                        >
+                                        <IconButton
+                                        sx={{ "&:hover": { color: "#e4493f" } }}
+                                        key="chechedLeft"
+                                        aria-label="Close"
+                                        color="primary"
+                                        onClick={() => {
+                                            ActivarDesactivar(row.id)
+                                        }}
                                         size="small"
                                       >
-                                        <SettingsIcon />
-                                        Editar
-                                      </Button>
-                                      <Button
-                                        variant="contained"
-                                        color="secondary"
-                                        className=" h-[28px]  w-[100px] mr-[20px]"
-                                        type="submit"
+                                        <RestoreFromTrashIcon fontSize="large" />
+                                      </IconButton>
+                                      </Tooltip> :  
+                                          <Tooltip  
+                                          title="Desactivar" 
+                                          arrow 
+                                          placement="top"
+                                          // placement="top-start"
+                                        >
+                                        <IconButton
+                                        sx={{ "&:hover": { color: "#e4493f" } }}
+                                        key="chechedLeft"
+                                        aria-label="Close"
+                                        color="primary"
+                                        onClick={() => {
+                                          ActivarDesactivar(row.id)
+                                      }}
                                         size="small"
                                       >
-                                        <DeleteForeverIcon />
-                                        Desactivar
-                                      </Button>
+                                        <DeleteForeverIcon fontSize="large" />
+                                      </IconButton>
+                                      </Tooltip> 
+                                  
+                                  } 
+
+                                    </div>
+                                
+                                   
+                                    
                                     </StyledTableCell>
                                   </StyledTableRow>
                                 );
@@ -689,6 +803,42 @@ function CreateProfileApp(props) {
               dataWeb={dataWeb}
             />
           )}
+            <Dialog
+            open={openDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            scroll={"paper"}
+          >
+            {loading ? (
+              <div className="flex justify-center items-center h-[250px] w-[300px]">
+                <CircularProgress color="secondary" />
+              </div>
+            ) : (
+              <div>
+                {msgResp && (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    {msgError ? (
+                      <div className="flex justify-center items-center h-[250px] w-[300px]">
+                        <WarningIcon className="w-[68px] h-[68px] text-red" />
+                        <span className="absolute bottom-[70px] text-red">
+                          {" "}
+                          <b>{msgText}</b>
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex justify-center items-center h-[250px] w-[300px]">
+                        <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                        <span className="absolute bottom-[70px] text-green">
+                          {" "}
+                          <b>{msgText}</b>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </Dialog>
         </div>
       }
       scroll="content"
