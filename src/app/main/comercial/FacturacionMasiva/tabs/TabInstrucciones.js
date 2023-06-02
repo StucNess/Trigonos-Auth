@@ -649,7 +649,7 @@ function TabInstrucciones(props) {
             comuna: "Las Condes",
           };
         });
-      } else if (props.erp == 7) {
+      } else if (props.erp == 7 || props.erp == 5) {
         rows = dataInstructions.data.map((data) => {
           return {
             id: data.id,
@@ -1237,7 +1237,7 @@ function TabInstrucciones(props) {
         obj.FechaCarta = transformtToShortDate(
           dataInstructions.data[i].fecha_carta
         );
-      } else if (props.erp == 7) {
+      } else if (props.erp == 7 || props.erp == 5) {
         obj.DestinodelDocumento = "A";
         obj.Documentoimpresosegeneranulo = "N";
         obj.DocumentoimpresoGeneraRebajaStock = "N";
@@ -1482,7 +1482,7 @@ function TabInstrucciones(props) {
                         const isItemSelected = isSelected(row.id);
                         const labelId = `enhanced-table-checkbox-${index}`;
                         {
-                          if (props.erp == 2) {
+                          if (props.erp == 2 || props.erp == 3) {
                             return (
                               <StyledTableRow
                                 hover
@@ -1623,7 +1623,7 @@ function TabInstrucciones(props) {
                                 </StyledTableCell>
                               </StyledTableRow>
                             );
-                          } else if (props.erp == 7) {
+                          } else if (props.erp == 7 || props.erp == 5) {
                             return (
                               <StyledTableRow
                                 hover
