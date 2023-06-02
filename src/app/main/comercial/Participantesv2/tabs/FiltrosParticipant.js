@@ -9,71 +9,37 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import AdviceModule from "../../AdviceModule";
-import { useGetProyectoAllMutation, useGetProyectoByIdMutation } from "app/store/participantesApi/participantesApi";
+import { useGetParticipantellMutation, useGetProyectoAllMutation, useGetProyectoByIdMutation } from "app/store/participantesApi/participantesApi";
 
 let participants;
 export default function FiltrosParticipant(props) {
-  const [getParticipant, data] = useGetProyectoAllMutation();
-  const [getProyect, dataProyect] = useGetProyectoByIdMutation();
-  const [carga, setCarga] = useState(true);
-  const [nameParticipants, setNameParticipants] = useState([{
-    name: "Vacio",
-    rutCompleto: "Vacio",
-    id: 1,
-  },]);
-  const [dataParticipant, setDataParticipant] = useState([
-    {
-      name: "Vacio",
-      rutCompleto: "Vacio",
-      id: 1,
-    },
-  ]);
-  
-  // useEffect(() => {
-  //   props.isLoading(data.isLoading);
-  // }, [data.isLoading]);
-  //corregir error de datos indefinidos
-  useEffect(() => {
-    if(!data.isLoading){
-      setCarga(false);
-    }
-    console.log(data.isLoading);
-  }, [data.isLoading]);
-  useEffect(() => {
-    props.sendParticipants(dataParticipant);
-    
-  }, [dataParticipant]);
-  useEffect(() => {
-    if (props.change) {
-    
-      `ID DEL REFRESH: ${props.idParticipant}`;
-      callAsyncApi(props.idParticipant);
-    }
-  }, [props.change]);
-  let callAsyncApi = (refreshValue) => {
-    getParticipant({PageIndex:1,PageSize:1000}).then((response)=>{
-      let participants = response.data.data;
-      setNameParticipants(participants);
-      setDataParticipant(participants[parseInt(refreshValue - 1)]);
-      props.sendParticipants(participants[parseInt(refreshValue - 1)]);
-    }).catch((error)=>{
-      
-    });
  
-  };
+  const [fullData, setFullData] = useState({
+    dataParticipant: props.allparticipants[0],
+    dataProject:props.allprojects.filter((data) => data.id_participants ===props.allparticipants[0].id)[0]||{},
+    dataFactCl:props.allfactcl.filter((data) => data.idParticipante ===props.allparticipants[0].id)[0]||{}
+  });
+  const [allParticipants, setAllParticipants] = useState(props.allparticipants);
+  const [dataParticipant, setDataParticipant] = useState([props.allparticipants[0]]);
+
+  const [allProjects, setAllProjects] = useState(props.allprojects);
+  const [dataProject, setDataProject] = useState([props.allprojects.filter((data) => data.id_participants ===props.allparticipants[0].id)||{}]);
+
+  const [allFactsCl, setAllFactsCl] = useState(props.allfactcl);
+  // const [dataFactCL, setDataFactCL] = useState([props.allfactcl.filter((data) => data.id_participants ===props.allparticipants[0].id)||{}]);
+
+
+
+console.log(props.allparticipants)
+ 
   useEffect(() => {
-    getParticipant({PageIndex:1,PageSize:1000}).then((response)=>{
-      props.sendParticipants(response.data.data[0]);
-      setNameParticipants(response.data.data);
-      setDataParticipant(response.data.data[0])
-      
-      
-    }).catch((error)=>{
-      
-    });
-    
+    props.sendFullData(fullData);
+  }, [fullData]);
+
+  useEffect(() => {
+ 
+    props.sendFullData(fullData);
   }, []);
-  
   return (
     <Box>
       <Box className="flex flex-col w-full mb-[20px] ">
@@ -92,52 +58,45 @@ export default function FiltrosParticipant(props) {
         </Typography>
         <span>Introducir términos de búsqueda</span>
       </Box>
-      {data.isLoading?
-              <div className="flex items-center">
-                <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                  {/* <p>Chupa Chupa .....</p> */}
-                  <LinearProgress color="primary" />
-                </Stack>
-              </div>:
-              <Box className="flex  w-full   mdmax:flex-wrap justify-evenly   lg:justify-start">
-              <Autocomplete
-                className="m-[10px] w-[300px] md:w-[500px]"
-                disablePortal
-                options={nameParticipants}
-                value={dataParticipant}
-                onChange={(event, newValue) =>
-                  newValue != undefined && setDataParticipant(newValue)
-                }
-                getOptionLabel={(option) =>
-                  option.business_Name || dataParticipant[0].name
-                }
-                // isOptionEqualToValue={(option, value) =>
-                //   dataParticipant.name == value || ""
-                // }
-                id="combo-box-demo"
-                renderInput={(params) => (
-                  <TextField {...params} label="Razón Social" />
-                )}
-              />
-              <Autocomplete
-                className="m-[10px] w-[300px] md:w-[500px]"
-                disablePortal
-                onChange={(event, newValue) =>
-                  newValue != undefined && setDataParticipant(newValue)
-                }
-                // isOptionEqualToValue={(option, value) =>
-                //   dataParticipant.name == value || ""
-                // }
-                getOptionLabel={(option) =>
-                  option.rutCompleto || dataParticipant[0].rutCompleto
-              
-                }
-                id="combo-box-demo"
-                options={nameParticipants}
-                value={dataParticipant}
-                renderInput={(params) => <TextField {...params} label="Rut" />}
-              />
-            </Box>}
+          <Box className="flex  w-full   mdmax:flex-wrap justify-evenly   lg:justify-start">
+          <Autocomplete
+            className="m-[10px] w-[300px] md:w-[500px]"
+            disablePortal
+            options={allParticipants}
+            value={fullData.dataParticipant}
+            onChange={(event, newValue) =>
+              newValue != undefined && setFullData( {dataParticipant: newValue,
+                dataProject:props.allprojects.filter((data) => data.id_participants ===newValue.id)[0]||{},
+                dataFactCl:props.allfactcl.filter((data) => data.idParticipante ===newValue.id)[0]||{}})
+            }
+            getOptionLabel={(option) =>
+              option.business_Name || dataParticipant[0].business_Name
+            }
+           
+            id="combo-box-demo"
+            renderInput={(params) => (
+              <TextField {...params} label="Razón Social" />
+            )}
+          />
+          <Autocomplete
+            className="m-[10px] w-[300px] md:w-[500px]"
+            disablePortal
+            onChange={(event, newValue) =>
+              newValue != undefined && setFullData( {dataParticipant: newValue,
+                dataProject:props.allprojects.filter((data) => data.id_participants ===newValue.id)[0]||{},
+                dataFactCl:props.allfactcl.filter((data) => data.idParticipante ===newValue.id)[0]||{}})
+            }
+          
+            getOptionLabel={(option) =>
+              option.rutCompleto || dataParticipant[0].rutCompleto
+          
+            }
+            id="combo-box-demo"
+            options={allParticipants}
+            value={fullData.dataParticipant}
+            renderInput={(params) => <TextField {...params} label="Rut" />}
+          />
+        </Box>
       
     </Box>
   );
