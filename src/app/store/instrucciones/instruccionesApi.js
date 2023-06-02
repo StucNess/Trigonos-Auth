@@ -10,7 +10,8 @@ export const instruccionesApi = createApi({
       query: () => "/Glosa",
     }),
     getInstrucciones: builder.query({
-      query: (id) => `/api/Instrucciones/${id}?Folio=0`,
+      query: (id) =>
+        `/api/Instrucciones/${id}?Folio=0&EstadoEmision=No Facturado`,
     }),
 
     // getInstrucciones: builder.mutation({

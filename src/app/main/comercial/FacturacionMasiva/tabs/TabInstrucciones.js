@@ -13,7 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 //ICONS
 import Stack from "@mui/material/Stack";
-import { SiMicrosoftexcel } from "react-icons/si";
+import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 import Checkbox from "@mui/material/Checkbox";
 import LinearProgress from "@mui/material/LinearProgress";
 
@@ -286,6 +286,69 @@ function EnhancedTableHead(props) {
       },
     ];
   } else if (erp == 7) {
+    headCells = [
+      {
+        id: "id",
+        numeric: false,
+        disablePadding: false,
+        label: "id",
+      },
+      {
+        id: "numeroCorrelativo",
+        numeric: false,
+        disablePadding: false,
+        label: "Número (Correlativo)",
+      },
+      {
+        id: "fecha",
+        numeric: false,
+        disablePadding: false,
+        label: "Fecha",
+      },
+      {
+        id: "fechaVencimiento",
+        numeric: false,
+        disablePadding: false,
+        label: "Fecha de Vencimiento",
+      },
+      {
+        id: "codigoCliente",
+        numeric: false,
+        disablePadding: false,
+        label: "Código del Cliente",
+      },
+      {
+        id: "afecto",
+        numeric: false,
+        disablePadding: false,
+        label: "Afecto",
+      },
+      {
+        id: "total",
+        numeric: false,
+        disablePadding: false,
+        label: "Total",
+      },
+      {
+        id: "nombre",
+        numeric: false,
+        disablePadding: false,
+        label: "Nombre",
+      },
+      {
+        id: "direccion",
+        numeric: false,
+        disablePadding: false,
+        label: "Drección",
+      },
+      {
+        id: "comentarioProducto",
+        numeric: false,
+        disablePadding: false,
+        label: "Comentario Producto",
+      },
+    ];
+  } else if (erp == 7 || erp == 5) {
     headCells = [
       {
         id: "id",
@@ -994,7 +1057,7 @@ function TabInstrucciones(props) {
       XLSX.utils.sheet_add_aoa(ws, headersExcelF1);
     } else if (props.erp == 2) {
       XLSX.utils.sheet_add_aoa(ws, headersExcelF2);
-    } else if (props.ers == 7) {
+    } else if (props.erp == 7) {
       XLSX.utils.sheet_add_aoa(ws, headersExcelF7);
     }
     const sheet = XLSX.utils.sheet_add_json(ws, data, {
@@ -1008,6 +1071,22 @@ function TabInstrucciones(props) {
   }
   function downloadExcelFile(filename, data) {
     let dataPrueba = [];
+    const transformtToShortDate = (param) => {
+      let fechaString = param;
+      let fecha = new Date(fechaString);
+
+      let dia = fecha.getDate();
+      let mes = fecha.getMonth() + 1;
+      let anio = fecha.getFullYear();
+      if (dia < 10) {
+        dia = "0" + dia;
+      }
+      if (mes < 10) {
+        mes = "0" + mes;
+      }
+      let fechaCorta = dia + "-" + mes + "-" + anio;
+      return fechaCorta;
+    };
     const devuelveFechaHoy = (param = 0) => {
       let fechaActual = new Date();
       param === 1 && fechaActual.setDate(fechaActual.getDate() + 2);
@@ -1047,7 +1126,9 @@ function TabInstrucciones(props) {
         obj.FechaPago = "";
         obj.FechaVencimiento = devuelveFechaHoy(1);
         obj.FechaReception = "";
-        obj.FechaCarta = dataInstructions.data[i].fecha_carta;
+        obj.FechaCarta = transformtToShortDate(
+          dataInstructions.data[i].fecha_carta
+        );
         obj.CartaN = "";
         obj.Concepto = dataInstructions.data[i].glosa;
         obj.MesConsumido = "";
@@ -1095,9 +1176,67 @@ function TabInstrucciones(props) {
         obj.Secuencia2 = 1;
         obj.TipoDocumento = "SEN";
         obj.FolioReferencia = dataInstructions.data[i].codigoRef;
-        obj.FechaCarta = dataInstructions.data[i].fecha_carta;
+        obj.FechaCarta = transformtToShortDate(
+          dataInstructions.data[i].fecha_carta
+        );
         obj.MotivoRef = "";
         obj.RazonReferencia2 = dataInstructions.data[i].glosa;
+      } else if (props.erp == 3) {
+        obj.Rut = dataInstructions.data[i].rutDeudor.replace("-", "");
+        obj.Tipo = "33";
+        obj.Folio = dataInstructions.data[i].folio;
+        obj.FechaEmision = devuelveFechaHoy();
+        obj.Rutreceptor = dataInstructions.data[i].rutDeudor;
+        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
+        obj.giro = dataInstructions.data[i].giroDeudor;
+        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
+        obj.ComunaRecepcion = "Las condes";
+        obj.Email = "";
+        obj.Exento = "0";
+        obj.neto = dataInstructions.data[i].montoNeto;
+        obj.iva =
+          dataInstructions.data[i].montoBruto -
+          dataInstructions.data[i].montoNeto;
+        obj.total = dataInstructions.data[i].montoBruto;
+        obj.TipoReferencia = "SEN";
+        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
+        obj.CodReferencia = "0";
+        obj.DES1 = dataInstructions.data[i].glosa;
+        obj.GLO1 = "";
+        obj.MNT1 = dataInstructions.data[i].montoNeto;
+        obj.DES2 = "";
+        obj.GLO2 = "";
+        obj.MNT2 = "0";
+        obj.DES3 = "";
+        obj.GLO3 = "";
+        obj.MNT3 = "0";
+        obj.DES4 = "";
+        obj.GLO4 = "";
+        obj.MNT4 = "0";
+        obj.DES5 = "";
+        obj.GLO5 = "";
+        obj.MNT5 = "0";
+        obj.DES6 = "";
+        obj.GLO6 = "";
+        obj.MNT6 = "0";
+        obj.DES7 = "";
+        obj.GLO7 = "";
+        obj.MNT7 = "0";
+        obj.DES8 = "";
+        obj.GLO8 = "";
+        obj.MNT8 = "0";
+        obj.DES9 = "";
+        obj.GLO9 = "";
+        obj.MNT9 = "0";
+        obj.DES10 = "";
+        obj.GLO10 = "";
+        obj.MNT10 = "0";
+        obj.GlosaLarga = "";
+        obj.FechaVencimiento = devuelveFechaHoy(2);
+        obj.GlosaReferencia = dataInstructions.data[i].glosa;
+        obj.FechaCarta = transformtToShortDate(
+          dataInstructions.data[i].fecha_carta
+        );
       } else if (props.erp == 7) {
         obj.DestinodelDocumento = "A";
         obj.Documentoimpresosegeneranulo = "N";
@@ -1173,7 +1312,9 @@ function TabInstrucciones(props) {
         obj.NumerodeImpuesto = "1";
         obj.CódigodeImpuesto = "IVA";
         obj.ValordeImpuesto = "19";
-        obj.MontodeImpuesto = dataInstructions.data[i].montoBruto - i.montoNeto;
+        obj.MontodeImpuesto =
+          dataInstructions.data[i].montoBruto -
+          dataInstructions.data[i].montoNeto;
         obj.CentrodeNegociosProducto2 = "";
         obj.Clasificador1Impuesto = "";
         obj.Clasificador2Impuesto = "";
@@ -1210,64 +1351,12 @@ function TabInstrucciones(props) {
         obj.FormadePago = "";
         obj.TipoDocumentoAsociado = "SEN";
         obj.FolioDocumentoAsociado = dataInstructions.data[i].codigoRef;
-        obj.FechaDocumentoAsociado = dataInstructions.data[i].fecha_carta;
+        obj.FechaDocumentoAsociado = transformtToShortDate(
+          dataInstructions.data[i].fecha_carta
+        );
         obj.ComentarioDocumentoAsociado = dataInstructions.data[i].concepto;
         obj.email = "";
         obj.EsdocumentodetraspasoSsiNno = "S";
-      } else if (props.erp == 3) {
-        obj.Rut = dataInstructions.data[i].rutDeudor.replace("-", "");
-        obj.Tipo = "33";
-        obj.Folio = dataInstructions.data[i].folio;
-        obj.FechaEmision = devuelveFechaHoy();
-        obj.Rutreceptor = dataInstructions.data[i].rutDeudor;
-        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
-        obj.giro = dataInstructions.data[i].giroDeudor;
-        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
-        obj.ComunaRecepcion = "Las condes";
-        obj.Email = "";
-        obj.Exento = "0";
-        obj.neto = dataInstructions.data[i].montoNeto;
-        obj.iva =
-          dataInstructions.data[i].montoBruto -
-          idataInstructions.data[i].montoNeto;
-        obj.total = dataInstructions.data[i].montoBruto;
-        obj.TipoReferencia = "SEN";
-        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
-        obj.CodReferencia = "0";
-        obj.DES1 = dataInstructions.data[i].glosa;
-        obj.GLO1 = "";
-        obj.MNT1 = dataInstructions.data[i].montoNeto;
-        obj.DES2 = "";
-        obj.GLO2 = "";
-        obj.MNT2 = "0";
-        obj.DES3 = "";
-        obj.GLO3 = "";
-        obj.MNT3 = "0";
-        obj.DES4 = "";
-        obj.GLO4 = "";
-        obj.MNT4 = "0";
-        obj.DES5 = "";
-        obj.GLO5 = "";
-        obj.MNT5 = "0";
-        obj.DES6 = "";
-        obj.GLO6 = "";
-        obj.MNT6 = "0";
-        obj.DES7 = "";
-        obj.GLO7 = "";
-        obj.MNT7 = "0";
-        obj.DES8 = "";
-        obj.GLO8 = "";
-        obj.MNT8 = "0";
-        obj.DES9 = "";
-        obj.GLO9 = "";
-        obj.MNT9 = "0";
-        obj.DES10 = "";
-        obj.GLO10 = "";
-        obj.MNT10 = "0";
-        obj.GlosaLarga = "";
-        obj.FechaVencimiento = devuelveFechaHoy(2);
-        obj.GlosaReferencia = dataInstructions.data[i].glosa;
-        obj.FechaCarta = dataInstructions.data[i].fecha_carta;
       }
       dataPrueba.push(obj);
     }
@@ -1322,7 +1411,17 @@ function TabInstrucciones(props) {
                 }}
               />
               <Box className="flex justify-center mb-[5px] w-full">
-                {props.erp == 2 ? (
+                {props.erp == 1 || props.erp == 3 || props.erp == 7 ? (
+                  <Button
+                    className=" rounded flex justify-start min-w-[170px] m-[5px]"
+                    variant="contained"
+                    color="customdos"
+                    onClick={() => downloadExcelFile("mydata")}
+                  >
+                    <SiMicrosoftexcel size={30} className="mr-[10px] " />
+                    Descargar
+                  </Button>
+                ) : props.erp == 2 ? (
                   <>
                     <Button
                       className=" rounded flex justify-start min-w-[170px] m-[5px]"
@@ -1344,26 +1443,18 @@ function TabInstrucciones(props) {
                       Folio
                     </Button>
                   </>
-                ) : props.erp == 1 ? (
+                ) : props.erp == 5 ? (
                   <Button
                     className=" rounded flex justify-start min-w-[170px] m-[5px]"
                     variant="contained"
                     color="customdos"
                     onClick={() => downloadExcelFile("mydata")}
                   >
-                    <SiMicrosoftexcel size={30} className="mr-[10px] " />
-                    Descargar
+                    <SiBitcoinsv size={30} className="mr-[10px]" />
+                    Facturar
                   </Button>
                 ) : (
-                  <Button
-                    className=" rounded flex justify-start min-w-[170px] m-[5px]"
-                    variant="contained"
-                    color="customdos"
-                    onClick={() => downloadExcelFile("mydata")}
-                  >
-                    <SiMicrosoftexcel size={30} className="mr-[10px]" />
-                    Descargar
-                  </Button>
+                  <></>
                 )}
               </Box>
             </Box>

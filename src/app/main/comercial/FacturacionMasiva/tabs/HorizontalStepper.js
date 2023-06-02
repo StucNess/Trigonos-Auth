@@ -35,9 +35,11 @@ const steps = [
   "Finalización del proceso",
 ];
 // let idErp = 0;
+let erpSelect;
 export default function HorizontalLinearStepper(props) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [idParticipant, setIdParticipant] = useState(0);
+  const [facturador, setFacturador] = useState("Vacio");
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetInstruccionesQuery(idParticipant);
   const handleNext = () => {
@@ -47,6 +49,27 @@ export default function HorizontalLinearStepper(props) {
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
+  useEffect(() => {
+    if (idParticipant != 0) {
+      erpSelect = props.dataParticipants.find(
+        (d) => d.id == idParticipant
+      ).trgns_erp;
+    }
+
+    if (erpSelect == 1) {
+      setFacturador("SAP_ABASTIBLE");
+    } else if (erpSelect == 2) {
+      setFacturador("NUBOX");
+    } else if (erpSelect == 3) {
+      setFacturador("ENTHERNET");
+    } else if (erpSelect == 5) {
+      setFacturador("FACTURACION.CL");
+    } else if (erpSelect == 7) {
+      setFacturador("DEFONTANA");
+    }
+
+    console.log(props.dataParticipants);
+  }, [idParticipant]);
 
   const handleReset = () => {
     setActiveStep(0);
@@ -113,17 +136,15 @@ export default function HorizontalLinearStepper(props) {
                     <MenuItem value="">
                       <em>Seleccionar</em>
                     </MenuItem>
-                    {props.dataParticipants
-                      .filter((data) => data.trgns_erp != 5)
-                      .map(({ business_Name, id }) => (
-                        <MenuItem key={id} value={id}>
-                          {business_Name}.
-                        </MenuItem>
-                      ))}
+                    {props.dataParticipants.map(({ business_Name, id }) => (
+                      <MenuItem key={id} value={id}>
+                        {business_Name}.
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
                 <Box sx={{ m: 1, minWidth: 300 }}>
-                  INSERTE IMAGEN
+                  {facturador}
                   {/* INSERTAR IMAGEN DE CLIENTE */}
                 </Box>
               </div>
