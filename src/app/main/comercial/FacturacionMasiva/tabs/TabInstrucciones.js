@@ -620,7 +620,7 @@ function TabInstrucciones(props) {
       if (props.erp == 2) {
         rows = dataInstructions.data.map((data) => {
           return {
-            id: data.id,
+            id: data.id_instruccions,
             rut: data.rutDeudor,
             razonSocial: data.nombreDeudor,
             giro: data.giroDeudor,
@@ -633,7 +633,7 @@ function TabInstrucciones(props) {
       } else if (props.erp == 1) {
         rows = dataInstructions.data.map((data) => {
           return {
-            id: data.id,
+            id: data.id_instruccions,
             folioReferencia: data.codigoRef,
             razonReferencia: data.glosa,
             razonSocial: data.nombreDeudor,
@@ -652,8 +652,8 @@ function TabInstrucciones(props) {
       } else if (props.erp == 7 || props.erp == 5) {
         rows = dataInstructions.data.map((data) => {
           return {
-            id: data.id,
-            numeroCorrelativo: data.id,
+            id: data.id_instruccions,
+            numeroCorrelativo: data.id_instruccions,
             fecha: devuelveFechaHoy(),
             fechaVencimiento: devuelveFechaHoy(1),
             codigoCliente: data.rutDeudor,
