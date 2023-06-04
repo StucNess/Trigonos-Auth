@@ -2930,7 +2930,8 @@ export default function HorizontalNonLinearStepper(props) {
                                 name="erp"
                                 disabled={erp ? false : true}
                                 InputProps={{
-                                  startAdornment: (
+                                  startAdornment:!facturacioncl?(
+                                 
                                     <InputAdornment position="start">
                                       {erp ? (
                                         <>
@@ -2983,7 +2984,7 @@ export default function HorizontalNonLinearStepper(props) {
                                         />
                                       )}
                                     </InputAdornment>
-                                  ),
+                                  ):(<></>),
                                 }}
                               >
                                 {props.facturadorErp.map((data) => (
