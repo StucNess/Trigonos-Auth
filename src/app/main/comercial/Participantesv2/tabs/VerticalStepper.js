@@ -268,6 +268,10 @@ export default function HorizontalNonLinearStepper(props) {
   const [refetchFact, dataFact] =  useRefetchQueriesFactMutation();
   const handleClickOpen = () => {
     //condiciones antes de enviar algo
+    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
+    let isEqualdos = JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
+    let isEqualtres = JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+
     if((formStateProjects.erp === 5) &&  JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl) && props.fullData.dataFactCl.phabilitado === undefined){
       
       setOpenDialog(true);
@@ -277,8 +281,8 @@ export default function HorizontalNonLinearStepper(props) {
         msgError: true,
       });
       setTimeout(() => {
-        refetchParticipant();
-        refetchFact();
+        // refetchParticipant();
+        // refetchFact();
         setMsgAlert({
           msgResp: undefined,
           msgText: "",
@@ -288,7 +292,27 @@ export default function HorizontalNonLinearStepper(props) {
       }, 1500);
 
     }else{
-      setOpen(true);
+      if(!isEqual|| !isEqualdos|| !isEqualtres){
+        setOpen(true);
+      }else{
+        setOpenDialog(true);
+        setMsgAlert({
+          msgResp: true,
+          msgText: "Debe modificar algun campo",
+          msgError: true,
+        });
+        setTimeout(() => {
+          // refetchParticipant();
+          // refetchFact();
+          setMsgAlert({
+            msgResp: undefined,
+            msgText: "",
+            msgError: undefined,
+          });
+          setOpenDialog(false);
+        }, 1500);
+      }
+  
     }
 
    
@@ -565,9 +589,71 @@ export default function HorizontalNonLinearStepper(props) {
       ...formStateProjects,
       erp: event.target.value,
     });
+   
 
-    if (event.target.value != 5) {
+    if (event.target.value === 5) {
       haveFactCl(props.fullData.dataFactCl.phabilitado);
+      setUpdate({
+        ...update,
+        facturacioncl: false,
+        fact_pHabilitado: props.fullData.dataFactCl.phabilitado,
+        fact_userProduccion: false,
+        fact_claveProduccion: false,
+        fact_rutProduccion: false,
+        fact_userPruebas: false,
+        fact_clavePruebas: false,
+        fact_rutPruebas: false,
+      });
+      setformStateFactCl({
+        fact_pHabilitado:
+          props.fullData.dataFactCl !== {}
+            ? props.fullData.dataFactCl.phabilitado
+            : "Vacio",
+        fact_userProduccion: props.fullData.dataFactCl.usuario64
+          ? props.fullData.dataFactCl.usuario64
+          : "Vacio",
+        fact_claveProduccion: props.fullData.dataFactCl.clave64
+          ? props.fullData.dataFactCl.clave64
+          : "Vacio",
+        fact_rutProduccion: props.fullData.dataFactCl.ruT64
+          ? props.fullData.dataFactCl.ruT64
+          : "Vacio",
+        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+          ? props.fullData.dataFactCl.usuarioTest
+          : "Vacio",
+        fact_clavePruebas: props.fullData.dataFactCl.claveTest
+          ? props.fullData.dataFactCl.claveTest
+          : "Vacio",
+        fact_rutPruebas: props.fullData.dataFactCl.rutTest
+          ? props.fullData.dataFactCl.rutTest
+          : "Vacio",
+      });
+      setDataconfirmFactCl({
+        fact_pHabilitado:
+        props.fullData.dataFactCl !== {}
+          ? props.fullData.dataFactCl.phabilitado
+          : "Vacio",
+      fact_userProduccion: props.fullData.dataFactCl.usuario64
+        ? props.fullData.dataFactCl.usuario64
+        : "Vacio",
+      fact_claveProduccion: props.fullData.dataFactCl.clave64
+        ? props.fullData.dataFactCl.clave64
+        : "Vacio",
+      fact_rutProduccion: props.fullData.dataFactCl.ruT64
+        ? props.fullData.dataFactCl.ruT64
+        : "Vacio",
+      fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+        ? props.fullData.dataFactCl.usuarioTest
+        : "Vacio",
+      fact_clavePruebas: props.fullData.dataFactCl.claveTest
+        ? props.fullData.dataFactCl.claveTest
+        : "Vacio",
+      fact_rutPruebas: props.fullData.dataFactCl.rutTest
+        ? props.fullData.dataFactCl.rutTest
+        : "Vacio",
+      });
+    }else{
+      haveFactCl(undefined);
       setUpdate({
         ...update,
         facturacioncl: false,
@@ -579,13 +665,23 @@ export default function HorizontalNonLinearStepper(props) {
         fact_rutPruebas: false,
       });
       setformStateFactCl({
-        ...formStateFactCl,
-        fact_userProduccion: dataconfirmFactCl.fact_userProduccion,
-        fact_claveProduccion: dataconfirmFactCl.fact_claveProduccion,
-        fact_rutProduccion: dataconfirmFactCl.fact_rutProduccion,
-        fact_userPruebas: dataconfirmFactCl.fact_userPruebas,
-        fact_clavePruebas: dataconfirmFactCl.fact_clavePruebas,
-        fact_rutPruebas: dataconfirmFactCl.fact_rutPruebas,
+        fact_pHabilitado: undefined,
+        fact_userProduccion: "Vacio",
+        fact_claveProduccion: "Vacio",
+        fact_rutProduccion:"Vacio",
+        fact_userPruebas: "Vacio",
+        fact_clavePruebas: "Vacio",
+        fact_rutPruebas: "Vacio",
+       
+      });
+      setDataconfirmFactCl({
+        fact_pHabilitado: undefined,
+        fact_userProduccion: "Vacio",
+        fact_claveProduccion: "Vacio",
+        fact_rutProduccion:"Vacio",
+        fact_userPruebas: "Vacio",
+        fact_clavePruebas: "Vacio",
+        fact_rutPruebas: "Vacio",
       });
     }
     // setErp(event.target.value);
@@ -754,6 +850,15 @@ export default function HorizontalNonLinearStepper(props) {
               (data) => data.id === formStateProjects.id_nomina_pago
             )[0].nombreBanco
           ),
+          
+      dataconfirmFactCl.fact_pHabilitado ===
+      formStateFactCl.fact_pHabilitado
+        ? undefined
+        : createData(
+            "Facturación.CL Tipo de Ambiente",
+           dataconfirmFactCl.fact_pHabilitado?"Producción":"Testing",
+            formStateFactCl.fact_pHabilitado?"Producción":"Testing"
+          ),
       dataconfirmFactCl.fact_userProduccion ===
       formStateFactCl.fact_userProduccion
         ? undefined
@@ -770,6 +875,7 @@ export default function HorizontalNonLinearStepper(props) {
             dataconfirmFactCl.fact_rutProduccion,
             formStateFactCl.fact_rutProduccion
           ),
+      
       dataconfirmFactCl.fact_claveProduccion ===
       formStateFactCl.fact_claveProduccion
         ? undefined
@@ -859,6 +965,8 @@ export default function HorizontalNonLinearStepper(props) {
 
   function SubmitActProject(isEqual){
     if (!isEqual) {
+      console.log(formStateProjects.erp)
+      console.log(dataconfirmProjects.erp)
       postActProyect({
         id_participants: props.fullData.dataParticipant.id,
         erp:
@@ -874,7 +982,8 @@ export default function HorizontalNonLinearStepper(props) {
             ? formStateProjects.id_nomina_pago
             : null,
       }).then((response) => {
-        
+        refetchParticipant();
+        refetchFact();
       });
     }else{
      
@@ -926,7 +1035,8 @@ export default function HorizontalNonLinearStepper(props) {
               ? formStateFactCl.fact_pHabilitado
               : dataconfirmFactCl.fact_pHabilitado,
         }).then((response) => {
-
+          refetchParticipant();
+          refetchFact();
          
         });;
       }
@@ -970,7 +1080,8 @@ export default function HorizontalNonLinearStepper(props) {
                 : null,
             phabilitado: formStateFactCl.fact_pHabilitado,
           }).then((response) => {
-
+            refetchParticipant();
+            refetchFact();
           });;
         }
       }
@@ -1014,38 +1125,7 @@ export default function HorizontalNonLinearStepper(props) {
       }).catch((error)=>{
 
       })
-      // const apiPatchParticipante =
-      //   ` https://trigonosapi.azurewebsites.net/api/Participantes?` +
-      //   `id=${formState.id}&` +
-      //   `Name=${formState.name}&` +
-      //   `Rut=${formState.rut}&` +
-      //   `Verification_Code=${formState.verificationCode}&` +
-      //   `Business_Name=${formState.businessName}&` +
-      //   `Commercial_Business=${formState.commercialBusiness}&` +
-      //   `Dte_Reception_Email=${formState.email}&` +
-      //   `Bank_Account=${formState.bankAccount}&` +
-      //   `bank=${formState.bank}&` +
-      //   `Commercial_address=${formState.commercialAddress}&` +
-      //   `Postal_address=${formState.postalAddress}&` +
-      //   `Manager=${formState.manager}&` +
-      //   `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
-      //   `Pay_contact_last_name=${formState.payContactLastName}&` +
-      //   `Pay_contact_address=${formState.payContactAddress}&` +
-      //   `Pay_contact_phones=${formatpayContactPhones}&` +
-      //   `Pay_contact_email=${formState.payContactEmail}&` +
-      //   `Bills_contact_first_name=${formState.billsContactFirstName}&` +
-      //   `Bills_contact_last_name=${formState.billsContactLastName}&` +
-      //   `Bills_contact_address=${formState.billsContactAddress}&` +
-      //   `Bills_contact_phones=${formatBillsContactPhones}&` +
-      //   `Bills_contact_email=${formState.billsContactEmail}`;
-      // const res = axios
-      //   .patch(apiPatchParticipante)
-      //   .then((response) => {
-          
-      //   })
-      //   .catch((error) => {
-         
-      //   });
+
     }
   }
   
@@ -1765,7 +1845,7 @@ export default function HorizontalNonLinearStepper(props) {
                                               /["\[\]"]/g,
                                               ""
                                             ),
-                                        });
+                                        });pointer
                                         setUpdate({
                                           ...update,
                                           payContactPhones: false,
@@ -2382,6 +2462,8 @@ export default function HorizontalNonLinearStepper(props) {
                                           });
                                           setformStateFactCl({
                                             ...formStateFactCl,
+                                            fact_pHabilitado: 
+                                            dataconfirmFactCl.fact_pHabilitado,
                                             fact_userProduccion:
                                               dataconfirmFactCl.fact_userProduccion,
                                             fact_claveProduccion:
@@ -2395,6 +2477,7 @@ export default function HorizontalNonLinearStepper(props) {
                                             fact_rutPruebas:
                                               dataconfirmFactCl.fact_rutPruebas,
                                           });
+                                          haveFactCl(dataconfirmFactCl.fact_pHabilitado);
                                           setCountActive(
                                             countActive > 0
                                               ? countActive - 1

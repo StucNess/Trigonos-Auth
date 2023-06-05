@@ -2,13 +2,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const participantesApi = createApi({
   reducerPath: "participantes",
-  tagTypes: ["listparticipant","proyectos"],
+  tagTypes: ["listparticipant","proyectos","participant"],
   baseQuery: fetchBaseQuery({
     baseUrl: "https://trigonosapi.azurewebsites.net/",
   }),
   endpoints: (builder) => ({
     getParticipantes: builder.query({
       query: () => "/api/Participantes",
+      providesTags:["participant"]
     }),
     getParticipantesById_: builder.query({
       query: (id) => `/api/Participantes?id=${id}`,
@@ -127,7 +128,7 @@ export const participantesApi = createApi({
     }),
     refetchQueriesPart: builder.mutation({
       queryFn: () => ({ data: null }),
-      invalidatesTags: ["listparticipant","proyectos"],
+      invalidatesTags: ["listparticipant","proyectos","participant"],
     }),
   }),
 });

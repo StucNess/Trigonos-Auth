@@ -31,7 +31,7 @@ const NominaPagoApp = () => {
   const {data: getFactCl, isFetching: fetchFact }= useGetFactCLAllQuery();
   const {data: getFactErp, isFetching: fetchFactErp }= useGetFacturadorERPTableQuery();
   const {data: getNomPago, isFetching: fetchNomPag }= useGetNominaPagoTableQuery();
-
+  const [datapermanet, setDatapermanet] = useState([])
   let ArrayFetchs = [fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag];
     let ArrayDatas = [getParticipant,getProject,getFactCl,getFactErp,getNomPago];
     function verificarLista() {
@@ -49,9 +49,9 @@ const NominaPagoApp = () => {
       }
     }
   
-  let isloadingg =verificarLista();
-  // console.log(fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag)
-  // console.log(isloadingg)
+  // let isloadingg =verificarLista();
+  // // console.log(fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag)
+  // // console.log(isloadingg)
   useEffect(() => {
  
       function verificacarga() {
@@ -65,25 +65,28 @@ const NominaPagoApp = () => {
       }
     
     setCarga(verificacarga() )
-    setTimeout(() => {
-      if(fullData != undefined){
-        setIsloading(verificacarga());
-      }
-    }, 1300);
+  
   
 
   }, [fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag])
+  useEffect(() => {
+    if(!carga){
+      setTimeout(() => {
+        if(fullData != undefined){
+          setIsloading(false);
+          setDatapermanet([fullData.dataParticipant.id])
+        }
+      }, 1300);
+    }
+   
+  }, [carga])
   
-
+ 
+  
   useEffect(() => {
     
     if(fullData != undefined){
       setIsloading(false);
-      // console.log({
-      //   dataParticipant: [getParticipant.data[0]],
-      //   dataProject:getProject.data.filter((data) => data.id_participants ===getParticipant.data[0].id)||{},
-      //   dataFactCl:getFactCl.filter((data) => data.idParticipante ===getParticipant.data[0].id)||{}
-      // })
     }
   }, [fullData])
   
@@ -93,15 +96,19 @@ const NominaPagoApp = () => {
   const [idParticipant, setIdParticipant] = useState();
   const [tipoCliente, setTipoCliente] = useState({id: 7455, id_participants: 2, vHabilitado: 0});
   const getIdParticipant = (data) => {
+    
     setIdParticipant(data);
   };
   const getFullData = (data) => {
+   
     setFullData(data);
   };
   const getDataParticipants = (data) => {
     setDataParticipant(data);
   };
   const getChange = (data) => {
+    
+    
     setChange(data);
   };
   const getTipoCliente = (data) => {
@@ -149,7 +156,7 @@ const NominaPagoApp = () => {
            allfactcl={getFactCl}
            sendFullData={getFullData}
            change={carga}
-           idParticipant={idParticipant}
+           idParticipant={datapermanet}
           //  isLoading={getIsloading}
          
          />
