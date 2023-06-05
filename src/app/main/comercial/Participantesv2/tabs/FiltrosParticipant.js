@@ -30,15 +30,32 @@ export default function FiltrosParticipant(props) {
 
 
 
-console.log(props.allparticipants)
  
   useEffect(() => {
+    console.log(fullData)
     props.sendFullData(fullData);
+
   }, [fullData]);
 
   useEffect(() => {
- 
-    props.sendFullData(fullData);
+    console.log(props.idParticipant)
+    if(props.idParticipant[0] >0){
+      console.log(props.allparticipants)
+      setFullData({
+        dataParticipant: props.allparticipants.filter((data) => data.id ===props.idParticipant[0])[0],
+        dataProject:props.allprojects.filter((data) => data.id_participants ===props.idParticipant[0])[0]||{},
+        dataFactCl:props.allfactcl.filter((data) => data.idParticipante ===props.idParticipant[0])[0]||{}
+      })
+    }
+   
+
+  }, [props.idParticipant]);
+//  useEffect(() => {
+//     // props.sendFullData(fullData);
+
+//   }, [props.allparticipants,props.allprojects,props.allfactcl]);
+  useEffect(() => {
+   
   }, []);
   return (
     <Box>

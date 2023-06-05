@@ -171,16 +171,17 @@ class JwtService extends FuseUtils.EventEmitter {
                 // }
               })
               .catch((error) => {});
-            const json = {
-              role: response.data.role,
-              role: response.data.role,
-              data: {
-                displayName: response.data.username,
-                email: response.data.email,
-                nombre: response.data.nombre,
-                apellido: response.data.apellido,
-              },
-            };
+              const json = {
+                token: response.data.token,
+                idUser: response.data.id,
+                role: response.data.role,
+                data: {
+                  displayName: response.data.username,
+                  email: response.data.email,
+                  nombre: response.data.nombre,
+                  apellido: response.data.apellido,
+                },
+              };
             resolve(json);
           } else {
             this.logout();

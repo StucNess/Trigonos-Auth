@@ -53,14 +53,19 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import {
   useGetProyectoByIdMutation,
+  usePatchPartcipantMutation,
   usePostActualizarProyectoMutation,
+  useRefetchQueriesPartMutation,
 } from "app/store/participantesApi/participantesApi";
 import {
   usePostFacturaAgregarMutation,
   useGetFacturaByIdMutation,
   usePostFacturaActualizarMutation,
+  useRefetchQueriesFactMutation,
 } from "app/store/facturacionClApi/facturacionClApi";
-
+import WarningIcon from "@mui/icons-material/Warning";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 //MODAL TABLA CAMBIOS
 function createData(campo, antiguo, nuevo) {
   return { campo, antiguo, nuevo };
@@ -87,9 +92,19 @@ let dataBank;
 let banks;
 
 export default function HorizontalNonLinearStepper(props) {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText: "",
+    msgError: false,
+  });
+  const { msgResp, msgText, msgError } = MsgAlert;
+
   const [postActProyect, dataActProyect] = usePostActualizarProyectoMutation();
   const [postAddFactCl, dataAddFactCl] = usePostFacturaAgregarMutation();
   const [postActFactCl, dataActFactCl] = usePostFacturaActualizarMutation();
+  const [patchActPart, dataActPart] = usePatchPartcipantMutation();
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [activeLabel, setActiveLabel] = useState("");
@@ -249,8 +264,59 @@ export default function HorizontalNonLinearStepper(props) {
 
   const [checkedBlue, setCheckedBlue] = React.useState(false);
   const [checkedExt, setCheckedExt] = React.useState(false);
+  const [refetchParticipant, dataPart] = useRefetchQueriesPartMutation();
+  const [refetchFact, dataFact] = useRefetchQueriesFactMutation();
   const handleClickOpen = () => {
-    setOpen(true);
+    //condiciones antes de enviar algo
+    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
+    let isEqualdos =
+      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
+    let isEqualtres =
+      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+
+    if (
+      formStateProjects.erp === 5 &&
+      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl) &&
+      props.fullData.dataFactCl.phabilitado === undefined
+    ) {
+      setOpenDialog(true);
+      setMsgAlert({
+        msgResp: true,
+        msgText: "Debe completar Facturación.CL",
+        msgError: true,
+      });
+      setTimeout(() => {
+        // refetchParticipant();
+        // refetchFact();
+        setMsgAlert({
+          msgResp: undefined,
+          msgText: "",
+          msgError: undefined,
+        });
+        setOpenDialog(false);
+      }, 1500);
+    } else {
+      if (!isEqual || !isEqualdos || !isEqualtres) {
+        setOpen(true);
+      } else {
+        setOpenDialog(true);
+        setMsgAlert({
+          msgResp: true,
+          msgText: "Debe modificar algun campo",
+          msgError: true,
+        });
+        setTimeout(() => {
+          // refetchParticipant();
+          // refetchFact();
+          setMsgAlert({
+            msgResp: undefined,
+            msgText: "",
+            msgError: undefined,
+          });
+          setOpenDialog(false);
+        }, 1500);
+      }
+    }
   };
 
   const handleCloseAlert = () => {
@@ -525,8 +591,69 @@ export default function HorizontalNonLinearStepper(props) {
       erp: event.target.value,
     });
 
-    if (event.target.value != 5) {
+    if (event.target.value === 5) {
       haveFactCl(props.fullData.dataFactCl.phabilitado);
+      setUpdate({
+        ...update,
+        facturacioncl: false,
+        fact_pHabilitado: props.fullData.dataFactCl.phabilitado,
+        fact_userProduccion: false,
+        fact_claveProduccion: false,
+        fact_rutProduccion: false,
+        fact_userPruebas: false,
+        fact_clavePruebas: false,
+        fact_rutPruebas: false,
+      });
+      setformStateFactCl({
+        fact_pHabilitado:
+          props.fullData.dataFactCl !== {}
+            ? props.fullData.dataFactCl.phabilitado
+            : "Vacio",
+        fact_userProduccion: props.fullData.dataFactCl.usuario64
+          ? props.fullData.dataFactCl.usuario64
+          : "Vacio",
+        fact_claveProduccion: props.fullData.dataFactCl.clave64
+          ? props.fullData.dataFactCl.clave64
+          : "Vacio",
+        fact_rutProduccion: props.fullData.dataFactCl.ruT64
+          ? props.fullData.dataFactCl.ruT64
+          : "Vacio",
+        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+          ? props.fullData.dataFactCl.usuarioTest
+          : "Vacio",
+        fact_clavePruebas: props.fullData.dataFactCl.claveTest
+          ? props.fullData.dataFactCl.claveTest
+          : "Vacio",
+        fact_rutPruebas: props.fullData.dataFactCl.rutTest
+          ? props.fullData.dataFactCl.rutTest
+          : "Vacio",
+      });
+      setDataconfirmFactCl({
+        fact_pHabilitado:
+          props.fullData.dataFactCl !== {}
+            ? props.fullData.dataFactCl.phabilitado
+            : "Vacio",
+        fact_userProduccion: props.fullData.dataFactCl.usuario64
+          ? props.fullData.dataFactCl.usuario64
+          : "Vacio",
+        fact_claveProduccion: props.fullData.dataFactCl.clave64
+          ? props.fullData.dataFactCl.clave64
+          : "Vacio",
+        fact_rutProduccion: props.fullData.dataFactCl.ruT64
+          ? props.fullData.dataFactCl.ruT64
+          : "Vacio",
+        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+          ? props.fullData.dataFactCl.usuarioTest
+          : "Vacio",
+        fact_clavePruebas: props.fullData.dataFactCl.claveTest
+          ? props.fullData.dataFactCl.claveTest
+          : "Vacio",
+        fact_rutPruebas: props.fullData.dataFactCl.rutTest
+          ? props.fullData.dataFactCl.rutTest
+          : "Vacio",
+      });
+    } else {
+      haveFactCl(undefined);
       setUpdate({
         ...update,
         facturacioncl: false,
@@ -538,13 +665,22 @@ export default function HorizontalNonLinearStepper(props) {
         fact_rutPruebas: false,
       });
       setformStateFactCl({
-        ...formStateFactCl,
-        fact_userProduccion: dataconfirmFactCl.fact_userProduccion,
-        fact_claveProduccion: dataconfirmFactCl.fact_claveProduccion,
-        fact_rutProduccion: dataconfirmFactCl.fact_rutProduccion,
-        fact_userPruebas: dataconfirmFactCl.fact_userPruebas,
-        fact_clavePruebas: dataconfirmFactCl.fact_clavePruebas,
-        fact_rutPruebas: dataconfirmFactCl.fact_rutPruebas,
+        fact_pHabilitado: undefined,
+        fact_userProduccion: "Vacio",
+        fact_claveProduccion: "Vacio",
+        fact_rutProduccion: "Vacio",
+        fact_userPruebas: "Vacio",
+        fact_clavePruebas: "Vacio",
+        fact_rutPruebas: "Vacio",
+      });
+      setDataconfirmFactCl({
+        fact_pHabilitado: undefined,
+        fact_userProduccion: "Vacio",
+        fact_claveProduccion: "Vacio",
+        fact_rutProduccion: "Vacio",
+        fact_userPruebas: "Vacio",
+        fact_clavePruebas: "Vacio",
+        fact_rutPruebas: "Vacio",
       });
     }
     // setErp(event.target.value);
@@ -713,6 +849,14 @@ export default function HorizontalNonLinearStepper(props) {
               (data) => data.id === formStateProjects.id_nomina_pago
             )[0].nombreBanco
           ),
+
+      dataconfirmFactCl.fact_pHabilitado === formStateFactCl.fact_pHabilitado
+        ? undefined
+        : createData(
+            "Facturación.CL Tipo de Ambiente",
+            dataconfirmFactCl.fact_pHabilitado ? "Producción" : "Testing",
+            formStateFactCl.fact_pHabilitado ? "Producción" : "Testing"
+          ),
       dataconfirmFactCl.fact_userProduccion ===
       formStateFactCl.fact_userProduccion
         ? undefined
@@ -729,6 +873,7 @@ export default function HorizontalNonLinearStepper(props) {
             dataconfirmFactCl.fact_rutProduccion,
             formStateFactCl.fact_rutProduccion
           ),
+
       dataconfirmFactCl.fact_claveProduccion ===
       formStateFactCl.fact_claveProduccion
         ? undefined
@@ -759,7 +904,7 @@ export default function HorizontalNonLinearStepper(props) {
             formStateFactCl.fact_clavePruebas
           ),
     ];
-    console.log(props.fullData.dataFactCl.phabilitado);
+
     rows = rows.filter((x) => x !== undefined);
     if (isEqual && isEqualdos && isEqualtres) {
       return <div>No se han encontrado cambios</div>;
@@ -794,14 +939,34 @@ export default function HorizontalNonLinearStepper(props) {
     }
   };
 
-  const ApiPatch = () => {
-    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    let isEqualdos =
-      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
-    let isEqualtres =
-      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+  function verificarLista(list) {
+    if (list.every((valor) => valor === false)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-    if (!isEqualtres) {
+  useEffect(() => {
+    let ver = verificarLista([
+      dataActFactCl.isLoading,
+      dataActProyect.isLoading,
+      dataActPart.isLoading,
+    ]);
+    if (ver) {
+      setOpenDialog(false);
+      setLoading(false);
+    }
+  }, [
+    dataActFactCl.isLoading,
+    dataActProyect.isLoading,
+    dataActPart.isLoading,
+  ]);
+
+  function SubmitActProject(isEqual) {
+    if (!isEqual) {
+      console.log(formStateProjects.erp);
+      console.log(dataconfirmProjects.erp);
       postActProyect({
         id_participants: props.fullData.dataParticipant.id,
         erp:
@@ -816,12 +981,18 @@ export default function HorizontalNonLinearStepper(props) {
           formStateProjects.id_nomina_pago != dataconfirmProjects.id_nomina_pago
             ? formStateProjects.id_nomina_pago
             : null,
-      }).then((response) => {});
+      }).then((response) => {
+        refetchParticipant();
+        refetchFact();
+      });
+    } else {
     }
-
+  }
+  function SubmitFactCl(isEqual) {
     if (props.fullData.dataFactCl.phabilitado != undefined) {
       //ejecuta el post de actualizar
-      if (!isEqualdos) {
+
+      if (!isEqual) {
         postActFactCl({
           idParticipante: props.fullData.dataParticipant.id,
           usuario64:
@@ -861,12 +1032,15 @@ export default function HorizontalNonLinearStepper(props) {
             dataconfirmFactCl.fact_pHabilitado
               ? formStateFactCl.fact_pHabilitado
               : dataconfirmFactCl.fact_pHabilitado,
+        }).then((response) => {
+          refetchParticipant();
+          refetchFact();
         });
       }
     } else {
       //ejecuta el post de agregar
       if (checkProduccion || checkPrueba) {
-        if (!isEqualdos) {
+        if (!isEqual) {
           postAddFactCl({
             idParticipante: props.fullData.dataParticipant.id,
             usuario64:
@@ -902,52 +1076,64 @@ export default function HorizontalNonLinearStepper(props) {
                 ? formStateFactCl.fact_rutPruebas
                 : null,
             phabilitado: formStateFactCl.fact_pHabilitado,
+          }).then((response) => {
+            refetchParticipant();
+            refetchFact();
           });
         }
       }
     }
+  }
+  function SubmitActParticipant(isEqual) {
     if (isEqual) {
       // console.log("No se realiza envio a API");
-      setAlertError(true);
     } else {
       let formatBillsContactPhones =
         '["' + formState.billsContactPhones.replace(/,/g, '","') + '"]';
       let formatpayContactPhones =
         '["' + formState.payContactPhones.replace(/,/g, '","') + '"]';
 
-      const apiPatchParticipante =
-        ` http://localhost:5205/api/Participantes?` +
-        `id=${formState.id}&` +
-        `Name=${formState.name}&` +
-        `Rut=${formState.rut}&` +
-        `Verification_Code=${formState.verificationCode}&` +
-        `Business_Name=${formState.businessName}&` +
-        `Commercial_Business=${formState.commercialBusiness}&` +
-        `Dte_Reception_Email=${formState.email}&` +
-        `Bank_Account=${formState.bankAccount}&` +
-        `bank=${formState.bank}&` +
-        `Commercial_address=${formState.commercialAddress}&` +
-        `Postal_address=${formState.postalAddress}&` +
-        `Manager=${formState.manager}&` +
-        `Pay_Contact_First_Name=${formState.payContactFirstName}&` +
-        `Pay_contact_last_name=${formState.payContactLastName}&` +
-        `Pay_contact_address=${formState.payContactAddress}&` +
-        `Pay_contact_phones=${formatpayContactPhones}&` +
-        `Pay_contact_email=${formState.payContactEmail}&` +
-        `Bills_contact_first_name=${formState.billsContactFirstName}&` +
-        `Bills_contact_last_name=${formState.billsContactLastName}&` +
-        `Bills_contact_address=${formState.billsContactAddress}&` +
-        `Bills_contact_phones=${formatBillsContactPhones}&` +
-        `Bills_contact_email=${formState.billsContactEmail}`;
-      const res = axios
-        .patch(apiPatchParticipante)
-        .then((response) => {
-          setAlertOk(true);
-        })
-        .catch((error) => {
-          setAlertError(true);
-        });
+      patchActPart({
+        id: formState.id,
+        name: formState.name,
+        rut: formState.rut,
+        verificationCode: formState.verificationCode,
+        businessName: formState.businessName,
+        commercialBusiness: formState.commercialBusiness,
+        email: formState.email,
+        bankAccount: formState.bankAccount,
+        bank: formState.bank,
+        commercialAddress: formState.commercialAddress,
+        postalAddress: formState.postalAddress,
+        manager: formState.manager,
+        payContactFirstName: formState.payContactFirstName,
+        payContactLastName: formState.payContactLastName,
+        payContactAddress: formState.payContactAddress,
+        formatpayContactPhones: formatpayContactPhones,
+        payContactEmail: formState.payContactEmail,
+        billsContactFirstName: formState.billsContactFirstName,
+        billsContactLastName: formState.billsContactLastName,
+        billsContactAddress: formState.billsContactAddress,
+        formatBillsContactPhones: formatBillsContactPhones,
+        billsContactEmail: formState.billsContactEmail,
+      })
+        .then((response) => {})
+        .catch((error) => {});
     }
+  }
+
+  const ApiPatch = () => {
+    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
+    let isEqualdos =
+      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
+    let isEqualtres =
+      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+
+    setOpenDialog(true);
+    setLoading(true);
+    SubmitActProject(isEqualtres);
+    SubmitFactCl(isEqualdos);
+    SubmitActParticipant(isEqual);
   };
   useEffect(() => {
     countActive === 0 ? setActiveButton(false) : setActiveButton(true);
@@ -1650,6 +1836,7 @@ export default function HorizontalNonLinearStepper(props) {
                                               ""
                                             ),
                                         });
+                                        pointer;
                                         setUpdate({
                                           ...update,
                                           payContactPhones: false,
@@ -2266,6 +2453,8 @@ export default function HorizontalNonLinearStepper(props) {
                                           });
                                           setformStateFactCl({
                                             ...formStateFactCl,
+                                            fact_pHabilitado:
+                                              dataconfirmFactCl.fact_pHabilitado,
                                             fact_userProduccion:
                                               dataconfirmFactCl.fact_userProduccion,
                                             fact_claveProduccion:
@@ -2279,6 +2468,9 @@ export default function HorizontalNonLinearStepper(props) {
                                             fact_rutPruebas:
                                               dataconfirmFactCl.fact_rutPruebas,
                                           });
+                                          haveFactCl(
+                                            dataconfirmFactCl.fact_pHabilitado
+                                          );
                                           setCountActive(
                                             countActive > 0
                                               ? countActive - 1
@@ -2820,7 +3012,7 @@ export default function HorizontalNonLinearStepper(props) {
                                 name="erp"
                                 disabled={erp ? false : true}
                                 InputProps={{
-                                  startAdornment: (
+                                  startAdornment: !facturacioncl ? (
                                     <InputAdornment position="start">
                                       {erp ? (
                                         <>
@@ -2873,6 +3065,8 @@ export default function HorizontalNonLinearStepper(props) {
                                         />
                                       )}
                                     </InputAdornment>
+                                  ) : (
+                                    <></>
                                   ),
                                 }}
                               >
@@ -3093,6 +3287,42 @@ export default function HorizontalNonLinearStepper(props) {
                 : "completar"}
             </Button>
           ))} */}
+        <Dialog
+          open={openDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          scroll={"paper"}
+        >
+          {loading ? (
+            <div className="flex justify-center items-center h-[250px] w-[300px]">
+              <CircularProgress color="secondary" />
+            </div>
+          ) : (
+            <div>
+              {msgResp && (
+                <div className="flex justify-center items-center h-[250px] w-[300px]">
+                  {msgError ? (
+                    <div className="flex justify-center items-center h-[250px] w-[300px]">
+                      <WarningIcon className="w-[68px] h-[68px] text-red" />
+                      <span className="absolute bottom-[70px] text-red">
+                        {" "}
+                        <b>{msgText}</b>
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center items-center h-[250px] w-[300px]">
+                      <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                      <span className="absolute bottom-[70px] text-green">
+                        {" "}
+                        <b>{msgText}</b>
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </Dialog>
       </Box>
     </Box>
   );
