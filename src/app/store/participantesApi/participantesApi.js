@@ -2,20 +2,19 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const participantesApi = createApi({
   reducerPath: "participantes",
-  tagTypes: ["listparticipant","proyectos","participant"],
+  tagTypes: ["listparticipant", "proyectos", "participant"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/",
+    baseUrl: "https://trigonosapi.azurewebsites.net/",
   }),
   endpoints: (builder) => ({
     getParticipantes: builder.query({
       query: () => "/api/Participantes",
-      providesTags:["participant"]
+      providesTags: ["participant"],
     }),
     getParticipantesById_: builder.query({
       query: (id) => `/api/Participantes?id=${id}`,
     }),
     getParticipantell: builder.mutation({
-
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
@@ -25,39 +24,38 @@ export const participantesApi = createApi({
       }),
     }),
     patchPartcipant: builder.mutation({
-
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
         },
-        url:`/api/Participantes?id=${spec.id}&` +
-        `Name=${spec.name}&` +
-        `Rut=${spec.rut}&` +
-        `Verification_Code=${spec.verificationCode}&` +
-        `Business_Name=${spec.businessName}&` +
-        `Commercial_Business=${spec.commercialBusiness}&` +
-        `Dte_Reception_Email=${spec.email}&` +
-        `Bank_Account=${spec.bankAccount}&` +
-        `bank=${spec.bank}&` +
-        `Commercial_address=${spec.commercialAddress}&` +
-        `Postal_address=${spec.postalAddress}&` +
-        `Manager=${spec.manager}&` +
-        `Pay_Contact_First_Name=${spec.payContactFirstName}&` +
-        `Pay_contact_last_name=${spec.payContactLastName}&` +
-        `Pay_contact_address=${spec.payContactAddress}&` +
-        `Pay_contact_phones=${spec.formatpayContactPhones}&` +
-        `Pay_contact_email=${spec.payContactEmail}&` +
-        `Bills_contact_first_name=${spec.billsContactFirstName}&` +
-        `Bills_contact_last_name=${spec.billsContactLastName}&` +
-        `Bills_contact_address=${spec.billsContactAddress}&` +
-        `Bills_contact_phones=${spec.formatBillsContactPhones}&` +
-        `Bills_contact_email=${spec.billsContactEmail}`,
+        url:
+          `/api/Participantes?id=${spec.id}&` +
+          `Name=${spec.name}&` +
+          `Rut=${spec.rut}&` +
+          `Verification_Code=${spec.verificationCode}&` +
+          `Business_Name=${spec.businessName}&` +
+          `Commercial_Business=${spec.commercialBusiness}&` +
+          `Dte_Reception_Email=${spec.email}&` +
+          `Bank_Account=${spec.bankAccount}&` +
+          `bank=${spec.bank}&` +
+          `Commercial_address=${spec.commercialAddress}&` +
+          `Postal_address=${spec.postalAddress}&` +
+          `Manager=${spec.manager}&` +
+          `Pay_Contact_First_Name=${spec.payContactFirstName}&` +
+          `Pay_contact_last_name=${spec.payContactLastName}&` +
+          `Pay_contact_address=${spec.payContactAddress}&` +
+          `Pay_contact_phones=${spec.formatpayContactPhones}&` +
+          `Pay_contact_email=${spec.payContactEmail}&` +
+          `Bills_contact_first_name=${spec.billsContactFirstName}&` +
+          `Bills_contact_last_name=${spec.billsContactLastName}&` +
+          `Bills_contact_address=${spec.billsContactAddress}&` +
+          `Bills_contact_phones=${spec.formatBillsContactPhones}&` +
+          `Bills_contact_email=${spec.billsContactEmail}`,
         method: "PATCH",
       }),
-      invalidatesTags: ["listparticipant","proyectos"],
+      invalidatesTags: ["listparticipant", "proyectos"],
     }),
     getProyectoById: builder.mutation({
-
       query: (id) => ({
         headers: {
           "Content-type": "application/json",
@@ -67,7 +65,6 @@ export const participantesApi = createApi({
       }),
     }),
     getProyectoAll: builder.mutation({
-
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
@@ -77,7 +74,6 @@ export const participantesApi = createApi({
       }),
     }),
     postActualizarProyecto: builder.mutation({
-
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
@@ -86,12 +82,10 @@ export const participantesApi = createApi({
         method: "POST",
         body: spec,
       }),
-      invalidatesTags: ["listparticipant","proyectos"],
+      invalidatesTags: ["listparticipant", "proyectos"],
     }),
-    
 
     getParticipantesById: builder.mutation({
- 
       query: (id) => ({
         headers: {
           "Content-type": "application/json",
@@ -100,7 +94,7 @@ export const participantesApi = createApi({
         method: "GET",
       }),
     }),
-   
+
     getBusinessName: builder.query({
       query: () => "/BusinessName",
     }),
@@ -119,16 +113,16 @@ export const participantesApi = createApi({
     getPartAll: builder.query({
       query: (spec) =>
         `/api/Participantes?All=s&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
-      providesTags: ["listparticipant"]
+      providesTags: ["listparticipant"],
     }),
     getProyAll: builder.query({
       query: (spec) =>
         `/api/Participantes/PaginationProyectos?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
-      providesTags: ["proyectos"]
+      providesTags: ["proyectos"],
     }),
     refetchQueriesPart: builder.mutation({
       queryFn: () => ({ data: null }),
-      invalidatesTags: ["listparticipant","proyectos","participant"],
+      invalidatesTags: ["listparticipant", "proyectos", "participant"],
     }),
   }),
 });

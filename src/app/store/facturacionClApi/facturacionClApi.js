@@ -4,11 +4,10 @@ export const facturacionClApi = createApi({
   reducerPath: "facturacionesCl",
   tagTypes: ["FacturacionesCl"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/api/FacturacionCl/",
+    baseUrl: "https://trigonosapi.azurewebsites.net/api/FacturacionCl/",
   }),
   endpoints: (builder) => ({
     getFacturaById: builder.mutation({
-      
       query: (id) => ({
         headers: {
           "Content-type": "application/json",
@@ -18,12 +17,10 @@ export const facturacionClApi = createApi({
       }),
     }),
     getFactCLAll: builder.query({
-      
       query: () => `/NpaginationDecode`,
       providesTags: ["FacturacionesCl"],
     }),
     postFacturaAgregar: builder.mutation({
-      
       query: (data) => ({
         headers: {
           "Content-type": "application/json",
@@ -36,7 +33,6 @@ export const facturacionClApi = createApi({
       // invalidatesTags: ["usuarios", "usuariosroles", "empresas"],
     }),
     postFacturaActualizar: builder.mutation({
-      
       query: (data) => ({
         headers: {
           "Content-type": "application/json",
