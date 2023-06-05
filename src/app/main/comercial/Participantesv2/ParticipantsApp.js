@@ -23,6 +23,7 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 let participants = [];
 const NominaPagoApp = () => {
   const [isloading, setIsloading] = useState(true);
+  const [carga, setCarga] = useState(true);
   const [dataParticipant, setDataParticipant] = useState([]);
   const [fullData, setFullData] = useState(undefined);
   const {data: getParticipant, isFetching: fetchParticipant }= useGetPartAllQuery({PageIndex:1,PageSize:1000});
@@ -30,36 +31,59 @@ const NominaPagoApp = () => {
   const {data: getFactCl, isFetching: fetchFact }= useGetFactCLAllQuery();
   const {data: getFactErp, isFetching: fetchFactErp }= useGetFacturadorERPTableQuery();
   const {data: getNomPago, isFetching: fetchNomPag }= useGetNominaPagoTableQuery();
-  console.log(getProject)
 
   let ArrayFetchs = [fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag];
-  let ArrayDatas = [getParticipant,getProject,getFactCl,getFactErp,getNomPago];
-  function verificarLista() {
-    if (ArrayFetchs.every((valor) => valor === true)) {
-      return true;
-    } else {
-      if(ArrayDatas.every((valor) => valor != undefined)){
-        return false;
-      }else{
-        
+    let ArrayDatas = [getParticipant,getProject,getFactCl,getFactErp,getNomPago];
+    function verificarLista() {
+      if (ArrayFetchs.every((valor) => valor === true)) {
         return true;
+      } else {
+        if(ArrayDatas.every((valor) => valor != undefined)){
+          return false;
+        }else{
+          
+          return true;
+          
+        }
         
       }
-      
     }
-  }
   
-  let isLoadingApis = verificarLista()
+  let isloadingg =verificarLista();
+  // console.log(fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag)
+  // console.log(isloadingg)
+  useEffect(() => {
  
+      function verificacarga() {
+        if ([fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag].every((valor) => valor === false)) {
+          return false;
+        } else {
+          return true;
+  
+          
+        }
+      }
+    
+    setCarga(verificacarga() )
+    setTimeout(() => {
+      if(fullData != undefined){
+        setIsloading(verificacarga());
+      }
+    }, 1300);
+  
+
+  }, [fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag])
+  
+
   useEffect(() => {
     
     if(fullData != undefined){
       setIsloading(false);
-      console.log({
-        dataParticipant: [getParticipant.data[0]],
-        dataProject:getProject.data.filter((data) => data.id_participants ===getParticipant.data[0].id)||{},
-        dataFactCl:getFactCl.filter((data) => data.idParticipante ===getParticipant.data[0].id)||{}
-      })
+      // console.log({
+      //   dataParticipant: [getParticipant.data[0]],
+      //   dataProject:getProject.data.filter((data) => data.id_participants ===getParticipant.data[0].id)||{},
+      //   dataFactCl:getFactCl.filter((data) => data.idParticipante ===getParticipant.data[0].id)||{}
+      // })
     }
   }, [fullData])
   
@@ -109,7 +133,7 @@ const NominaPagoApp = () => {
               </div>
             </Box>
           </Box>
-          {isLoadingApis?<Paper className="w-full p-[20px] mb-[20px]">
+          {carga?<Paper className="w-full p-[20px] mb-[20px]">
             <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
                   
                     <LinearProgress color="primary" />
@@ -124,7 +148,7 @@ const NominaPagoApp = () => {
            allprojects={getProject.data}
            allfactcl={getFactCl}
            sendFullData={getFullData}
-           change={change}
+           change={carga}
            idParticipant={idParticipant}
           //  isLoading={getIsloading}
          

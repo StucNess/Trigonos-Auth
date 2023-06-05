@@ -55,11 +55,13 @@ import {
   useGetProyectoByIdMutation,
   usePatchPartcipantMutation,
   usePostActualizarProyectoMutation,
+  useRefetchQueriesPartMutation,
 } from "app/store/participantesApi/participantesApi";
 import {
   usePostFacturaAgregarMutation,
   useGetFacturaByIdMutation,
   usePostFacturaActualizarMutation,
+  useRefetchQueriesFactMutation,
 } from "app/store/facturacionClApi/facturacionClApi";
 import WarningIcon from "@mui/icons-material/Warning";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -262,9 +264,11 @@ export default function HorizontalNonLinearStepper(props) {
 
   const [checkedBlue, setCheckedBlue] = React.useState(false);
   const [checkedExt, setCheckedExt] = React.useState(false);
+  const [refetchParticipant, dataPart] = useRefetchQueriesPartMutation();
+  const [refetchFact, dataFact] =  useRefetchQueriesFactMutation();
   const handleClickOpen = () => {
     //condiciones antes de enviar algo
-    if((formStateProjects.erp === 5) &&  JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl)){
+    if((formStateProjects.erp === 5) &&  JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl) && props.fullData.dataFactCl.phabilitado === undefined){
       
       setOpenDialog(true);
       setMsgAlert({
@@ -273,6 +277,8 @@ export default function HorizontalNonLinearStepper(props) {
         msgError: true,
       });
       setTimeout(() => {
+        refetchParticipant();
+        refetchFact();
         setMsgAlert({
           msgResp: undefined,
           msgText: "",
@@ -794,7 +800,7 @@ export default function HorizontalNonLinearStepper(props) {
             formStateFactCl.fact_clavePruebas
           ),
     ];
-    console.log(props.fullData.dataFactCl.phabilitado);
+
     rows = rows.filter((x) => x !== undefined);
     if (isEqual && isEqualdos && isEqualtres) {
       return <div>No se han encontrado cambios</div>;
@@ -849,7 +855,7 @@ export default function HorizontalNonLinearStepper(props) {
     }
 
   }, [dataActFactCl.isLoading,dataActProyect.isLoading,dataActPart.isLoading])
-  console.log(dataActProyect.isLoading)
+  
 
   function SubmitActProject(isEqual){
     if (!isEqual) {

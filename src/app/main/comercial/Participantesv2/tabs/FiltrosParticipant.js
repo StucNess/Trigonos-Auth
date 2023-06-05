@@ -30,15 +30,19 @@ export default function FiltrosParticipant(props) {
 
 
 
-console.log(props.allparticipants)
  
   useEffect(() => {
     props.sendFullData(fullData);
   }, [fullData]);
 
+ useEffect(() => {
+    
+    props.sendFullData(fullData);
+  }, [props.allparticipants,props.allprojects,props.allfactcl]);
   useEffect(() => {
  
     props.sendFullData(fullData);
+   
   }, []);
   return (
     <Box>

@@ -8,7 +8,7 @@ export const facturacionClApi = createApi({
   }),
   endpoints: (builder) => ({
     getFacturaById: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      
       query: (id) => ({
         headers: {
           "Content-type": "application/json",
@@ -18,12 +18,12 @@ export const facturacionClApi = createApi({
       }),
     }),
     getFactCLAll: builder.query({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+      
       query: () => `/NpaginationDecode`,
       providesTags: ["FacturacionesCl"],
     }),
     postFacturaAgregar: builder.mutation({
-      //  Objeto del body {idUser:"", newData:{email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rolIdAnterior:"",rolIdNuevo:""}}
+      
       query: (data) => ({
         headers: {
           "Content-type": "application/json",
@@ -32,10 +32,11 @@ export const facturacionClApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["FacturacionesCl"],
       // invalidatesTags: ["usuarios", "usuariosroles", "empresas"],
     }),
     postFacturaActualizar: builder.mutation({
-      //  Objeto del body {idUser:"", newData:{email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rolIdAnterior:"",rolIdNuevo:""}}
+      
       query: (data) => ({
         headers: {
           "Content-type": "application/json",
@@ -44,7 +45,11 @@ export const facturacionClApi = createApi({
         method: "POST",
         body: data,
       }),
-      // invalidatesTags: ["usuarios", "usuariosroles", "empresas"],
+      invalidatesTags: ["FacturacionesCl"],
+    }),
+    refetchQueriesFact: builder.mutation({
+      queryFn: () => ({ data: null }),
+      invalidatesTags: ["FacturacionesCl"],
     }),
   }),
 });
@@ -52,5 +57,6 @@ export const {
   usePostFacturaAgregarMutation,
   usePostFacturaActualizarMutation,
   useGetFacturaByIdMutation,
+  useRefetchQueriesFactMutation,
   useGetFactCLAllQuery,
 } = facturacionClApi;

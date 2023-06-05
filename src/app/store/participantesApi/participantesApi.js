@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const participantesApi = createApi({
   reducerPath: "participantes",
+  tagTypes: ["listparticipant","proyectos"],
   baseQuery: fetchBaseQuery({
     baseUrl: "https://trigonosapi.azurewebsites.net/",
   }),
@@ -13,7 +14,7 @@ export const participantesApi = createApi({
       query: (id) => `/api/Participantes?id=${id}`,
     }),
     getParticipantell: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
@@ -23,7 +24,7 @@ export const participantesApi = createApi({
       }),
     }),
     patchPartcipant: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
@@ -52,9 +53,10 @@ export const participantesApi = createApi({
         `Bills_contact_email=${spec.billsContactEmail}`,
         method: "PATCH",
       }),
+      invalidatesTags: ["listparticipant","proyectos"],
     }),
     getProyectoById: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+
       query: (id) => ({
         headers: {
           "Content-type": "application/json",
@@ -64,7 +66,7 @@ export const participantesApi = createApi({
       }),
     }),
     getProyectoAll: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
@@ -74,7 +76,7 @@ export const participantesApi = createApi({
       }),
     }),
     postActualizarProyecto: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+
       query: (spec) => ({
         headers: {
           "Content-type": "application/json",
@@ -83,10 +85,12 @@ export const participantesApi = createApi({
         method: "POST",
         body: spec,
       }),
+      invalidatesTags: ["listparticipant","proyectos"],
     }),
+    
 
     getParticipantesById: builder.mutation({
-      //  Objeto del body {email:"",username:"",nombre:"",apellido:"",idEmpresa:0,pais:"",password:"",rol:""}
+ 
       query: (id) => ({
         headers: {
           "Content-type": "application/json",
@@ -95,7 +99,7 @@ export const participantesApi = createApi({
         method: "GET",
       }),
     }),
-    //Revisar como utilizar el patch si no cambialo por post en .net
+   
     getBusinessName: builder.query({
       query: () => "/BusinessName",
     }),
@@ -104,7 +108,7 @@ export const participantesApi = createApi({
     }),
     getParticipantesSpec: builder.query({
       query: (parameters) =>
-        `/api/Participantes/${parameters.id}?business_name=${parameters.business_name}?rut=${parameters.rut}`, //pasale un objecto {id:0, business_name:"", rut:"" } aun asi no se si esta bien quizas debas usar un mutation
+        `/api/Participantes/${parameters.id}?business_name=${parameters.business_name}?rut=${parameters.rut}`,
     }),
     getHistorificacion: builder.query({
       query: (id) => `/Historificacion?${id}`,
@@ -114,10 +118,16 @@ export const participantesApi = createApi({
     getPartAll: builder.query({
       query: (spec) =>
         `/api/Participantes?All=s&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
+      providesTags: ["listparticipant"]
     }),
     getProyAll: builder.query({
       query: (spec) =>
         `/api/Participantes/PaginationProyectos?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
+      providesTags: ["proyectos"]
+    }),
+    refetchQueriesPart: builder.mutation({
+      queryFn: () => ({ data: null }),
+      invalidatesTags: ["listparticipant","proyectos"],
     }),
   }),
 });
@@ -134,7 +144,7 @@ export const {
   useGetRutQuery,
   useGetParticipantesSpecQuery,
   useGetHistorificacionQuery,
-
+  useRefetchQueriesPartMutation,
   useGetPartAllQuery,
   useGetProyAllQuery,
 } = participantesApi;
