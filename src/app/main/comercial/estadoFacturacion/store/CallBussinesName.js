@@ -4,7 +4,7 @@ import axios from "axios";
 let dataResponse;
 export const CallBussinesName = async () => {
   let url = "";
-  url = " https://trigonosapi.azurewebsites.net/BusinessName";
+  url = " http://localhost:5205/BusinessName";
   const response = await axios
     .get(url)
     .then((res) => {

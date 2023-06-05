@@ -2,9 +2,9 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const routesApi = createApi({
   reducerPath: "routes",
-  tagTypes: ["RolesToken","listarpaginaweb"],
+  tagTypes: ["RolesToken", "listarpaginaweb"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/api/Rol/",
+    baseUrl: "http://localhost:5205/api/Rol/",
   }),
   endpoints: (builder) => ({
     getAllRoles: builder.query({ query: () => "" }),
@@ -27,7 +27,6 @@ export const routesApi = createApi({
     getListarPaginaWeb: builder.query({
       query: (todoid) => "/ListarPaginaWeb",
       providesTags: ["listarpaginaweb"],
-
     }),
     // postHabilitarRol: builder.query({
     //     query:(id)=>`/activarRolPagina/${id}`
@@ -40,8 +39,7 @@ export const routesApi = createApi({
         url: `/ActDesactDinamicRol/${id}`,
         method: "POST",
       }),
-      invalidatesTags: ["RolesToken","listarpaginaweb"],
-
+      invalidatesTags: ["RolesToken", "listarpaginaweb"],
     }),
     postHabilitarRol: builder.mutation({
       query: (id) => ({
@@ -51,8 +49,6 @@ export const routesApi = createApi({
         url: `/activarRolPagina/${id}`,
         method: "POST",
       }),
-     
-
     }),
     postDeshabilitarRol: builder.mutation({
       query: (id) => ({
@@ -62,8 +58,6 @@ export const routesApi = createApi({
         url: `/desactivarRolPagina/${id}`,
         method: "POST",
       }),
-    
-
     }),
     postNewRol: builder.mutation({
       query: (rol) => ({
@@ -85,7 +79,7 @@ export const routesApi = createApi({
 
         body: rol.data,
       }),
-      invalidatesTags: ["RolesToken","listarpaginaweb"],
+      invalidatesTags: ["RolesToken", "listarpaginaweb"],
     }),
     postNewRolPages: builder.mutation({
       //Agrega un rol y pagina en la tabla de rompimiento

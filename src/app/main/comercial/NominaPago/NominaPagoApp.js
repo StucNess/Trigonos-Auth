@@ -6,7 +6,7 @@ import FusePageSimple from "@fuse/core/FusePageSimple";
 import NominaPagoAppHeader from "./NominaPagoAppHeader";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import {Stack} from "@mui/material";
+import { Stack } from "@mui/material";
 
 import LinearProgress from "@mui/material/LinearProgress";
 
@@ -42,38 +42,32 @@ let discPrueba = false;
 let ldata;
 const NominaPagoApp = () => {
   let tablaSelect = 1;
-  const [getNominas,dataNomina]  = useGetNominasMutation();
+  const [getNominas, dataNomina] = useGetNominasMutation();
   const [clientData, setClienteData] = useState([]);
   const [payRollData, setPayRollData] = useState([]);
   const [disc, setDisc] = useState(false);
-  const [stateNomina, setStateNomina] = useState({})
+  const [stateNomina, setStateNomina] = useState({});
   const [open, setOpen] = useState(false);
-  const [estado, setEstado] = useState('');
+  const [estado, setEstado] = useState("");
 
   const actualizarEstado = (nuevoEstado) => {
     setEstado(nuevoEstado);
   };
 
-
   // const [render, setRender] = useState(false);
   useEffect(() => {
-   console.log(stateNomina)
-  }, [stateNomina])
- 
+    console.log(stateNomina);
+  }, [stateNomina]);
+
   useEffect(() => {
-    discPrueba= false;
+    discPrueba = false;
     changeDisc = undefined;
-    ldata= undefined;
+    ldata = undefined;
     setDisc(false);
-    setClienteData([])
+    setClienteData([]);
     setStateNomina({});
-
-  }, [estado])
-  
-
+  }, [estado]);
   const getClientData = (data, glosa = "") => {
-    
-    
     // console.log(disc);
     setClienteData(data);
     callApiPayroll(data.id, glosa);
@@ -82,78 +76,106 @@ const NominaPagoApp = () => {
   const getDiscData = (disc, glosa = "") => {
     discPrueba = disc;
     setDisc(disc);
-
     getClientData(ldata, glosa);
   };
   const callApiPayroll = (id, glosa = "") => {
     if (discPrueba == false) {
-      
       getNominas({
         id: id,
-        Glosa: glosa
-      }).then((response)=>{
-        const {data, error} = response;
-        if(data!=undefined){
-          setStateNomina({data:data, error:data.length>0?false:true, msgError:data.length>0? error:"No se registran datos", title:"Notificación"})
-          if(data.length===0){
+        Glosa: glosa,
+      })
+        .then((response) => {
+          const { data, error } = response;
+          if (data != undefined) {
+            setStateNomina({
+              data: data,
+              error: data.length > 0 ? false : true,
+              msgError: data.length > 0 ? error : "No se registran datos",
+              title: "Notificación",
+            });
+            if (data.length === 0) {
+              setOpen(true);
+              setTimeout(() => {
+                setOpen(false);
+              }, 2000);
+            }
+          } else {
+            setStateNomina({
+              data: undefined,
+              error: true,
+              msgError: error,
+              title: "Error en busqueda",
+            });
             setOpen(true);
             setTimeout(() => {
               setOpen(false);
             }, 2000);
-           }
-        }else{
-         
-          setStateNomina({data:undefined, error:true, msgError: error, title:"Error en busqueda" })
+          }
+        })
+        .catch((error) => {
+          setStateNomina({
+            data: undefined,
+            error: true,
+            msgError: error,
+            title: "Error en busqueda",
+          });
           setOpen(true);
           setTimeout(() => {
             setOpen(false);
           }, 2000);
-        }
-      }).catch((error)=>{
-        setStateNomina({data:undefined, error:true, msgError: error, title:"Error en busqueda" })
-        setOpen(true);
-        setTimeout(() => {
-          setOpen(false);
-        }, 2000);
-      });
+        });
     } else {
       getNominas({
         id: id,
         Glosa: glosa,
-        Disc: "si"
-      }).then((response)=>{
-        const {data, error} = response;
-        if(data!=undefined){
-          setStateNomina({data:data, error:data.length>0?false:true, msgError:data.length>0? error:"No existen disconformidades", title:"Notificación"})
-          if(data.length===0){
+        Disc: "si",
+      })
+        .then((response) => {
+          const { data, error } = response;
+          if (data != undefined) {
+            setStateNomina({
+              data: data,
+              error: data.length > 0 ? false : true,
+              msgError: data.length > 0 ? error : "No existen disconformidades",
+              title: "Notificación",
+            });
+            if (data.length === 0) {
+              setOpen(true);
+              setTimeout(() => {
+                setOpen(false);
+              }, 2000);
+            }
+          } else {
+            setStateNomina({
+              data: undefined,
+              error: true,
+              msgError: error,
+              title: "Error en busqueda",
+            });
+            setOpen(true);
+            setTimeout(() => {
+              setOpen(false);
+            }, 2000);
+          }
+        })
+        .catch((error) => {
+          setStateNomina({
+            data: undefined,
+            error: true,
+            msgError: error,
+            title: "Error en busqueda",
+          });
           setOpen(true);
           setTimeout(() => {
             setOpen(false);
           }, 2000);
-         }
-        }else{
-          setStateNomina({data:undefined, error:true, msgError: error , title:"Error en busqueda"})
-          setOpen(true);
-          setTimeout(() => {
-            setOpen(false);
-          }, 2000);
-        }
-      }).catch((error)=>{
-        setStateNomina({data:undefined, error:true, msgError: error , title:"Error en busqueda"})
-        setOpen(true);
-        setTimeout(() => {
-          setOpen(false);
-        }, 2000);
-      });
-   
+        });
     }
-   
   };
   const getChangeDisc = (param) => {
     changeDisc = param;
-
-    // setDisc(param);
   };
+  console.log(stateNomina);
   return (
     <Root
       // header={<NominaPagoAppHeader />}
@@ -201,61 +223,66 @@ const NominaPagoApp = () => {
             */}
             </motion.div>
             <motion.div className="  col-span-12 ">
-              
-
-              <Stack  sx={{ width: "100%", color: "grey.500", height:"3px"}} spacing={2}>
-            {dataNomina.isLoading ? 
-              <LinearProgress color="primary" className="ml-[20px] mr-[20px]" />   
-              :<></>}
-            </Stack>
-            <Paper>
-            {clientData.bank == 4 && (
-               <TablaNominaBCI
-               isLoading ={dataNomina.isLoading}
-               payRollData={stateNomina}
-               sendDiscData={getDiscData}
-               changedDisc={changeDisc}
-                />
-              )}
-              {clientData.bank == 9 && (
-                 <TablaNominaSecurity
-                 payRollData={stateNomina}
-                 sendDiscData={getDiscData}
-                 changedDisc={changeDisc}
-               />
-              )}
-              {clientData.bank == 7 && (
-                <TablaNominaSantander
-                payRollData={stateNomina}
-                sendDiscData={getDiscData}
-                changedDisc={changeDisc}
-              />
-              )}
+              <Stack
+                sx={{ width: "100%", color: "grey.500", height: "3px" }}
+                spacing={2}
+              >
+                {dataNomina.isLoading ? (
+                  <LinearProgress
+                    color="primary"
+                    className="ml-[20px] mr-[20px]"
+                  />
+                ) : (
+                  <></>
+                )}
+              </Stack>
+              <Paper>
+                {clientData.bank == 4 && (
+                  <TablaNominaBCI
+                    isLoading={dataNomina.isLoading}
+                    payRollData={stateNomina}
+                    sendDiscData={getDiscData}
+                    changedDisc={changeDisc}
+                  />
+                )}
+                {clientData.bank == 9 && (
+                  <TablaNominaSecurity
+                    payRollData={stateNomina}
+                    sendDiscData={getDiscData}
+                    changedDisc={changeDisc}
+                  />
+                )}
+                {clientData.bank == 7 && (
+                  <TablaNominaSantander
+                    payRollData={stateNomina}
+                    sendDiscData={getDiscData}
+                    changedDisc={changeDisc}
+                  />
+                )}
               </Paper>
             </motion.div>
-            
-            
           </motion.div>
-        <Dialog
-        open={open}
-        TransitionComponent={Transition}
-        keepMounted
-        // onClose={}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle sx={{ color: "#FF5733" }}>
-          {stateNomina.title}
-          <ReportIcon sx={{ color: "#FF5733" }} />
-        </DialogTitle>
-        <DialogContent>
-          
-            <h2 className="text-pantoneazul">{JSON.stringify(stateNomina.msgError)}</h2>
-        </DialogContent>
-        <DialogActions>
-          {/* <Button onClick={handleClose}>Disagree</Button>
+          <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            keepMounted
+            // onClose={}
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle sx={{ color: "#FF5733" }}>
+              {stateNomina.title}
+              <ReportIcon sx={{ color: "#FF5733" }} />
+            </DialogTitle>
+            <DialogContent>
+              <h2 className="text-pantoneazul">
+                {JSON.stringify(stateNomina.msgError)}
+              </h2>
+            </DialogContent>
+            <DialogActions>
+              {/* <Button onClick={handleClose}>Disagree</Button>
           <Button onClick={handleClose}>Agree</Button> */}
-        </DialogActions>
-      </Dialog>
+            </DialogActions>
+          </Dialog>
         </div>
       }
       scroll="content"

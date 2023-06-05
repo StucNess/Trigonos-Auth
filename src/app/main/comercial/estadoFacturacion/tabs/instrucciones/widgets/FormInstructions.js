@@ -112,16 +112,16 @@ const FormInstructions = (props) => {
       return;
     }
     const apiPatchParticipante =
-      ` https://trigonosapi.azurewebsites.net/api/Instrucciones?` +
+      ` http://localhost:5205/api/Instrucciones?` +
       `id=${props.data.id_instruccions}&` +
       // `EstadoEmision=${BillingState.indexOf(billing) + 1}&` +
       // `EstadoRecepcion=${ReceptionState.indexOf(reception) + 1}&` +
       // `EstadoPago=${PaymentState.indexOf(payment) + 1}&` +
       // `EstadoAceptacion=${AceptationState.indexOf(aceptation) + 1}&` +
-      `FechaEmision=${billingDateF}&` +
+      `FechaEmision=${receptionDateF}&` +
       `FechaRecepcion=${receptionDateF}&` +
       `FechaPago=${paymentDateF}&` +
-      `FechaAceptacion=${aceptationDateF}&` +
+      `FechaAceptacion=${receptionDateF}&` +
       `TipoInstructions=${1}&` +
       `Folio=${folio}&` +
       `Editor=PRUEBA`;
@@ -148,7 +148,7 @@ const FormInstructions = (props) => {
       <br />
       <Stack direction="row" spacing={2}>
         <Autocomplete
-          // disabled={props.acreedor ? true : false}
+          label="Estado Recepción"
           disablePortal
           id="combo-box-demo"
           value={reception}
@@ -164,6 +164,7 @@ const FormInstructions = (props) => {
           sx={{ mb: 2, width: 300 }}
         />
         <Autocomplete
+          label="Estado Aceptación"
           disablePortal
           id="combo-box-demo"
           disabled
@@ -179,6 +180,7 @@ const FormInstructions = (props) => {
           sx={{ mb: 2, width: 300 }}
         />
         <Autocomplete
+          label="Estado Facturación"
           disablePortal
           id="combo-box-demo"
           value={billing}
@@ -194,9 +196,9 @@ const FormInstructions = (props) => {
           sx={{ mb: 2, width: 300 }}
         />
       </Stack>
-
       <Stack direction="row" spacing={2}>
         <Autocomplete
+          label="Estado Pago"
           disablePortal
           id="combo-box-demo"
           value={payment}
@@ -213,8 +215,8 @@ const FormInstructions = (props) => {
         />
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
           <MobileDatePicker
-            disabled={props.acreedor ? true : false}
             label="Fecha Recepcion"
+            disabled={!props.acreedor && !props.fechaRecepcion ? false : true}
             inputFormat="dd/MM/yyyy"
             minDate={new Date("2017-01-02")}
             maxDate={new Date("2024-01-01")}
@@ -227,8 +229,8 @@ const FormInstructions = (props) => {
             )}
           />
           <MobileDatePicker
-            disabled
             label="Fecha Aceptacion"
+            disabled
             inputFormat="dd/MM/yyyy"
             minDate={new Date("2017-01-02")}
             maxDate={new Date("2024-01-01")}
@@ -242,18 +244,11 @@ const FormInstructions = (props) => {
           />
         </LocalizationProvider>
       </Stack>
-
       <Stack direction="row" spacing={2}>
         <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
           <MobileDatePicker
             label="Fecha Pago"
-            disabled={
-              !disabledChange ||
-              (props.emisione && props.acreedor) ||
-              (!props.acreedor && props.fechaRecepcion)
-                ? false
-                : true
-            }
+            disabled={props.fechaRecepcion && props.acreedor ? false : true}
             inputFormat="dd/MM/yyyy"
             value={paymentDate}
             minDate={new Date("2017-01-02")}
@@ -267,7 +262,7 @@ const FormInstructions = (props) => {
           />
           <MobileDatePicker
             label="Fecha Facturacion"
-            disabled={!props.acreedor && props.fechaRecepcion ? false : true}
+            disabled
             inputFormat="dd/MM/yyyy"
             value={billingDate}
             minDate={new Date("2017-01-02")}
@@ -281,14 +276,14 @@ const FormInstructions = (props) => {
           />
         </LocalizationProvider>
         <TextField
+          label="Folio"
           id="outlined"
           value={folio}
-          disabled={!props.acreedor && props.fechaRecepcion ? false : true}
+          disabled={!props.acreedor && !props.fechaRecepcion ? false : true}
           onChange={(event) => {
             setStates({ ...states, folio: event.target.value });
           }}
           name="Folio"
-          label="Folio"
           sx={{ mb: 2, width: 268 }}
         />
       </Stack>

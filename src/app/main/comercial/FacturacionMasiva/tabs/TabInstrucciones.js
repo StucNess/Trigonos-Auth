@@ -16,7 +16,7 @@ import Stack from "@mui/material/Stack";
 import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 import Checkbox from "@mui/material/Checkbox";
 import LinearProgress from "@mui/material/LinearProgress";
-
+import axios from "axios";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import AddIcon from "@mui/icons-material/Add";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
@@ -842,36 +842,40 @@ function TabInstrucciones(props) {
     ],
   ];
 
-  let headersExcelF2 = [
+  let headersExcelF2Folio = [
     [
-      "Tipo",
-      "Folio",
+      "TIPO (33: Factura electrónica, 34:Factura exenta electrónica, 56: Nota débito electrónica, 61:Nota de crédito electrónica, 39: Boleta electrónica; 41: Boleta exenta electrónica )",
+      "FOLIO",
       "Secuencia",
-      "FechaEmision",
+      "Fecha Emision",
       "Rut",
-      "RazonSocial",
-      "giro",
-      "ComunaRecepcion",
-      "DireccionesRecepcion",
+      "Razon Social",
+      "Giro",
+      "Comuna",
+      "Direccion",
       "Afecto",
-      "RazonReferencia",
+      "Producto",
       "Descripcion",
       "Cantidad",
-      "neto",
-      "Porcentaje",
-      "Email",
-      "TipoServicio",
+      "Precio",
+      "PORCENTDSCTO",
+      "EMAIL",
+      "TIPOSERVICIO (1: Boletas de servicios periódico ó Facturas de servicios periódicos domiciliarios; 2:Boletas de servicios periódicos domiciliarios ó Facturas de otros servicios periódicos; 3:Boletas de venta y servicios ó Factura de servicios)",
       "PeriodoDesde",
-      "PeriodoHasta",
-      "FechaVencimiento",
-      "Tipo2",
-      "Folio2",
-      "Secuencia2",
-      "TipoDocumento",
-      "FolioReferencia",
-      "FechaCarta",
-      "MotivoRef",
-      "RazonReferencia2",
+      "PERIODOHASTA",
+      "FECHAVENCIMIENTO",
+    ],
+  ];
+  let headersExcelF2Anexo = [
+    [
+      "TIPO",
+      "FOLIO",
+      "SECUENCIA",
+      "TIPO DOCUMENTO REFERENCIADO (30: Factura, 33: Factura electrónica, 34:Factura electrónica exenta, 39: Boleta Electrónica, 41: Boleta Electrónica Exenta, 45: Factura de Compra, 46: Factura de Compra Electrónica, 50: Guía de Despacho, 52: Guía de despacho electrónica, 56: Nota débito electrónica, 61:Nota de crédito electrónica, 103:Liquidación, 801: Orden de Compra, 802: Nota de Pedido, NVE: Nota de Venta, CEC: Centro de Costo, 803: Contrato)",
+      "FOLIO DOCUMENTO REFERENCIADO",
+      "FECHA DOCUMENTO REFERENCIADO",
+      "MOTIVO REFERENCIA(1: Anula documento, 2: Corrige texto, 3: Corrige monto)",
+      "GLOSA REFERENCIA",
     ],
   ];
   let headersExcelF3 = [
@@ -1050,14 +1054,16 @@ function TabInstrucciones(props) {
   const descargarExcel = () => {
     console.log("DESCARGANDO EXCEL");
   };
-  function convertToSheet(data) {
+  function convertToSheet(data, nubox = 0) {
     const wb = XLSX.utils.book_new();
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
     if (props.erp == 1) {
       XLSX.utils.sheet_add_aoa(ws, headersExcelF1);
-    } else if (props.erp == 2) {
-      XLSX.utils.sheet_add_aoa(ws, headersExcelF2);
-    } else if (props.erp == 7) {
+    } else if (props.erp == 2 && nubox == 1) {
+      XLSX.utils.sheet_add_aoa(ws, headersExcelF2Folio);
+    } else if (props.erp == 2 && nubox == 2) {
+      XLSX.utils.sheet_add_aoa(ws, headersExcelF2Anexo);
+    } else if (props.erp == 7 || props.erp == 5) {
       XLSX.utils.sheet_add_aoa(ws, headersExcelF7);
     }
     const sheet = XLSX.utils.sheet_add_json(ws, data, {
@@ -1069,7 +1075,7 @@ function TabInstrucciones(props) {
 
     XLSX.writeFile(wb, "filename.xlsx");
   }
-  function downloadExcelFile(filename, data) {
+  function downloadExcelFile(filename, nubox = 0) {
     let dataPrueba = [];
     const transformtToShortDate = (param) => {
       let fechaString = param;
@@ -1104,7 +1110,7 @@ function TabInstrucciones(props) {
       return fechaCorta;
     };
     for (let i in dataInstructions.data.filter((p) =>
-      selected.includes(p.id)
+      selected.includes(p.id_instruccions)
     )) {
       let obj = new Object();
       if (props.erp == 1) {
@@ -1150,7 +1156,7 @@ function TabInstrucciones(props) {
         obj.giro = dataInstructions.data[i].giroDeudor;
         obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
         obj.ComunaRecepcion = "Los leones";
-      } else if (props.erp == 2) {
+      } else if (props.erp == 2 && nubox == 1) {
         obj.Tipo = "33";
         obj.Folio = dataInstructions.data[i].id_instruccions;
         obj.Secuencia = 1;
@@ -1161,16 +1167,17 @@ function TabInstrucciones(props) {
         obj.ComunaRecepcion = "Las condes";
         obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
         obj.Afecto = "SI";
-        obj.RazonReferencia = dataInstructions.data[i].glosa;
+        obj.producto = dataInstructions.data[i].glosa;
         obj.Descripcion = "";
         obj.Cantidad = "1";
-        obj.neto = dataInstructions.data[i].montoNeto;
+        obj.Precio = dataInstructions.data[i].montoNeto;
         obj.Porcentaje = 0;
         obj.Email = "";
         obj.TipoServicio = "";
         obj.PeriodoDesde = "";
         obj.PeriodoHasta = "";
         obj.FechaVencimiento = "";
+      } else if (props.erp == 2 && nubox == 2) {
         obj.Tipo2 = "33";
         obj.Folio2 = dataInstructions.data[i].id_instruccions;
         obj.Secuencia2 = 1;
@@ -1360,8 +1367,25 @@ function TabInstrucciones(props) {
       }
       dataPrueba.push(obj);
     }
+    if (props.erp == 2 && nubox == 1) {
+      convertToSheet(dataPrueba, 1);
+    } else if (props.erp == 2 && nubox == 2) {
+      convertToSheet(dataPrueba, 2);
+    } else {
+      convertToSheet(dataPrueba);
+    }
 
-    convertToSheet(dataPrueba);
+    let url;
+    url =
+      "http://localhost:5205/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
+    axios
+      .post(url, selected)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   }
 
   const handleSelectAllClick = (event) => {
@@ -1416,7 +1440,7 @@ function TabInstrucciones(props) {
                     className=" rounded flex justify-start min-w-[170px] m-[5px]"
                     variant="contained"
                     color="customdos"
-                    onClick={() => downloadExcelFile("mydata")}
+                    onClick={() => downloadExcelFile("mydata", 0)}
                   >
                     <SiMicrosoftexcel size={30} className="mr-[10px] " />
                     Descargar
@@ -1427,20 +1451,20 @@ function TabInstrucciones(props) {
                       className=" rounded flex justify-start min-w-[170px] m-[5px]"
                       variant="contained"
                       color="customdos"
-                      onClick={() => downloadExcelFile("mydata")}
+                      onClick={() => downloadExcelFile("mydata", 1)}
                     >
                       <SiMicrosoftexcel size={30} className="mr-[10px] " />
-                      Descargar
+                      Descargar Folios
                     </Button>
                     <Button
                       className=" rounded flex justify-start min-w-[170px] m-[5px]"
                       variant="contained"
                       color="customdos"
                       // onClick={exportToExcel}
-                      onClick={() => downloadExcelFile("mydata")}
+                      onClick={() => downloadExcelFile("mydata", 2)}
                     >
                       <SiMicrosoftexcel size={30} className="mr-[10px] " />
-                      Folio
+                      Descargar Anexo
                     </Button>
                   </>
                 ) : props.erp == 5 ? (
@@ -1448,7 +1472,7 @@ function TabInstrucciones(props) {
                     className=" rounded flex justify-start min-w-[170px] m-[5px]"
                     variant="contained"
                     color="customdos"
-                    onClick={() => downloadExcelFile("mydata")}
+                    onClick={() => downloadExcelFile("mydata", 0)}
                   >
                     <SiBitcoinsv size={30} className="mr-[10px]" />
                     Facturar

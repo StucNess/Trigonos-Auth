@@ -52,12 +52,12 @@ export default function SelectClientTable(props) {
     setcliente(event.target.value);
 
     props.actualizarEstado(event.target.value);
-    setValue(dayjs())
+    setValue(dayjs());
   };
   const handleChangeDate = (newValue) => {
     setValue(newValue);
   };
-  
+
   const [participants, setParticipants] = useState([]);
   const [payrollTable, setPayrollTable] = useState(0);
   const [alertt, setAlertt] = useState(false);
@@ -75,9 +75,7 @@ export default function SelectClientTable(props) {
   const searchPayroll = () => {
     render == true ? setRender(true) : setRender(false);
     let prueba = participants.find((p) => p.id == cliente);
-
     if (prueba != undefined) {
-      // console.log(prueba);
       props.sendClientData(prueba);
       props.changeDisc(searchPayroll);
     } else {
@@ -195,9 +193,7 @@ export default function SelectClientTable(props) {
           <ReportIcon sx={{ color: "#FF5733" }} />
         </DialogTitle>
         <DialogContent>
-       
-            <h2 className="text-pantoneazul">Debe seleccionar un Cliente</h2>
-       
+          <h2 className="text-pantoneazul">Debe seleccionar un Cliente</h2>
         </DialogContent>
         <DialogActions>
           {/* <Button onClick={handleClose}>Disagree</Button>

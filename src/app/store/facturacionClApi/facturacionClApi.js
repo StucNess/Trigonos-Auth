@@ -4,7 +4,7 @@ export const facturacionClApi = createApi({
   reducerPath: "facturacionesCl",
   tagTypes: ["FacturacionesCl"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/api/FacturacionCl/",
+    baseUrl: "http://localhost:5205/api/FacturacionCl/",
   }),
   endpoints: (builder) => ({
     getFacturaById: builder.mutation({
