@@ -175,7 +175,6 @@ const NominaPagoApp = () => {
   const getChangeDisc = (param) => {
     changeDisc = param;
   };
-  console.log(stateNomina);
   return (
     <Root
       // header={<NominaPagoAppHeader />}

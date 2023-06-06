@@ -288,9 +288,8 @@ export default function TablaNominaSantander(props) {
     }
   };
 
- 
-  if(props.payRollData.data!=undefined){
-    props.payRollData.data.map((p) => {
+  if (props.payRollData.data != undefined) {
+    props.payRollData.data.data.map((p) => {
       rows.push(
         createData(
           p.rutAcreedor,
@@ -308,14 +307,15 @@ export default function TablaNominaSantander(props) {
   }
 
   useEffect(() => {
-    if(props.payRollData.data!=undefined){
-      let prueba = props.payRollData.data.filter((p) => selected.includes(p.id));
+    if (props.payRollData.data != undefined) {
+      let prueba = props.payRollData.data.data.filter((p) =>
+        selected.includes(p.id)
+      );
       setDataExport(prueba);
       let pruebaValor = 0;
       prueba.map((p) => (pruebaValor = pruebaValor + p.valorNeto));
       setTotal(pruebaValor);
     }
-    
   }, [selected]);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";

@@ -4,7 +4,7 @@ export const participantesApi = createApi({
   reducerPath: "participantes",
   tagTypes: ["listparticipant", "proyectos", "participant"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/",
+    baseUrl: "http://localhost:5205/",
   }),
   endpoints: (builder) => ({
     getParticipantes: builder.query({

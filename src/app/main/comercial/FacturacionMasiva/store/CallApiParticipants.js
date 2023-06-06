@@ -6,7 +6,7 @@ export const CallApiParticipants = async (
   numero = 1
 ) => {
   const idUser = localStorage.getItem("idUser");
-  let url = `https://trigonosapi.azurewebsites.net/api/Participantes?id=${idUser}`;
+  let url = `http://localhost:5205/api/Participantes?id=${idUser}`;
   let response;
   let prueba;
 
@@ -18,5 +18,5 @@ export const CallApiParticipants = async (
 // const idUser = localStorage.getItem("idUser");
 
 // const response = await axios.get(
-//   ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${idUser}`
+//   ` http://localhost:5205/api/Participantes?id=${idUser}`
 // );

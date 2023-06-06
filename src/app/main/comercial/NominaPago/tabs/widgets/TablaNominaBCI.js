@@ -292,7 +292,7 @@ export default function EnhancedTable(props) {
     }
   };
   if (props.payRollData.data != undefined) {
-    props.payRollData.data.map((p) => {
+    props.payRollData.data.data.map((p) => {
       rows.push(
         createData(
           p.rutAcreedor,
@@ -311,7 +311,7 @@ export default function EnhancedTable(props) {
 
   useEffect(() => {
     if (props.payRollData.data != undefined) {
-      let prueba = props.payRollData.data.filter((p) =>
+      let prueba = props.payRollData.data.data.filter((p) =>
         selected.includes(p.id)
       );
       setDataExport(prueba);
