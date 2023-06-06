@@ -21,7 +21,7 @@ export function navigationConfigAsync (item =[],data =[]){
   const idEstFacturacion = 9;
   const idNominaPago = 10;
   const idFactMasiva= 11;
- 
+  const idGestDocumental= 13;
 
   // ParticipantsAppConfig(getListRoles(8)),
   // EstadoFacturacionAppConfig(getListRoles(9)),
@@ -178,10 +178,29 @@ export function navigationConfigAsync (item =[],data =[]){
                   icon: "heroicons-outline:document-report",
                   url: "/comercial/facturacionMasiva",
                   auth:getListRoles(idFactMasiva)
-
                 },
               ],
             },
+          ],
+        },
+        {
+          id: "3",
+          title: "GESTIÓN",
+          subtitle: "Modulo de Gestión",
+          type: "group",
+          icon: "heroicons-outline:home",
+          
+          children: [
+          
+            {
+              id: "3.1",
+              title: "Gestión Documental",
+              type: "item",
+              icon: "heroicons-outline:clipboard-check",
+              url: "/gestion/documental",
+              auth: getListRoles(idGestDocumental)
+            },
+           
           ],
         },
       ];
