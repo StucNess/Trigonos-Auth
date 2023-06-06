@@ -39,6 +39,7 @@ import RecoverPassTwoConfig from "./main/recover-password/RecoverPassTwoConfig";
 import { ComercialConfigs } from "./main/comercial/ComercialConfigs";
 import AnalisisConfig from "./main/analisis/AnalisisConfig";
 import { AdministracionConfig } from "./main/administracion/AdministracionConfig";
+import { gestionConfig } from "./main/gestion/gestionConfig";
 import {
   useGetAllRolesQuery,
   useGetAllRoutesQuery,
@@ -78,8 +79,6 @@ const AppContextProvider = ({ children }) => {
   const {data: todoshabilit =[],isLoading: isloading =true} = useGetOnlyHabilitRoutesQuery();
   const user = useSelector(selectUser);
 
-
- console.log(window.localStorage.getItem("idUser"))
  
 
   
@@ -126,6 +125,7 @@ const AppContextProvider = ({ children }) => {
       ...ComercialConfigs(todoshabilit),
       ...AnalisisConfig,
       ...AdministracionConfig(todoshabilit), //los que contienen el spread se les pasa el objeto completo
+      ...gestionConfig(todoshabilit),
       ProfileAppConfig(getListRoles(3)),
     ];
     let defaultAuth = roles.map(function(el) {

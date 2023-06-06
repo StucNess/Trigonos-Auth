@@ -232,8 +232,7 @@ class JwtService extends FuseUtils.EventEmitter {
       return false;
     }
     const decoded = jwtDecode(access_token);
-    console.log(decoded);
-    console.log(decoded.exp);
+
     const currentTime = Date.now() / 1000;
     if (decoded.exp < currentTime) {
       console.warn("Tiempo de inactividad sobrepasado");
