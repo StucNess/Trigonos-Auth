@@ -14,6 +14,9 @@ export const participantesApi = createApi({
     getParticipantesById_: builder.query({
       query: (id) => `/api/Participantes?id=${id}`,
     }),
+    getExcelById_: builder.query({
+      query: (id) => `/excelHistory?id=${id}`,
+    }),
     getParticipantell: builder.mutation({
       query: (spec) => ({
         headers: {
@@ -94,6 +97,15 @@ export const participantesApi = createApi({
         method: "GET",
       }),
     }),
+    // getExcelsById: builder.mutation({
+    //   query: (id) => ({
+    //     headers: {
+    //       "Content-type": "application/json",
+    //     },
+    //     url: `/excelHistory?id=${id}`,
+    //     method: "GET",
+    //   }),
+    // }),
 
     getBusinessName: builder.query({
       query: () => "/BusinessName",
@@ -135,6 +147,7 @@ export const {
   usePostActualizarProyectoMutation,
   usePatchPartcipantMutation,
   useGetParticipantesByIdMutation,
+  useGetExcelById_Query,
   useGetBusinessNameQuery,
   useGetRutQuery,
   useGetParticipantesSpecQuery,
