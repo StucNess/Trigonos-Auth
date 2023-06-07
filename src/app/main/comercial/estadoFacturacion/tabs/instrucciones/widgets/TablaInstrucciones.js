@@ -515,7 +515,9 @@ const TablaInstrucciones = (props) => {
                       <TableCell
                         key={column.id}
                         align={column.align}
-                        style={{ minWidth: column.minWidth }}
+                        style={{
+                          minWidth: column.minWidth,
+                        }}
                         sx={
                           columnsHidden.some((e) => e === column.id)
                             ? { display: { xl: "none", xs: "block" } }
@@ -602,6 +604,35 @@ const TablaInstrucciones = (props) => {
                                 {random(value)}
                               </TableCell>
                             );
+                          } else if (
+                            column.label === "E.Emision" ||
+                            column.label === "E.Pago"
+                          ) {
+                            if (value.includes("No")) {
+                              return (
+                                <TableCell
+                                  key={column.id}
+                                  align={column.align}
+                                  style={{ color: "red" }}
+                                >
+                                  {column.format && typeof value === "number"
+                                    ? column.format(value)
+                                    : value}
+                                </TableCell>
+                              );
+                            } else {
+                              return (
+                                <TableCell
+                                  key={column.id}
+                                  align={column.align}
+                                  style={{ color: "green" }}
+                                >
+                                  {column.format && typeof value === "number"
+                                    ? column.format(value)
+                                    : value}
+                                </TableCell>
+                              );
+                            }
                           } else {
                             return (
                               <TableCell key={column.id} align={column.align}>

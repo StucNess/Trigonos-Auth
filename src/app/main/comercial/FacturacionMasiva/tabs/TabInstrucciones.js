@@ -1106,7 +1106,7 @@ function TabInstrucciones(props) {
       if (mes < 10) {
         mes = "0" + mes;
       }
-      let fechaCorta = año + "-" + mes + "-" + dia;
+      let fechaCorta = dia + "-" + mes + "-" + año;
       return fechaCorta;
     };
     for (let i in dataInstructions.data.filter((p) =>
@@ -1163,9 +1163,11 @@ function TabInstrucciones(props) {
         obj.FechaEmision = devuelveFechaHoy();
         obj.Rut = dataInstructions.data[i].rutDeudor;
         obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
-        obj.giro = dataInstructions.data[i].giroDeudor;
+        obj.giro = dataInstructions.data[i].giroDeudor.substring(0, 20);
         obj.ComunaRecepcion = "Las condes";
-        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
+        obj.DireccionesRecepcion = dataInstructions.data[
+          i
+        ].direccionDeudor.substring(0, 20);
         obj.Afecto = "SI";
         obj.producto = dataInstructions.data[i].glosa;
         obj.Descripcion = "";
