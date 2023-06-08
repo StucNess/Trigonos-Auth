@@ -12,7 +12,7 @@ const AppContextProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://trigonosapi.azurewebsites.net/api/Rol/listarRolPagina"
+          "http://localhost:5205/api/Rol/listarRolPagina"
         );
         const result = await response.json();
         setData(result);

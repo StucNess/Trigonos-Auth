@@ -74,7 +74,7 @@ function DocumentalApp(props) {
     if (getData != undefined) {
       setClient(getData.data[0]);
     }
-  }, [fetching]);
+  }, [fetching, fetchingExcels]);
 
   function handleChangeTab(event, value) {
     setTabValue(value);
