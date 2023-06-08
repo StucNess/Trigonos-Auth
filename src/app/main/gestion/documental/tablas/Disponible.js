@@ -1,5 +1,6 @@
 import { Paper, Typography, Button, Box } from "@mui/material";
 import * as React from "react";
+import * as XLSX from "xlsx";
 
 import { SiMicrosoftexcel } from "react-icons/si";
 import Tooltip from "@mui/material/Tooltip";
@@ -13,6 +14,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useState } from "react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,15 +36,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   // },
   // hide last border
 }));
-function createData(name, description) {
-  return { name, description };
-}
 
-const rows = [
-  createData("Excel 1", "Folio y sin Fecha de Recepción"),
-  createData("Excel 2", "Cuadre Masivo"),
-];
 export default function Disponible(props) {
+  const {tableUtils,actionDownload}= props
+
+ 
+
   return (
     <TableContainer component={Box}>
       <Table aria-label="customized table" size="small">
@@ -53,7 +52,8 @@ export default function Disponible(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.excelData.data.map((row) => (
+        
+        {tableUtils.map((row) => (
             <Tooltip
               title="Descargar"
               arrow
@@ -64,6 +64,10 @@ export default function Disponible(props) {
                 key={row.id}
                 hover
                 className="border-b-2 border-inherit cursor-pointer "
+                onClick={ ()=>{
+                  actionDownload(row.headerExcel,row.dataExcel,row.name)
+                
+                }}
               >
                 <StyledTableCell component="th" scope="row" align="left">
                   <SiMicrosoftexcel
@@ -78,6 +82,7 @@ export default function Disponible(props) {
               </StyledTableRow>
             </Tooltip>
           ))}
+          
         </TableBody>
       </Table>
     </TableContainer>

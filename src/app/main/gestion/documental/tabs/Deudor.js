@@ -2,6 +2,7 @@ import { Paper, Typography, Button, Box } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import * as React from "react";
+import * as XLSX from "xlsx";
 
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -36,13 +37,76 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   // },
   // hide last border
 }));
-function createData(name, estado) {
-  return { name, estado };
+let head1 = [
+  [
+    "ID Instruccion",
+    "Nombre Acreedor",
+    "Nombre Deudor",
+    "Rut",
+    "Folio",
+    "Fecha Recepcion",
+    "Fecha Aceptacion",
+    "Concepto",
+    "Monto",
+  ],
+];
+
+let head2= [
+  [
+    "ID Instruccion",
+    "Nombre Acreedor",
+    "Nombre Deudor",
+    "Rut",
+    "Folio",
+    "Fecha Recepcion",
+    "Fecha Aceptacion",
+    "Concepto",
+    "Fecha de Pago",
+    "Monto",
+  ],
+];
+const convertAndDownloadExcel = (header,data,name)=>{
+  const wb = XLSX.utils.book_new();
+  const ws= XLSX.utils.json_to_sheet([]);
+  XLSX.utils.sheet_add_aoa(ws, header);
+  const sheet = XLSX.utils.sheet_add_json(ws, data, {
+    origin: "A2",
+    skipHeader: true,
+  });
+
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+
+  XLSX.writeFile(wb, `${name}.xlsx`);
 }
 
-const rows = [createData("Excel 1", false), createData("Excel 2", true)];
-
 export default function Deudor(props) {
+  console.log(props.cliente);
+  const cuadremasivo = props.dataExcel.data.map(function(el) {
+    return {Id :el.id_instruccions, nombre_acreedor: props.cliente.business_Name,nombre_deudor: el.giroDeudor, rut: el.rutAcreedor,folio:el.folio,fecha_recepcion:el.fecha_recepcion,fecha_aceptacion:el.fecha_aceptacion,glosa: el.glosa,monto:el.montoNeto}         
+  });
+  const historico =  props.dataExcel.data.map(function(el) {
+    return {Id :el.id_instruccions, nombre_acreedor: props.cliente.business_Name,nombre_deudor: el.giroDeudor, rut: el.rutAcreedor,folio:el.folio,fecha_recepcion:el.fecha_recepcion,fecha_aceptacion:el.fecha_aceptacion,glosa: el.glosa,fecha_pago:el.fecha_pago,monto:el.montoNeto}         
+  });
+
+  const tableUtils = [
+    {
+      id: 1,
+      name: `DC-${props.cliente.rut}` ,
+      description: "Cuadre Masivo de instrucciones deudor, Folio 0 sin fecha de recepción",
+      dataExcel:cuadremasivo,
+      headerExcel: head1
+    
+    },
+    {
+      id: 2,
+      name: `DC-HIST-${props.cliente.rut}`,
+      description: "Historia de instrucciones de deudor",
+      dataExcel:historico,
+      headerExcel: head2
+    }
+  ]
+  
+
   return (
     <div className="grid grid-cols-9 gap-12 p-[20px]">
       <div className="col-span-3 bg-white rounded-md">
@@ -53,7 +117,8 @@ export default function Deudor(props) {
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
-          <Disponible excelData={props.dataExcel} />
+          
+          <Disponible  tableUtils={tableUtils} actionDownload = {convertAndDownloadExcel} />
         </div>
       </div>
 
@@ -66,7 +131,7 @@ export default function Deudor(props) {
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
-          <HistorialCarga excelData={props.dataExcel} />
+          {/* <HistorialCarga excelData={props.dataExcel} /> */}
         </div>
       </div>
       <div className="col-span-3 bg-white rounded-md">
