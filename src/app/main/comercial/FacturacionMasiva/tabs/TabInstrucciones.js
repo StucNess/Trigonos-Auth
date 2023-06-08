@@ -940,7 +940,7 @@ function TabInstrucciones(props) {
       "TipodeDocumento",
       "NúmeroCorrelativo",
       "Nimerofinalsiloboletas",
-      "Fech",
+      "Fecha",
       "Local",
       "Vendedor",
       "MonedaReferencia",

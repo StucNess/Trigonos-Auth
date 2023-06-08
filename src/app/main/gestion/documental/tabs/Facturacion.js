@@ -16,8 +16,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Disponible from "../tablas/Disponible";
+import Dialog from "@mui/material/Dialog";
+import WarningIcon from "@mui/icons-material/Warning";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HistorialCarga from "../tablas/HistorialCarga";
 import { setRole } from "app/store/Role";
+
 import { useState } from "react";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,6 +50,14 @@ function createData(name, estado) {
 
 export default function Facturacion(props) {
   const [refresh, setRefresh] = useState(false);
+  const [cargando, setCargando] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText: "",
+    msgError: false,
+  });
+  const { msgResp, msgText, msgError } = MsgAlert;
   const devuelveFechaHoy = (param = 0) => {
     let fechaActual = new Date();
     param === 1 && fechaActual.setDate(fechaActual.getDate() + 2);
@@ -78,8 +91,17 @@ export default function Facturacion(props) {
     // console.log(props.idParticipant);
     // console.log(type);
     // console.log(description);
-
+    //  setMsgAlert({
+    //    msgResp: true,
+    //    msgText: "Exito, Usuario Activado!",
+    //    msgError: false,
+    //  });
+    //  setTimeout(() => {
+    //    setOpenDialog(false);
+    //  }, 1000);
     reader.onload = (e) => {
+      setOpenDialog(true);
+      setCargando(true);
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: "array" });
 
@@ -92,17 +114,15 @@ export default function Facturacion(props) {
         dataPrueba.push(row);
       });
       let url;
-      url = `http://localhost:5205/api/Instrucciones/acturalizarFacturacion?id=${props.idParticipant}`;
+      url = `http://localhost:5205/api/Instrucciones/ActuralizarFacturacionnnn?id=${props.idParticipant}`;
       axios
         .post(url, dataPrueba)
         .then(function (response) {
           let description = "Se actualizo todo correctamente";
-          console.log(response);
           let status = "OK";
           let json = {
             excelName: name,
             status: status,
-            // date: devuelveFechaHoy(),
             idParticipant: props.idParticipant,
             type: type,
             description: description,
@@ -111,30 +131,44 @@ export default function Facturacion(props) {
           axios
             .post(url, json)
             .then(function (response) {
-              console.log(response);
-              window.location.reload();
+              setMsgAlert({
+                msgResp: true,
+                msgText: "Exito, Archivo Subido!",
+                msgError: false,
+              });
+              setCargando(false);
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
             })
             .catch(function (error) {
               console.log(error);
             });
         })
         .catch(function (error) {
-          // console.log(typeof error.response.data.message == typeof "hola");
           let description = error.response.data.message;
           let status = "ERROR";
           let json = {
             excelName: name,
             status: status,
-            // date: devuelveFechaHoy(),
             idParticipant: props.idParticipant,
             type: type,
-            description: error.response.data.message,
+            description: description,
           };
           let url = "http://localhost:5205/api/Instrucciones/Agregar";
           axios
             .post(url, json)
             .then(function (response) {
-              console.log(response);
+              setMsgAlert({
+                msgResp: true,
+                msgText: "Error, Archivo subido con errores!",
+                msgError: true,
+              });
+              setCargando(false);
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+
               //window.location.reload();
             })
             .catch(function (error) {
@@ -146,6 +180,7 @@ export default function Facturacion(props) {
 
     reader.readAsArrayBuffer(file);
   };
+
   return (
     <div className="grid grid-cols-9 gap-12 p-[20px]">
       <div className="col-span-3 bg-white rounded-md">
@@ -180,6 +215,42 @@ export default function Facturacion(props) {
           </div>
         </div>
       </div>
+      <Dialog
+        open={openDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        scroll={"paper"}
+      >
+        {cargando ? (
+          <div className="flex justify-center items-center h-[250px] w-[300px]">
+            <CircularProgress color="secondary" />
+          </div>
+        ) : (
+          <div>
+            {msgResp && (
+              <div className="flex justify-center items-center h-[250px] w-[300px]">
+                {msgError ? (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    <WarningIcon className="w-[68px] h-[68px] text-red" />
+                    <span className="absolute bottom-[70px] text-red">
+                      {" "}
+                      <b>{msgText}</b>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                    <span className="absolute bottom-[70px] text-green">
+                      {" "}
+                      <b>{msgText}</b>
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 }
