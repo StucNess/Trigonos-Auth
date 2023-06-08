@@ -13,6 +13,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useState } from "react";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -43,6 +44,11 @@ const rows = [
   createData("Excel 2", "Cuadre Masivo"),
 ];
 export default function Disponible(props) {
+  const [dataMostrar, setdataMostrar] = useState({
+    id: 0,
+    descripcion: "undefined"
+  })
+
   return (
     <TableContainer component={Box}>
       <Table aria-label="customized table" size="small">
@@ -53,7 +59,33 @@ export default function Disponible(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.excelData.data.map((row) => (
+        {props.excelData === undefined ? <>
+        {dataMostrar.map((row) => (
+            <Tooltip
+              title="Descargar"
+              arrow
+              placement="right"
+              // placement="top-start"
+            >
+              <StyledTableRow
+                key={row.id}
+                hover
+                className="border-b-2 border-inherit cursor-pointer "
+              >
+                <StyledTableCell component="th" scope="row" align="left">
+                  <SiMicrosoftexcel
+                    size={30}
+                    className="mr-[10px] text-green-700"
+                  />
+                </StyledTableCell>
+                <StyledTableCell align="left">
+                  {" "}
+                  {row.descripcion}
+                </StyledTableCell>
+              </StyledTableRow>
+            </Tooltip>
+          ))}</>
+          :<>{props.excelData.data.map((row) => (
             <Tooltip
               title="Descargar"
               arrow
@@ -77,7 +109,8 @@ export default function Disponible(props) {
                 </StyledTableCell>
               </StyledTableRow>
             </Tooltip>
-          ))}
+          ))}</>}
+          
         </TableBody>
       </Table>
     </TableContainer>

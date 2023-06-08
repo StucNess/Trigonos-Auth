@@ -26,6 +26,7 @@ import Acreedor from "./tabs/Acreedor";
 import Deudor from "./tabs/Deudor";
 import Facturacion from "./tabs/Facturacion";
 import NominaPago from "./tabs/NominaPago";
+import { useGetDeudorDocumentQuery } from "app/store/instrucciones/instruccionesApi";
 
 let theme = createTheme(esES);
 
@@ -44,12 +45,21 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function DocumentalApp(props) {
+  const [carga, setCarga] = useState(true);
+
   const [tabValue, setTabValue] = useState(0);
   const user = useSelector(selectUser);
   const [client, setClient] = useState({ id: 141 });
   const { data: getData, isFetching: fetching } = useGetParticipantesById_Query(
     user.idUser
   );
+  const { data: getDataDeudor, isFetching: fetchDeudorDocument } = useGetDeudorDocumentQuery(
+    client.id
+  );
+ 
+
+    console.log(getDataDeudor)
+
   const { data: getDataExcels, isFetching: fetchingExcels } =
     useGetExcelById_Query(client.id);
 
@@ -62,8 +72,27 @@ function DocumentalApp(props) {
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
+
+  useEffect(() => {
+ 
+    function verificacarga() {
+      if ([fetchDeudorDocument,fetchingExcels,fetching].every((valor) => valor === false)) {
+        return false;
+      } else {
+        return true;
+
+        
+      }
+    }
+  
+  setCarga(verificacarga())
+    console.log(getDataDeudor)
+    
+
+}, [fetchDeudorDocument,fetchingExcels,fetching])
+
   console.log(client);
-  return fetching || fetchingExcels ? (
+  return carga? (
     <Paper className="w-full p-[20px] mb-[20px]">
       <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
         <LinearProgress color="primary" />
@@ -140,7 +169,10 @@ function DocumentalApp(props) {
             />
           )}
           {tabValue === 1 && (
-            <Deudor dataExcel={getDataExcels} fetchingExcels={fetchingExcels} />
+            <Deudor 
+            dataExcel={getDataDeudor}
+            cliente ={client}
+            fetchingExcels={fetchingExcels} />
           )}
           {tabValue === 2 && (
             <Facturacion
