@@ -1,5 +1,6 @@
 import { Paper, Typography, Button, Box } from "@mui/material";
 import * as React from "react";
+import * as XLSX from "xlsx";
 
 import { SiMicrosoftexcel } from "react-icons/si";
 import Tooltip from "@mui/material/Tooltip";
@@ -35,19 +36,11 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   // },
   // hide last border
 }));
-function createData(name, description) {
-  return { name, description };
-}
 
-const rows = [
-  createData("Excel 1", "Folio y sin Fecha de Recepción"),
-  createData("Excel 2", "Cuadre Masivo"),
-];
 export default function Disponible(props) {
-  const [dataMostrar, setdataMostrar] = useState({
-    id: 0,
-    descripcion: "undefined"
-  })
+  const {tableUtils,actionDownload}= props
+
+ 
 
   return (
     <TableContainer component={Box}>
@@ -59,8 +52,8 @@ export default function Disponible(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-        {props.excelData === undefined ? <>
-        {dataMostrar.map((row) => (
+        
+        {tableUtils.map((row) => (
             <Tooltip
               title="Descargar"
               arrow
@@ -71,31 +64,10 @@ export default function Disponible(props) {
                 key={row.id}
                 hover
                 className="border-b-2 border-inherit cursor-pointer "
-              >
-                <StyledTableCell component="th" scope="row" align="left">
-                  <SiMicrosoftexcel
-                    size={30}
-                    className="mr-[10px] text-green-700"
-                  />
-                </StyledTableCell>
-                <StyledTableCell align="left">
-                  {" "}
-                  {row.descripcion}
-                </StyledTableCell>
-              </StyledTableRow>
-            </Tooltip>
-          ))}</>
-          :<>{props.excelData.data.map((row) => (
-            <Tooltip
-              title="Descargar"
-              arrow
-              placement="right"
-              // placement="top-start"
-            >
-              <StyledTableRow
-                key={row.id}
-                hover
-                className="border-b-2 border-inherit cursor-pointer "
+                onClick={ ()=>{
+                  actionDownload(row.headerExcel,row.dataExcel,row.name)
+                
+                }}
               >
                 <StyledTableCell component="th" scope="row" align="left">
                   <SiMicrosoftexcel
@@ -109,7 +81,7 @@ export default function Disponible(props) {
                 </StyledTableCell>
               </StyledTableRow>
             </Tooltip>
-          ))}</>}
+          ))}
           
         </TableBody>
       </Table>
