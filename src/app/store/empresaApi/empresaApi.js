@@ -4,7 +4,7 @@ export const empresaApi = createApi({
   reducerPath: "empresas",
   tagTypes: ["empresas", "addempresa"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/api/Empresas",
+    baseUrl: "https://trigonosapi.azurewebsites.net/api/Empresas",
   }),
   endpoints: (builder) => ({
     getEmpresas: builder.query({
