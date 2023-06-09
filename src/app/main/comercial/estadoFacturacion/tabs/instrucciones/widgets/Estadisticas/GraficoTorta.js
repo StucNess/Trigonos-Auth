@@ -7,7 +7,8 @@ function GraficoTorta(props){
     console.log(dataGrafic)
     const [state, setState] = useState({
         options: {
-            labels: ['Pagado', 'No pagado', 'Atrasado']
+            labels: ['Pagado', 'No pagado', 'Atrasado'],
+            colors: ['#96F746', '#E24444', '#1A81F0']
         },
         series : [dataGrafic.totalPagado,dataGrafic.totalNoPagado, dataGrafic.totalAtrasado]
 
