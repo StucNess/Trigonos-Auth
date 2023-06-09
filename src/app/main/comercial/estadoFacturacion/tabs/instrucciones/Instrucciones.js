@@ -31,7 +31,7 @@ const Instrucciones = (props) => {
   const [selectedParams, setSelectedParams] = useState({});
   const [charge, setCharge] = useState(false);
   const [render, setRender] = useState(false);
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [cargandoFiltross, setCargandoFiltross] = useState(false);
 
   function stateToken(state) {
@@ -78,6 +78,11 @@ const Instrucciones = (props) => {
   function cargandoFiltros(param) {
     setCargandoFiltross(param);
   }
+  useEffect(() => {
+    console.log(props.id);
+ 
+  }, [props.id])
+  
 
   return (
     <motion.div
@@ -104,9 +109,11 @@ const Instrucciones = (props) => {
               Estadísticas
             </Typography>
           </div>
-          <div className="flex justify-center flex-wrap w-full h-full  items-center mt-12">
+          {/* flex justify-center flex-wrap w-full h-full  items-center mt-12 */}
+          
+          <div className="">
             {props.id != undefined &&
-              <Estadisticas participantId ={props.id}/>
+              <Estadisticas participantId ={props.id} />
             }
           
           </div>
