@@ -53,19 +53,16 @@ function DocumentalApp(props) {
 
   const [tabValue, setTabValue] = useState(0);
   const user = useSelector(selectUser);
-  const [client, setClient] = useState({ id: 141 });
+  const [client, setClient] = useState({ id: 0 });
   const [open, setOpen] = useState(null);
   const { data: getData, isFetching: fetching } = useGetParticipantesById_Query(
     user.idUser
   );
-  const { data: getDataDeudor, isFetching: fetchDeudorDocument } = useGetDeudorDocumentQuery(
-    client.id
-  );
+  const { data: getDataDeudor, isFetching: fetchDeudorDocument } =
+    useGetDeudorDocumentQuery(client.id);
   // const { data: getDataDeudor, isFetching: fetchDeudorDocument } = useGetDeudorDocumentQuery(
   //   client.id
   // );
-
-  
 
   const { data: getDataExcels, isFetching: fetchingExcels } =
     useGetExcelById_Query(client.id);
@@ -81,32 +78,29 @@ function DocumentalApp(props) {
   }
 
   useEffect(() => {
- 
     function verificacarga() {
-      if ([fetchDeudorDocument,fetchingExcels,fetching].every((valor) => valor === false)) {
+      if (
+        [fetchDeudorDocument, fetchingExcels, fetching].every(
+          (valor) => valor === false
+        )
+      ) {
         return false;
       } else {
         return true;
-
-        
       }
     }
-  
-  setCarga(verificacarga())
-  
 
-}, [fetchDeudorDocument,fetchingExcels,fetching])
+    setCarga(verificacarga());
+  }, [fetchDeudorDocument, fetchingExcels, fetching]);
 
-function handleOpen() {
-  setOpen(true);
-  
-}
+  function handleOpen() {
+    setOpen(true);
+  }
 
-function handleclose() {
-  setOpen(null);
-  
-}
-  return carga? (
+  function handleclose() {
+    setOpen(null);
+  }
+  return carga ? (
     <Paper className="w-full p-[20px] mb-[20px]">
       <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
         <LinearProgress color="primary" />
@@ -117,43 +111,43 @@ function handleclose() {
       header={
         <div className="flex flex-col w-full px-24 sm:px-32 mt-[10px]">
           <div className="flex items-center">
-          <Button
-            onClick={handleOpen}
-            className="flex items-center border border-solid border-b-0 rounded-t-xl rounded-b-0 h-40 px-16 text-13 sm:text-16"
-            variant="default"
-            sx={{
-              backgroundColor: (theme) => theme.palette.background.default,
-              borderColor: (theme) => theme.palette.divider,
-            }}
-            endIcon={
-              <FuseSvgIcon size={20} color="action">
-                heroicons-solid:chevron-down
-              </FuseSvgIcon>
-            }
-          >
-            {client.business_Name || getData.data[0].business_Name}
-          </Button>
-          
-          <Menu
-            id="project-menu"
-            anchorEl={open}
-            open={open}
-            onClose={handleclose}
-          >
-            {getData.data &&
-              getData.data.map((cliente) => (
-                <MenuItem
-                  key={cliente.id}
-                  onClick={(ev) => {
-                    setClient(cliente)
-                    handleclose()
-                  }}
-                >
-                  {cliente.business_Name || getData.data[0].business_Name}
-                </MenuItem>
-              ))}
-          </Menu>
-        </div>
+            <Button
+              onClick={handleOpen}
+              className="flex items-center border border-solid border-b-0 rounded-t-xl rounded-b-0 h-40 px-16 text-13 sm:text-16"
+              variant="default"
+              sx={{
+                backgroundColor: (theme) => theme.palette.background.default,
+                borderColor: (theme) => theme.palette.divider,
+              }}
+              endIcon={
+                <FuseSvgIcon size={20} color="action">
+                  heroicons-solid:chevron-down
+                </FuseSvgIcon>
+              }
+            >
+              {client.business_Name || getData.data[0].business_Name}
+            </Button>
+
+            <Menu
+              id="project-menu"
+              anchorEl={open}
+              open={open}
+              onClose={handleclose}
+            >
+              {getData.data &&
+                getData.data.map((cliente) => (
+                  <MenuItem
+                    key={cliente.id}
+                    onClick={(ev) => {
+                      setClient(cliente);
+                      handleclose();
+                    }}
+                  >
+                    {cliente.business_Name || getData.data[0].business_Name}
+                  </MenuItem>
+                ))}
+            </Menu>
+          </div>
           {/* <Autocomplete
             id="size-small-filled"
             size="small"
@@ -169,9 +163,6 @@ function handleclose() {
               <TextField {...params} variant="filled" label="Clientes" />
             )}
           /> */}
-
-
-
         </div>
       }
       content={
@@ -219,17 +210,19 @@ function handleclose() {
           </Tabs>
           {tabValue === 0 && (
             <Acreedor
-              cliente ={client}
-              dataExcelAcreedor={getDataDeudor}//poner getdataAcreedor
+              cliente={client}
+              dataExcelAcreedor={getDataDeudor} //poner getdataAcreedor
               dataExcel={getDataExcels}
               fetchingExcels={fetchingExcels}
             />
           )}
           {tabValue === 1 && (
-            <Deudor 
-            dataExcel={getDataDeudor}
-            cliente ={client}
-            fetchingExcels={fetchingExcels} />
+            <Deudor
+              dataExcel={getDataDeudor}
+              cliente={client}
+              fetchingExcels={fetchingExcels}
+              idParticipant={client.id}
+            />
           )}
           {tabValue === 2 && (
             <Facturacion

@@ -85,20 +85,6 @@ export default function Facturacion(props) {
     let idParticipant = props.idParticipant;
     let type = "Facturacion Masiva";
 
-    // console.log(name);
-    // console.log(status);
-    // console.log(fecha);
-    // console.log(props.idParticipant);
-    // console.log(type);
-    // console.log(description);
-    //  setMsgAlert({
-    //    msgResp: true,
-    //    msgText: "Exito, Usuario Activado!",
-    //    msgError: false,
-    //  });
-    //  setTimeout(() => {
-    //    setOpenDialog(false);
-    //  }, 1000);
     reader.onload = (e) => {
       setOpenDialog(true);
       setCargando(true);
@@ -106,7 +92,6 @@ export default function Facturacion(props) {
       const workbook = XLSX.read(data, { type: "array" });
 
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      // const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
       // Procesar cada fila de datos
@@ -155,7 +140,8 @@ export default function Facturacion(props) {
             type: type,
             description: description,
           };
-          let url = "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
+          let url =
+            "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
           axios
             .post(url, json)
             .then(function (response) {

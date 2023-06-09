@@ -11,11 +11,11 @@ export const instruccionesApi = createApi({
     }),
     getInstrucciones: builder.query({
       query: (id) =>
-        `/api/Instrucciones/InstruccionesDef/${id}?Folio=0&Acreedor=${id}&EstadoEmision=No Facturado`,
+        `/api/Instrucciones/InstruccionesDef/${id}?Folio=0&Acreedor=${id}&MontoNeto=10&EstadoEmision=No Facturado`,
     }),
     getDeudorDocument: builder.query({
       query: (id) =>
-        `/api/Instrucciones/InstruccionesDef/${id}?Deudor=${id}&Folio=0&PageIndex=1&PageSize=10000`,
+        `/api/Instrucciones/InstruccionesDef/${id}?Deudor=${id}&MontoNeto=10&Folio=0&PageIndex=1&PageSize=5000`,
     }),
 
     // getInstrucciones: builder.mutation({
@@ -30,4 +30,8 @@ export const instruccionesApi = createApi({
     // }),
   }),
 });
-export const { useGetGlosaQuery, useGetInstruccionesQuery,useGetDeudorDocumentQuery } = instruccionesApi;
+export const {
+  useGetGlosaQuery,
+  useGetInstruccionesQuery,
+  useGetDeudorDocumentQuery,
+} = instruccionesApi;

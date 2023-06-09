@@ -544,7 +544,7 @@ const TablaInstrucciones = (props) => {
                         {columns.map((column) => {
                           const value = row[column.id];
                           const dataRow = row;
-                       
+
                           // !tableData.some(
                           //   (e) => e.id_instruccions === id_instruccions
                           // );

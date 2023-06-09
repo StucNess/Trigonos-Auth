@@ -69,7 +69,8 @@ function RecoverPassTwo() {
         Authorization: "Bearer " + token,
       },
     };
-    const urlApi = " https://trigonosapi.azurewebsites.net/api/Usuarios/ActualizarContrasena";
+    const urlApi =
+      " https://trigonosapi.azurewebsites.net/api/Usuarios/ActualizarContrasena";
     const jsonApi = {
       password: password,
     };
