@@ -78,7 +78,7 @@ const convertAndDownloadExcel = (header,data,name)=>{
 }
 
 export default function Acreedor(props) {
-  console.log(props.dataExcelAcreedor)
+
   const cuadremasivo = props.dataExcelAcreedor.data.map(function(el) {
     return {Id :el.id_instruccions, nombre_acreedor: props.cliente.business_Name,nombre_deudor: el.giroDeudor, rut: el.rutAcreedor,folio:el.folio,fecha_emision:el.fecha_emision,fecha_pago:el.fecha_pago,glosa: el.glosa,monto:el.montoNeto}         
   });

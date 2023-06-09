@@ -74,7 +74,6 @@ function GraficoTorta(props){
 
     return (
         <div className='flex flex-wrap '>
-        
             <Paper className='flex flex-col  items-center shadow rounded-2xl m-[5px]'>
                 <div className='p-[5px]'>
                 <Chart  options={estRecept.options} series={estRecept.series} width={"60%"} type="donut" />
@@ -92,7 +91,6 @@ function GraficoTorta(props){
                         {dataset}
                         </Typography>
                     </div>
-                   
                 ))}
                 </div>
             </Paper>
@@ -100,7 +98,6 @@ function GraficoTorta(props){
                 <div className='p-[5px]'>
                 <Chart  options={estPagado.options} series={estPagado.series} width={"60%"} type="donut" />
                 </div>
-                
                 <div className="p-[5px]">
                 {estPagado.series.map((dataset, i) => (
                     <div className='flex flex-row'>
@@ -113,7 +110,6 @@ function GraficoTorta(props){
                         {dataset}
                     </Typography>
                     </div>
-                   
                 ))}
                 </div>
             </Paper>
@@ -138,20 +134,7 @@ function GraficoTorta(props){
                 ))}
                 </div>
             </Paper>
-            
-
-
-
-   
-      
-            
         </div>
-       
-       
-        
-        // <div className="donut">
-        //     
-        // </div>
     );
 }
 

@@ -79,10 +79,13 @@ const Instrucciones = (props) => {
     setCargandoFiltross(param);
   }
   useEffect(() => {
-    console.log(props.id);
+    
+    if(props.id != undefined){
+      setDisabled(false);
+    }
  
   }, [props.id])
-  
+  console.log(stateCharge)
 
   return (
     <motion.div
@@ -112,7 +115,7 @@ const Instrucciones = (props) => {
           {/* flex justify-center flex-wrap w-full h-full  items-center mt-12 */}
           
           <div className="">
-            {props.id != undefined &&
+            {disabled ? <></>:
               <Estadisticas participantId ={props.id} />
             }
           
@@ -138,6 +141,7 @@ const Instrucciones = (props) => {
           getClearDebtorAndCreditor={getClearDebtorAndCreditor}
           cargando={charge}
           getCargandoFiltros={cargandoFiltros}
+        
         />
       </motion.div>
       <motion.div
