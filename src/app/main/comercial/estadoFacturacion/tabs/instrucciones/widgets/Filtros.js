@@ -344,7 +344,7 @@ const Filtros = (props) => {
                     disablePortal
                     id="combo-box-demo"
                     disabled={
-                      props.cargando ||
+                      
                       (!props.stateTokenFiltros.acreedor &&
                         !props.stateTokenFiltros.deudor)
                         ? true
@@ -376,7 +376,7 @@ const Filtros = (props) => {
                     disablePortal
                     id="combo-box-demo"
                     disabled={
-                      props.cargando ||
+                      
                       (!props.stateTokenFiltros.acreedor &&
                         !props.stateTokenFiltros.deudor)
                         ? true
@@ -408,7 +408,7 @@ const Filtros = (props) => {
                     disablePortal
                     id="combo-box-demo"
                     value={selected.sConcept}
-                    disabled={props.cargando || !disabled ? true : false}
+                    disabled={!disabled ? true : false}
                     options={conceptN}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
@@ -448,7 +448,7 @@ const Filtros = (props) => {
                     disablePortal
                     id="combo-box-demo"
                     value={selected.sCodRef}
-                    disabled={props.cargando || !disabled ? true : false}
+                    disabled={!disabled ? true : false}
                     options={codRef}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
@@ -468,7 +468,7 @@ const Filtros = (props) => {
                   <TextField
                     label="Monto Neto"
                     id="outlined-start-adornment"
-                    disabled={props.cargando || !disabled ? true : false}
+                    disabled={!disabled ? true : false}
                     sx={{ width: 300, mb: 2 }}
                     value={
                       limpiar || selected.sMontoNeto === ""
@@ -506,7 +506,7 @@ const Filtros = (props) => {
                   <TextField
                     label="Monto Bruto"
                     id="outlined-start-adornment"
-                    disabled={props.cargando || !disabled ? true : false}
+                    disabled={!disabled ? true : false}
                     sx={{ width: 300, mb: 2 }}
                     value={
                       limpiar || selected.sMontoBruto === ""
@@ -544,7 +544,7 @@ const Filtros = (props) => {
                   <TextField
                     label="Folio"
                     id="outlined-start-adornment"
-                    disabled={props.cargando || !disabled ? true : false}
+                    disabled={!disabled ? true : false}
                     value={selected.sFolio}
                     onChange={(event) => {
                       if (event.target.value === null) {
@@ -659,8 +659,8 @@ const Filtros = (props) => {
                     />
                   </FormGroup>
                 </Box>
-
-                <Button
+                {props.cargando ? <>Cargando...</> :
+                  <><Button
                   className="w-[150px]"
                   variant="contained"
                   color="secondary"
@@ -710,7 +710,9 @@ const Filtros = (props) => {
                   }}
                 >
                   Buscar
-                </Button>
+                </Button></>
+                }
+                
               </>
             )}
           </Box>
