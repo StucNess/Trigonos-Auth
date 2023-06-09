@@ -1,4 +1,4 @@
-import { Paper, Typography, Button, Box } from "@mui/material";
+import { Paper, Typography, Button, Box, ButtonBase } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import * as React from "react";
@@ -204,14 +204,16 @@ export default function Facturacion(props) {
             onClick={() => console.log("hola")}
             className="ml-[10px] text-pantoneazul"
           />
-          <input type="file" onChange={(e) => handleFileUpload(e)} />
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px] ">
           <div className="bg-[#f0f0f0] rounded-md flex items-center justify-center ">
-            <Button className="cursor-copy" variant="contained" size="medium">
-              Medium
-            </Button>
+            <input type="file" onChange={(e) => handleFileUpload(e)} />
+            <ButtonBase
+              className="cursor-copy"
+              variant="contained"
+              size="medium"
+            ></ButtonBase>
           </div>
         </div>
       </div>
