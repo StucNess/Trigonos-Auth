@@ -114,7 +114,7 @@ export default function Facturacion(props) {
         dataPrueba.push(row);
       });
       let url;
-      url = `http://localhost:5205/api/Instrucciones/ActuralizarFacturacionnnn?id=${props.idParticipant}`;
+      url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/ActuralizarFacturacionnnn?id=${props.idParticipant}`;
       axios
         .post(url, dataPrueba)
         .then(function (response) {
@@ -127,7 +127,7 @@ export default function Facturacion(props) {
             type: type,
             description: description,
           };
-          let url = `http://localhost:5205/api/Instrucciones/Agregar`;
+          let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
           axios
             .post(url, json)
             .then(function (response) {
@@ -155,7 +155,7 @@ export default function Facturacion(props) {
             type: type,
             description: description,
           };
-          let url = "http://localhost:5205/api/Instrucciones/Agregar";
+          let url = "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
           axios
             .post(url, json)
             .then(function (response) {

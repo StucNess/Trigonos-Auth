@@ -188,7 +188,7 @@ const TablaInstrucciones = (props) => {
   useEffect(() => {
     (async () => {
       const proyectsResponse = await axios.get(
-        " http://localhost:5205/api/Participantes"
+        " https://trigonosapi.azurewebsites.net/api/Participantes"
       );
       proyects = await proyectsResponse;
     })();
@@ -544,7 +544,7 @@ const TablaInstrucciones = (props) => {
                         {columns.map((column) => {
                           const value = row[column.id];
                           const dataRow = row;
-                          console.log(row);
+                       
                           // !tableData.some(
                           //   (e) => e.id_instruccions === id_instruccions
                           // );

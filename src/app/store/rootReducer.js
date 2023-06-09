@@ -9,6 +9,7 @@ import { usuariosApi } from './usuariosApi/usuariosApi';
 import { empresaApi } from './empresaApi/empresaApi';
 import { nominasApi } from './nominasApi/nominasApi';
 import { facturacionClApi } from './facturacionClApi/facturacionClApi';
+import { metricsApi } from './metricsApi/metricsApi';
 
 const createReducer = (asyncReducers) => (state, action) => {
   
@@ -19,6 +20,7 @@ const createReducer = (asyncReducers) => (state, action) => {
     [usuariosApi.reducerPath]: usuariosApi.reducer,
     [empresaApi.reducerPath]: empresaApi.reducer,
     [nominasApi.reducerPath]: nominasApi.reducer,
+    [metricsApi.reducerPath]: metricsApi.reducer,
     [facturacionClApi.reducerPath]: facturacionClApi.reducer,
     fuse,
     i18n,
