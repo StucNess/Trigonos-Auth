@@ -108,9 +108,7 @@ export default function StickyHeadTable() {
   };
   const getModal = async (hola) => {
     await axios
-      .get(
-        ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${hola.id}`
-      )
+      .get(` http://localhost:5205/api/Participantes?id=${hola.id}`)
       .then((response) => {
         const prueba = response.data;
         diccionario.id = prueba.id;

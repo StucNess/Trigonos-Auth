@@ -49,29 +49,26 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function DocumentalApp(props) {
-  const [carga, setCarga] = useState(true);
-
-  const [tabValue, setTabValue] = useState(0);
   const user = useSelector(selectUser);
-  const [client, setClient] = useState({ id: 0 });
-  const [open, setOpen] = useState(null);
   const { data: getData, isFetching: fetching } = useGetParticipantesById_Query(
     user.idUser
   );
+  const [client, setClient] = useState(null);
   const { data: getDataDeudor, isFetching: fetchDeudorDocument } =
-    useGetDeudorDocumentQuery(client.id);
-  // const { data: getDataDeudor, isFetching: fetchDeudorDocument } = useGetDeudorDocumentQuery(
-  //   client.id
-  // );
-
+    useGetDeudorDocumentQuery(client != null ? client.id : 0);
   const { data: getDataExcels, isFetching: fetchingExcels } =
-    useGetExcelById_Query(client.id);
+    useGetExcelById_Query(client != null ? client.id : 0);
+  const [carga, setCarga] = useState(true);
+
+  const [tabValue, setTabValue] = useState(0);
+
+  const [open, setOpen] = useState(null);
 
   useEffect(() => {
-    if (getData != undefined) {
+    if (getData != null) {
       setClient(getData.data[0]);
     }
-  }, [fetching, fetchingExcels]);
+  }, [fetching]);
 
   function handleChangeTab(event, value) {
     setTabValue(value);
@@ -99,6 +96,8 @@ function DocumentalApp(props) {
 
   function handleclose() {
     setOpen(null);
+
+    // console.log(value);
   }
   return carga ? (
     <Paper className="w-full p-[20px] mb-[20px]">
@@ -140,6 +139,7 @@ function DocumentalApp(props) {
                     key={cliente.id}
                     onClick={(ev) => {
                       setClient(cliente);
+                      // console.log(cliente);
                       handleclose();
                     }}
                   >
@@ -218,7 +218,7 @@ function DocumentalApp(props) {
           )}
           {tabValue === 1 && (
             <Deudor
-              dataExcel={getDataDeudor}
+              dataExcel={getDataExcels}
               cliente={client}
               fetchingExcels={fetchingExcels}
               idParticipant={client.id}
