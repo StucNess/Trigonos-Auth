@@ -185,7 +185,7 @@ export default function Deudor(props) {
       jsonData.forEach((row) => {
         dataPrueba.push(row);
       });
-      let url = `http://localhost:5205/api/Instrucciones/ActualizarFacDeudor?id=${props.idParticipant}`;
+      let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarFacDeudor?id=${props.idParticipant}`;
       axios
         .post(url, dataPrueba, { maxBodyLength: 100 })
         .then(function (response) {
@@ -208,7 +208,7 @@ export default function Deudor(props) {
             type: type,
             description: description,
           };
-          let url = `http://localhost:5205/api/Instrucciones/Agregar`;
+          let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
           axios
             .post(url, json)
             .then(function (response) {
@@ -236,7 +236,8 @@ export default function Deudor(props) {
             type: type,
             description: description,
           };
-          let url = "http://localhost:5205/api/Instrucciones/Agregar";
+          let url =
+            "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
           axios
             .post(url, json)
             .then(function (response) {

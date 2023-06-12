@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const metricsApi = createApi({
   reducerPath: "metrics",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/api/Metrics/",
+    baseUrl: "https://trigonosapi.azurewebsites.net/api/Metrics/",
   }),
   endpoints: (builder) => ({
     getEstadoPago: builder.query({
@@ -15,7 +15,6 @@ export const metricsApi = createApi({
     getEstadoFacturacion: builder.query({
       query: (id) => `/EstadoDeFacturacion/${id}`,
     }),
-
 
     // getInstrucciones: builder.mutation({
     //     query: (id) => ({
@@ -29,4 +28,8 @@ export const metricsApi = createApi({
     // }),
   }),
 });
-export const { useGetEstadoPagoQuery , useGetEstadoRecepcionadoQuery, useGetEstadoFacturacionQuery} = metricsApi;
+export const {
+  useGetEstadoPagoQuery,
+  useGetEstadoRecepcionadoQuery,
+  useGetEstadoFacturacionQuery,
+} = metricsApi;
