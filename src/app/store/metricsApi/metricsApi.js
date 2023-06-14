@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const metricsApi = createApi({
   reducerPath: "metrics",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/api/Metrics/",
+    baseUrl: "https://trigonosapi.azurewebsites.net/api/Metrics/",
   }),
   endpoints: (builder) => ({
     getEstadoPago: builder.query({
