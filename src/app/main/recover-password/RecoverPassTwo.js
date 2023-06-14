@@ -69,13 +69,12 @@ function RecoverPassTwo() {
         Authorization: "Bearer " + token,
       },
     };
-    const urlApi =
-      " https://trigonosapi.azurewebsites.net/api/Usuarios/ActualizarContrasena";
+    const urlApi = " http://localhost:5205/api/Usuarios/ActualizarContrasena";
     const jsonApi = {
       password: password,
     };
     // axios
-    //   .get(" https://trigonosapi.azurewebsites.net/api/Usuarios", yourConfig)
+    //   .get(" http://localhost:5205/api/Usuarios", yourConfig)
     axios
       .post(urlApi, jsonApi, yourConfig)
       .then((response) => {

@@ -100,7 +100,8 @@ export default function Deudor(props) {
     msgError: false,
   });
   const { msgResp, msgText, msgError } = MsgAlert;
-  const cuadremasivo = props.dataExcel.data.map(function (el) {
+
+  const cuadremasivo = props.dataExcelDeudor.data.map(function (el) {
     return {
       Id: el.id_instruccions,
       nombre_acreedor: props.cliente.business_Name,
@@ -113,7 +114,7 @@ export default function Deudor(props) {
       monto: el.montoNeto,
     };
   });
-  const historico = props.dataExcel.data.map(function (el) {
+  const historico = props.dataExcelDeudor.data.map(function (el) {
     return {
       Id: el.id_instruccions,
       nombre_acreedor: props.cliente.business_Name,
@@ -185,7 +186,7 @@ export default function Deudor(props) {
       jsonData.forEach((row) => {
         dataPrueba.push(row);
       });
-      let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarFacDeudor?id=${props.idParticipant}`;
+      let url = `http://localhost:5205/api/Instrucciones/ActualizarFacDeudor?id=${props.idParticipant}`;
       axios
         .post(url, dataPrueba, { maxBodyLength: 100 })
         .then(function (response) {
@@ -208,7 +209,7 @@ export default function Deudor(props) {
             type: type,
             description: description,
           };
-          let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
+          let url = `http://localhost:5205/api/Instrucciones/Agregar`;
           axios
             .post(url, json)
             .then(function (response) {
@@ -236,8 +237,7 @@ export default function Deudor(props) {
             type: type,
             description: description,
           };
-          let url =
-            "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
+          let url = "http://localhost:5205/api/Instrucciones/Agregar";
           axios
             .post(url, json)
             .then(function (response) {
@@ -266,7 +266,7 @@ export default function Deudor(props) {
   return (
     <div className="grid grid-cols-9 gap-12 p-[20px]">
       <div className="col-span-3 bg-white rounded-md">
-        <div className="flex flex-row  m-[20px]">
+        <div className="fl  ex flex-row  m-[20px]">
           <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
             Excel Disponibles
           </Typography>

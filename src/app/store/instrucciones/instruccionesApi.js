@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const instruccionesApi = createApi({
   reducerPath: "instrucciones",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/",
+    baseUrl: "http://localhost:5205/",
   }),
   endpoints: (builder) => ({
     getGlosa: builder.query({
@@ -19,7 +19,7 @@ export const instruccionesApi = createApi({
     }),
     getAcreedorDocument: builder.query({
       query: (id) =>
-        `/api/Instrucciones/InstruccionesDef/${id}?Acreedor=${id}&MontoNeto=10&conFolio=si&PageIndex=1&PageSize=5000`,
+        `/api/Instrucciones/InstruccionesDef/${id}?Acreedor=${id}&MontoNeto=10&EstadoPago=No Pagado&conFolio=si&PageIndex=1&PageSize=5000`,
     }),
     // getInstrucciones: builder.mutation({
     //     query: (id) => ({

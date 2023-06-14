@@ -30,7 +30,10 @@ import Acreedor from "./tabs/Acreedor";
 import Deudor from "./tabs/Deudor";
 import Facturacion from "./tabs/Facturacion";
 import NominaPago from "./tabs/NominaPago";
-import { useGetDeudorDocumentQuery } from "app/store/instrucciones/instruccionesApi";
+import {
+  useGetAcreedorDocumentQuery,
+  useGetDeudorDocumentQuery,
+} from "app/store/instrucciones/instruccionesApi";
 
 let theme = createTheme(esES);
 
@@ -54,16 +57,19 @@ function DocumentalApp(props) {
     user.idUser
   );
   const [client, setClient] = useState(null);
+
   const { data: getDataDeudor, isFetching: fetchDeudorDocument } =
     useGetDeudorDocumentQuery(client != null ? client.id : 0);
+
+  const { data: getDataAcreedor, isFetching: fetchAcreedorDocument } =
+    useGetAcreedorDocumentQuery(client != null ? client.id : 0);
+
   const { data: getDataExcels, isFetching: fetchingExcels } =
     useGetExcelById_Query(client != null ? client.id : 0);
+
   const [carga, setCarga] = useState(true);
-
   const [tabValue, setTabValue] = useState(0);
-
   const [open, setOpen] = useState(null);
-
   useEffect(() => {
     if (getData != null) {
       setClient(getData.data[0]);
@@ -73,13 +79,16 @@ function DocumentalApp(props) {
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
-
+  console.log(getDataAcreedor);
   useEffect(() => {
     function verificacarga() {
       if (
-        [fetchDeudorDocument, fetchingExcels, fetching].every(
-          (valor) => valor === false
-        )
+        [
+          fetchDeudorDocument,
+          fetchingExcels,
+          fetching,
+          fetchAcreedorDocument,
+        ].every((valor) => valor === false)
       ) {
         return false;
       } else {
@@ -88,7 +97,7 @@ function DocumentalApp(props) {
     }
 
     setCarga(verificacarga());
-  }, [fetchDeudorDocument, fetchingExcels, fetching]);
+  }, [fetchDeudorDocument, fetchingExcels, fetching, fetchAcreedorDocument]);
 
   function handleOpen() {
     setOpen(true);
@@ -96,8 +105,6 @@ function DocumentalApp(props) {
 
   function handleclose() {
     setOpen(null);
-
-    // console.log(value);
   }
   return carga ? (
     <Paper className="w-full p-[20px] mb-[20px]">
@@ -139,7 +146,6 @@ function DocumentalApp(props) {
                     key={cliente.id}
                     onClick={(ev) => {
                       setClient(cliente);
-                      // console.log(cliente);
                       handleclose();
                     }}
                   >
@@ -211,14 +217,16 @@ function DocumentalApp(props) {
           {tabValue === 0 && (
             <Acreedor
               cliente={client}
-              dataExcelAcreedor={getDataDeudor} //poner getdataAcreedor
+              dataExcelAcreedor={getDataAcreedor} //poner getdataAcreedor
               dataExcel={getDataExcels}
               fetchingExcels={fetchingExcels}
+              idParticipant={client.id}
             />
           )}
           {tabValue === 1 && (
             <Deudor
               dataExcel={getDataExcels}
+              dataExcelDeudor={getDataDeudor}
               cliente={client}
               fetchingExcels={fetchingExcels}
               idParticipant={client.id}
