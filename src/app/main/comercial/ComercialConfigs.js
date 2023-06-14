@@ -1,4 +1,5 @@
 import {EstadoFacturacionAppConfig} from './estadoFacturacion/EstadoFacturacionAppConfig';
+import { EstadoFacturacionAppConfigV2 } from './estadoFacturacionV2/EstadoFacturacionAppConfigV2';
 // import CobranzaConfig from './cobranzas/CobranzasAppConfigs'
 import {ParticipantesAppConfig} from './Participantes/ParticipantesAppConfig';
 import {ParticipantsAppConfig} from './Participantesv2/ParticipantsAppConfig';
@@ -30,6 +31,7 @@ export function ComercialConfigs (data =[]){
     const ConfigCollection =[
         ParticipantsAppConfig(getListRoles(8)),
         EstadoFacturacionAppConfig(getListRoles(9)),
+        EstadoFacturacionAppConfigV2(getListRoles(9)),
         ParticipantesAppConfig(getListRoles(8)),
         NominaPagoAppConfig(getListRoles(10)),
         FacturacionMasivaAppConfig(getListRoles(11)),

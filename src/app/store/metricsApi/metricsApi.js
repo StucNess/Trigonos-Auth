@@ -15,18 +15,6 @@ export const metricsApi = createApi({
     getEstadoFacturacion: builder.query({
       query: (id) => `/EstadoDeFacturacion/${id}`,
     }),
-
-
-    // getInstrucciones: builder.mutation({
-    //     query: (id) => ({
-    //         headers:{
-    //             'Content-type': 'application/json'
-    //         },
-    //         url: `/desactivarRolPagina/${id}?parametros=`,
-    //         method: 'POST',
-
-    //     }),
-    // }),
   }),
 });
 export const { useGetEstadoPagoQuery , useGetEstadoRecepcionadoQuery, useGetEstadoFacturacionQuery} = metricsApi;

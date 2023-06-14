@@ -723,14 +723,3 @@ const Filtros = (props) => {
 };
 
 export default Filtros;
-// const [data, setData] = useState([]);
-
-// const firstLoad = useRef(true);
-// useEffect(() => {
-//  if (firstLoad.current) {  // this is just a technique to run below code just one time
-//    setTimeout(() => { // simulated called api (data comes after 5 sec)
-//      setData(lisdata);
-//    }, 5000);
-//    firstLoad.current = false;
-//  }
-// });
