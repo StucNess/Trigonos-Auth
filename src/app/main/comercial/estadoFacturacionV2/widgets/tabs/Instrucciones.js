@@ -59,7 +59,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from "react";
 import TablaInstrucciones from "../Componentes/TablaInstrucciones/TablaInstrucciones";
-import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery } from "app/store/instrucciones/instruccionesApi";
+import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery } from "app/store/instrucciones/instruccionesApi";
 import { useGetBusinessNameQuery, useGetRutQuery } from "app/store/participantesApi/participantesApi";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -204,9 +204,52 @@ let condicionFilters = 0;
   useGetBusinessNameQuery();
   const { data: getDataRut, isFetching: fetchRut, refetch: refetchRut} = 
   useGetRutQuery();
+  const [skipFetchs, setSkipFetchs] = useState({
+    skipNombreAcre:false,
+    skipRutAcre:false,
+    skipNombreDeudor:false,
+    skipRutDeudor:false,
 
+  })
   const { data: getDataNombreAcre, isFetching: fetchNombreAcre, refetch: refetchNombreAcre} = 
-  useGetNombreAcreedorQuery({id:id,spec: undefined});
+  useGetNombreAcreedorQuery(
+    {id:id,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.deudor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.acreedor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+  }},{skip:skipFetchs.skipNombreAcre});//propiedad skip es para no iniciar la carga previa
+
+  const { data: getDataRutAcre, isFetching: fetchRutAcre, refetch: refetchRutAcre} = 
+  useGetRutAcreedorQuery(
+    {id:id,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.deudor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.acreedor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+  }},{skip:skipFetchs.skipRutAcre});//propiedad skip es para no iniciar la carga previa
 
   const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
   useGetInstruccionesSpecQuery(
@@ -282,13 +325,22 @@ let condicionFilters = 0;
       tableData = getDataInstruction.data
       setPagination(getDataInstruction.count)
       setPageCount(getDataInstruction.pageCount + 1);
-  
+
       setCargando(false);
     
 
     }
   }, [getDataInstruction])
-  
+  useEffect(() => {
+    if(getDataNombreAcre){
+      setBusinessName(getDataNombreAcre)
+    }
+  }, [getDataNombreAcre])
+  useEffect(() => {
+    if(getDataRutAcre){
+      setRutName(getDataRutAcre)
+    }
+  }, [getDataRutAcre])
   useEffect(() => {
     if( getDataName!=undefined ){
       setBusinessName(getDataName);
@@ -330,12 +382,16 @@ let condicionFilters = 0;
         [event.target.name]: event.target.checked,
         deudor: false,
       });
+     
       refetchInstruc();
     } else if (
       
       event.target.name === "deudor" &&
       event.target.checked === true
     ) {
+      setSkipFetchs({...skipFetchs,skipNombreAcre:false,skipRutAcre:false});
+      refetchNombreAcre();
+      refetchRutAcre();
       setCargando(true);
       setState({
         ...state,
@@ -368,6 +424,7 @@ let condicionFilters = 0;
   //tabla
   const handleChangePage = () => {
     setCargando(true);
+  
     setPageIndex(pageIndex===pageCount?pageIndex: pageIndex + 1)
     if(pageIndex===pageCount){
       setCargando(false);
