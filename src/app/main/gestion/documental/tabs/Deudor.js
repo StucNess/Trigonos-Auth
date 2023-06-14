@@ -1,4 +1,11 @@
-import { Paper, Typography, Button, Box, ButtonBase } from "@mui/material";
+import {
+  Paper,
+  Typography,
+  Button,
+  Box,
+  ButtonBase,
+  Dialog,
+} from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import * as React from "react";
@@ -16,7 +23,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Disponible from "../tablas/Disponible";
+import WarningIcon from "@mui/icons-material/Warning";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HistorialCarga from "../tablas/HistorialCarga";
+import { useState } from "react";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#f1f5f9",
@@ -80,8 +91,17 @@ const convertAndDownloadExcel = (header, data, name) => {
 };
 
 export default function Deudor(props) {
-  console.log(props.cliente);
-  const cuadremasivo = props.dataExcel.data.map(function (el) {
+  const [openDialog, setOpenDialog] = useState(false);
+  const [cargando, setCargando] = useState(false);
+
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText: "",
+    msgError: false,
+  });
+  const { msgResp, msgText, msgError } = MsgAlert;
+
+  const cuadremasivo = props.dataExcelDeudor.data.map(function (el) {
     return {
       Id: el.id_instruccions,
       nombre_acreedor: props.cliente.business_Name,
@@ -94,7 +114,7 @@ export default function Deudor(props) {
       monto: el.montoNeto,
     };
   });
-  const historico = props.dataExcel.data.map(function (el) {
+  const historico = props.dataExcelDeudor.data.map(function (el) {
     return {
       Id: el.id_instruccions,
       nombre_acreedor: props.cliente.business_Name,
@@ -145,19 +165,20 @@ export default function Deudor(props) {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
+
     let dataPrueba = [];
     let name = event.target.files[0].name;
 
     let fecha = devuelveFechaHoy();
     let idParticipant = props.idParticipant;
-    let type = "Facturacion Masiva";
+    let type = "Deudor";
 
     reader.onload = (e) => {
-      // setOpenDialog(true);
-      // setCargando(true);
+      setOpenDialog(true);
+      setCargando(true);
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: "array" });
-
+      // const [openDialog, setOpenDialog] = useState(false);
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
@@ -165,83 +186,88 @@ export default function Deudor(props) {
       jsonData.forEach((row) => {
         dataPrueba.push(row);
       });
-      let url;
-      axios.interceptors.request.use((request) => {
-        request.maxContentLength = Infinity;
-        request.maxBodyLength = Infinity;
-        return request;
-      });
-
-      url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarFacDeudor?id=${props.idParticipant}`;
+      let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarFacDeudor?id=${props.idParticipant}`;
       axios
         .post(url, dataPrueba, { maxBodyLength: 100 })
         .then(function (response) {
-          console.log(response);
-          // let description = "Se actualizo todo correctamente";
-          // let status = "OK";
-          // let json = {
-          //   excelName: name,
-          //   status: status,
-          //   idParticipant: props.idParticipant,
-          //   type: type,
-          //   description: description,
-          // };
-          // let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
-          // axios
-          //   .post(url, json)
-          //   .then(function (response) {
-          //     setMsgAlert({
-          //       msgResp: true,
-          //       msgText: "Exito, Archivo Subido!",
-          //       msgError: false,
-          //     });
-          //     setCargando(false);
-          //     setTimeout(() => {
-          //       window.location.reload();
-          //     }, 2000);
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error);
-          //   });
+          // setMsgAlert({
+          //   msgResp: true,
+          //   msgText: "Exito, Archivo Subido!",
+          //   msgError: false,
+          // });
+          // setCargando(false);
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 2000);
+
+          let description = "Se actualizo todo correctamente";
+          let status = "OK";
+          let json = {
+            excelName: name,
+            status: status,
+            idParticipant: props.idParticipant,
+            type: type,
+            description: description,
+          };
+          let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
+          axios
+            .post(url, json)
+            .then(function (response) {
+              setMsgAlert({
+                msgResp: true,
+                msgText: "Exito, Archivo Subido!",
+                msgError: false,
+              });
+              setCargando(false);
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
         })
         .catch(function (error) {
-          console.log(error);
-          // let description = error.response.data.message;
-          // let status = "ERROR";
-          // let json = {
-          //   excelName: name,
-          //   status: status,
-          //   idParticipant: props.idParticipant,
-          //   type: type,
-          //   description: description,
-          // };
-          // let url =
-          //   "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
-          // // axios
-          //   .post(url, json)
-          //   .then(function (response) {
-          //     setMsgAlert({
-          //       msgResp: true,
-          //       msgText: "Error, Archivo subido con errores!",
-          //       msgError: true,
-          //     });
-          //     setCargando(false);
-          //     setTimeout(() => {
-          //       window.location.reload();
-          //     }, 2000);
-          //   })
-          //   .catch(function (error) {
-          //     console.log(error);
-          //   });
+          let description = error.response.data.message;
+          let status = "ERROR";
+          let json = {
+            excelName: name,
+            status: status,
+            idParticipant: props.idParticipant,
+            type: type,
+            description: description,
+          };
+          let url =
+            "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
+          axios
+            .post(url, json)
+            .then(function (response) {
+              setMsgAlert({
+                msgResp: true,
+                msgText: "Error, Archivo subido con errores!",
+                msgError: true,
+              });
+              setCargando(false);
+              setTimeout(() => {
+                window.location.reload();
+              }, 2000);
+
+              //window.location.reload();
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
+          // window.location.reload();
         });
     };
 
     reader.readAsArrayBuffer(file);
   };
+
   return (
     <div className="grid grid-cols-9 gap-12 p-[20px]">
       <div className="col-span-3 bg-white rounded-md">
-        <div className="flex flex-row  m-[20px]">
+        <div className="fl  ex flex-row  m-[20px]">
           <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
             Excel Disponibles
           </Typography>
@@ -264,7 +290,7 @@ export default function Deudor(props) {
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
-          {/* <HistorialCarga excelData={props.dataExcel} /> */}
+          <HistorialCarga excelData={props.dataExcel} type={"Deudor"} />
         </div>
       </div>
       <div className="col-span-3 bg-white rounded-md">
@@ -286,6 +312,42 @@ export default function Deudor(props) {
           </div>
         </div>
       </div>
+      <Dialog
+        open={openDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        scroll={"paper"}
+      >
+        {cargando ? (
+          <div className="flex justify-center items-center h-[250px] w-[300px]">
+            <CircularProgress color="secondary" />
+          </div>
+        ) : (
+          <div>
+            {msgResp && (
+              <div className="flex justify-center items-center h-[250px] w-[300px]">
+                {msgError ? (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    <WarningIcon className="w-[68px] h-[68px] text-red" />
+                    <span className="absolute bottom-[70px] text-red">
+                      {" "}
+                      <b>{msgText}</b>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                    <span className="absolute bottom-[70px] text-green">
+                      {" "}
+                      <b>{msgText}</b>
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 }

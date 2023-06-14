@@ -1382,9 +1382,7 @@ function TabInstrucciones(props) {
       "https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
     axios
       .post(url, selected)
-      .then(function (response) {
-       
-      })
+      .then(function (response) {})
       .catch(function (error) {
         console.log(error);
       });

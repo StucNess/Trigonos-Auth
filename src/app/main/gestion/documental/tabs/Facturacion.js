@@ -178,7 +178,10 @@ export default function Facturacion(props) {
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
-          <HistorialCarga excelData={props.dataExcel} />
+          <HistorialCarga
+            excelData={props.dataExcel}
+            type={"Facturacion Masiva"}
+          />
         </div>
       </div>
       <div className="col-span-3 bg-white rounded-md">

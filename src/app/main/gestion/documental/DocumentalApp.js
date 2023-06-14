@@ -30,7 +30,10 @@ import Acreedor from "./tabs/Acreedor";
 import Deudor from "./tabs/Deudor";
 import Facturacion from "./tabs/Facturacion";
 import NominaPago from "./tabs/NominaPago";
-import { useGetDeudorDocumentQuery } from "app/store/instrucciones/instruccionesApi";
+import {
+  useGetAcreedorDocumentQuery,
+  useGetDeudorDocumentQuery,
+} from "app/store/instrucciones/instruccionesApi";
 
 let theme = createTheme(esES);
 
@@ -49,40 +52,43 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 }));
 
 function DocumentalApp(props) {
-  const [carga, setCarga] = useState(true);
-
-  const [tabValue, setTabValue] = useState(0);
   const user = useSelector(selectUser);
-  const [client, setClient] = useState({ id: 0 });
-  const [open, setOpen] = useState(null);
   const { data: getData, isFetching: fetching } = useGetParticipantesById_Query(
     user.idUser
   );
+  const [client, setClient] = useState(null);
+
   const { data: getDataDeudor, isFetching: fetchDeudorDocument } =
-    useGetDeudorDocumentQuery(client.id);
-  // const { data: getDataDeudor, isFetching: fetchDeudorDocument } = useGetDeudorDocumentQuery(
-  //   client.id
-  // );
+    useGetDeudorDocumentQuery(client != null ? client.id : 0);
+
+  const { data: getDataAcreedor, isFetching: fetchAcreedorDocument } =
+    useGetAcreedorDocumentQuery(client != null ? client.id : 0);
 
   const { data: getDataExcels, isFetching: fetchingExcels } =
-    useGetExcelById_Query(client.id);
+    useGetExcelById_Query(client != null ? client.id : 0);
 
+  const [carga, setCarga] = useState(true);
+  const [tabValue, setTabValue] = useState(0);
+  const [open, setOpen] = useState(null);
   useEffect(() => {
-    if (getData != undefined) {
+    if (getData != null) {
       setClient(getData.data[0]);
     }
-  }, [fetching, fetchingExcels]);
+  }, [fetching]);
 
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
-
+  console.log(getDataAcreedor);
   useEffect(() => {
     function verificacarga() {
       if (
-        [fetchDeudorDocument, fetchingExcels, fetching].every(
-          (valor) => valor === false
-        )
+        [
+          fetchDeudorDocument,
+          fetchingExcels,
+          fetching,
+          fetchAcreedorDocument,
+        ].every((valor) => valor === false)
       ) {
         return false;
       } else {
@@ -91,7 +97,7 @@ function DocumentalApp(props) {
     }
 
     setCarga(verificacarga());
-  }, [fetchDeudorDocument, fetchingExcels, fetching]);
+  }, [fetchDeudorDocument, fetchingExcels, fetching, fetchAcreedorDocument]);
 
   function handleOpen() {
     setOpen(true);
@@ -211,14 +217,16 @@ function DocumentalApp(props) {
           {tabValue === 0 && (
             <Acreedor
               cliente={client}
-              dataExcelAcreedor={getDataDeudor} //poner getdataAcreedor
+              dataExcelAcreedor={getDataAcreedor} //poner getdataAcreedor
               dataExcel={getDataExcels}
               fetchingExcels={fetchingExcels}
+              idParticipant={client.id}
             />
           )}
           {tabValue === 1 && (
             <Deudor
-              dataExcel={getDataDeudor}
+              dataExcel={getDataExcels}
+              dataExcelDeudor={getDataDeudor}
               cliente={client}
               fetchingExcels={fetchingExcels}
               idParticipant={client.id}

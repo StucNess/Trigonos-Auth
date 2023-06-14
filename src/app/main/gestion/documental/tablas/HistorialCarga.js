@@ -55,66 +55,198 @@ export default function HistorialCarga(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.excelData.data.map((row) => (
-            <StyledTableRow
-              key={row.id}
-              hover
-              className="border-b-2 border-inherit"
-            >
-              <StyledTableCell component="th" scope="row" align="left">
-                {row.excelName}
-              </StyledTableCell>
-              <StyledTableCell component="th" scope="row" align="left">
-                {row.description}
-              </StyledTableCell>
-              <StyledTableCell align="left">
-                {row.status == "OK" ? (
-                  <Tooltip
-                    title="Se ha cargado correctamente"
-                    arrow
-                    placement="right"
-                    // placement="top-start"
-                  >
-                    <IconButton
-                      sx={{ "&:hover": { color: "#e4493f" } }}
-                      key="chechedLeft"
-                      aria-label="Close"
-                      color="success"
-                      //  onClick={() => {
-                      //   Activar(row.id);
-                      // }}
-                      size="small"
-                    >
-                      <DoneAllIcon fontSize="large" />
-                    </IconButton>
-                  </Tooltip>
-                ) : (
-                  <Tooltip
-                    title="Error al procesar solicitud"
-                    arrow
-                    placement="right"
-                    // placement="top-start"
-                  >
-                    <IconButton
-                      sx={{ "&:hover": { color: "#e4493f" } }}
-                      key="chechedLeft"
-                      aria-label="Close"
-                      color="error"
-                      //   onClick={() => {
-                      //     Desactivar(row.id);
-                      //  }}
-                      size="small"
-                    >
-                      <ErrorOutlineIcon fontSize="large" />
-                    </IconButton>
-                  </Tooltip>
-                )}
-              </StyledTableCell>
-              <StyledTableCell component="th" scope="row" align="left">
-                {row.date}
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {props.type == "Facturacion Masiva" ? (
+            props.excelData.data
+              .filter((e) => e.type == "Facturacion Masiva")
+              .map((row) => (
+                <StyledTableRow
+                  key={row.id}
+                  hover
+                  className="border-b-2 border-inherit"
+                >
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.excelName}
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.description}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.status == "OK" ? (
+                      <Tooltip
+                        title="Se ha cargado correctamente"
+                        arrow
+                        placement="right"
+                        // placement="top-start"
+                      >
+                        <IconButton
+                          sx={{ "&:hover": { color: "#e4493f" } }}
+                          key="chechedLeft"
+                          aria-label="Close"
+                          color="success"
+                          //  onClick={() => {
+                          //   Activar(row.id);
+                          // }}
+                          size="small"
+                        >
+                          <DoneAllIcon fontSize="large" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        title="Error al procesar solicitud"
+                        arrow
+                        placement="right"
+                        // placement="top-start"
+                      >
+                        <IconButton
+                          sx={{ "&:hover": { color: "#e4493f" } }}
+                          key="chechedLeft"
+                          aria-label="Close"
+                          color="error"
+                          //   onClick={() => {
+                          //     Desactivar(row.id);
+                          //  }}
+                          size="small"
+                        >
+                          <ErrorOutlineIcon fontSize="large" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.date}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))
+          ) : props.type == "Deudor" ? (
+            props.excelData.data
+              .filter((e) => e.type == "Deudor")
+              .map((row) => (
+                <StyledTableRow
+                  key={row.id}
+                  hover
+                  className="border-b-2 border-inherit"
+                >
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.excelName}
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.description}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.status == "OK" ? (
+                      <Tooltip
+                        title="Se ha cargado correctamente"
+                        arrow
+                        placement="right"
+                        // placement="top-start"
+                      >
+                        <IconButton
+                          sx={{ "&:hover": { color: "#e4493f" } }}
+                          key="chechedLeft"
+                          aria-label="Close"
+                          color="success"
+                          //  onClick={() => {
+                          //   Activar(row.id);
+                          // }}
+                          size="small"
+                        >
+                          <DoneAllIcon fontSize="large" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        title="Error al procesar solicitud"
+                        arrow
+                        placement="right"
+                        // placement="top-start"
+                      >
+                        <IconButton
+                          sx={{ "&:hover": { color: "#e4493f" } }}
+                          key="chechedLeft"
+                          aria-label="Close"
+                          color="error"
+                          //   onClick={() => {
+                          //     Desactivar(row.id);
+                          //  }}
+                          size="small"
+                        >
+                          <ErrorOutlineIcon fontSize="large" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.date}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))
+          ) : props.type == "Acreedor" ? (
+            props.excelData.data
+              .filter((e) => e.type == "Acreedor")
+              .map((row) => (
+                <StyledTableRow
+                  key={row.id}
+                  hover
+                  className="border-b-2 border-inherit"
+                >
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.excelName}
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.description}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">
+                    {row.status == "OK" ? (
+                      <Tooltip
+                        title="Se ha cargado correctamente"
+                        arrow
+                        placement="right"
+                        // placement="top-start"
+                      >
+                        <IconButton
+                          sx={{ "&:hover": { color: "#e4493f" } }}
+                          key="chechedLeft"
+                          aria-label="Close"
+                          color="success"
+                          //  onClick={() => {
+                          //   Activar(row.id);
+                          // }}
+                          size="small"
+                        >
+                          <DoneAllIcon fontSize="large" />
+                        </IconButton>
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        title="Error al procesar solicitud"
+                        arrow
+                        placement="right"
+                        // placement="top-start"
+                      >
+                        <IconButton
+                          sx={{ "&:hover": { color: "#e4493f" } }}
+                          key="chechedLeft"
+                          aria-label="Close"
+                          color="error"
+                          //   onClick={() => {
+                          //     Desactivar(row.id);
+                          //  }}
+                          size="small"
+                        >
+                          <ErrorOutlineIcon fontSize="large" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row" align="left">
+                    {row.date}
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))
+          ) : (
+            <></>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

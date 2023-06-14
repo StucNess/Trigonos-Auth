@@ -142,6 +142,17 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutAcreedor"],
 
+    getAcreedorDocument: builder.query({
+      query: (id) =>
+        `/api/Instrucciones/InstruccionesDef/${id}?Acreedor=${id}&MontoNeto=10&EstadoPago=No Pagado&conFolio=si&PageIndex=1&PageSize=5000`,
+    }),
+    // getInstrucciones: builder.mutation({
+    //     query: (id) => ({
+    //         headers:{
+    //             'Content-type': 'application/json'
+    //         },
+    //         url: `/desactivarRolPagina/${id}?parametros=`,
+    //         method: 'POST',
 
     }),
     getNameDeudor: builder.query({
@@ -212,4 +223,5 @@ export const {
   useGetRutAcreedorQuery,
   useGetNameDeudorQuery,
   useGetRutDeudorQuery,
+  useGetAcreedorDocumentQuery,
 } = instruccionesApi;
