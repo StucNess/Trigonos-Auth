@@ -155,7 +155,7 @@ export const instruccionesApi = createApi({
     //         method: 'POST',
 
     }),
-    getNameDeudor: builder.query({
+    getNombreDeudor: builder.query({
       query: (data) => ({
         url: data.spec
           ? `/sFiltrosNameDebtor?id=${data.id}` +
@@ -221,7 +221,7 @@ export const {
   useGetConceptoQuery,
   useGetNombreAcreedorQuery,
   useGetRutAcreedorQuery,
-  useGetNameDeudorQuery,
+  useGetNombreDeudorQuery,
   useGetRutDeudorQuery,
   useGetAcreedorDocumentQuery,
 } = instruccionesApi;

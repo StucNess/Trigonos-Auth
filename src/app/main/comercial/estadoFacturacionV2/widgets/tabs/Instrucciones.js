@@ -250,6 +250,45 @@ let condicionFilters = 0;
         NombreDeudor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
         NombreAcreedor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
   }},{skip:skipFetchs.skipRutAcre});//propiedad skip es para no iniciar la carga previa
+  const { data: getDataNombreDeudor, isFetching: fetchNombreDeudor, refetch: refetchNombreDeudor} = 
+  useGetNombreDeudorQuery(
+    {id:id,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.deudor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.acreedor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+  }},{skip:skipFetchs.skipNombreDeudor});//propiedad skip es para no iniciar la carga previa
+
+  const { data: getDataRutDeudor, isFetching: fetchRutDeudor, refetch: refetchRutDeudor} = 
+  useGetRutDeudorQuery(
+    {id:id,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.deudor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.acreedor?(selected.sRut.slice(0, 8)!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+  }},{skip:skipFetchs.skipRutDeudor});//propiedad skip es para no iniciar la carga previa
 
   const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
   useGetInstruccionesSpecQuery(
@@ -332,15 +371,15 @@ let condicionFilters = 0;
     }
   }, [getDataInstruction])
   useEffect(() => {
-    if(getDataNombreAcre){
-      setBusinessName(getDataNombreAcre)
+    if(getDataNombreDeudor){
+      setBusinessName(getDataNombreDeudor)
     }
-  }, [getDataNombreAcre])
+  }, [getDataNombreDeudor])
   useEffect(() => {
-    if(getDataRutAcre){
-      setRutName(getDataRutAcre)
+    if(getDataRutDeudor){
+      setRutName(getDataRutDeudor)
     }
-  }, [getDataRutAcre])
+  }, [getDataRutDeudor])
   useEffect(() => {
     if( getDataName!=undefined ){
       setBusinessName(getDataName);
