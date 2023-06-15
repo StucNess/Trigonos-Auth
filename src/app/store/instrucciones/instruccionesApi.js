@@ -61,25 +61,25 @@ export const instruccionesApi = createApi({
       query: (data) => ({
         url: data.spec
           ? `/ssFiltros?id=${data.id}` +
-            (spec.FechaEmision != undefined ? `?FechaEmision=${spec.FechaEmision}` : "")+
-            (spec.FechaRecepcion != undefined ? `?FechaRecepcion=${spec.FechaRecepcion}` : "")+
-            (spec.FechaPago != undefined ? `?FechaPago=${spec.FechaPago}` : "")+
-            (spec.FechaAceptacion != undefined ? `?FechaAceptacion=${spec.FechaAceptacion}` : "")+
-            (spec.Glosa != undefined ? `?Glosa=${spec.Glosa}` : "")+
-            (spec.Concepto != undefined ? `?Concepto=${spec.Concepto}` : "")+
-            (spec.EstadoAceptacion != undefined ? `?EstadoAceptacion=${spec.EstadoAceptacion}` : "")+
-            (spec.EstadoRecepcion != undefined ? `?EstadoRecepcion=${spec.EstadoRecepcion}` : "")+
-            (spec.Acreedor != undefined ? `?Acreedor=${spec.Acreedor}` : "")+
-            (spec.Deudor != undefined ? `?Deudor=${spec.Deudor}` : "")+
-            (spec.MontoNeto != undefined ? `?MontoNeto=${spec.MontoNeto}` : "")+
-            (spec.MontoBruto != undefined ? `?MontoBruto=${spec.MontoBruto}` : "")+
-            (spec.EstadoEmision != undefined ? `?EstadoEmision=${spec.EstadoEmision}` : "")+
-            (spec.EstadoPago != undefined ? `?EstadoPago=${spec.EstadoPago}` : "")+
-            (spec.RutAcreedor != undefined ? `?RutAcreedor=${spec.RutAcreedor}` : "")+
-            (spec.RutDeudor != undefined ? `?RutDeudor=${spec.RutDeudor}` : "")+
-            (spec.Folio != undefined ? `?Folio=${spec.Folio}` : "")+
-            (spec.NombreAcreedor != undefined ? `?NombreAcreedor=${spec.NombreAcreedor}` : "")+
-            (spec.NombreDeudor != undefined ? `?NombreDeudor=${spec.NombreDeudor}` : "")
+            (data.spec.FechaEmision != undefined ? `&FechaEmision=${data.spec.FechaEmision}` : "")+
+            (data.spec.FechaRecepcion != undefined ? `&FechaRecepcion=${data.spec.FechaRecepcion}` : "")+
+            (data.spec.FechaPago != undefined ? `&FechaPago=${data.spec.FechaPago}` : "")+
+            (data.spec.FechaAceptacion != undefined ? `&FechaAceptacion=${data.spec.FechaAceptacion}` : "")+
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "")+
+            (data.spec.Concepto != undefined ? `&Concepto=${data.spec.Concepto}` : "")+
+            (data.spec.EstadoAceptacion != undefined ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}` : "")+
+            (data.spec.EstadoRecepcion != undefined ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}` : "")+
+            (data.spec.Acreedor != undefined ? `&Acreedor=${data.spec.Acreedor}` : "")+
+            (data.spec.Deudor != undefined ? `&Deudor=${data.spec.Deudor}` : "")+
+            (data.spec.MontoNeto != undefined ? `&MontoNeto=${data.spec.MontoNeto}` : "")+
+            (data.spec.MontoBruto != undefined ? `&MontoBruto=${data.spec.MontoBruto}` : "")+
+            (data.spec.EstadoEmision != undefined ? `&EstadoEmision=${data.spec.EstadoEmision}` : "")+
+            (data.spec.EstadoPago != undefined ? `&EstadoPago=${data.spec.EstadoPago}` : "")+
+            (data.spec.RutAcreedor != undefined ? `&RutAcreedor=${data.spec.RutAcreedor}` : "")+
+            (data.spec.RutDeudor != undefined ? `&RutDeudor=${data.spec.RutDeudor}` : "")+
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "")+
+            (data.spec.NombreAcreedor != undefined ? `&NombreAcreedor=${data.spec.NombreAcreedor}` : "")+
+            (data.spec.NombreDeudor != undefined ? `&NombreDeudor=${data.spec.NombreDeudor}` : "")
           : `/ssFiltros?id=${data.id}`,
         method: "GET",
       }),
