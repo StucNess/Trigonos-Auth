@@ -28,6 +28,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import ReportIcon from "@mui/icons-material/Report";
 import { forwardRef } from "react";
+import { useGetParticipantesById_Query } from "app/store/participantesApi/participantesApi";
+// REDUX
+import { useSelector } from "react-redux";
+import { selectUser } from "app/store/userSlice";
+//
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
     backgroundColor: theme.palette.background.paper,
@@ -40,25 +45,22 @@ const Transition = forwardRef(function Transition(props, ref) {
 let changeDisc;
 let discPrueba = false;
 let ldata;
+let array = [];
+let temporal = 0;
 const NominaPagoApp = () => {
   let tablaSelect = 1;
+  const user = useSelector(selectUser);
   const [getNominas, dataNomina] = useGetNominasMutation();
   const [clientData, setClienteData] = useState([]);
   const [payRollData, setPayRollData] = useState([]);
   const [disc, setDisc] = useState(false);
   const [stateNomina, setStateNomina] = useState({});
+  const [stateNominaPrueba, setStateNominaPrueba] = useState({});
   const [open, setOpen] = useState(false);
   const [estado, setEstado] = useState("");
-
-  const actualizarEstado = (nuevoEstado) => {
-    setEstado(nuevoEstado);
-  };
-
-  // const [render, setRender] = useState(false);
-  useEffect(() => {
-    console.log(stateNomina);
-  }, [stateNomina]);
-
+  const [cargando, setCargando] = useState(false);
+  const { data: getDataParticipant, isFetching: isFetchinParticipant } =
+    useGetParticipantesById_Query(user.idUser);
   useEffect(() => {
     discPrueba = false;
     changeDisc = undefined;
@@ -66,9 +68,16 @@ const NominaPagoApp = () => {
     setDisc(false);
     setClienteData([]);
     setStateNomina({});
+    array = [];
+    setCargando(true);
   }, [estado]);
+  useEffect(() => {
+    setStateNominaPrueba(array);
+  }, [cargando]);
+  const actualizarEstado = (nuevoEstado) => {
+    setEstado(nuevoEstado);
+  };
   const getClientData = (data, glosa = "") => {
-    // console.log(disc);
     setClienteData(data);
     callApiPayroll(data.id, glosa);
     ldata = data;
@@ -79,40 +88,65 @@ const NominaPagoApp = () => {
     getClientData(ldata, glosa);
   };
   const callApiPayroll = (id, glosa = "") => {
+    temporal = 1;
     if (discPrueba == false) {
       getNominas({
         id: id,
         Glosa: glosa,
       })
         .then((response) => {
-          const { data, error } = response;
+          const { data, error, count } = response;
           if (data != undefined) {
-            setStateNomina({
-              data: data,
-              error: data.length > 0 ? false : true,
-              msgError: data.length > 0 ? error : "No se registran datos",
-              title: "Notificación",
-            });
-            if (data.length === 0) {
+            if (data.count > 0) {
+              let buclesF = Math.round(data.count / 100 + 0.49) + 2;
+              for (let x = 1; x < buclesF; x++) {
+                getNominas({
+                  id: id,
+                  Glosa: glosa,
+                  PageIndex: x,
+                })
+                  .then((response) => {
+                    response.data.data.map((e) => {
+                      array.push(e);
+                    });
+                    if (array.length === data.count) {
+                      setCargando(false);
+                      temporal = 0;
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }
+              temporal = 0;
+              setStateNomina({
+                data: data,
+                error: data.length > 0 ? false : true,
+                msgError: data.length > 0 ? error : "No se registran datos",
+                title: "Notificación",
+              });
+            } else if (data.length === 0) {
+              setOpen(true);
+              setTimeout(() => {
+                setOpen(false);
+              }, 2000);
+            } else {
+              temporal = 0;
+              setStateNomina({
+                data: undefined,
+                error: true,
+                msgError: error,
+                title: "Error en busqueda",
+              });
               setOpen(true);
               setTimeout(() => {
                 setOpen(false);
               }, 2000);
             }
-          } else {
-            setStateNomina({
-              data: undefined,
-              error: true,
-              msgError: error,
-              title: "Error en busqueda",
-            });
-            setOpen(true);
-            setTimeout(() => {
-              setOpen(false);
-            }, 2000);
           }
         })
         .catch((error) => {
+          temporal = 0;
           setStateNomina({
             data: undefined,
             error: true,
@@ -133,12 +167,35 @@ const NominaPagoApp = () => {
         .then((response) => {
           const { data, error } = response;
           if (data != undefined) {
-            setStateNomina({
-              data: data,
-              error: data.length > 0 ? false : true,
-              msgError: data.length > 0 ? error : "No existen disconformidades",
-              title: "Notificación",
-            });
+            if (data.count > 0) {
+              let buclesF = Math.round(data.count / 100 + 0.49) + 2;
+              for (let x = 1; x < buclesF; x++) {
+                getNominas({
+                  id: id,
+                  Glosa: glosa,
+                  Disc: "si",
+                  PageIndex: x,
+                })
+                  .then((response) => {
+                    response.data.data.map((e) => {
+                      array.push(e);
+                    });
+                    if (array.length === data.count) {
+                      setCargando(false);
+                      temporal = 0;
+                    }
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+              }
+              setStateNomina({
+                data: data,
+                error: data.length > 0 ? false : true,
+                msgError: data.length > 0 ? error : "No se registran datos",
+                title: "Notificación",
+              });
+            }
             if (data.length === 0) {
               setOpen(true);
               setTimeout(() => {
@@ -158,6 +215,7 @@ const NominaPagoApp = () => {
             }, 2000);
           }
         })
+
         .catch((error) => {
           setStateNomina({
             data: undefined,
@@ -175,9 +233,15 @@ const NominaPagoApp = () => {
   const getChangeDisc = (param) => {
     changeDisc = param;
   };
-  return (
+
+  return isFetchinParticipant ? (
+    <Paper className="w-full p-[20px] mb-[20px]">
+      <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+        <LinearProgress color="primary" />
+      </Stack>
+    </Paper>
+  ) : (
     <Root
-      // header={<NominaPagoAppHeader />}
       content={
         <div className="w-full">
           <motion.div
@@ -185,6 +249,7 @@ const NominaPagoApp = () => {
             initial="hidden"
             animate="show"
           >
+            {/* INFORMACION SOBRE LO QUE HAY QUE HACER */}
             <motion.div className="  col-span-12 mb-[20px]">
               <Box className="  bg-white rounded-sm p-[10px] ">
                 <h1 className="ml-[5px]">Nominas de Pago &#40;Deudor&#41;</h1>
@@ -202,65 +267,64 @@ const NominaPagoApp = () => {
                 </Box>
               </Box>
             </motion.div>
-            <motion.div className=" mdmax:col-span-12  md:col-span-6">
+            {/* SELECT PARA ELEGIR CLIENTES */}
+            <motion.div className=" mdmax:col-span-24  md:col-span-12">
               <SelectClient
                 sendClientData={getClientData}
                 disc={disc}
                 actualizarEstado={actualizarEstado}
                 changeDisc={getChangeDisc}
+                dataParticipant={getDataParticipant.data.filter(
+                  (p) => p.bank == 9 || p.bank == 4 || p.bank == 7
+                )}
               />
             </motion.div>
-
-            <motion.div className=" mdmax:col-span-12  md:col-span-6">
-              {/*
-            Cargar la diversificacion de las tablas aca
-            */}
-              <UploadFile />
-
-              {/*
-            HAY QUE DIFERENCIAR CUAL TABLA LE PERTENECE AL CLIENTE
-            */}
-            </motion.div>
+            {/* TABLA DATOS NOMINA */}
             <motion.div className="  col-span-12 ">
               <Stack
                 sx={{ width: "100%", color: "grey.500", height: "3px" }}
                 spacing={2}
               >
-                {dataNomina.isLoading ? (
+                {cargando && temporal == 1 ? (
                   <LinearProgress
                     color="primary"
                     className="ml-[20px] mr-[20px]"
                   />
-                ) : (
+                ) : cargando && temporal == 0 ? (
                   <></>
+                ) : (
+                  <Paper>
+                    {clientData.bank == 4 && (
+                      <TablaNominaBCI
+                        isLoading={dataNomina.isLoading}
+                        payRollData={stateNomina}
+                        sendDiscData={getDiscData}
+                        changedDisc={changeDisc}
+                        payRollDataPrueba={stateNominaPrueba}
+                      />
+                    )}
+                    {clientData.bank == 9 && (
+                      <TablaNominaSecurity
+                        payRollData={stateNomina}
+                        sendDiscData={getDiscData}
+                        changedDisc={changeDisc}
+                        payRollDataPrueba={stateNominaPrueba}
+                      />
+                    )}
+                    {clientData.bank == 7 && (
+                      <TablaNominaSantander
+                        payRollData={stateNomina}
+                        sendDiscData={getDiscData}
+                        changedDisc={changeDisc}
+                        payRollDataPrueba={stateNominaPrueba}
+                      />
+                    )}
+                  </Paper>
                 )}
               </Stack>
-              <Paper>
-                {clientData.bank == 4 && (
-                  <TablaNominaBCI
-                    isLoading={dataNomina.isLoading}
-                    payRollData={stateNomina}
-                    sendDiscData={getDiscData}
-                    changedDisc={changeDisc}
-                  />
-                )}
-                {clientData.bank == 9 && (
-                  <TablaNominaSecurity
-                    payRollData={stateNomina}
-                    sendDiscData={getDiscData}
-                    changedDisc={changeDisc}
-                  />
-                )}
-                {clientData.bank == 7 && (
-                  <TablaNominaSantander
-                    payRollData={stateNomina}
-                    sendDiscData={getDiscData}
-                    changedDisc={changeDisc}
-                  />
-                )}
-              </Paper>
             </motion.div>
           </motion.div>
+          {/* TERMINA  */}
           <Dialog
             open={open}
             TransitionComponent={Transition}
