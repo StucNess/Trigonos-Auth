@@ -53,27 +53,33 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 
 function DocumentalApp(props) {
   const user = useSelector(selectUser);
-  const [client, setClient] = useState(null);
-  const [carga, setCarga] = useState(true);
-  const [tabValue, setTabValue] = useState(0);
-  const [open, setOpen] = useState(null);
   const { data: getData, isFetching: fetching } = useGetParticipantesById_Query(
     user.idUser
   );
+  const [client, setClient] = useState(null);
+
   const { data: getDataDeudor, isFetching: fetchDeudorDocument } =
     useGetDeudorDocumentQuery(client != null ? client.id : 0);
+
   const { data: getDataAcreedor, isFetching: fetchAcreedorDocument } =
-    useGetAcreedorDocumentQuery({
-      id: client != null ? client.id : 0,
-      pageIndex: 1,
-    });
+    useGetAcreedorDocumentQuery(client != null ? client.id : 0);
+
   const { data: getDataExcels, isFetching: fetchingExcels } =
     useGetExcelById_Query(client != null ? client.id : 0);
+
+  const [carga, setCarga] = useState(true);
+  const [tabValue, setTabValue] = useState(0);
+  const [open, setOpen] = useState(null);
   useEffect(() => {
     if (getData != null) {
       setClient(getData.data[0]);
     }
   }, [fetching]);
+
+  function handleChangeTab(event, value) {
+    setTabValue(value);
+  }
+  console.log(getDataAcreedor);
   useEffect(() => {
     function verificacarga() {
       if (
@@ -92,12 +98,11 @@ function DocumentalApp(props) {
 
     setCarga(verificacarga());
   }, [fetchDeudorDocument, fetchingExcels, fetching, fetchAcreedorDocument]);
-  function handleChangeTab(event, value) {
-    setTabValue(value);
-  }
+
   function handleOpen() {
     setOpen(true);
   }
+
   function handleclose() {
     setOpen(null);
   }
