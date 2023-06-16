@@ -61,6 +61,7 @@ import { useEffect, useState } from "react";
 import TablaInstrucciones from "../Componentes/TablaInstrucciones/TablaInstrucciones";
 import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery} from "app/store/instrucciones/instruccionesApi";
 import { useGetBusinessNameQuery, useGetRutQuery } from "app/store/participantesApi/participantesApi";
+import ModalEdicionInstruccion from "../Componentes/Modals/ModalEdicionInstruccion";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -130,6 +131,8 @@ let orderByList = {
 
 export default function Instrucciones(props) {
   const { id } = props
+  const [table, setTable] = useState(false);
+
   const [pageIndex, setPageIndex] = useState(1);
   const [pagination, setPagination] = useState(0);
   const [pageCount, setPageCount] = useState(0);
@@ -1529,12 +1532,28 @@ let condicionFilters = 0;
                           } else if ("editar" === column.label) {
                             return (
                               <TableCell key={column.id} align={column.align}>
-                                <EditIcon
-                                  style={{ cursor: "pointer" }}
-                                  // onClick={() => {
-                                  //   showModal(dataRow);
-                                  // }}
-                                />
+                                <Tooltip  
+                                  title="Actualizar Instrucción" 
+                                  arrow 
+                                  placement="top">
+                                  <span>
+                                  <IconButton
+                                  sx={{ "&:hover": { color: "#e4493f" } }}
+                                  key="chechedLeft"
+                                  aria-label="Close"
+                                  color="primary"
+                                  onClick={()=>{
+                                    setTable(true);
+                                  }}
+                                  
+                                  // disabled={checkeddos.length === 0}
+                                  size="small"
+                                >
+                                  <EditIcon fontSize="medium" />
+                                </IconButton>
+                                  </span>
+                              </Tooltip>
+                               
                               </TableCell>
                             );
                           } else if (
@@ -1613,23 +1632,11 @@ let condicionFilters = 0;
           </TableContainer>
      
         </div>
-        {/* {modal && (
-          <ModalGeneric
-            data={dataInstruction}
-            getOpenModal={getOpenModal}
-            closeModal={() => {
-              tableData = [];
-              setModal(false);
-
-              if (render1 === true) {
-                setRender1(false);
-              } else {
-                setRender1(true);
-              }
-            }}
-            proyects={proyects.data.data}
-          />
-        )} */}
+        {table && (
+            <ModalEdicionInstruccion
+              setTable={() => setTable(false)}
+            />
+          )}
       </Box>}
       
       
