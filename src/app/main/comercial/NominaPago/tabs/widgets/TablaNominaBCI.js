@@ -291,8 +291,8 @@ export default function EnhancedTable(props) {
       setDisabledDateEnd(true);
     }
   };
-  if (props.payRollData.data != undefined) {
-    props.payRollData.data.data.map((p) => {
+  if (props.payRollDataPrueba.length > 0) {
+    props.payRollDataPrueba.map((p) => {
       rows.push(
         createData(
           p.rutAcreedor,
@@ -310,8 +310,8 @@ export default function EnhancedTable(props) {
   }
 
   useEffect(() => {
-    if (props.payRollData.data != undefined) {
-      let prueba = props.payRollData.data.data.filter((p) =>
+    if (props.payRollDataPrueba.length > 0) {
+      let prueba = props.payRollDataPrueba.filter((p) =>
         selected.includes(p.id)
       );
       setDataExport(prueba);

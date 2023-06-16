@@ -19,7 +19,7 @@ export const nominasApi = createApi({
               : "") +
             (spec.Disc != undefined ? `&Disc=${spec.Disc}` : "") +
             (spec.PageIndex != undefined
-              ? `?PageIndex=${spec.PageIndex} `
+              ? `&PageIndex=${spec.PageIndex} `
               : " ") +
             (spec.PageSize != undefined ? `?PageSize=${spec.search}` : "")
           : "/Pagination",

@@ -143,8 +143,8 @@ export const instruccionesApi = createApi({
       providesTags: ["rutAcreedor"],
 
     getAcreedorDocument: builder.query({
-      query: (id) =>
-        `/api/Instrucciones/InstruccionesDef/${id}?Acreedor=${id}&MontoNeto=10&EstadoPago=No Pagado&conFolio=si&PageIndex=1&PageSize=5000`,
+      query: (data) =>
+        `/api/Instrucciones/InstruccionesDef/${data.id}?Acreedor=${data.id}&MontoNeto=10&EstadoPago=No Pagado&conFolio=si&PageIndex=${data.pageIndex}&PageSize=500`,
     }),
     // getInstrucciones: builder.mutation({
     //     query: (id) => ({

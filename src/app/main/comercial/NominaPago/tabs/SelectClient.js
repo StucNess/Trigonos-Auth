@@ -48,6 +48,22 @@ export default function SelectClientTable(props) {
   const [cliente, setcliente] = useState("");
   const [render, setRender] = useState(false);
   const [value, setValue] = useState(dayjs());
+  const [participants, setParticipants] = useState([]);
+  const [payrollTable, setPayrollTable] = useState(0);
+  const [alertt, setAlertt] = useState(false);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    setParticipants(props.dataParticipant);
+  }, []);
+  useEffect(() => {
+    if (alertt === true) {
+      setOpen(true);
+      setTimeout(() => {
+        setAlertt(false);
+        setOpen(false);
+      }, 1500);
+    }
+  }, [alertt]);
   const handleChange = (event) => {
     setcliente(event.target.value);
 
@@ -57,21 +73,6 @@ export default function SelectClientTable(props) {
   const handleChangeDate = (newValue) => {
     setValue(newValue);
   };
-
-  const [participants, setParticipants] = useState([]);
-  const [payrollTable, setPayrollTable] = useState(0);
-  const [alertt, setAlertt] = useState(false);
-  const [open, setOpen] = useState(false);
-  useEffect(() => {
-    (async () => {
-      let participantFilter = await callParticipants();
-      setParticipants(
-        participantFilter.filter(
-          (p) => p.bank == 9 || p.bank == 4 || p.bank == 7
-        )
-      );
-    })();
-  }, []);
   const searchPayroll = () => {
     render == true ? setRender(true) : setRender(false);
     let prueba = participants.find((p) => p.id == cliente);
@@ -82,18 +83,6 @@ export default function SelectClientTable(props) {
       setAlertt(true);
     }
   };
-  const OpenDialogAlert = () => {
-    return <div>Debe seleccionar el loco</div>;
-  };
-  useEffect(() => {
-    if (alertt === true) {
-      setOpen(true);
-      setTimeout(() => {
-        setAlertt(false);
-        setOpen(false);
-      }, 1500);
-    }
-  }, [alertt]);
   return (
     <Box
       sx={{
@@ -126,6 +115,7 @@ export default function SelectClientTable(props) {
             <InputLabel id="demo-simple-select-autowidth-label">
               Seleccionar Cliente
             </InputLabel>
+
             <Select
               labelId="demo-simple-select-autowidth-label"
               id="demo-simple-select-autowidth"
@@ -134,6 +124,7 @@ export default function SelectClientTable(props) {
               autoWidth
               label="Seleccionar Cliente"
             >
+              {/* AQUI SE RECORREN LOS CLIENTES */}
               {participants.map(({ business_Name, id }) => (
                 <MenuItem key={id} value={id}>
                   {business_Name}
