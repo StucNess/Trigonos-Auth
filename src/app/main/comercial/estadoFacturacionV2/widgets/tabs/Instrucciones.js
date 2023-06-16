@@ -178,6 +178,21 @@ let condicionFilters = 0;
     sTerminoPeriodo: "",
     buscar: false,
   });
+  const clearFilters = () => {
+    setSelected({
+      sBusinessName: "",
+      sRut: "",
+      sConcept: "",
+      sMontoNeto: "",
+      sMontoBruto: "",
+      sFolio: "",
+      sCarta: "",
+      sCodRef: "",
+      sInicioPeriodo: "",
+      sTerminoPeriodo: "",
+      buscar: "",
+    });
+  };
   const {
     sBusinessName,
     sRut,
@@ -205,10 +220,12 @@ let condicionFilters = 0;
   const { data: getDataRut, isFetching: fetchRut, refetch: refetchRut} = 
   useGetRutQuery();
   const [skipFetchs, setSkipFetchs] = useState({
-    skipNombreAcre:true,
-    skipRutAcre:true,
-    skipNombreDeudor:true,
-    skipRutDeudor:true,
+    skipNombreAcre:false,
+    skipRutAcre:false,
+    skipNombreDeudor:false,
+    skipRutDeudor:false,
+    skipConcept:false,
+    skipInstructions:false,
 
   })
   const { data: getDataNombreAcre, isFetching: fetchNombreAcre, refetch: refetchNombreAcre} = 
@@ -229,7 +246,7 @@ let condicionFilters = 0;
         Folio:buscar?(sFolio!=""?sFolio:""):"",
         NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }});//propiedad skip es para no iniciar la carga previa
+  }},{skip:skipFetchs.skipNombreAcre});//propiedad skip es para no iniciar la carga previa
 
   const { data: getDataRutAcre, isFetching: fetchRutAcre, refetch: refetchRutAcre} = 
   useGetRutAcreedorQuery(
@@ -249,7 +266,7 @@ let condicionFilters = 0;
         Folio:buscar?(sFolio!=""?sFolio:""):"",
         NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }});//propiedad skip es para no iniciar la carga previa
+  }},{skip:skipFetchs.skipRutAcre});//propiedad skip es para no iniciar la carga previa
   const { data: getDataNombreDeudor, isFetching: fetchNombreDeudor, refetch: refetchNombreDeudor} = 
   useGetNombreDeudorQuery(
     {id:id,
@@ -268,7 +285,7 @@ let condicionFilters = 0;
         Folio:buscar?(sFolio!=""?sFolio:""):"",
         NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }});//propiedad skip es para no iniciar la carga previa
+  }},{skip:skipFetchs.skipNombreDeudor});//propiedad skip es para no iniciar la carga previa
 
   const { data: getDataRutDeudor, isFetching: fetchRutDeudor, refetch: refetchRutDeudor} = 
   useGetRutDeudorQuery(
@@ -288,7 +305,7 @@ let condicionFilters = 0;
         Folio:buscar?(sFolio!=""?sFolio:""):"",
         NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }});//propiedad skip es para no iniciar la carga previa
+  }},{skip:skipFetchs.skipRutDeudor});//propiedad skip es para no iniciar la carga previa
 
   const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
   useGetInstruccionesSpecQuery(
@@ -311,6 +328,8 @@ let condicionFilters = 0;
       Folio:buscar?(sFolio!=""?sFolio:""):"",
       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      Carta:buscar?(sCarta!=""?sCarta:""):"",
+      CodigoRef:buscar?(sCodRef!=""?sCodRef:""):"",
       FechaEmision:"",
       FechaRecepcion:"",
       FechaPago:"",
@@ -318,8 +337,6 @@ let condicionFilters = 0;
       Concepto:"",
       InicioPeriodo:"",
       TerminoPeriodo:"",
-      Carta:"",
-      CodigoRef:"",
       OrderByNeto:"",
       OrderByBruto:"",
       OrderByFechaEmision:"",
@@ -327,7 +344,7 @@ let condicionFilters = 0;
       OrderByFechaCarta:"",
       OrderByFolio:"",
     }
-    });
+    },{skip:skipFetchs.skipInstructions});
   const { data: getDataConcept, isFetching: fetchConcept, refetch: refetchConcept} = 
   useGetConceptoQuery(
     {id,
@@ -346,7 +363,7 @@ let condicionFilters = 0;
         Folio:buscar?(sFolio!=""?sFolio:""):"",
         NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }}
+  }},{skip:skipFetchs.skipConcept}
   );
 
   useEffect(() => {
@@ -366,6 +383,17 @@ let condicionFilters = 0;
   }
   useEffect(()=>{
     setCargando(verificacarga() )
+    if(!verificacarga()){
+     setSkipFetchs(
+      { 
+        skipNombreAcre:true,
+        skipRutAcre:true,
+        skipNombreDeudor:true,
+        skipRutDeudor:true,
+        skipConcept:true,
+        skipInstructions:true,
+      })
+    }
   },[fetchInstructions,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre]);
 
   useEffect(() => {
@@ -429,7 +457,15 @@ let condicionFilters = 0;
         [event.target.name]: event.target.checked,
         deudor: false,
       });
-      setSkipFetchs({...skipFetchs,skipNombreDeudor:false,skipRutDeudor:false});
+      setSkipFetchs(
+        { 
+          skipNombreAcre:false,
+          skipRutAcre:false,
+          skipNombreDeudor:false,
+          skipRutDeudor:false,
+          skipConcept:false,
+          skipInstructions:false,
+        })
       refetchNombreDeudor();
       refetchRutDeudor();
       refetchInstruc();
@@ -444,7 +480,15 @@ let condicionFilters = 0;
         [event.target.name]: event.target.checked,
         acreedor: false,
       });
-      setSkipFetchs({...skipFetchs,skipNombreAcre:false,skipRutAcre:false});
+      setSkipFetchs(
+        { 
+          skipNombreAcre:false,
+          skipRutAcre:false,
+          skipNombreDeudor:false,
+          skipRutDeudor:false,
+          skipConcept:false,
+          skipInstructions:false,
+        })
       refetchNombreAcre();
       refetchRutAcre();
       refetchInstruc();
@@ -454,6 +498,11 @@ let condicionFilters = 0;
         ...state,
         [event.target.name]: event.target.checked,
       });
+      setSkipFetchs(
+        {...skipFetchs,
+          skipConcept:false,
+          skipInstructions:false,
+        })
       refetchConcept();
       refetchInstruc();
     }
@@ -461,12 +510,42 @@ let condicionFilters = 0;
   //filtros
   function searchFilter(){
     setSelected({...selected,buscar: true});
+    setSkipFetchs(
+      {...skipFetchs,
+        skipConcept:false,
+        skipInstructions:false,
+      })
     refetchConcept();
     refetchInstruc();
-    console.log(sBusinessName);
+    console.log(sConcept);
 
   }
+  const clearAllFilters = () => {
+    
+    if(condicionFilters === 0){
+      clearFilters();
+      setSkipFetchs(
+        {
+          ...skipFetchs,
+          skipConcept:false,
+          skipInstructions:false,
+        })
+      refetchInstruc();
+      refetchConcept();
+    }else{
+      setSkipFetchs(
+        {
+          ...skipFetchs,
+          skipConcept:false,
+          skipInstructions:false,
+        })
+      refetchInstruc();
+      refetchConcept();
+      clearFilters();
+      clearStates();
+    }
 
+  };
   const conditionFilters = (e) => {
     if (e.target.name === "estados" && e.target.checked === true) {
       condicionFilters = 1;
@@ -489,6 +568,10 @@ let condicionFilters = 0;
     }
     // setPage(pageIndex + 1);
     console.log(`${pageIndex} ${pageCount}`)
+    setSkipFetchs(
+      {...skipFetchs,
+        skipInstructions:false,
+      })
     refetchInstruc();
     
   };
@@ -500,6 +583,10 @@ let condicionFilters = 0;
       setCargando(false);
     }
     // setPage(pageIndex + 1);
+    setSkipFetchs(
+      {...skipFetchs,
+        skipInstructions:false,
+      })
     refetchInstruc();
     
   };
@@ -509,6 +596,10 @@ let condicionFilters = 0;
       setCargando(true);
       setRowsPerPage(option)
       setPageIndex(1);
+      setSkipFetchs(
+        {...skipFetchs,
+          skipInstructions:false,
+        })
       refetchInstruc();
     }
     // setPage(pageIndex + 1);
@@ -905,13 +996,12 @@ let condicionFilters = 0;
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    value={selected.sConcept}
-                    // disabled={!disabled ? true : false}
                     options={conceptN}
+                    value={selected.sConcept}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
-                        setSelected({ ...selected, sConcept: newValue });
+                        setSelected({ ...selected, sConcept: newValue.label });
                       }else{
                         setSelected({ ...selected, sConcept: "" });
 
@@ -931,9 +1021,9 @@ let condicionFilters = 0;
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
-                        setSelected({ ...selected, sCarta: newValue });
+                        setSelected({ ...selected, sCarta: newValue.label });
                       } else{
-                        setSelected({ ...selected, sCarta: "" });
+                        setSelected({ ...selected, sCarta: ""});
 
                       } 
                     }}
@@ -951,7 +1041,7 @@ let condicionFilters = 0;
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
                       if (newValue != null) {
-                        setSelected({ ...selected, sCodRef: newValue });
+                        setSelected({ ...selected, sCodRef: newValue.label });
                       } else{
                         setSelected({ ...selected, sCodRef: "" });
 
@@ -977,22 +1067,13 @@ let condicionFilters = 0;
                       if (event.target.value === null) {
                         setSelected({ ...selected, sMontoNeto: null });
                       } else {
-                        if (
-                          !isLetters(
-                            event.target.value
-                              .replace(".", "")
-                              .replace(".", "")
-                              .replace(".", "")
-                          )
-                        ) {
-                          setSelected({
-                            ...selected,
-                            sMontoNeto: event.target.value
-                              .replace(".", "")
-                              .replace(".", "")
-                              .replace(".", ""),
-                          });
-                        }
+                        setSelected({
+                          ...selected,
+                          sMontoNeto: event.target.value
+                            .replace(".", "")
+                            .replace(".", "")
+                            .replace(".", ""),
+                        });
                       }
                     }}
                     InputProps={{
@@ -1015,22 +1096,13 @@ let condicionFilters = 0;
                       if (event.target.value === null) {
                         setSelected({ ...selected, sMontoBruto: null });
                       } else {
-                        if (
-                          !isLetters(
-                            event.target.value
-                              .replace(".", "")
-                              .replace(".", "")
-                              .replace(".", "")
-                          )
-                        ) {
-                          setSelected({
-                            ...selected,
-                            sMontoBruto: event.target.value
-                              .replace(".", "")
-                              .replace(".", "")
-                              .replace(".", ""),
-                          });
-                        }
+                        setSelected({
+                          ...selected,
+                          sMontoBruto: event.target.value
+                            .replace(".", "")
+                            .replace(".", "")
+                            .replace(".", ""),
+                        });
                       }
                     }}
                     InputProps={{
@@ -1171,6 +1243,9 @@ let condicionFilters = 0;
                   //   }
                   // }}
                   disabled ={cargando}
+                  onClick={() => {
+                    clearAllFilters();
+                  }}
                   style={{
                     m: 1,
                     width: 200,
