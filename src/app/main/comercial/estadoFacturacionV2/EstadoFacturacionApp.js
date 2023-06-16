@@ -187,7 +187,7 @@ function estadoFacturacion(props) {
           </Tabs>
           {tabValue === 0 && client!=undefined&& (
            
-            <Instrucciones id ={client.id}
+            <Instrucciones id ={client.id} participants ={getData.data}
             
             />
           )}

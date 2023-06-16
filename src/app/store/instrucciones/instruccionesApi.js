@@ -525,6 +525,46 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudor"],
     }),
+    patchInstruccionesSpec: builder.mutation({
+      query: (data) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/api/Instrucciones?id=${data.id}` +
+            (data.spec.Editor != undefined
+              ? `&Editor=${data.spec.Editor}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.TipoInstructions != undefined ? `&TipoInstructions=${data.spec.TipoInstructions}` : "") +
+            (data.spec.Folio != undefined
+              ? `&Folio=${data.spec.Folio}`
+              : ""),
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 export const {
@@ -539,4 +579,5 @@ export const {
   useGetRutAcreedorQuery,
   useGetNombreDeudorQuery,
   useGetRutDeudorQuery,
+  usePatchInstruccionesSpecMutation,
 } = instruccionesApi;
