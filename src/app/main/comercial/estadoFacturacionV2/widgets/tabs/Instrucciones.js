@@ -367,10 +367,26 @@ let condicionFilters = 0;
   );
 
   useEffect(() => {
+    setPageIndex(1);
+    setPagination(0);
+    setPageCount(0);
+    setRowsPerPage(5);
+    clearFilters();
+    clearStates();
+    setSkipFetchs(
+      { 
+        skipNombreAcre:false,
+        skipRutAcre:false,
+        skipNombreDeudor:false,
+        skipRutDeudor:false,
+        skipConcept:false,
+        skipInstructions:false,
+      })
     refetchInstruc();
     refetchRut();
     refetchName();
     refetchConcept();
+   
   }, [id])
 
 
