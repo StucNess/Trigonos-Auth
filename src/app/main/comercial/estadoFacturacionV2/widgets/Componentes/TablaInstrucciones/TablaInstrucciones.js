@@ -22,13 +22,14 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import { styled } from "@mui/material/styles";
 import TableContainer from "@mui/material/TableContainer";
 import { useEffect, useRef, useState, memo } from "react";
-import { CallInstrucciones } from "../../../store/CallInstrucciones";
-import AlertDialogSlide from "./AlertDialogSlide";
+
+
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
-import ModalGeneric from "../widgets/ModalGeneric";
+
 import { stubFalse } from "lodash";
 import * as XLSX from "xlsx";
+import { useGetInstruccionesSpecQuery } from "app/store/instrucciones/instruccionesApi";
 
 //ITEM PARA EL HEADER DE LA TABLA
 const Item = styled(Paper)(({ theme }) => ({
@@ -62,55 +63,7 @@ const columns = [
   { id: "editar", label: "editar" },
 ];
 
-function createData(
-  id_instruccions,
-  ceN_billing_status_type_name,
-  trgnS_dte_reception_status_name,
-  ceN_payment_status_type_name,
-  ceN_dte_acceptance_status_name,
-  nombreAcreedor,
-  rutAcreedor,
-  nombreDeudor,
-  rutDeudor,
-  glosa,
-  concepto,
-  montoNeto,
-  montoBruto,
-  folio,
-  fecha_pago,
-  fecha_aceptacion,
-  fecha_emision,
-  fecha_recepcion,
-  editar,
-  carta,
-  tipo_instruccion,
-  fecha_carta
-) {
-  return {
-    id_instruccions,
-    ceN_billing_status_type_name,
-    trgnS_dte_reception_status_name,
-    ceN_payment_status_type_name,
-    ceN_dte_acceptance_status_name,
-    nombreAcreedor,
-    rutAcreedor,
-    nombreDeudor,
-    rutDeudor,
-    glosa,
-    concepto,
-    montoNeto,
-    montoBruto,
-    folio,
-    fecha_pago,
-    fecha_aceptacion,
-    fecha_emision,
-    fecha_recepcion,
-    editar,
-    carta,
-    tipo_instruccion,
-    fecha_carta,
-  };
-}
+
 let pageIndex = 1;
 let pagination = 0;
 let condicion = 1;
@@ -146,172 +99,50 @@ let orderByList = {
 };
 // let editar;
 const TablaInstrucciones = (props) => {
-  const fontStyles = { color: "white", fontSize: "20px" };
+  const { participantId } = props
+
   const [page, setPage] = useState(0);
   const [cargando, setCargando] = useState(true);
   const [alert, setAlert] = useState(false);
-  const [error, setError] = useState();
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [render, setRender] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(0);
   const [modal, setModal] = useState(false);
   const [editar, setEditar] = useState(false);
-  const [render1, setRender1] = useState(false);
-  useEffect(() => {
-    idProyecto = props.idParticipante;
-    setCargando(true);
-    tableData = [];
-    setPage(0);
-    pageIndex = 1;
-    // setTimeout(() => {
-    //   setCargando(false);
-    // }, 2000);
-  }, [props.idParticipante]);
-  useEffect(() => {
-    setCargando(true);
-  }, [render1]);
+  const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
+  useGetInstruccionesSpecQuery(
+    participantId,
+    pageIndex ,
+    rowsPerPage ,
+    undefined);
 
-  const {
-    estadoEmision,
-    estadoPago,
-    estadoRecepcion,
-    estadoAceptacion,
-    acreedor,
-    deudor,
-  } = props.estadoPar;
-  useEffect(() => {
-    setCargando(true);
-    tableData = [];
-    setPage(0);
-    pageIndex = 1;
-  }, [props.estadoPar, props.selected.buscar]);
 
   useEffect(() => {
-    (async () => {
-      const proyectsResponse = await axios.get(
-        " https://trigonosapi.azurewebsites.net/api/Participantes"
-      );
-      proyects = await proyectsResponse;
-    })();
-  }, []);
+    refetchInstruc();
 
+  }, [participantId])
   useEffect(() => {
-    if (condicion == 1) {
-      let fetchData = async (
-        id = idProyecto,
-        PageIndex = pageIndex,
-        PageSize = rowsPerPage,
-        data = props.estadoPar,
-        filters = props.selected,
-        orderByList = orderByList
-      ) => {
-        try {
-          let response = await CallInstrucciones(
-            PageIndex,
-            PageSize,
-            id,
-            props.estadoPar,
-            props.selected,
-            orderByList
-          );
-          setError(response);
-          if (response.data != [] && response.data != undefined) {
-            let json = await response.data;
-            pagination = response.count;
-
-            json.map(
-              ({
-                id_instruccions,
-                ceN_billing_status_type_name,
-                trgnS_dte_reception_status_name,
-                ceN_payment_status_type_name,
-                ceN_dte_acceptance_status_name,
-                nombreAcreedor,
-                rutAcreedor,
-                nombreDeudor,
-                rutDeudor,
-                glosa,
-                concepto,
-                montoNeto,
-                montoBruto,
-                folio,
-                fecha_pago,
-                fecha_aceptacion,
-                fecha_emision,
-                fecha_recepcion,
-                carta,
-                tipo_instruccion,
-                fecha_carta,
-              }) =>
-                !tableData.some((e) => e.id_instruccions === id_instruccions) &&
-                tableData.push(
-                  createData(
-                    id_instruccions,
-                    ceN_billing_status_type_name,
-                    trgnS_dte_reception_status_name,
-                    ceN_payment_status_type_name,
-                    ceN_dte_acceptance_status_name,
-                    nombreAcreedor,
-                    rutAcreedor,
-                    nombreDeudor,
-                    rutDeudor,
-                    glosa,
-                    concepto,
-                    montoNeto,
-                    montoBruto,
-                    folio,
-                    fecha_pago,
-                    fecha_aceptacion,
-                    fecha_emision,
-                    fecha_recepcion,
-                    editar,
-                    carta,
-                    tipo_instruccion,
-                    fecha_carta
-                  )
-                )
-            );
-            setCargando(false);
-          }
-        } catch (error) {
-          console.log("error", error);
-        }
-      };
-
-      fetchData(
-        idProyecto,
-        pageIndex,
-        rowsPerPage,
-        props.estadoPar,
-        props.selected,
-        orderByList
-      );
+ 
+    function verificacarga() {
+      if ([fetchInstructions].every((valor) => valor === false)) {
+        return false;
+      } else {
+        return true;     
+      }
     }
-  }, [
-    props.idParticipante,
-    page,
-    rowsPerPage,
-    props.estadoPar,
-    props.selected.buscar,
-    props.idParticipante,
-    render,
-    render1,
-    cargando,
-  ]);
-  // useEffect(() => {
-  //   props.tokenCharge(cargando);
-  // }, [cargando]);
-  props.tokenCharge(cargando);
-  // useEffect(() => {
-  //   if (error === "ERR_BAD_RESPONSE") {
-  //     setAlert(true);
-  //     setCargando(false);
-  //     tableData = [];
-  //   }
-  // }, [error]);
+    if(getDataInstruction!=undefined){
+      tableData = getDataInstruction.data
+      pagination = getDataInstruction.count;
+      setPage(0);
+      pageIndex = 1;
+      setRowsPerPage(5)
+      
+    }
+    setCargando(verificacarga() )
+
+}, [fetchInstructions])
   const handleChangePage = (event, newPage) => {
     if (pageIndex === newPage) {
       condicion = 1;
-      setCargando(true);
+   
       pageIndex = pageIndex + 1;
       setPage(page + 1);
 
@@ -461,25 +292,19 @@ const TablaInstrucciones = (props) => {
         orderByList.orderByFolio = "desc";
       }
     }
-
-    if (render === true) {
-      setRender(false);
-    } else {
-      setRender(true);
-    }
   };
   if (cargando) {
     return (
-      <div className="flex items-center">
-        <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-          <p>Cargando Instrucciones .....</p>
-          <LinearProgress color="success" />
-        </Stack>
-      </div>
+      <Paper className="w-full p-[20px] mb-[20px]">
+            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                  
+                    <LinearProgress color="primary" />
+            </Stack>
+         </Paper>
     );
   } else {
     return (
-      <Paper className="flex flex-col flex-auto p-24 shadow rounded-2xl overflow-hidden h-full  w-full">
+      <Box className="flex flex-col flex-auto p-24  overflow-hidden h-full  w-full">
         <div className="flex flex-col sm:flex-row items-start justify-between">
           {alert && <AlertDialogSlide />}
         </div>
@@ -569,9 +394,9 @@ const TablaInstrucciones = (props) => {
                               <TableCell key={column.id} align={column.align}>
                                 <EditIcon
                                   style={{ cursor: "pointer" }}
-                                  onClick={() => {
-                                    showModal(dataRow);
-                                  }}
+                                  // onClick={() => {
+                                  //   showModal(dataRow);
+                                  // }}
                                 />
                               </TableCell>
                             );
@@ -659,7 +484,7 @@ const TablaInstrucciones = (props) => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </div>
-        {modal && (
+        {/* {modal && (
           <ModalGeneric
             data={dataInstruction}
             getOpenModal={getOpenModal}
@@ -675,8 +500,8 @@ const TablaInstrucciones = (props) => {
             }}
             proyects={proyects.data.data}
           />
-        )}
-      </Paper>
+        )} */}
+      </Box>
 
     );
   }

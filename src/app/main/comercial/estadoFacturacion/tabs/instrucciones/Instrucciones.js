@@ -9,7 +9,7 @@ import { Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { SiMicrosoftexcel } from "react-icons/si";
 import Estadisticas from "./widgets/Estadisticas/Estadisticas";
-let search = () => {};
+
 let ClearDebtorAndCreditor;
 let clearStates;
 // let cargandoFiltross;
@@ -85,7 +85,7 @@ const Instrucciones = (props) => {
     }
  
   }, [props.id])
-  console.log(stateCharge)
+ 
 
   return (
     <motion.div

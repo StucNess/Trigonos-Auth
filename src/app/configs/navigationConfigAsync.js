@@ -139,6 +139,7 @@ export function navigationConfigAsync (item =[],data =[]){
               url: "/comercial/Participantesv2",
               auth: getListRoles(idGestionParticipant)
             },
+           
             // {
             //   id: "example-component",
             //   title: "Example",
@@ -155,7 +156,7 @@ export function navigationConfigAsync (item =[],data =[]){
               auth:authGestFacturacion,
               children: [
                 {
-                  id: "2.1",
+                  id: "2.2.1",
                   title: "Estado Facturación",
                   type: "item",
                   icon: "heroicons-outline:clipboard-check",
@@ -163,7 +164,7 @@ export function navigationConfigAsync (item =[],data =[]){
                   auth:getListRoles(idEstFacturacion)
                 },
                 {
-                  id: "2.2",
+                  id: "2.2.2",
                   title: "Nominas de Pago",
                   type: "item",
                   icon: "heroicons-outline:clipboard-list",
@@ -172,7 +173,7 @@ export function navigationConfigAsync (item =[],data =[]){
 
                 },
                 {
-                  id: "2.3",
+                  id: "2.2.3",
                   title: "Facturación Masiva",
                   type: "item",
                   icon: "heroicons-outline:document-report",
@@ -180,6 +181,14 @@ export function navigationConfigAsync (item =[],data =[]){
                   auth:getListRoles(idFactMasiva)
                 },
               ],
+            },
+            {
+              id: "4.4",
+              title: "TEST",
+              type: "item",
+              icon: "heroicons-outline:clipboard-check",
+              url: "/comercial/estadoFacturacionV2",
+              auth: getListRoles(idEstFacturacion)
             },
           ],
         },
