@@ -59,7 +59,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from "react";
 import TablaInstrucciones from "../Componentes/TablaInstrucciones/TablaInstrucciones";
-import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery} from "app/store/instrucciones/instruccionesApi";
+import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery, useGetConceptomMutation, useGetRutDeudormMutation, useGetNombreDeudormMutation, useGetNombreAcreedormMutation, useGetRutAcreedormMutation} from "app/store/instrucciones/instruccionesApi";
 import { useGetBusinessNameQuery, useGetRutQuery } from "app/store/participantesApi/participantesApi";
 import ModalEdicionInstruccion from "../Componentes/Modals/ModalEdicionInstruccion";
 const Item = styled(Paper)(({ theme }) => ({
@@ -370,6 +370,12 @@ let condicionFilters = 0;
         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
   }},{skip:skipFetchs.skipConcept}
   );
+  //MUTATIONS
+  const [getConceptMutation, dataConcMutation] = useGetConceptomMutation();
+  const [getRutDeudorMutation, dataRutDMutation] = useGetRutDeudormMutation();
+  const [getRutAcreMutation, dataRutAcre] = useGetRutAcreedormMutation();
+  const [getNombreDeudorMutation, dataNombreDMutation] = useGetNombreDeudormMutation();
+  const [getNombreAcreedor, dataNombreAcreMutation] = useGetNombreAcreedormMutation();
 
   useEffect(() => {
     setPageIndex(1);
@@ -391,6 +397,75 @@ let condicionFilters = 0;
     refetchRut();
     refetchName();
     refetchConcept();
+    async function fetchConcept() {
+      // You can await here
+      try {
+        await getConceptMutation({id,
+          spec:{
+            EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+            EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+            Acreedor:state.acreedor?id:"",
+            Deudor:state.deudor?id:"",
+            EstadoEmision:state.estadoEmision?"Facturado":"",
+            EstadoPago:state.estadoPago?"Pagado":"",
+            RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            Glosa:buscar?(sConcept!=""?sConcept:""):"",
+            MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+            MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+            Folio:buscar?(sFolio!=""?sFolio:""):"",
+            NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+            NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      }}).then((response) => {
+        
+        if(response.error === undefined){
+          console.log(response);
+          }else{
+            console.log("ERROR 1");
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR 2");
+        });
+      } catch (error) {
+        console.log("ERROR 3");
+      }
+      try {
+        await getRutDeudorMutation({id,
+          spec:{
+            EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+            EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+            Acreedor:state.acreedor?id:"",
+            Deudor:state.deudor?id:"",
+            EstadoEmision:state.estadoEmision?"Facturado":"",
+            EstadoPago:state.estadoPago?"Pagado":"",
+            RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            Glosa:buscar?(sConcept!=""?sConcept:""):"",
+            MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+            MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+            Folio:buscar?(sFolio!=""?sFolio:""):"",
+            NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+            NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      }}).then((response) => {
+        
+        if(response.error === undefined){
+          console.log(response);
+          }else{
+            console.log("ERROR 1");
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR 2");
+        });
+      } catch (error) {
+        console.log("ERROR 3");
+      }
+      // ...
+    }
+    fetchConcept();
+    
+
    
   }, [id])
 
@@ -403,7 +478,7 @@ let condicionFilters = 0;
     }
   }
   useEffect(()=>{
-    setCargando(verificacarga() )
+    setCargando(verificacarga())
     if(!verificacarga()){
      setSkipFetchs(
       { 
