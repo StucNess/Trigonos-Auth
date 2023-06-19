@@ -50,22 +50,30 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-sidebarHeader": {},
   "& .FusePageSimple-sidebarContent": {},
 }));
-
+let array = [];
 function DocumentalApp(props) {
   const user = useSelector(selectUser);
   const [carga, setCarga] = useState(true);
   const [tabValue, setTabValue] = useState(0);
   const [open, setOpen] = useState(null);
   const [client, setClient] = useState(null);
+  const [stateInstuctions, setStateInstuctions] = useState({});
+  const [cargando, setCargando] = useState(false);
+
   const { data: getData, isFetching: fetching } = useGetParticipantesById_Query(
     user.idUser
   );
-  const { data: getDataDeudor, isFetching: fetchDeudorDocument } =
-    useGetDeudorDocumentQuery(client != null ? client.id : 0);
-  const { data: getDataAcreedor, isFetching: fetchAcreedorDocument } =
-    useGetAcreedorDocumentQuery(client != null ? client.id : 0);
+  // const { data: getDataDeudor, isFetching: fetchDeudorDocument } =
+  //   useGetDeudorDocumentQuery(client != null ? client.id : 0);
+  // const { data: getDataAcreedor, isFetching: fetchAcreedorDocument } =
+  //   useGetAcreedorDocumentQuery(client != null ? client.id : 0);
   const { data: getDataExcels, isFetching: fetchingExcels } =
     useGetExcelById_Query(client != null ? client.id : 0);
+  useEffect(() => {
+    setStateInstuctions(array);
+    console.log(array);
+  }, [cargando]);
+
   useEffect(() => {
     if (getData != null) {
       setClient(getData.data[0]);
@@ -75,10 +83,10 @@ function DocumentalApp(props) {
     function verificacarga() {
       if (
         [
-          fetchDeudorDocument,
           fetchingExcels,
           fetching,
-          fetchAcreedorDocument,
+          // fetchDeudorDocument,
+          // fetchAcreedorDocument,
         ].every((valor) => valor === false)
       ) {
         return false;
@@ -88,7 +96,12 @@ function DocumentalApp(props) {
     }
 
     setCarga(verificacarga());
-  }, [fetchDeudorDocument, fetchingExcels, fetching, fetchAcreedorDocument]);
+  }, [
+    fetchingExcels,
+    fetching,
+    //  fetchDeudorDocument,
+    //  fetchAcreedorDocument
+  ]);
   function handleChangeTab(event, value) {
     setTabValue(value);
   }
@@ -146,21 +159,6 @@ function DocumentalApp(props) {
                 ))}
             </Menu>
           </div>
-          {/* <Autocomplete
-            id="size-small-filled"
-            size="small"
-            className="w-1/4 pl-[20px] pt-[10px]"
-            disablePortal
-            options={getData.data}
-            value={client || getData.data[0]}
-            onChange={(event, newValue) =>
-              newValue != undefined && setClient(newValue)
-            }
-            getOptionLabel={(option) => option.business_Name}
-            renderInput={(params) => (
-              <TextField {...params} variant="filled" label="Clientes" />
-            )}
-          /> */}
         </div>
       }
       content={
@@ -209,7 +207,7 @@ function DocumentalApp(props) {
           {tabValue === 0 && (
             <Acreedor
               cliente={client}
-              dataExcelAcreedor={getDataAcreedor} //poner getdataAcreedor
+              // dataExcelAcreedor={getDataAcreedor}
               dataExcel={getDataExcels}
               fetchingExcels={fetchingExcels}
               idParticipant={client.id}
@@ -218,9 +216,11 @@ function DocumentalApp(props) {
           {tabValue === 1 && (
             <Deudor
               dataExcel={getDataExcels}
-              dataExcelDeudor={getDataDeudor}
+              // dataExcelDeudor={getDataDeudor}
+              //EXCEL HISTORICOS
               cliente={client}
               fetchingExcels={fetchingExcels}
+              //
               idParticipant={client.id}
             />
           )}

@@ -129,6 +129,9 @@ export const instruccionesApi = createApi({
               ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
               : "") +
             (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Pagada != undefined
+              ? `&Pagada=${data.spec.Pagada}`
+              : "") +
             (data.spec.Concepto != undefined
               ? `&Concepto=${data.spec.Concepto}`
               : "") +
@@ -140,6 +143,9 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.Acreedor != undefined
               ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.conFolio != undefined
+              ? `&conFolio=${data.spec.conFolio}`
               : "") +
             (data.spec.Deudor != undefined
               ? `&Deudor=${data.spec.Deudor}`

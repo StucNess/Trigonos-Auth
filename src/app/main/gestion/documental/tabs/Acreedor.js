@@ -35,66 +35,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-    // backgroundColor: "#F7F7F7",
   },
 }));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  // '&:nth-of-type(odd)': {
-  //   backgroundColor: theme.palette.action.hover,
-  // },
-  // '&:nth-of-type(odd)': {
-  //   backgroundColor: theme.palette.action.hover,
-  // },
-  // hide last border
-}));
-let head1 = [
-  [
-    "ID Instruccion",
-    "Nombre Acreedor",
-    "Nombre Deudor",
-    "Rut",
-    "Folio",
-    "Fecha Emision",
-    "Fecha de Pago",
-    "Concepto",
-    "Monto",
-  ],
-];
-
-let head2 = [
-  [
-    "ID Instruccion",
-    "Nombre Acreedor",
-    "Nombre Deudor",
-    "Rut",
-    "Folio",
-    "Fecha Emision",
-    "Fecha de Pago",
-    "Concepto",
-    "Monto",
-  ],
-];
-const convertAndDownloadExcel = (header, data, name) => {
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.json_to_sheet([]);
-  XLSX.utils.sheet_add_aoa(ws, header);
-  const sheet = XLSX.utils.sheet_add_json(ws, data, {
-    origin: "A2",
-    skipHeader: true,
-  });
-
-  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
-  XLSX.writeFile(wb, `${name}.xlsx`);
-};
 const devuelveFechaHoy = (param = 0) => {
   let fechaActual = new Date();
   param === 1 && fechaActual.setDate(fechaActual.getDate() + 2);
   let dia = fechaActual.getDate();
   let mes = fechaActual.getMonth() + 1; // Los meses comienzan desde 0, por lo que se suma 1
   let año = fechaActual.getFullYear();
-
   if (dia < 10) {
     dia = "0" + dia;
   }
@@ -103,60 +51,42 @@ const devuelveFechaHoy = (param = 0) => {
   }
   let fechaCorta = año + "-" + mes + "-" + dia;
   return fechaCorta;
-};
+}; // FECHA DE HOY
 export default function Acreedor(props) {
   const [openDialog, setOpenDialog] = useState(false);
   const [cargando, setCargando] = useState(false);
-
   const [MsgAlert, setMsgAlert] = useState({
     msgResp: false,
     msgText: "",
     msgError: false,
   });
   const { msgResp, msgText, msgError } = MsgAlert;
-  const cuadremasivo = props.dataExcelAcreedor.data.map(function (el) {
-    return {
-      Id: el.id_instruccions,
-      nombre_acreedor: props.cliente.business_Name,
-      nombre_deudor: el.giroDeudor,
-      rut: el.rutAcreedor,
-      folio: el.folio,
-      fecha_emision: el.fecha_emision,
-      fecha_pago: el.fecha_pago,
-      glosa: el.glosa,
-      monto: el.montoNeto,
-    };
-  });
-  const historico = props.dataExcelAcreedor.data.map(function (el) {
-    return {
-      Id: el.id_instruccions,
-      nombre_acreedor: props.cliente.business_Name,
-      nombre_deudor: el.giroDeudor,
-      rut: el.rutAcreedor,
-      folio: el.folio,
-      fecha_emision: el.fecha_emision,
-      fecha_pago: el.fecha_pago,
-      glosa: el.glosa,
-      monto: el.montoNeto,
-    };
-  });
-
-  const tableUtils = [
-    {
-      id: 1,
-      name: `AC-${props.cliente.rut}`,
-      description: "Cuadre Masivo de instrucciones acreedor",
-      dataExcel: cuadremasivo,
-      headerExcel: head1,
-    },
-    {
-      id: 2,
-      name: `AC-HIST-${props.cliente.rut}`,
-      description: "Historia de instrucciones de acreedor",
-      dataExcel: historico,
-      headerExcel: head2,
-    },
-  ];
+  // const cuadremasivo = props.dataExcelAcreedor.data.map(function (el) {
+  //   return {
+  //     Id: el.id_instruccions,
+  //     nombre_acreedor: props.cliente.business_Name,
+  //     nombre_deudor: el.giroDeudor,
+  //     rut: el.rutAcreedor,
+  //     folio: el.folio,
+  //     fecha_emision: el.fecha_emision,
+  //     fecha_pago: el.fecha_pago,
+  //     glosa: el.glosa,
+  //     monto: el.montoNeto,
+  //   };
+  // });
+  // const historico = props.dataExcelAcreedor.data.map(function (el) {
+  //   return {
+  //     Id: el.id_instruccions,
+  //     nombre_acreedor: props.cliente.business_Name,
+  //     nombre_deudor: el.giroDeudor,
+  //     rut: el.rutAcreedor,
+  //     folio: el.folio,
+  //     fecha_emision: el.fecha_emision,
+  //     fecha_pago: el.fecha_pago,
+  //     glosa: el.glosa,
+  //     monto: el.montoNeto,
+  //   };
+  // });
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -261,7 +191,6 @@ export default function Acreedor(props) {
 
     reader.readAsArrayBuffer(file);
   };
-
   return (
     <div className="grid grid-cols-9 gap-12 p-[20px]">
       <div className="col-span-3 bg-white rounded-md">
@@ -272,9 +201,10 @@ export default function Acreedor(props) {
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
+          {/* EXCEL PARA DESCARGAR ---------------------------------------------------------------------------*/}
           <Disponible
-            tableUtils={tableUtils}
-            actionDownload={convertAndDownloadExcel}
+            cliente={props.cliente}
+            // actionDownload={convertAndDownloadExcel}
           />
         </div>
       </div>
@@ -288,14 +218,17 @@ export default function Acreedor(props) {
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
+          {/* EXCEL HISTORICOS ---------------------------------------------------------------------------*/}
           <HistorialCarga excelData={props.dataExcel} type={"Acreedor"} />
         </div>
       </div>
+
       <div className="col-span-3 bg-white rounded-md">
         <div className="flex flex-row  m-[20px]">
           <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
             Subida
           </Typography>
+          {/* SUBIDA DE ARCHIVO ---------------------------------------------------------------------------*/}
           <UploadFileIcon className="ml-[10px] text-pantoneazul" />
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>

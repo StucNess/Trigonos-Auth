@@ -1,20 +1,15 @@
 import { Box, Paper } from "@mui/material";
 import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
-import withReducer from "app/store/withReducer";
+
 import FusePageSimple from "@fuse/core/FusePageSimple";
-import NominaPagoAppHeader from "./NominaPagoAppHeader";
-import Alert from "@mui/material/Alert";
-import AlertTitle from "@mui/material/AlertTitle";
+
 import { Stack } from "@mui/material";
-
 import LinearProgress from "@mui/material/LinearProgress";
-
 import { motion } from "framer-motion";
-import axios from "axios";
-import SortingSelectingTable from "./tabs/SortingSelectingTable";
+
 import SelectClient from "./tabs/SelectClient";
-import UploadFile from "./tabs/UploadFile";
+
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import TablaNominaBCI from "./tabs/widgets/TablaNominaBCI";
 import TablaNominaSantander from "./tabs/widgets/TablaNominaSantander";
@@ -23,7 +18,7 @@ import { useGetNominasMutation } from "app/store/nominasApi/nominasApi";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
+
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import ReportIcon from "@mui/icons-material/Report";
