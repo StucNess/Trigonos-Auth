@@ -59,7 +59,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from "react";
 import TablaInstrucciones from "../Componentes/TablaInstrucciones/TablaInstrucciones";
-import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery} from "app/store/instrucciones/instruccionesApi";
+import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery, useGetConceptomMutation, useGetRutDeudormMutation, useGetNombreDeudormMutation, useGetNombreAcreedormMutation, useGetRutAcreedormMutation} from "app/store/instrucciones/instruccionesApi";
 import { useGetBusinessNameQuery, useGetRutQuery } from "app/store/participantesApi/participantesApi";
 import ModalEdicionInstruccion from "../Componentes/Modals/ModalEdicionInstruccion";
 const Item = styled(Paper)(({ theme }) => ({
@@ -114,11 +114,8 @@ let columnsOrder = [
   "Fecha carta",
   "Folio",
 ];
-let idProyecto = 141;
-let Respaldo;
-let dataInstruction;
-let tokenOpenModal;
-let proyects;
+
+
 let orderByList = {
   orderByNeto: "",
   orderByBruto: "",
@@ -132,7 +129,12 @@ let orderByList = {
 export default function Instrucciones(props) {
   const { id } = props
   const [table, setTable] = useState(false);
-
+  const [dataEdit, setDataEdit] = useState({ 
+    dataRow:{},
+    dataBoleean: false,
+    fechaEmision:undefined,
+    fechaRecepcion:undefined
+    })
   const [pageIndex, setPageIndex] = useState(1);
   const [pagination, setPagination] = useState(0);
   const [pageCount, setPageCount] = useState(0);
@@ -368,6 +370,12 @@ let condicionFilters = 0;
         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
   }},{skip:skipFetchs.skipConcept}
   );
+  //MUTATIONS
+  const [getConceptMutation, dataConcMutation] = useGetConceptomMutation();
+  const [getRutDeudorMutation, dataRutDMutation] = useGetRutDeudormMutation();
+  const [getRutAcreMutation, dataRutAcre] = useGetRutAcreedormMutation();
+  const [getNombreDeudorMutation, dataNombreDMutation] = useGetNombreDeudormMutation();
+  const [getNombreAcreedor, dataNombreAcreMutation] = useGetNombreAcreedormMutation();
 
   useEffect(() => {
     setPageIndex(1);
@@ -389,6 +397,75 @@ let condicionFilters = 0;
     refetchRut();
     refetchName();
     refetchConcept();
+    async function fetchConcept() {
+      // You can await here
+      try {
+        await getConceptMutation({id,
+          spec:{
+            EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+            EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+            Acreedor:state.acreedor?id:"",
+            Deudor:state.deudor?id:"",
+            EstadoEmision:state.estadoEmision?"Facturado":"",
+            EstadoPago:state.estadoPago?"Pagado":"",
+            RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            Glosa:buscar?(sConcept!=""?sConcept:""):"",
+            MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+            MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+            Folio:buscar?(sFolio!=""?sFolio:""):"",
+            NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+            NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      }}).then((response) => {
+        
+        if(response.error === undefined){
+          console.log(response);
+          }else{
+            console.log("ERROR 1");
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR 2");
+        });
+      } catch (error) {
+        console.log("ERROR 3");
+      }
+      try {
+        await getRutDeudorMutation({id,
+          spec:{
+            EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+            EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+            Acreedor:state.acreedor?id:"",
+            Deudor:state.deudor?id:"",
+            EstadoEmision:state.estadoEmision?"Facturado":"",
+            EstadoPago:state.estadoPago?"Pagado":"",
+            RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+            Glosa:buscar?(sConcept!=""?sConcept:""):"",
+            MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+            MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+            Folio:buscar?(sFolio!=""?sFolio:""):"",
+            NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+            NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      }}).then((response) => {
+        
+        if(response.error === undefined){
+          console.log(response);
+          }else{
+            console.log("ERROR 1");
+          }
+        })
+        .catch((error) => {
+          console.log("ERROR 2");
+        });
+      } catch (error) {
+        console.log("ERROR 3");
+      }
+      // ...
+    }
+    fetchConcept();
+    
+
    
   }, [id])
 
@@ -401,7 +478,7 @@ let condicionFilters = 0;
     }
   }
   useEffect(()=>{
-    setCargando(verificacarga() )
+    setCargando(verificacarga())
     if(!verificacarga()){
      setSkipFetchs(
       { 
@@ -594,6 +671,25 @@ let condicionFilters = 0;
     refetchInstruc();
     
   };
+  const handleOpen= (row) => {
+    const coincide = props.participants.some((item) => {
+      return item.business_Name === row.nombreAcreedor ;
+    });
+    let billingDate = new Date(row.fecha_emision);
+    let receptionDate = new Date(row.fecha_recepcion);
+    let emisione = `20${billingDate.getYear().toString().slice(1, 3)}/${
+      billingDate.getMonth() + 1
+    }/${billingDate.getDate()}`;
+    let recepcione = `20${receptionDate.getYear().toString().slice(1, 3)}/${
+      receptionDate.getMonth() + 1
+    }/${receptionDate.getDate()}`;
+    emisione === "2017/1/1" ? (emisione = false) : (emisione = true);
+    recepcione === "2017/1/1" ? (recepcione = false) : (recepcione = true);
+    setDataEdit({dataBoleean:coincide,dataRow:row,fechaEmision:emisione,fechaRecepcion: recepcione})
+    setTable(true);
+  };
+
+  
   const handleChangePagedos = () => {
     setCargando(true);
    
@@ -1508,7 +1604,7 @@ let condicionFilters = 0;
                       >
                         {columns.map((column) => {
                           const value = row[column.id];
-                          const dataRow = row;
+                          
 
                           // !tableData.some(
                           //   (e) => e.id_instruccions === id_instruccions
@@ -1543,17 +1639,15 @@ let condicionFilters = 0;
                                   aria-label="Close"
                                   color="primary"
                                   onClick={()=>{
-                                    setTable(true);
+                                    handleOpen(row)
                                   }}
-                                  
-                                  // disabled={checkeddos.length === 0}
+                                  disabled={table}
                                   size="small"
                                 >
                                   <EditIcon fontSize="medium" />
                                 </IconButton>
                                   </span>
                               </Tooltip>
-                               
                               </TableCell>
                             );
                           } else if (
@@ -1634,7 +1728,16 @@ let condicionFilters = 0;
         </div>
         {table && (
             <ModalEdicionInstruccion
-              setTable={() => setTable(false)}
+              setTable={() => {
+                setTable(false); 
+                setDataEdit({ 
+                  dataRow:{},
+                  dataBoleean: false,
+                  fechaEmision:undefined,
+                  fechaRecepcion:undefined
+                  })
+              }}
+              dataEdit ={dataEdit}
             />
           )}
       </Box>}
