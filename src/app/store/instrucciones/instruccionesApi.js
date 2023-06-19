@@ -211,7 +211,7 @@ export const instruccionesApi = createApi({
     getConcepto: builder.query({
       query: (data) => ({
         url: data.spec
-          ? `/ssFiltros?id=${data.id}` +
+          ? `/ConceptFilter?id=${data.id}` +
             (data.spec.FechaEmision != undefined
               ? `&FechaEmision=${data.spec.FechaEmision}`
               : "") +
@@ -269,6 +269,130 @@ export const instruccionesApi = createApi({
         method: "GET",
       }),
       providesTags: ["concepto"],
+    }),
+    getCodRef: builder.query({
+      query: (data) => ({
+        url: data.spec
+          ? `/CodRefFilter?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/ssFiltros?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["CodRef"],
+    }),
+    getCarta: builder.query({
+      query: (data) => ({
+        url: data.spec
+          ? `/CartaFilter?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/ssFiltros?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["Carta"],
     }),
 
     getNombreAcreedor: builder.query({
@@ -566,7 +690,7 @@ export const instruccionesApi = createApi({
     getConceptom: builder.mutation({
       query: (data) => ({
         url: data.spec
-          ? `/ssFiltros?id=${data.id}` +
+          ? `/ConceptFilter?id=${data.id}` +
             (data.spec.FechaEmision != undefined
               ? `&FechaEmision=${data.spec.FechaEmision}`
               : "") +
@@ -897,4 +1021,6 @@ export const {
   useGetRutAcreedormMutation,
   useGetNombreDeudormMutation,
   useGetNombreAcreedormMutation,
+  useGetCodRefQuery,
+  useGetCartaQuery,
 } = instruccionesApi;
