@@ -4,7 +4,7 @@ export const instruccionesApi = createApi({
   reducerPath: "instrucciones",
   tagTypes: ["instruccionesDef"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/",
+    baseUrl: "http://localhost:5205/",
   }),
   endpoints: (builder) => ({
     getGlosa: builder.query({
@@ -690,7 +690,7 @@ export const instruccionesApi = createApi({
     getConceptom: builder.mutation({
       query: (data) => ({
         url: data.spec
-          ? `/ConceptFilter?id=${data.id}` +
+          ? `/ConceptFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
             (data.spec.FechaEmision != undefined
               ? `&FechaEmision=${data.spec.FechaEmision}`
               : "") +
@@ -749,7 +749,130 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["conceptoMutation"],
     }),
-
+    getCodRefm: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CodRefFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/ssFiltros?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["conceptoMutation"],
+    }),
+    getCartam: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CartaFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/ssFiltros?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["conceptoMutation"],
+    }),
     getNombreAcreedorm: builder.mutation({
       query: (data) => ({
         url: data.spec
@@ -815,7 +938,7 @@ export const instruccionesApi = createApi({
     getRutAcreedorm: builder.mutation({
       query: (data) => ({
         url: data.spec
-          ? `/sFiltrosRutCreditor?id=${data.id}` +
+          ? `/sFiltrosRutCreditor?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
             (data.spec.FechaEmision != undefined
               ? `&FechaEmision=${data.spec.FechaEmision}`
               : "") +
@@ -869,6 +992,7 @@ export const instruccionesApi = createApi({
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
               : "")
+            
           : `/sFiltrosRutCreditor?id=${data.id}`,
         method: "GET",
       }),
@@ -1001,6 +1125,441 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudorMutation"],
     }),
+    //CONTADORES SOLUCION DE CARGA TEMPORAL 
+    getNumberConcept: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CountingConcept?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/sFiltrosNameDebtor?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["rutDeudorMutation"],
+    }),
+    getNumberCodRef: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CountingCodRef?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/sFiltrosNameDebtor?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["rutDeudorMutation"],
+    }),
+    getNumberCarta: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CountingCarta?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/sFiltrosNameDebtor?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["rutDeudorMutation"],
+    }),
+    getNumberRutAcreedor: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CountingRutAcreedor?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/sFiltrosNameDebtor?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["rutDeudorMutation"],
+    }),
+    getNumberRutDeudor: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CountingRutDeudor?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/sFiltrosNameDebtor?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["rutDeudorMutation"],
+    }),
+    getNumberNombreAcreedor: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CountingNombreAcreedor?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/sFiltrosNameDebtor?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["rutDeudorMutation"],
+    }),
+    getNumberNombreDeudor: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/CountingNombreDeudor?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/sFiltrosNameDebtor?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["rutDeudorMutation"],
+    }),
   }),
 });
 export const {
@@ -1017,10 +1576,20 @@ export const {
   useGetRutDeudorQuery,
   usePatchInstruccionesSpecMutation,
   useGetConceptomMutation,
+  useGetCodRefmMutation,
+  useGetCartamMutation,
   useGetRutDeudormMutation,
   useGetRutAcreedormMutation,
   useGetNombreDeudormMutation,
   useGetNombreAcreedormMutation,
   useGetCodRefQuery,
   useGetCartaQuery,
+  useGetNumberConceptMutation,
+  useGetNumberCodRefMutation,
+  useGetNumberCartaMutation,
+  useGetNumberRutAcreedorMutation,
+  useGetNumberRutDeudorMutation,
+  useGetNumberNombreAcreedorMutation,
+  useGetNumberNombreDeudorMutation,
+
 } = instruccionesApi;

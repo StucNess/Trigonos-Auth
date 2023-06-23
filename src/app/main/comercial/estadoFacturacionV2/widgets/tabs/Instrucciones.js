@@ -59,7 +59,7 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from "react";
 import TablaInstrucciones from "../Componentes/TablaInstrucciones/TablaInstrucciones";
-import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery, useGetConceptomMutation, useGetRutDeudormMutation, useGetNombreDeudormMutation, useGetNombreAcreedormMutation, useGetRutAcreedormMutation, useGetCartaQuery, useGetCodRefQuery} from "app/store/instrucciones/instruccionesApi";
+import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery, useGetConceptomMutation, useGetRutDeudormMutation, useGetNombreDeudormMutation, useGetNombreAcreedormMutation, useGetRutAcreedormMutation, useGetCartaQuery, useGetCodRefQuery, useGetNumberConceptMutation, useGetNumberCodRefMutation, useGetNumberCartaMutation, useGetNumberRutAcreedorMutation, useGetNumberRutDeudorMutation, useGetNumberNombreAcreedorMutation, useGetNumberNombreDeudorMutation, useGetCartamMutation, useGetCodRefmMutation} from "app/store/instrucciones/instruccionesApi";
 import { useGetBusinessNameQuery, useGetRutQuery } from "app/store/participantesApi/participantesApi";
 import ModalEdicionInstruccion from "../Componentes/Modals/ModalEdicionInstruccion";
 const Item = styled(Paper)(({ theme }) => ({
@@ -164,8 +164,8 @@ export default function Instrucciones(props) {
 let condicionFilters = 0;
   let conditionPeriods = 0;
   const [disabledDateEnd, setDisabledDateEnd] = useState(false);
-  const [bussN, setBusinessName] = useState([]);
-  const [rutN, setRutName] = useState([]);
+  const [bussN, setBusinessName] = useState();
+  const [rutN, setRutName] = useState();
   const [conceptN, setConceptName] = useState([]);
   const [cart, setCart] = useState([]);
   const [codRef, setCodRef] = useState([]);
@@ -235,84 +235,84 @@ let condicionFilters = 0;
     skipCarta:false,
 
   })
-  const { data: getDataNombreAcre, isFetching: fetchNombreAcre, refetch: refetchNombreAcre} = 
-  useGetNombreAcreedorQuery(
-    {id:id,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        Glosa:buscar?(sConcept!=""?sConcept:""):"",
-        MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-        MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-        Folio:buscar?(sFolio!=""?sFolio:""):"",
-        NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-        NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }},{skip:skipFetchs.skipNombreAcre});//propiedad skip es para no iniciar la carga previa
+  // const { data: getDataNombreAcre, isFetching: fetchNombreAcre, refetch: refetchNombreAcre} = 
+  // useGetNombreAcreedorQuery(
+  //   {id:id,
+  //     spec:{
+  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //       Acreedor:state.acreedor?id:"",
+  //       Deudor:state.deudor?id:"",
+  //       EstadoEmision:state.estadoEmision?"Facturado":"",
+  //       EstadoPago:state.estadoPago?"Pagado":"",
+  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  // }},{skip:skipFetchs.skipNombreAcre});//propiedad skip es para no iniciar la carga previa
 
-  const { data: getDataRutAcre, isFetching: fetchRutAcre, refetch: refetchRutAcre} = 
-  useGetRutAcreedorQuery(
-    {id:id,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        Glosa:buscar?(sConcept!=""?sConcept:""):"",
-        MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-        MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-        Folio:buscar?(sFolio!=""?sFolio:""):"",
-        NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-        NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }},{skip:skipFetchs.skipRutAcre});//propiedad skip es para no iniciar la carga previa
-  const { data: getDataNombreDeudor, isFetching: fetchNombreDeudor, refetch: refetchNombreDeudor} = 
-  useGetNombreDeudorQuery(
-    {id:id,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        Glosa:buscar?(sConcept!=""?sConcept:""):"",
-        MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-        MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-        Folio:buscar?(sFolio!=""?sFolio:""):"",
-        NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-        NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }},{skip:skipFetchs.skipNombreDeudor});//propiedad skip es para no iniciar la carga previa
+  // const { data: getDataRutAcre, isFetching: fetchRutAcre, refetch: refetchRutAcre} = 
+  // useGetRutAcreedorQuery(
+  //   {id:id,
+  //     spec:{
+  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //       Acreedor:state.acreedor?id:"",
+  //       Deudor:state.deudor?id:"",
+  //       EstadoEmision:state.estadoEmision?"Facturado":"",
+  //       EstadoPago:state.estadoPago?"Pagado":"",
+  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  // }},{skip:skipFetchs.skipRutAcre});//propiedad skip es para no iniciar la carga previa
+  // const { data: getDataNombreDeudor, isFetching: fetchNombreDeudor, refetch: refetchNombreDeudor} = 
+  // useGetNombreDeudorQuery(
+  //   {id:id,
+  //     spec:{
+  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //       Acreedor:state.acreedor?id:"",
+  //       Deudor:state.deudor?id:"",
+  //       EstadoEmision:state.estadoEmision?"Facturado":"",
+  //       EstadoPago:state.estadoPago?"Pagado":"",
+  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  // }},{skip:skipFetchs.skipNombreDeudor});//propiedad skip es para no iniciar la carga previa
 
-  const { data: getDataRutDeudor, isFetching: fetchRutDeudor, refetch: refetchRutDeudor} = 
-  useGetRutDeudorQuery(
-    {id:id,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        Glosa:buscar?(sConcept!=""?sConcept:""):"",
-        MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-        MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-        Folio:buscar?(sFolio!=""?sFolio:""):"",
-        NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-        NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }},{skip:skipFetchs.skipRutDeudor});//propiedad skip es para no iniciar la carga previa
+  // const { data: getDataRutDeudor, isFetching: fetchRutDeudor, refetch: refetchRutDeudor} = 
+  // useGetRutDeudorQuery(
+  //   {id:id,
+  //     spec:{
+  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //       Acreedor:state.acreedor?id:"",
+  //       Deudor:state.deudor?id:"",
+  //       EstadoEmision:state.estadoEmision?"Facturado":"",
+  //       EstadoPago:state.estadoPago?"Pagado":"",
+  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  // }},{skip:skipFetchs.skipRutDeudor});//propiedad skip es para no iniciar la carga previa
 
   const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
   useGetInstruccionesSpecQuery(
@@ -352,246 +352,520 @@ let condicionFilters = 0;
       OrderByFolio:"",
     }
     },{skip:skipFetchs.skipInstructions});
-  const { data: getDataConcept, isFetching: fetchConcept, refetch: refetchConcept} = 
-  useGetConceptoQuery(
-    {id,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        Glosa:buscar?(sConcept!=""?sConcept:""):"",
-        MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-        MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-        Folio:buscar?(sFolio!=""?sFolio:""):"",
-        NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-        NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }},{skip:skipFetchs.skipConcept}
-  );
-  const { data: getDataCodRef, isFetching: fetchCodRef, refetch: refetchCodRef} = 
-  useGetCodRefQuery(
-    {id,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        Glosa:buscar?(sConcept!=""?sConcept:""):"",
-        MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-        MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-        Folio:buscar?(sFolio!=""?sFolio:""):"",
-        NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-        NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }},{skip:skipFetchs.skipCodRef}
-  );
-  const { data: getDataCarta, isFetching: fetchCarta, refetch: refetchCarta} = 
-  useGetCartaQuery(
-    {id,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-        Glosa:buscar?(sConcept!=""?sConcept:""):"",
-        MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-        MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-        Folio:buscar?(sFolio!=""?sFolio:""):"",
-        NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-        NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  }},{skip:skipFetchs.skipCarta}
-  );
-  //MUTATIONS
-  // const [getConceptMutation, dataConcMutation] = useGetConceptomMutation();
-  // const [getRutDeudorMutation, dataRutDMutation] = useGetRutDeudormMutation();
-  // const [getRutAcreMutation, dataRutAcre] = useGetRutAcreedormMutation();
-  // const [getNombreDeudorMutation, dataNombreDMutation] = useGetNombreDeudormMutation();
-  // const [getNombreAcreedor, dataNombreAcreMutation] = useGetNombreAcreedormMutation();
+  let dataSpec ={
+    id,
+    spec:{
+      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+      Acreedor:state.acreedor?id:"",
+      Deudor:state.deudor?id:"",
+      EstadoEmision:state.estadoEmision?"Facturado":"",
+      EstadoPago:state.estadoPago?"Pagado":"",
+      RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+      RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+      Glosa:buscar?(sConcept!=""?sConcept:""):"",
+      MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+      MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+      Folio:buscar?(sFolio!=""?sFolio:""):"",
+      NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+    }}
 
-  useEffect(() => {
-    setPageIndex(1);
-    setPagination(0);
-    setPageCount(0);
-    setRowsPerPage(5);
-    clearFilters();
-    clearStates();
-    setSkipFetchs(
-      { 
-        skipNombreAcre:false,
-        skipRutAcre:false,
-        skipNombreDeudor:false,
-        skipRutDeudor:false,
-        skipConcept:false,
-        skipInstructions:false,
-        skipCodRef:false,
-        skipCarta:false,
-      })
-    refetchInstruc();
-    refetchRut();
-    refetchName();
-    refetchConcept();
-    refetchCodRef();
-    refetchCarta();
-    // async function fetchConcept() {
-    //   // You can await here
-    //   try {
-    //     await getConceptMutation({id,
-    //       spec:{
-    //         EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-    //         EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-    //         Acreedor:state.acreedor?id:"",
-    //         Deudor:state.deudor?id:"",
-    //         EstadoEmision:state.estadoEmision?"Facturado":"",
-    //         EstadoPago:state.estadoPago?"Pagado":"",
-    //         RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-    //         RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-    //         Glosa:buscar?(sConcept!=""?sConcept:""):"",
-    //         MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-    //         MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-    //         Folio:buscar?(sFolio!=""?sFolio:""):"",
-    //         NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-    //         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-    //   }}).then((response) => {
-        
-    //     if(response.error === undefined){
-    //       console.log(response);
-    //       }else{
-    //         console.log("ERROR 1");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.log("ERROR 2");
-    //     });
-    //   } catch (error) {
-    //     console.log("ERROR 3");
-    //   }
-    //   try {
-    //     await getRutDeudorMutation({id,
-    //       spec:{
-    //         EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-    //         EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-    //         Acreedor:state.acreedor?id:"",
-    //         Deudor:state.deudor?id:"",
-    //         EstadoEmision:state.estadoEmision?"Facturado":"",
-    //         EstadoPago:state.estadoPago?"Pagado":"",
-    //         RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-    //         RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-    //         Glosa:buscar?(sConcept!=""?sConcept:""):"",
-    //         MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-    //         MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-    //         Folio:buscar?(sFolio!=""?sFolio:""):"",
-    //         NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-    //         NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-    //   }}).then((response) => {
-        
-    //     if(response.error === undefined){
-    //       console.log(response);
-    //       }else{
-    //         console.log("ERROR 1");
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.log("ERROR 2");
-    //     });
-    //   } catch (error) {
-    //     console.log("ERROR 3");
-    //   }
-    //   // ...
-    // }
-    // fetchConcept();
+  // const { data: getDataConcept, isFetching: fetchConcept, refetch: refetchConcept} = 
+  // useGetConceptoQuery(
+  //   {id,
+  //     spec:{
+  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //       Acreedor:state.acreedor?id:"",
+  //       Deudor:state.deudor?id:"",
+  //       EstadoEmision:state.estadoEmision?"Facturado":"",
+  //       EstadoPago:state.estadoPago?"Pagado":"",
+  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  // }},{skip:skipFetchs.skipConcept}
+  // );
+  // const { data: getDataCodRef, isFetching: fetchCodRef, refetch: refetchCodRef} = 
+  // useGetCodRefQuery(
+  //   {id,
+  //     spec:{
+  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //       Acreedor:state.acreedor?id:"",
+  //       Deudor:state.deudor?id:"",
+  //       EstadoEmision:state.estadoEmision?"Facturado":"",
+  //       EstadoPago:state.estadoPago?"Pagado":"",
+  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  // }},{skip:skipFetchs.skipCodRef}
+  // );
+  // const { data: getDataCarta, isFetching: fetchCarta, refetch: refetchCarta} = 
+  // useGetCartaQuery(
+  //   {id,
+  //     spec:{
+  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //       Acreedor:state.acreedor?id:"",
+  //       Deudor:state.deudor?id:"",
+  //       EstadoEmision:state.estadoEmision?"Facturado":"",
+  //       EstadoPago:state.estadoPago?"Pagado":"",
+  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  // }},{skip:skipFetchs.skipCarta}
+  // );
+  //CONST QUE RECIBE DATA
+  //--CONCEPTO CARTA CODREF
+  const [conceptFilter, setConceptFilter] = useState([]);
+  const [codRefFilter, setCodRefFilter] = useState([]);
+  const [cartaFilter, setCartaFilter] = useState([]);
+  //--RutAcre RutDeudor NombreDeudor NombreAcreedor
+  const [rutAcreFilter, setRutAcreFilter] = useState([]);
+  const [rutDeuFilter, setRutDeuFilter] = useState([]);
+  const [nomAcreFilter, setNomAcreFilter] = useState([]);
+  const [nomDeuFilter, setNomDeuFilter] = useState([]);
+  //MUTATIONS COUNTERS
+
+  const [getNumConcept, {isLoading : isLoadingNConcept}] = useGetNumberConceptMutation();
+  const [getNumCodRef, {isLoading : isLoadingNCodRef}] = useGetNumberCodRefMutation();
+  const [getNumCarta, {isLoading : isLoadingCart}] = useGetNumberCartaMutation();
+  const [getNumRutA, {isLoading : isLoadingRutAcre}] = useGetNumberRutAcreedorMutation();
+  const [getNumRutD, {isLoading : isLoadingRutDeu}] = useGetNumberRutDeudorMutation();
+  const [getNumNomAcre, {isLoading : isLoadingNnameAcre}] = useGetNumberNombreAcreedorMutation();
+  const [getNumNomDeu, {isLoading : isLoadingNnameDeu}] = useGetNumberNombreDeudorMutation();
     
+  //MUTATIONS DATA
 
+  const [getConceptMutation, {isLoading : isLoadingConceptm}] = useGetConceptomMutation();
+  const [getCodRefMutation, {isLoading : isLoadingCodRefm}] = useGetCodRefmMutation();
+  const [getCartaMutation, {isLoading : isLoadingCartam}] = useGetCartamMutation();
+  const [getRutDeudorMutation, {isLoading : isLoadingRutDeudorm}] = useGetRutDeudormMutation();
+  const [getRutAcreMutation, {isLoading : isLoadingRutAcreedorm}] = useGetRutAcreedormMutation();
+  const [getNombreDeudorMutation, {isLoading : isLoadingNombreDm}] = useGetNombreDeudormMutation();
+  const [getNombreAcreedor, {isLoading : isLoadingNombreAm}] = useGetNombreAcreedormMutation();
+
+  //cargas individuales pasaran por el verificar carga hasta que no se me ocurra otra manera
+  const [cargaConcept, setCargaConcept] = useState(true);
+  const [cargaCodRef, setCargaCodRef] = useState(true);
+  const [cargaCarta, setCargaCarta] = useState(true);
+  //estas se activan solo cuando hay cambios de los estados
+  const [cargaRutDeudor, setCargaRutDeudor] = useState(false);
+  const [cargaRutAcre, setCargaRutAcre] = useState(false);
+  const [cargaNombreAcre, setCargaNombreAcre] = useState(false);
+  const [cargaNombreDeu, setCargaNombreDeu] = useState(false);
+
+
+  //contador para la carga no funciona 
+  const [peticionesCompletadas, setPeticionesCompletadas] = useState(0);
+  const [LoadingApis, setLoadingApis] = useState(true);
+  //concept, carta, codref
+  function FiltersOne(){
+    setLoadingApis(true);
+    setCargaConcept(true);
+    setCargaCodRef(true);
+    setCargaCarta(true);
+    setPeticionesCompletadas(0);
+    setConceptFilter(undefined);
+    setCodRefFilter(undefined);
+    setCartaFilter(undefined);
+    let Concept = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: dataSpec.spec,
+    };
+    let CodRef = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: dataSpec.spec,
+    };
+    let Carta = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: dataSpec.spec,
+    };
+    try {
+      
+      getNumConcept(Concept).then((response) => {
+        let buclesF = Math.round(response.data / 100 + 0.49) + 1;
+        for (let x = 1; x < buclesF; x++) {
+           Concept.PageIndex = x;
+          getConceptMutation(Concept)
+            .then((response) => {
+              setConceptFilter(prevLista => {
+                if (Array.isArray(prevLista)) {
+                  return [...prevLista, response.data.data].flat();
+                } else {
+                  return [response.data.data];
+                }
+              });
+              if(x ===( buclesF-1)){
+                setCargaConcept(false);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      getNumCodRef(CodRef).then((response) => {
+        let buclesF = Math.round(response.data / 100 + 0.49) + 1;
+        for (let x = 1; x < buclesF; x++) {
+          CodRef.PageIndex = x;
+          getCodRefMutation(CodRef)
+            .then((response) => {
+              setCodRefFilter(prevLista => {
+                if (Array.isArray(prevLista)) {
+                  return [...prevLista, response.data.data].flat();
+                } else {
+                  return [response.data.data];
+                }
+              });
+              if(x ===( buclesF-1)){
+                setCargaCodRef(false);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      getNumCarta(Carta).then((response) => {
+        let buclesF = Math.round(response.data / 100 + 0.49) + 1;
+        for (let x = 1; x < buclesF; x++) {
+          Carta.PageIndex = x;
+          getCartaMutation(Carta)
+            .then((response) => {
+              setCartaFilter(prevLista => {
+                if (Array.isArray(prevLista)) {
+                  return [...prevLista, response.data.data].flat();
+                } else {
+                  return [response.data.data];
+                }
+              });
+              if(x ===( buclesF-1)){
+                // console.log(`x vale ${x} y buclesF vale ${buclesF-1}`)
+                setCargaCarta(false);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+         
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    } catch (error) {
+      
+    }
    
-  }, [id])
+  }
+   //rut, nombre: acreedor y deudor
+  function FiltersTwo(){
+    setLoadingApis(true);
+    setCargaNombreAcre(true);
+    setCargaNombreDeu(true);
+    setCargaRutAcre(true);
+    setCargaRutDeudor(true);
+    setRutAcreFilter(undefined);
+    setRutDeuFilter(undefined);
+    setNomAcreFilter(undefined);
+    setNomDeuFilter(undefined);
+    let RutAcreedor = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 200,
+      spec: dataSpec.spec,
+    };
+    let RutDeudor = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 200,
+      spec: dataSpec.spec,
+    };
+    let NombreAcre = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 200,
+      spec: dataSpec.spec,
+    };
+    let NombreDeudor = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 200,
+      spec: dataSpec.spec,
+    };
+    try {
+     
+      getNumRutA(RutAcreedor).then((response) => {
+        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        for (let x = 1; x < buclesF; x++) {
+          RutAcreedor.PageIndex = x;
+          getRutAcreMutation(RutAcreedor)
+            .then((response) => {
+              setRutAcreFilter(prevLista => {
+                if (Array.isArray(prevLista)) {
+                  return [...prevLista, response.data.data].flat();
+                } else {
+                  return [response.data.data];
+                }
+              });
+              if(x ===( buclesF-1)){
+                setCargaRutAcre(false);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      getNumRutD(RutDeudor).then((response) => {
+        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        for (let x = 1; x < buclesF; x++) {
+          RutDeudor.PageIndex = x;
+          getRutDeudorMutation(RutDeudor)
+            .then((response) => {
+              setRutDeuFilter(prevLista => {
+                if (Array.isArray(prevLista)) {
+                  return [...prevLista, response.data.data].flat();
+                } else {
+                  return [response.data.data];
+                }
+              });
+              if(x ===( buclesF-1)){
+                setCargaRutDeudor(false);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      getNumNomAcre(NombreAcre).then((response) => {
+        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        for (let x = 1; x < buclesF; x++) {
+          NombreAcre.PageIndex = x;
+          getNombreAcreedor(NombreAcre)
+            .then((response) => {
+              setNomAcreFilter(prevLista => {
+                if (Array.isArray(prevLista)) {
+                  return [...prevLista, response.data.data].flat();
+                } else {
+                  return [response.data.data];
+                }
+              });
+              if(x ===( buclesF-1)){
+                setCargaNombreAcre(false);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      getNumNomDeu(NombreDeudor).then((response) => {
+        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        for (let x = 1; x < buclesF; x++) {
+          NombreDeudor.PageIndex = x;
+          getNombreDeudorMutation(NombreDeudor)
+            .then((response) => {
+              setNomDeuFilter(prevLista => {
+                if (Array.isArray(prevLista)) {
+                  return [...prevLista, response.data.data].flat();
+                } else {
+                  return [response.data.data];
+                }
+              });
+              if(x ===( buclesF-1)){
+                setCargaNombreDeu(false);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-
+    } catch (error) {
+      console.log("ERROR 3");
+    }
+  }
   function verificacarga() {
-    if ([fetchInstructions,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre,fetchCodRef,fetchCodRef].every((valor) => valor === false)) {
+    if ([fetchInstructions,cargaConcept,cargaCodRef,cargaCarta,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor].every((valor) => valor === false)) {
       return false;
     } else {
       return true;     
     }
   }
   useEffect(()=>{
-    setCargando(verificacarga())
-    if(!verificacarga()){
-     setSkipFetchs(
-      { 
-        skipNombreAcre:true,
-        skipRutAcre:true,
-        skipNombreDeudor:true,
-        skipRutDeudor:true,
-        skipConcept:true,
-        skipInstructions:true,
-        skipCodRef:true,
-        skipCarta:true,
-      })
-    }
-  },[fetchInstructions,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre]);
-
+    setLoadingApis(verificacarga())
+    console.log(verificacarga())
+  },[cargaConcept,cargaCodRef,cargaCarta,fetchInstructions,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor]);
   useEffect(() => {
-    if(getDataInstruction && getDataInstruction.data){
+    FiltersOne();
+    setPageIndex(1);
+    setPagination(0);
+    setPageCount(0);
+    setRowsPerPage(5);
+    clearFilters();
+    clearStates();
+    setSkipFetchs({...skipFetchs,skipInstructions:false,})
+    refetchInstruc();
+  }, [id])
+  // useEffect(() => {
+  //   console.log(peticionesCompletadas);
+  // }, [peticionesCompletadas])
+  
+  // useEffect(() => {
+  //   console.log(conceptFilter);
+  // }, [conceptFilter])
+  // useEffect(() => {
+  //   console.log(codRefFilter);
+  // }, [codRefFilter])
+  // useEffect(() => {
+  //   console.log(cartaFilter);
+  // }, [cartaFilter])
+  // useEffect(() => {
+  //   console.log(rutAcreFilter);
+  // }, [rutAcreFilter])
+  // useEffect(() => {
+  //   console.log(rutDeuFilter);
+  // }, [rutDeuFilter])
+  // useEffect(() => {
+  //   console.log(nomAcreFilter);
+  // }, [nomAcreFilter])
+  // useEffect(() => {
+  //   console.log(nomDeuFilter);
+  // }, [nomDeuFilter])
+
+  
+  // ,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre,fetchCodRef,fetchCodRef
+  // function verificacarga() {
+  //   if ([fetchInstructions].every((valor) => valor === false)) {
+  //     return false;
+  //   } else {
+  //     return true;     
+  //   }
+  // }
+  // useEffect(()=>{
+  //   setCargando(verificacarga())
+  //   if(!verificacarga()){
+  //    setSkipFetchs(
+  //     { 
+  //       skipNombreAcre:true,
+  //       skipRutAcre:true,
+  //       skipNombreDeudor:true,
+  //       skipRutDeudor:true,
+  //       skipConcept:true,
+  //       skipInstructions:true,
+  //       skipCodRef:true,
+  //       skipCarta:true,
+  //     })
+  //   }
+  // },[fetchInstructions,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre]);
+  // console.log();(getDataConcept)
+  useEffect(() => {
+    if(getDataInstruction){
       tableData = getDataInstruction.data
       setPagination(getDataInstruction.count)
       setPageCount(getDataInstruction.pageCount + 1);
     }
-    setCargando(verificacarga() )
+    // setCargando(verificacarga() )
   }, [getDataInstruction,fetchInstructions])
+  // const [rutAcreFilter, setRutAcreFilter] = useState([]);
+  // const [rutDeuFilter, setRutDeuFilter] = useState([]);
+  // const [nomAcreFilter, setNomAcreFilter] = useState([]);
+  // const [nomDeuFilter, setNomDeuFilter] = useState([]);
   useEffect(() => {
     
-    if(state.acreedor && getDataRutDeudor && getDataNombreDeudor){
-      setRutName(getDataRutDeudor);
-      setBusinessName(getDataNombreDeudor);
+    if(state.acreedor && rutDeuFilter && nomDeuFilter){
+      setRutName(rutDeuFilter[0]);
+      setBusinessName(nomDeuFilter[0]);
       if(!verificacarga()){
-        setCargando(false)
+        setLoadingApis(false)
       }
     
     }
-    else if(state.deudor && getDataRutAcre && getDataNombreAcre){
-      setRutName(getDataRutAcre);
-      setBusinessName(getDataNombreAcre);
+    else if(state.deudor && rutAcreFilter && nomAcreFilter){
+      setRutName(rutAcreFilter[0]);
+      setBusinessName(nomAcreFilter[0]);
       if(!verificacarga()){
-        setCargando(false)
+        setLoadingApis(false)
       }
     
     }else{
-      setCargando(verificacarga() )
+      setLoadingApis(verificacarga() )
       setRutName({});
       setBusinessName({});
     }
   
-  }, [state.acreedor,state.deudor,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre])
+  }, [state.acreedor,state.deudor,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor])
+
   useEffect(() => {
-    if( getDataConcept ){
-      setConceptName(getDataConcept.label);
-    }
-    setCargando(verificacarga() )
-  }, [fetchConcept,getDataConcept])
-  useEffect(() => {
-    if( getDataCodRef ){
-      console.log(getDataCodRef)
-      setCodRef(getDataCodRef.codRef);
-    }
-    setCargando(verificacarga() )
-  }, [fetchCodRef,getDataCodRef])
-  useEffect(() => {
-    if( getDataCarta ){
-      console.log(getDataCarta)
-      setCart(getDataCarta.carta);
-    }
-    setCargando(verificacarga() )
-  }, [fetchCarta,getDataCarta])
+   console.log(bussN);
+   console.log(rutN);
+  }, [bussN,rutN])
+  
+  // useEffect(() => {
+  //   if( getDataConcept ){
+  //     setConceptName(getDataConcept.label);
+  //   }
+  //   setCargando(verificacarga() )
+  // }, [fetchConcept,getDataConcept])
+  // useEffect(() => {
+  //   if( getDataCodRef ){
+  //     console.log(getDataCodRef)
+  //     setCodRef(getDataCodRef.codRef);
+  //   }
+  //   setCargando(verificacarga() )
+  // }, [fetchCodRef,getDataCodRef])
+  // useEffect(() => {
+  //   if( getDataCarta ){
+  //     console.log(getDataCarta)
+  //     setCart(getDataCarta.carta);
+  //   }
+  //   setCargando(verificacarga() )
+  // }, [fetchCarta,getDataCarta])
 
 //logica y control
   //estados
@@ -607,7 +881,7 @@ let condicionFilters = 0;
     
     if (event.target.name === "acreedor" &&
     event.target.checked === true) {
-      setCargando(true)
+      setLoadingApis(true)
       setState({
         ...state,
         [event.target.name]: event.target.checked,
@@ -615,22 +889,19 @@ let condicionFilters = 0;
       });
       setSkipFetchs(
         { 
-          skipNombreAcre:false,
-          skipRutAcre:false,
-          skipNombreDeudor:false,
-          skipRutDeudor:false,
-          skipConcept:false,
+          ...skipFetchs,
           skipInstructions:false,
         })
-      refetchNombreDeudor();
-      refetchRutDeudor();
+      FiltersTwo();
+      // refetchNombreDeudor();
+      // refetchRutDeudor();
       refetchInstruc();
     } else if (
       
       event.target.name === "deudor" &&
       event.target.checked === true
     ) {
-      setCargando(true)
+      setLoadingApis(true)
       setState({
         ...state,
         [event.target.name]: event.target.checked,
@@ -638,32 +909,28 @@ let condicionFilters = 0;
       });
       setSkipFetchs(
         { 
-          skipNombreAcre:false,
-          skipRutAcre:false,
-          skipNombreDeudor:false,
-          skipRutDeudor:false,
-          skipConcept:false,
+          ...skipFetchs,
           skipInstructions:false,
         })
-      refetchNombreAcre();
-      refetchRutAcre();
+        FiltersTwo();
+      // refetchNombreAcre();
+      // refetchRutAcre();
       refetchInstruc();
     } else {
-      setCargando(true)
+      setLoadingApis(true)
       setState({
         ...state,
         [event.target.name]: event.target.checked,
       });
       setSkipFetchs(
-        {...skipFetchs,
-          skipConcept:false,
-          skipCodRef:false,
-          skipCarta:false,
+        { 
+          ...skipFetchs,
           skipInstructions:false,
         })
-      refetchConcept();
-      refetchCodRef();
-      refetchCarta();
+      // refetchConcept();
+      // refetchCodRef();
+      // refetchCarta();
+      FiltersOne();
       refetchInstruc();
     }
   };
@@ -671,15 +938,14 @@ let condicionFilters = 0;
   function searchFilter(){
     setSelected({...selected,buscar: true});
     setSkipFetchs(
-      {...skipFetchs,
-        skipConcept:false,
-        skipCodRef:false,
-        skipCarta:false,
+      { 
+        ...skipFetchs,
         skipInstructions:false,
       })
-    refetchConcept();
-    refetchCodRef();
-    refetchCarta();
+    // refetchConcept();
+    // refetchCodRef();
+    // refetchCarta();
+    FiltersOne();
     refetchInstruc();
 
 
@@ -689,32 +955,28 @@ let condicionFilters = 0;
     if(condicionFilters === 0){
       clearFilters();
       setSkipFetchs(
-        {
+        { 
           ...skipFetchs,
-          skipConcept:false,
-          skipCodRef:false,
-          skipCarta:false,
           skipInstructions:false,
         })
       refetchInstruc();
-      refetchConcept();
-      refetchCodRef();
-      refetchCarta();
+      // refetchConcept();
+      // refetchCodRef();
+      // refetchCarta();
+      FiltersOne();
     }else{
       setSkipFetchs(
-        {
+        { 
           ...skipFetchs,
-          skipConcept:false,
-          skipCodRef:false,
-          skipCarta:false,
           skipInstructions:false,
         })
       refetchInstruc();
-      refetchConcept();
-      refetchCodRef();
-      refetchCarta();
+      // refetchConcept();
+      // refetchCodRef();
+      // refetchCarta();
       clearFilters();
       clearStates();
+      FiltersOne();
     }
 
   };
@@ -732,11 +994,11 @@ let condicionFilters = 0;
   });
   //tabla
   const handleChangePage = () => {
-    setCargando(true);
+    setLoadingApis(true);
   
     setPageIndex(pageIndex===pageCount?pageIndex: pageIndex + 1)
     if(pageIndex===pageCount){
-      setCargando(false);
+      setLoadingApis(false);
     }
     // setPage(pageIndex + 1);
     console.log(`${pageIndex} ${pageCount}`)
@@ -767,11 +1029,11 @@ let condicionFilters = 0;
 
   
   const handleChangePagedos = () => {
-    setCargando(true);
+    setLoadingApis(true);
    
     setPageIndex(pageIndex >1? pageIndex - 1:1)
     if(pageIndex===1){
-      setCargando(false);
+      setLoadingApis(false);
     }
     // setPage(pageIndex + 1);
     setSkipFetchs(
@@ -784,7 +1046,7 @@ let condicionFilters = 0;
   const handleChangeRowsCount = (option) => {
    
     if(rowsPerPage!=option){
-      setCargando(true);
+      setLoadingApis(true);
       setRowsPerPage(option)
       setPageIndex(1);
       setSkipFetchs(
@@ -960,7 +1222,7 @@ let condicionFilters = 0;
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={cargando}
+                          disabled={LoadingApis}
 
                           checked={state.estadoEmision}
                           onChange={handleChange}
@@ -985,7 +1247,7 @@ let condicionFilters = 0;
                     <FormControlLabel
                       control={
                         <Switch
-                         disabled={cargando}
+                         disabled={LoadingApis}
 
                           checked={state.estadoPago}
                           onChange={handleChange}
@@ -1004,7 +1266,7 @@ let condicionFilters = 0;
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={cargando}
+                          disabled={LoadingApis}
 
                           checked={state.estadoRecepcion}
                           onChange={handleChange}
@@ -1029,7 +1291,7 @@ let condicionFilters = 0;
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={cargando}
+                          disabled={LoadingApis}
 
                           checked={state.estadoAceptacion}
                           onChange={handleChange}
@@ -1052,7 +1314,7 @@ let condicionFilters = 0;
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={cargando}
+                          disabled={LoadingApis}
 
                           checked={state.acreedor}
                           onChange={handleChange}
@@ -1071,7 +1333,7 @@ let condicionFilters = 0;
                     <FormControlLabel
                       control={
                         <Switch
-                          disabled={cargando}
+                          disabled={LoadingApis}
 
                           checked={state.deudor}
                           onChange={handleChange}
@@ -1107,7 +1369,7 @@ let condicionFilters = 0;
           <FilterAltIcon className="ml-[10px] text-pantoneazul" />
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
-        {cargando?  
+        {LoadingApis?  
         <div className="flex items-center">
           <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
             {/* <p>Chupa Chupa .....</p> */}
@@ -1130,7 +1392,7 @@ let condicionFilters = 0;
                         !state.deudor)
                         ? true
                         : false}
-                    options={bussN}
+                    options={bussN.length <0? [{label:"Loading...", id:0}]:bussN}
                     value={selected.sBusinessName}
                     // isOptionEqualToValue={(option, value) =>
                     //   bussN.label === value.label
@@ -1163,7 +1425,7 @@ let condicionFilters = 0;
                         ? true
                         : false}
                     value={selected.sRut}
-                    options={rutN}
+                    options={ rutN.length <0? [{label:"Loading...", id:0}]:rutN}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue) => {
                       if (newValue === null) {
@@ -1187,7 +1449,7 @@ let condicionFilters = 0;
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    options={conceptN}
+                    options={conceptFilter[0]}
                     value={selected.sConcept}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
@@ -1208,7 +1470,7 @@ let condicionFilters = 0;
                     id="combo-box-demo"
                     value={selected.sCarta}
                     // disabled={props.cargando || !disabled ? true : false}
-                    options={cart}
+                    options={cartaFilter[0]}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
@@ -1228,7 +1490,7 @@ let condicionFilters = 0;
                     id="combo-box-demo"
                     value={selected.sCodRef}
                     // disabled={!disabled ? true : false}
-                    options={codRef}
+                    options={codRefFilter[0]}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
                       if (newValue != null) {
@@ -1433,7 +1695,7 @@ let condicionFilters = 0;
                   //     clearFilters();
                   //   }
                   // }}
-                  disabled ={cargando}
+                  disabled ={LoadingApis}
                   onClick={() => {
                     clearAllFilters();
                   }}
@@ -1459,7 +1721,7 @@ let condicionFilters = 0;
                   }
                  
                   }
-                  disabled ={cargando}
+                  disabled ={LoadingApis}
                   style={{
                     m: 1,
                     width: 200,
@@ -1542,7 +1804,7 @@ let condicionFilters = 0;
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1> */}
        
-        {cargando? <div className="flex items-center">
+        {LoadingApis? <div className="flex items-center">
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
                   {/* <p>Chupa Chupa .....</p> */}
                   <LinearProgress color="primary" />
