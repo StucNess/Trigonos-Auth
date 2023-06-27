@@ -688,6 +688,7 @@ export const instruccionesApi = createApi({
       
     }),
     getConceptom: builder.mutation({
+      timeout: 60000,
       query: (data) => ({
         url: data.spec
           ? `/ConceptFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
@@ -750,6 +751,7 @@ export const instruccionesApi = createApi({
       providesTags: ["conceptoMutation"],
     }),
     getCodRefm: builder.mutation({
+      timeout: 60000,
       query: (data) => ({
         url: data.spec
           ? `/CodRefFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
@@ -812,6 +814,7 @@ export const instruccionesApi = createApi({
       providesTags: ["conceptoMutation"],
     }),
     getCartam: builder.mutation({
+      timeout: 60000,
       query: (data) => ({
         url: data.spec
           ? `/CartaFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
@@ -875,6 +878,7 @@ export const instruccionesApi = createApi({
     }),
     getNombreAcreedorm: builder.mutation({
       query: (data) => ({
+        timeout: 60000,
         url: data.spec
           ? `/sFiltrosNameCreditor?id=${data.id}` +
             (data.spec.FechaEmision != undefined
@@ -937,6 +941,7 @@ export const instruccionesApi = createApi({
     }),
     getRutAcreedorm: builder.mutation({
       query: (data) => ({
+        timeout: 60000,
         url: data.spec
           ? `/sFiltrosRutCreditor?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
             (data.spec.FechaEmision != undefined
@@ -1003,6 +1008,7 @@ export const instruccionesApi = createApi({
 
     getNombreDeudorm: builder.mutation({
       query: (data) => ({
+        timeout: 60000,
         url: data.spec
           ? `/sFiltrosNameDebtor?id=${data.id}` +
             (data.spec.FechaEmision != undefined
@@ -1065,6 +1071,7 @@ export const instruccionesApi = createApi({
     }),
     getRutDeudorm: builder.mutation({
       query: (data) => ({
+        timeout: 60000,
         url: data.spec
           ? `/sFiltrosRutDeudor?id=${data.id}` +
             (data.spec.FechaEmision != undefined
