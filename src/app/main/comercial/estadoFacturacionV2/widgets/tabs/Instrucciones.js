@@ -352,23 +352,31 @@ let condicionFilters = 0;
       OrderByFolio:"",
     }
     },{skip:skipFetchs.skipInstructions});
+  const {
+    estadoEmision,
+    estadoPago,
+    estadoRecepcion,
+    estadoAceptacion,
+    acreedor,
+    deudor,
+  } = state;
   let dataSpec ={
     id,
     spec:{
       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-      Acreedor:state.acreedor?id:"",
-      Deudor:state.deudor?id:"",
-      EstadoEmision:state.estadoEmision?"Facturado":"",
-      EstadoPago:state.estadoPago?"Pagado":"",
-      RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-      RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+      EstadoRecepcion:estadoRecepcion?"Recepcionado":"",
+      Acreedor:acreedor?id:"",
+      Deudor:deudor?id:"",
+      EstadoEmision:estadoEmision?"Facturado":"",
+      EstadoPago:estadoPago?"Pagado":"",
+      RutDeudor:buscar?(acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+      RutAcreedor:buscar?(deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
       Glosa:buscar?(sConcept!=""?sConcept:""):"",
       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
       Folio:buscar?(sFolio!=""?sFolio:""):"",
-      NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-      NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      NombreDeudor:buscar?(acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+      NombreAcreedor:buscar?(deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
     }}
 
   // const { data: getDataConcept, isFetching: fetchConcept, refetch: refetchConcept} = 
@@ -477,14 +485,15 @@ let condicionFilters = 0;
   const [LoadingApis, setLoadingApis] = useState(true);
   //concept, carta, codref
   function FiltersOne(){
+    setConceptFilter();
+    setCodRefFilter();
+    setCartaFilter();
     setLoadingApis(true);
     setCargaConcept(true);
     setCargaCodRef(true);
     setCargaCarta(true);
     setPeticionesCompletadas(0);
-    setConceptFilter(undefined);
-    setCodRefFilter(undefined);
-    setCartaFilter(undefined);
+   
     let Concept = {
       id: id,
       PageIndex: 1,
@@ -504,223 +513,265 @@ let condicionFilters = 0;
       spec: dataSpec.spec,
     };
     try {
+      console.log(dataSpec.spec)
+      getNumConcept(Concept)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          Concept.PageIndex = index + 1;
+          return getConceptMutation(Concept);
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setConceptFilter((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+            setCargaConcept(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
       
-      getNumConcept(Concept).then((response) => {
-        let buclesF = Math.round(response.data / 100 + 0.49) + 1;
-        for (let x = 1; x < buclesF; x++) {
-           Concept.PageIndex = x;
-          getConceptMutation(Concept)
-            .then((response) => {
-              setConceptFilter(prevLista => {
-                if (Array.isArray(prevLista)) {
-                  return [...prevLista, response.data.data].flat();
-                } else {
-                  return [response.data.data];
-                }
-              });
-              if(x ===( buclesF-1)){
-                setCargaConcept(false);
+    
+    
+      getNumCodRef(CodRef)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          CodRef.PageIndex = index + 1;
+          return getCodRefMutation(CodRef);
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setCodRefFilter((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
               }
-            })
-            .catch((error) => {
-              console.log(error);
             });
-        }
+            setCargaCodRef(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
       });
-      getNumCodRef(CodRef).then((response) => {
-        let buclesF = Math.round(response.data / 100 + 0.49) + 1;
-        for (let x = 1; x < buclesF; x++) {
-          CodRef.PageIndex = x;
-          getCodRefMutation(CodRef)
-            .then((response) => {
-              setCodRefFilter(prevLista => {
-                if (Array.isArray(prevLista)) {
-                  return [...prevLista, response.data.data].flat();
-                } else {
-                  return [response.data.data];
-                }
-              });
-              if(x ===( buclesF-1)){
-                setCargaCodRef(false);
+      getNumCarta(Carta)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          Carta.PageIndex = index + 1;
+          return getCartaMutation(Carta);
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setCartaFilter((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
               }
-            })
-            .catch((error) => {
-              console.log(error);
             });
-          
-        }
+            setCargaCarta(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
       });
-      getNumCarta(Carta).then((response) => {
-        let buclesF = Math.round(response.data / 100 + 0.49) + 1;
-        for (let x = 1; x < buclesF; x++) {
-          Carta.PageIndex = x;
-          getCartaMutation(Carta)
-            .then((response) => {
-              setCartaFilter(prevLista => {
-                if (Array.isArray(prevLista)) {
-                  return [...prevLista, response.data.data].flat();
-                } else {
-                  return [response.data.data];
-                }
-              });
-              if(x ===( buclesF-1)){
-                // console.log(`x vale ${x} y buclesF vale ${buclesF-1}`)
-                setCargaCarta(false);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-         
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      
     } catch (error) {
       
     }
    
   }
    //rut, nombre: acreedor y deudor
-  function FiltersTwo(){
+  function FiltersAcree(){
+    setBusinessName();
+    setRutName();
     setLoadingApis(true);
     setCargaNombreAcre(true);
-    setCargaNombreDeu(true);
     setCargaRutAcre(true);
-    setCargaRutDeudor(true);
     setRutAcreFilter(undefined);
-    setRutDeuFilter(undefined);
     setNomAcreFilter(undefined);
-    setNomDeuFilter(undefined);
     let RutAcreedor = {
       id: id,
       PageIndex: 1,
-      PageSize: 200,
+      PageSize: 50,
       spec: dataSpec.spec,
     };
-    let RutDeudor = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 200,
-      spec: dataSpec.spec,
-    };
+
     let NombreAcre = {
       id: id,
       PageIndex: 1,
-      PageSize: 200,
+      PageSize: 50,
+      spec: dataSpec.spec,
+    };
+ 
+    try {
+     
+
+      getNumRutA(RutAcreedor)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 50 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          RutAcreedor.PageIndex = index + 1;
+          return getRutAcreMutation(RutAcreedor);
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setRutName((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+            setCargaRutAcre(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    
+
+      getNumNomAcre(NombreAcre)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 50 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          NombreAcre.PageIndex = index + 1;
+          return getNombreAcreedor(NombreAcre);
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setBusinessName((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+            setCargaNombreAcre(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    
+
+    } catch (error) {
+      console.log("ERROR 3");
+    }
+  }
+  function FiltersDeu(){
+    setBusinessName();
+    setRutName();
+    setLoadingApis(true);
+ 
+    setCargaNombreDeu(true);
+
+    setCargaRutDeudor(true);
+
+    setRutDeuFilter(undefined);
+
+    setNomDeuFilter(undefined);
+ 
+    let RutDeudor = {
+      id: id,
+      PageIndex: 1,
+      PageSize: 50,
       spec: dataSpec.spec,
     };
     let NombreDeudor = {
       id: id,
       PageIndex: 1,
-      PageSize: 200,
+      PageSize: 50,
       spec: dataSpec.spec,
     };
     try {
      
-      getNumRutA(RutAcreedor).then((response) => {
-        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
-        for (let x = 1; x < buclesF; x++) {
-          RutAcreedor.PageIndex = x;
-          getRutAcreMutation(RutAcreedor)
-            .then((response) => {
-              setRutAcreFilter(prevLista => {
-                if (Array.isArray(prevLista)) {
-                  return [...prevLista, response.data.data].flat();
-                } else {
-                  return [response.data.data];
-                }
-              });
-              if(x ===( buclesF-1)){
-                setCargaRutAcre(false);
+   
+      getNumRutD(RutDeudor)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          RutDeudor.PageIndex = index + 1;
+          return getRutDeudorMutation(RutDeudor);
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setRutName((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
               }
-            })
-            .catch((error) => {
-              console.log(error);
             });
-        }
+            setCargaRutDeudor(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
       });
-      getNumRutD(RutDeudor).then((response) => {
-        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
-        for (let x = 1; x < buclesF; x++) {
-          RutDeudor.PageIndex = x;
-          getRutDeudorMutation(RutDeudor)
-            .then((response) => {
-              setRutDeuFilter(prevLista => {
-                if (Array.isArray(prevLista)) {
-                  return [...prevLista, response.data.data].flat();
-                } else {
-                  return [response.data.data];
-                }
-              });
-              if(x ===( buclesF-1)){
-                setCargaRutDeudor(false);
+ 
+      getNumNomDeu(NombreDeudor)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          NombreDeudor.PageIndex = index + 1;
+          return getNombreDeudorMutation(NombreDeudor);
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+               
+            setBusinessName((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
               }
-            })
-            .catch((error) => {
-              console.log(error);
             });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      getNumNomAcre(NombreAcre).then((response) => {
-        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
-        for (let x = 1; x < buclesF; x++) {
-          NombreAcre.PageIndex = x;
-          getNombreAcreedor(NombreAcre)
-            .then((response) => {
-              setNomAcreFilter(prevLista => {
-                if (Array.isArray(prevLista)) {
-                  return [...prevLista, response.data.data].flat();
-                } else {
-                  return [response.data.data];
-                }
-              });
-              if(x ===( buclesF-1)){
-                setCargaNombreAcre(false);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      getNumNomDeu(NombreDeudor).then((response) => {
-        let buclesF = Math.round(response.data / 200 + 0.49) + 1;
-        for (let x = 1; x < buclesF; x++) {
-          NombreDeudor.PageIndex = x;
-          getNombreDeudorMutation(NombreDeudor)
-            .then((response) => {
-              setNomDeuFilter(prevLista => {
-                if (Array.isArray(prevLista)) {
-                  return [...prevLista, response.data.data].flat();
-                } else {
-                  return [response.data.data];
-                }
-              });
-              if(x ===( buclesF-1)){
-                setCargaNombreDeu(false);
-              }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
+            setCargaNombreDeu(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
       .catch((error) => {
         console.log(error);
@@ -737,6 +788,9 @@ let condicionFilters = 0;
       return true;     
     }
   }
+  const isOptionEqualToValue = (option, value) => {
+    return option.value === value;
+  };
   useEffect(()=>{
     setLoadingApis(verificacarga())
     console.log(verificacarga())
@@ -765,18 +819,18 @@ let condicionFilters = 0;
   // useEffect(() => {
   //   console.log(cartaFilter);
   // }, [cartaFilter])
-  // useEffect(() => {
-  //   console.log(rutAcreFilter);
-  // }, [rutAcreFilter])
-  // useEffect(() => {
-  //   console.log(rutDeuFilter);
-  // }, [rutDeuFilter])
-  // useEffect(() => {
-  //   console.log(nomAcreFilter);
-  // }, [nomAcreFilter])
-  // useEffect(() => {
-  //   console.log(nomDeuFilter);
-  // }, [nomDeuFilter])
+  useEffect(() => {
+    console.log(rutAcreFilter);
+  }, [rutAcreFilter])
+  useEffect(() => {
+    console.log(rutDeuFilter);
+  }, [rutDeuFilter])
+  useEffect(() => {
+    console.log(nomAcreFilter);
+  }, [nomAcreFilter])
+  useEffect(() => {
+    console.log(nomDeuFilter);
+  }, [nomDeuFilter])
 
   
   // ,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre,fetchCodRef,fetchCodRef
@@ -809,6 +863,7 @@ let condicionFilters = 0;
       tableData = getDataInstruction.data
       setPagination(getDataInstruction.count)
       setPageCount(getDataInstruction.pageCount + 1);
+      setLoadingApis(verificacarga());
     }
     // setCargando(verificacarga() )
   }, [getDataInstruction,fetchInstructions])
@@ -819,32 +874,23 @@ let condicionFilters = 0;
   useEffect(() => {
     
     if(state.acreedor && rutDeuFilter && nomDeuFilter){
-      setRutName(rutDeuFilter[0]);
-      setBusinessName(nomDeuFilter[0]);
-      if(!verificacarga()){
-        setLoadingApis(false)
-      }
-    
+      FiltersOne();
+      setLoadingApis(verificacarga() )
     }
     else if(state.deudor && rutAcreFilter && nomAcreFilter){
-      setRutName(rutAcreFilter[0]);
-      setBusinessName(nomAcreFilter[0]);
-      if(!verificacarga()){
-        setLoadingApis(false)
-      }
-    
+      FiltersOne();
+      setLoadingApis(verificacarga() )
     }else{
       setLoadingApis(verificacarga() )
-      setRutName({});
-      setBusinessName({});
+      FiltersOne();
     }
   
-  }, [state.acreedor,state.deudor,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor])
+  }, [state.acreedor,state.deudor])
 
-  useEffect(() => {
-   console.log(bussN);
-   console.log(rutN);
-  }, [bussN,rutN])
+  // useEffect(() => {
+  //  console.log(bussN);
+  //  console.log(rutN);
+  // }, [bussN,rutN])
   
   // useEffect(() => {
   //   if( getDataConcept ){
@@ -869,14 +915,7 @@ let condicionFilters = 0;
 
 //logica y control
   //estados
-  const {
-    estadoEmision,
-    estadoPago,
-    estadoRecepcion,
-    estadoAceptacion,
-    acreedor,
-    deudor,
-  } = state;
+ 
   const handleChange = (event) => {
     
     if (event.target.name === "acreedor" &&
@@ -892,9 +931,10 @@ let condicionFilters = 0;
           ...skipFetchs,
           skipInstructions:false,
         })
-      FiltersTwo();
+      FiltersDeu();
       // refetchNombreDeudor();
       // refetchRutDeudor();
+      FiltersOne();
       refetchInstruc();
     } else if (
       
@@ -912,9 +952,10 @@ let condicionFilters = 0;
           ...skipFetchs,
           skipInstructions:false,
         })
-        FiltersTwo();
+      FiltersAcree();
       // refetchNombreAcre();
       // refetchRutAcre();
+      FiltersOne();
       refetchInstruc();
     } else {
       setLoadingApis(true)
@@ -1392,8 +1433,9 @@ let condicionFilters = 0;
                         !state.deudor)
                         ? true
                         : false}
-                    options={bussN.length <0? [{label:"Loading...", id:0}]:bussN}
-                    value={selected.sBusinessName}
+                    options={!bussN? [{label:"Loading...", id:0}]:bussN}
+                    value={selected.sBusinessName || null}
+                    isOptionEqualToValue={(option, value) =>{if(value === option.label || value === null|| value ==="") { return true; }}}
                     // isOptionEqualToValue={(option, value) =>
                     //   bussN.label === value.label
                     // }
@@ -1412,6 +1454,7 @@ let condicionFilters = 0;
                         // apiGet(1, newValue.label);
                       }
                     }}
+                    
                     renderInput={(params) => (
                       <TextField {...params} label="Coordinado" />
                     )}
@@ -1424,8 +1467,8 @@ let condicionFilters = 0;
                         !state.deudor)
                         ? true
                         : false}
-                    value={selected.sRut}
-                    options={ rutN.length <0? [{label:"Loading...", id:0}]:rutN}
+                    value={selected.sRut|| null}
+                    options={ !rutN? [{label:"Loading...", id:0}]:rutN}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue) => {
                       if (newValue === null) {
@@ -1439,6 +1482,7 @@ let condicionFilters = 0;
                         // apiGet(1, newValue.label);
                       }
                     }}
+                    isOptionEqualToValue={(option, value) =>{if(value === option.label || value === null|| value ==="") { return true; }}}
                     // isOptionEqualToValue={(option, value) =>
                     //   rutN.label === value.label
                     // }
@@ -1449,17 +1493,23 @@ let condicionFilters = 0;
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    options={conceptFilter[0]}
-                    value={selected.sConcept}
+                    options={conceptFilter}
+                    value={selected.sConcept || null}
                     sx={{ width: 300, mb: 2 }}
-                    onChange={(event, newValue, reason) => {
-                      if (newValue !=null) {
-                        setSelected({ ...selected, sConcept: newValue.label });
+                    // onChange={(event, newValue, reason) => {
+                    //   if (newValue !=null) {
+                    //     setSelected({ ...selected, sConcept: newValue.label });
+                    //   }
+                    // }}
+                    onChange={(e, selectedObject) => {
+                      if (selectedObject !== null){
+                        setSelected({ ...selected, sConcept: selectedObject.label })
                       }else{
-                        setSelected({ ...selected, sConcept: "" });
-
+                        setSelected({ ...selected, sConcept: "" })
                       }
-                    }}
+                      
+                  }}
+                    isOptionEqualToValue={(option, value) =>{if(value === option.label || value === null|| value ==="") { return true; }}}
                     // isOptionEqualToValue={(option, value) => conceptN=== value.id}
                     renderInput={(params) => (
                       <TextField {...params} key={params.id} label="Concepto" />
@@ -1468,9 +1518,9 @@ let condicionFilters = 0;
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    value={selected.sCarta}
+                    value={selected.sCarta||null}
                     // disabled={props.cargando || !disabled ? true : false}
-                    options={cartaFilter[0]}
+                    options={cartaFilter}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
                       if (newValue !=null) {
@@ -1480,6 +1530,7 @@ let condicionFilters = 0;
 
                       } 
                     }}
+                    isOptionEqualToValue={(option, value) =>{if(value === option.label || value === null|| value ==="") { return true; }}}
                     // isOptionEqualToValue={(option, value) => cart === value}
                     renderInput={(params) => (
                       <TextField {...params}key={params.id} label="Carta" />
@@ -1488,9 +1539,9 @@ let condicionFilters = 0;
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    value={selected.sCodRef}
+                    value={selected.sCodRef||null}
                     // disabled={!disabled ? true : false}
-                    options={codRefFilter[0]}
+                    options={codRefFilter}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue, reason) => {
                       if (newValue != null) {
@@ -1500,6 +1551,7 @@ let condicionFilters = 0;
 
                       } 
                     }}
+                    isOptionEqualToValue={(option, value) =>{if(value === option.label || value === null|| value ==="") { return true; }}}
                     // isOptionEqualToValue={(option, value) => codRef === value}
                     renderInput={(params) => (
                       <TextField {...params}  key={params.id} label="Codigo Referencia" />
@@ -1513,7 +1565,7 @@ let condicionFilters = 0;
                     sx={{ width: 300, mb: 2 }}
                     value={
                       limpiar || selected.sMontoNeto === ""
-                        ? ""
+                        ? null
                         : chile.format(selected.sMontoNeto).replace("$", "")
                     }
                     onChange={(event) => {
@@ -1529,6 +1581,7 @@ let condicionFilters = 0;
                         });
                       }
                     }}
+                    
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">$</InputAdornment>
