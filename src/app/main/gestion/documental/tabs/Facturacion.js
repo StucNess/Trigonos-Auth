@@ -1,7 +1,7 @@
 import { Paper, Typography, Button, Box, ButtonBase } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import * as React from "react";
+import { usePostFacturacionMutation } from "app/store/instrucciones/instruccionesApi";
 import * as XLSX from "xlsx";
 import axios from "axios";
 import Tooltip from "@mui/material/Tooltip";
@@ -49,7 +49,6 @@ function createData(name, estado) {
 }
 
 export default function Facturacion(props) {
-  const [refresh, setRefresh] = useState(false);
   const [cargando, setCargando] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [MsgAlert, setMsgAlert] = useState({
@@ -58,6 +57,7 @@ export default function Facturacion(props) {
     msgError: false,
   });
   const { msgResp, msgText, msgError } = MsgAlert;
+  const [postFacturacion] = usePostFacturacionMutation(); //CALL API
   const devuelveFechaHoy = (param = 0) => {
     let fechaActual = new Date();
     param === 1 && fechaActual.setDate(fechaActual.getDate() + 2);
@@ -75,12 +75,38 @@ export default function Facturacion(props) {
     return fechaCorta;
   };
   const rows = [createData("Excel 1", false), createData("Excel 2", true)];
+  const mostrarMensaje = (response) => {
+    if (!(response.error == undefined)) {
+      setMsgAlert({
+        msgResp: true,
+        msgText:
+          response.error == "true"
+            ? "EL EXCEL DEBE TENER MENOS DE 2000 FILAS"
+            : response.error.data.message,
+
+        msgError: true,
+      });
+      setCargando(false);
+      setTimeout(() => {
+        setOpenDialog(false);
+      }, 2000);
+    } else {
+      setMsgAlert({
+        msgResp: true,
+        msgText: "EXITO",
+        msgError: false,
+      });
+      setCargando(false);
+      setTimeout(() => {
+        setOpenDialog(false);
+      }, 2000);
+    }
+  };
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
     let dataPrueba = [];
     let name = event.target.files[0].name;
-
     let fecha = devuelveFechaHoy();
     let idParticipant = props.idParticipant;
     let type = "Facturacion Masiva";
@@ -90,78 +116,91 @@ export default function Facturacion(props) {
       setCargando(true);
       const data = new Uint8Array(e.target.result);
       const workbook = XLSX.read(data, { type: "array" });
-
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-      // Procesar cada fila de datos
-      jsonData.forEach((row) => {
-        dataPrueba.push(row);
-      });
-      let url;
-      url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/ActuralizarFacturacionnnn?id=${props.idParticipant}`;
-      axios
-        .post(url, dataPrueba)
-        .then(function (response) {
-          let description = "Se actualizo todo correctamente";
-          let status = "OK";
-          let json = {
-            excelName: name,
-            status: status,
-            idParticipant: props.idParticipant,
-            type: type,
-            description: description,
-          };
-          let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
-          axios
-            .post(url, json)
-            .then(function (response) {
-              setMsgAlert({
-                msgResp: true,
-                msgText: "Exito, Archivo Subido!",
-                msgError: false,
+      if (jsonData.length < 2000) {
+        postFacturacion({
+          id: props.cliente.id,
+          body: jsonData.slice(0, 1000),
+        }).then((response) => {
+          console.log(response);
+          if (!(response.error == undefined)) {
+            mostrarMensaje(response);
+          } else {
+            if (jsonData.length > 1000) {
+              postFacturacionDeudor({
+                id: props.cliente.id,
+                body: jsonData.slice(1000, 2003),
+              }).then((response) => {
+                mostrarMensaje(response);
               });
-              setCargando(false);
-              setTimeout(() => {
-                window.location.reload();
-              }, 2000);
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-        })
-        .catch(function (error) {
-          let description = error.response.data.message;
-          let status = "ERROR";
-          let json = {
-            excelName: name,
-            status: status,
-            idParticipant: props.idParticipant,
-            type: type,
-            description: description,
-          };
-          let url =
-            "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
-          axios
-            .post(url, json)
-            .then(function (response) {
-              setMsgAlert({
-                msgResp: true,
-                msgText: "Error, Archivo subido con errores!",
-                msgError: true,
-              });
-              setCargando(false);
-              setTimeout(() => {
-                window.location.reload();
-              }, 2000);
-
-              //window.location.reload();
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
-          // window.location.reload();
+            } else {
+              mostrarMensaje(response);
+            }
+          }
         });
+      } else {
+        mostrarMensaje({ error: "true" });
+      }
+      // let description = "Se actualizo todo correctamente";
+      // let status = "OK";
+      // let json = {
+      //   excelName: name,
+      //   status: status,
+      //   idParticipant: props.idParticipant,
+      //   type: type,
+      //   description: description,
+      // };
+      // let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
+      // axios
+      //   .post(url, json)
+      //   .then(function (response) {
+      //     setMsgAlert({
+      //       msgResp: true,
+      //       msgText: "Exito, Archivo Subido!",
+      //       msgError: false,
+      //     });
+      //     setCargando(false);
+      //     setTimeout(() => {
+      //       window.location.reload();
+      //     }, 2000);
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //   });
+
+      // .catch((error) => {
+      //   // let description = error.response.data.message;
+      //   // let status = "ERROR";
+      //   // let json = {
+      //   //   excelName: name,
+      //   //   status: status,
+      //   //   idParticipant: props.idParticipant,
+      //   //   type: type,
+      //   //   description: description,
+      //   // };
+      //   // let url =
+      //   //   "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
+      //   // axios
+      //   //   .post(url, json)
+      //   //   .then(function (response) {
+      //   //     setMsgAlert({
+      //   //       msgResp: true,
+      //   //       msgText: "Error, Archivo subido con errores!",
+      //   //       msgError: true,
+      //   //     });
+      //   //     setCargando(false);
+      //   //     setTimeout(() => {
+      //   //       window.location.reload();
+      //   //     }, 2000);
+
+      //   //     //window.location.reload();
+      //   //   })
+      //   //   .catch(function (error) {
+      //   //     console.log(error);
+      //   //   });
+      //   // window.location.reload();
+      // });
     };
 
     reader.readAsArrayBuffer(file);
@@ -222,8 +261,8 @@ export default function Facturacion(props) {
               <div className="flex justify-center items-center h-[250px] w-[300px]">
                 {msgError ? (
                   <div className="flex justify-center items-center h-[250px] w-[300px]">
-                    <WarningIcon className="w-[68px] h-[68px] text-red" />
-                    <span className="absolute bottom-[70px] text-red">
+                    <WarningIcon className="w-[68px] h-[68px]  text-red" />
+                    <span className="absolute bottom-[20px] text-red">
                       {" "}
                       <b>{msgText}</b>
                     </span>

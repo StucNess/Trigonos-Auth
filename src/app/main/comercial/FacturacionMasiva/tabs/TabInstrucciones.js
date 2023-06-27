@@ -12,16 +12,11 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 //ICONS
-import Stack from "@mui/material/Stack";
 import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 import Checkbox from "@mui/material/Checkbox";
-import LinearProgress from "@mui/material/LinearProgress";
+
 import axios from "axios";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import AddIcon from "@mui/icons-material/Add";
-import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
-import SettingsIcon from "@mui/icons-material/Settings";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import PeopleIcon from "@mui/icons-material/People";
 
@@ -527,7 +522,6 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 function TabInstrucciones(props) {
-  // const theme = useTheme();
   const [order, setOrder] = useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
@@ -538,11 +532,11 @@ function TabInstrucciones(props) {
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
   const [cargando, setCargando] = useState(true);
-  const {
-    data: dataInstructions = [],
-    isLoading: isLoadinginstructions = true,
-    isFetching: isfetchInstructions,
-  } = useGetInstruccionesQuery(props.id);
+  // const {
+  //   data: props.dataInstructions = [],
+  //   // isLoading: isLoadinginstructions = true,
+  //   // isFetching: isfetchInstructions,
+  // } = useGetInstruccionesQuery(props.id);
 
   function search(searchString) {
     if (searchString.length === 0) {
@@ -595,7 +589,7 @@ function TabInstrucciones(props) {
   // useEffect(() => {
   //   return () => {
   //     rows = [];
-  //     dataInstructions = [];
+  //      = [];
   //     console.log("Me ejecute");
   //   };
   // }, []);
@@ -616,77 +610,75 @@ function TabInstrucciones(props) {
       let fechaCorta = dia + "/" + mes + "/" + año;
       return fechaCorta;
     };
-    if (!isLoadinginstructions) {
-      if (props.erp == 2) {
-        rows = dataInstructions.data.map((data) => {
-          return {
-            id: data.id_instruccions,
-            rut: data.rutDeudor,
-            razonSocial: data.nombreDeudor,
-            giro: data.giroDeudor,
-            comuna: "Las Condes",
-            direccion: data.direccionDeudor,
-            producto: data.glosa,
-            precio: data.montoNeto,
-          };
-        });
-      } else if (props.erp == 1) {
-        rows = dataInstructions.data.map((data) => {
-          return {
-            id: data.id_instruccions,
-            folioReferencia: data.codigoRef,
-            razonReferencia: data.glosa,
-            razonSocial: data.nombreDeudor,
-            rut: data.rutDeudor,
-            folio: data.folio,
-            fechaCarta: data.fecha_carta,
-            concepto: data.glosa,
-            neto: data.montoNeto,
-            iva: data.montoNeto * 0.19,
-            total: data.montoBruto,
-            giro: data.giroDeudor,
-            direccion: data.direccionDeudor,
-            comuna: "Las Condes",
-          };
-        });
-      } else if (props.erp == 7 || props.erp == 5) {
-        rows = dataInstructions.data.map((data) => {
-          return {
-            id: data.id_instruccions,
-            numeroCorrelativo: data.id_instruccions,
-            fecha: devuelveFechaHoy(),
-            fechaVencimiento: devuelveFechaHoy(1),
-            codigoCliente: data.rutDeudor,
-            afecto: data.montoNeto,
-            total: data.montoNeto * 0.19,
-            nombre: data.nombreDeudor,
-            direccion: data.direccionDeudor,
-            comentarioProducto: data.glosa,
-          };
-        });
-      }
-      rowspermanent = rows;
-      rowsOnMount();
-      setRowsPerPage(5);
-      let newPage = 0;
-      setPage(newPage);
-      const sortedRows = stableSort(rows, getComparator(order, orderBy));
-      const updatedRows = sortedRows.slice(
-        newPage * rowsPerPage,
-        newPage * rowsPerPage + rowsPerPage
-      );
-      setVisibleRows(updatedRows);
-      const numEmptyRows =
-        newPage > 0
-          ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
-          : 0;
-      const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
-      setPaddingHeight(newPaddingHeight);
-      setTimeout(() => {
-        setCargando(false);
-      }, 1000);
+    // if (!isLoadinginstructions) {
+    if (props.erp == 2) {
+      rows = props.dataInstructions.map((data) => {
+        return {
+          id: data.id_instruccions,
+          rut: data.rutDeudor,
+          razonSocial: data.nombreDeudor,
+          giro: data.giroDeudor,
+          comuna: "Las Condes",
+          direccion: data.direccionDeudor,
+          producto: data.glosa,
+          precio: data.montoNeto,
+        };
+      });
+    } else if (props.erp == 1) {
+      rows = props.dataInstructions.map((data) => {
+        return {
+          id: data.id_instruccions,
+          folioReferencia: data.codigoRef,
+          razonReferencia: data.glosa,
+          razonSocial: data.nombreDeudor,
+          rut: data.rutDeudor,
+          folio: data.folio,
+          fechaCarta: data.fecha_carta,
+          concepto: data.glosa,
+          neto: data.montoNeto,
+          iva: data.montoNeto * 0.19,
+          total: data.montoBruto,
+          giro: data.giroDeudor,
+          direccion: data.direccionDeudor,
+          comuna: "Las Condes",
+        };
+      });
+    } else if (props.erp == 7 || props.erp == 5) {
+      rows = props.dataInstructions.map((data) => {
+        return {
+          id: data.id_instruccions,
+          numeroCorrelativo: data.id_instruccions,
+          fecha: devuelveFechaHoy(),
+          fechaVencimiento: devuelveFechaHoy(1),
+          codigoCliente: data.rutDeudor,
+          afecto: data.montoNeto,
+          total: data.montoNeto * 0.19,
+          nombre: data.nombreDeudor,
+          direccion: data.direccionDeudor,
+          comentarioProducto: data.glosa,
+        };
+      });
     }
-  }, [isLoadinginstructions]);
+    rowspermanent = rows;
+    rowsOnMount();
+    setRowsPerPage(5);
+    let newPage = 0;
+    setPage(newPage);
+    const sortedRows = stableSort(rows, getComparator(order, orderBy));
+    const updatedRows = sortedRows.slice(
+      newPage * rowsPerPage,
+      newPage * rowsPerPage + rowsPerPage
+    );
+    setVisibleRows(updatedRows);
+    const numEmptyRows =
+      newPage > 0 ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length) : 0;
+    const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
+    setPaddingHeight(newPaddingHeight);
+    setTimeout(() => {
+      setCargando(false);
+    }, 1000);
+    // }
+  }, []);
 
   const handleSetRow = (event) => {
     const {
@@ -1109,7 +1101,7 @@ function TabInstrucciones(props) {
       let fechaCorta = dia + "-" + mes + "-" + año;
       return fechaCorta;
     };
-    for (let i in dataInstructions.data.filter((p) =>
+    for (let i in props.dataInstructions.filter((p) =>
       selected.includes(p.id_instruccions)
     )) {
       let obj = new Object();
@@ -1118,13 +1110,13 @@ function TabInstrucciones(props) {
         obj.dte = "";
         obj.id_dte = "";
         obj.Doc = "";
-        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
-        obj.RazonReferencia = dataInstructions.data[i].glosa;
+        obj.FolioReferencia = props.dataInstructions[i].codigoRef;
+        obj.RazonReferencia = props.dataInstructions[i].glosa;
         obj.EstadoEmision = "";
         obj.EstadoPagado = "";
         obj.SiglaCen = "";
-        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
-        obj.Rut = dataInstructions.data[i].rutDeudor;
+        obj.RazonSocial = props.dataInstructions[i].nombreDeudor;
+        obj.Rut = props.dataInstructions[i].rutDeudor;
         obj.Folio = "";
         obj.nnc = "";
         obj.nnd = "";
@@ -1133,46 +1125,47 @@ function TabInstrucciones(props) {
         obj.FechaVencimiento = devuelveFechaHoy(1);
         obj.FechaReception = "";
         obj.FechaCarta = transformtToShortDate(
-          dataInstructions.data[i].fecha_carta
+          props.dataInstructions[i].fecha_carta
         );
         obj.CartaN = "";
-        obj.Concepto = dataInstructions.data[i].glosa;
+        obj.Concepto = props.dataInstructions[i].glosa;
         obj.MesConsumido = "";
         obj.Codcuadro = "";
         obj.CodigoCP = "";
         obj.Version = "";
-        obj.neto = dataInstructions.data[i].montoNeto;
+        obj.neto = props.dataInstructions[i].montoNeto;
         obj.iva =
-          dataInstructions.data[i].montoBruto -
-          dataInstructions.data[i].montoNeto;
-        obj.total = dataInstructions.data[i].montoBruto;
+          props.dataInstructions[i].montoBruto -
+          props.dataInstructions[i].montoNeto;
+        obj.total = props.dataInstructions[i].montoBruto;
         obj.OrdenCompra = "";
         obj.FechaEstimaP = "";
-        obj.Glosa = dataInstructions.data[i].glosa;
+        obj.Glosa = props.dataInstructions[i].glosa;
         obj.MacroEmitFact = "";
         obj.MacroCobranza = "";
         obj.FechaEnviEmit = "";
         obj.MacroGenerarDTE = "";
-        obj.giro = dataInstructions.data[i].giroDeudor;
-        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
+        obj.giro = props.dataInstructions[i].giroDeudor;
+        obj.DireccionesRecepcion = props.dataInstructions[i].direccionDeudor;
         obj.ComunaRecepcion = "Los leones";
       } else if (props.erp == 2 && nubox == 1) {
         obj.Tipo = "33";
-        obj.Folio = dataInstructions.data[i].id_instruccions;
+        obj.Folio = props.dataInstructions[i].id_instruccions;
         obj.Secuencia = 1;
         obj.FechaEmision = devuelveFechaHoy();
-        obj.Rut = dataInstructions.data[i].rutDeudor;
-        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
-        obj.giro = dataInstructions.data[i].giroDeudor.substring(0, 20);
+        obj.Rut = props.dataInstructions[i].rutDeudor;
+        obj.RazonSocial = props.dataInstructions[i].nombreDeudor;
+        obj.giro = props.dataInstructions[i].giroDeudor.substring(0, 20);
         obj.ComunaRecepcion = "Las condes";
-        obj.DireccionesRecepcion = dataInstructions.data[
-          i
-        ].direccionDeudor.substring(0, 20);
+        obj.DireccionesRecepcion =
+          props.dataInstructions[i].direccionDeudor == null
+            ? ""
+            : props.dataInstructions[i].direccionDeudor.substring(0, 20);
         obj.Afecto = "SI";
-        obj.producto = dataInstructions.data[i].glosa;
+        obj.producto = props.dataInstructions[i].glosa;
         obj.Descripcion = "";
         obj.Cantidad = "1";
-        obj.Precio = dataInstructions.data[i].montoNeto;
+        obj.Precio = props.dataInstructions[i].montoNeto;
         obj.Porcentaje = 0;
         obj.Email = "";
         obj.TipoServicio = "";
@@ -1181,38 +1174,38 @@ function TabInstrucciones(props) {
         obj.FechaVencimiento = "";
       } else if (props.erp == 2 && nubox == 2) {
         obj.Tipo2 = "33";
-        obj.Folio2 = dataInstructions.data[i].id_instruccions;
+        obj.Folio2 = props.dataInstructions[i].id_instruccions;
         obj.Secuencia2 = 1;
         obj.TipoDocumento = "SEN";
-        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
+        obj.FolioReferencia = props.dataInstructions[i].codigoRef;
         obj.FechaCarta = transformtToShortDate(
-          dataInstructions.data[i].fecha_carta
+          props.dataInstructions[i].fecha_carta
         );
         obj.MotivoRef = "";
-        obj.RazonReferencia2 = dataInstructions.data[i].glosa;
+        obj.RazonReferencia2 = props.dataInstructions[i].glosa;
       } else if (props.erp == 3) {
-        obj.Rut = dataInstructions.data[i].rutDeudor.replace("-", "");
+        obj.Rut = props.dataInstructions[i].rutDeudor.replace("-", "");
         obj.Tipo = "33";
-        obj.Folio = dataInstructions.data[i].folio;
+        obj.Folio = props.dataInstructions[i].folio;
         obj.FechaEmision = devuelveFechaHoy();
-        obj.Rutreceptor = dataInstructions.data[i].rutDeudor;
-        obj.RazonSocial = dataInstructions.data[i].nombreDeudor;
-        obj.giro = dataInstructions.data[i].giroDeudor;
-        obj.DireccionesRecepcion = dataInstructions.data[i].direccionDeudor;
+        obj.Rutreceptor = props.dataInstructions[i].rutDeudor;
+        obj.RazonSocial = props.dataInstructions[i].nombreDeudor;
+        obj.giro = props.dataInstructions[i].giroDeudor;
+        obj.DireccionesRecepcion = props.dataInstructions[i].direccionDeudor;
         obj.ComunaRecepcion = "Las condes";
         obj.Email = "";
         obj.Exento = "0";
-        obj.neto = dataInstructions.data[i].montoNeto;
+        obj.neto = props.dataInstructions[i].montoNeto;
         obj.iva =
-          dataInstructions.data[i].montoBruto -
-          dataInstructions.data[i].montoNeto;
-        obj.total = dataInstructions.data[i].montoBruto;
+          props.dataInstructions[i].montoBruto -
+          props.dataInstructions[i].montoNeto;
+        obj.total = props.dataInstructions[i].montoBruto;
         obj.TipoReferencia = "SEN";
-        obj.FolioReferencia = dataInstructions.data[i].codigoRef;
+        obj.FolioReferencia = props.dataInstructions[i].codigoRef;
         obj.CodReferencia = "0";
-        obj.DES1 = dataInstructions.data[i].glosa;
+        obj.DES1 = props.dataInstructions[i].glosa;
         obj.GLO1 = "";
-        obj.MNT1 = dataInstructions.data[i].montoNeto;
+        obj.MNT1 = props.dataInstructions[i].montoNeto;
         obj.DES2 = "";
         obj.GLO2 = "";
         obj.MNT2 = "0";
@@ -1242,16 +1235,16 @@ function TabInstrucciones(props) {
         obj.MNT10 = "0";
         obj.GlosaLarga = "";
         obj.FechaVencimiento = devuelveFechaHoy(2);
-        obj.GlosaReferencia = dataInstructions.data[i].glosa;
+        obj.GlosaReferencia = props.dataInstructions[i].glosa;
         obj.FechaCarta = transformtToShortDate(
-          dataInstructions.data[i].fecha_carta
+          props.dataInstructions[i].fecha_carta
         );
       } else if (props.erp == 7 || props.erp == 5) {
         obj.DestinodelDocumento = "A";
         obj.Documentoimpresosegeneranulo = "N";
         obj.DocumentoimpresoGeneraRebajaStock = "N";
         obj.TipodeDocumento = "FVAELECT";
-        obj.NúmeroCorrelativo = dataInstructions.data[i].id_instruccions;
+        obj.NúmeroCorrelativo = props.dataInstructions[i].id_instruccions;
         obj.Nimerofinalsiloboletas = "";
         obj.Fecha = devuelveFechaHoy();
         obj.Local = "Local";
@@ -1260,7 +1253,7 @@ function TabInstrucciones(props) {
         obj.TasaReferencia = "1";
         obj.CondicióndePago = "CR2";
         obj.FechadeVencimiento = devuelveFechaHoy(1);
-        obj.CódigodelCliente = dataInstructions.data[i].rutDeudor;
+        obj.CódigodelCliente = props.dataInstructions[i].rutDeudor;
         obj.TipodeCliente = "";
         obj.CentrodeNegocios = "";
         obj.Clasificador1 = "";
@@ -1268,9 +1261,9 @@ function TabInstrucciones(props) {
         obj.OrigendelDocumento = "";
         obj.ListadePrecio = "";
         obj.CódigodelProyecto = "";
-        obj.Afecto = dataInstructions.data[i].montoNeto;
+        obj.Afecto = props.dataInstructions[i].montoNeto;
         obj.Exento = "0";
-        obj.Total = dataInstructions.data[i].montoBruto;
+        obj.Total = props.dataInstructions[i].montoBruto;
         obj.BodegaInventario = "";
         obj.MotivodemovimientoInventario = "";
         obj.CentrodeNegociosInventario = "";
@@ -1279,31 +1272,31 @@ function TabInstrucciones(props) {
         obj.DireccióndeDespacho = "";
         obj.Clasificador1Inventario = "";
         obj.Clasificador2Inventario = "";
-        obj.CódigoLegal = dataInstructions.data[i].rutDeudor;
-        obj.Nombre = dataInstructions.data[i].nombreDeudor;
-        obj.Giros = dataInstructions.data[i].giroDeudor;
-        obj.Dirección = dataInstructions.data[i].direccionDeudor;
+        obj.CódigoLegal = props.dataInstructions[i].rutDeudor;
+        obj.Nombre = props.dataInstructions[i].nombreDeudor;
+        obj.Giros = props.dataInstructions[i].giroDeudor;
+        obj.Dirección = props.dataInstructions[i].direccionDeudor;
         obj.Ciudads = "Las condes";
         obj.Rubro = "1";
         obj.Glosa = "";
         obj.LíneadeDetalle = "1";
         obj.ArticuloServicio = "S";
-        obj.CodigodelProducto = dataInstructions.data[i].glosa;
+        obj.CodigodelProducto = props.dataInstructions[i].glosa;
         obj.Cantidad = "1";
-        obj.PrecioUnitario = dataInstructions.data[i].montoNeto;
+        obj.PrecioUnitario = props.dataInstructions[i].montoNeto;
         obj.Descuento = "0";
         obj.TipodeDescuento = "P";
         obj.TipodeVenta = "";
-        obj.TotaldelProducto = dataInstructions.data[i].montoBruto;
+        obj.TotaldelProducto = props.dataInstructions[i].montoBruto;
         obj.PrecioLista = "";
-        obj.TotalNeto = dataInstructions.data[i].montoNeto;
+        obj.TotalNeto = props.dataInstructions[i].montoNeto;
         obj.FichaProducto = "";
         obj.CentrodeNegociosProducto = "EMPADM000000000";
         obj.Clasificador1Producto = "";
         obj.Clasificador2Producto = "";
         obj.CantidaddeUnidadEquivalente = "";
         obj.CantidaddePeriodos = "";
-        obj.ComentarioProducto = dataInstructions.data[i].concepto;
+        obj.ComentarioProducto = props.dataInstructions[i].concepto;
         obj.AnálisisAtributo1Producto = "";
         obj.AnálisisAtributo2Producto = "";
         obj.AnálisisAtributo3Producto = "";
@@ -1322,14 +1315,14 @@ function TabInstrucciones(props) {
         obj.CódigodeImpuesto = "IVA";
         obj.ValordeImpuesto = "19";
         obj.MontodeImpuesto =
-          dataInstructions.data[i].montoBruto -
-          dataInstructions.data[i].montoNeto;
+          props.dataInstructions[i].montoBruto -
+          props.dataInstructions[i].montoNeto;
         obj.CentrodeNegociosProducto2 = "";
         obj.Clasificador1Impuesto = "";
         obj.Clasificador2Impuesto = "";
         obj.NúmerodeCuota = "1";
         obj.FechadeCuota = devuelveFechaHoy(1);
-        obj.MontodeCuota = dataInstructions.data[i].montoBruto;
+        obj.MontodeCuota = props.dataInstructions[i].montoBruto;
         obj.RelaciónlineaSeries = "";
         obj.SufijoArtículoInventario = "";
         obj.TipodeRecargoyDescuento = "";
@@ -1359,11 +1352,11 @@ function TabInstrucciones(props) {
         obj.TotaldeBultos = "";
         obj.FormadePago = "";
         obj.TipoDocumentoAsociado = "SEN";
-        obj.FolioDocumentoAsociado = dataInstructions.data[i].codigoRef;
+        obj.FolioDocumentoAsociado = props.dataInstructions[i].codigoRef;
         obj.FechaDocumentoAsociado = transformtToShortDate(
-          dataInstructions.data[i].fecha_carta
+          props.dataInstructions[i].fecha_carta
         );
-        obj.ComentarioDocumentoAsociado = dataInstructions.data[i].concepto;
+        obj.ComentarioDocumentoAsociado = props.dataInstructions[i].concepto;
         obj.email = "";
         obj.EsdocumentodetraspasoSsiNno = "S";
       }
@@ -1417,337 +1410,315 @@ function TabInstrucciones(props) {
   };
   return (
     <Box className="m-[20px]">
-      {isLoadinginstructions ? (
-        <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-          {/* <p>Chupa Chupa .....</p> */}
-          <LinearProgress color="primary" />
-        </Stack>
-      ) : (
-        <>
-          <Box>
-            <Box className="flex flex-row mb-[20px]  w-full">
-              <TextField
-                id="outlined-basic"
-                label="Filtrar"
-                variant="filled"
-                onChange={(e) => {
-                  handleSetRow(e);
-                }}
-              />
-              <Box className="flex justify-center mb-[5px] w-full">
-                {props.erp == 1 || props.erp == 3 || props.erp == 7 ? (
+      <>
+        <Box>
+          <Box className="flex flex-row mb-[20px]  w-full">
+            <TextField
+              id="outlined-basic"
+              label="Filtrar"
+              variant="filled"
+              onChange={(e) => {
+                handleSetRow(e);
+              }}
+            />
+            <Box className="flex justify-center mb-[5px] w-full">
+              {props.erp == 1 || props.erp == 3 || props.erp == 7 ? (
+                <Button
+                  className=" rounded flex justify-start min-w-[170px] m-[5px]"
+                  variant="contained"
+                  color="customdos"
+                  onClick={() => downloadExcelFile("mydata", 0)}
+                >
+                  <SiMicrosoftexcel size={30} className="mr-[10px] " />
+                  Descargar
+                </Button>
+              ) : props.erp == 2 ? (
+                <>
                   <Button
                     className=" rounded flex justify-start min-w-[170px] m-[5px]"
                     variant="contained"
                     color="customdos"
-                    onClick={() => downloadExcelFile("mydata", 0)}
+                    onClick={() => downloadExcelFile("mydata", 1)}
                   >
                     <SiMicrosoftexcel size={30} className="mr-[10px] " />
-                    Descargar
+                    Descargar Folios
                   </Button>
-                ) : props.erp == 2 ? (
-                  <>
-                    <Button
-                      className=" rounded flex justify-start min-w-[170px] m-[5px]"
-                      variant="contained"
-                      color="customdos"
-                      onClick={() => downloadExcelFile("mydata", 1)}
-                    >
-                      <SiMicrosoftexcel size={30} className="mr-[10px] " />
-                      Descargar Folios
-                    </Button>
-                    <Button
-                      className=" rounded flex justify-start min-w-[170px] m-[5px]"
-                      variant="contained"
-                      color="customdos"
-                      // onClick={exportToExcel}
-                      onClick={() => downloadExcelFile("mydata", 2)}
-                    >
-                      <SiMicrosoftexcel size={30} className="mr-[10px] " />
-                      Descargar Anexo
-                    </Button>
-                  </>
-                ) : props.erp == 5 ? (
                   <Button
                     className=" rounded flex justify-start min-w-[170px] m-[5px]"
                     variant="contained"
                     color="customdos"
-                    onClick={() => downloadExcelFile("mydata", 0)}
+                    // onClick={exportToExcel}
+                    onClick={() => downloadExcelFile("mydata", 2)}
                   >
-                    <SiBitcoinsv size={30} className="mr-[10px]" />
-                    Facturar
+                    <SiMicrosoftexcel size={30} className="mr-[10px] " />
+                    Descargar Anexo
                   </Button>
-                ) : (
-                  <></>
-                )}
-              </Box>
+                </>
+              ) : props.erp == 5 ? (
+                <Button
+                  className=" rounded flex justify-start min-w-[170px] m-[5px]"
+                  variant="contained"
+                  color="customdos"
+                  onClick={() => downloadExcelFile("mydata", 0)}
+                >
+                  <SiBitcoinsv size={30} className="mr-[10px]" />
+                  Facturar
+                </Button>
+              ) : (
+                <></>
+              )}
             </Box>
-
-            <TableContainer>
-              {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
-              <Table
-                sx={{ minWidth: 750 }}
-                aria-labelledby="tableTitle"
-                size={dense ? "small" : "medium"}
-                stickyHeader
-              >
-                <EnhancedTableHead
-                  erp={props.erp}
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody>
-                  {visibleRows
-                    ? visibleRows.map((row, index) => {
-                        const isItemSelected = isSelected(row.id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
-                        {
-                          if (props.erp == 2 || props.erp == 3) {
-                            return (
-                              <StyledTableRow
-                                hover
-                                onClick={(event) => handleClick(event, row.id)}
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                key={row.id}
-                                selected={isItemSelected}
-                              >
-                                <StyledTableCell padding="checkbox">
-                                  <Checkbox
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputProps={{
-                                      "aria-labelledby": "Disconformidad",
-                                    }}
-                                  />
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  align="left"
-                                  component="th"
-                                  id={labelId}
-                                  scope="row"
-                                >
-                                  {row.rut}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.razonSocial}
-                                  align="left"
-                                >
-                                  {row.razonSocial}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.giro} align="left">
-                                  {row.giro}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.comuna} align="left">
-                                  {row.comuna}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.direccion}
-                                  align="left"
-                                >
-                                  {row.direccion}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.producto}
-                                  align="left"
-                                >
-                                  {row.producto}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.precio} align="left">
-                                  {chile.format(row.precio)}
-                                </StyledTableCell>
-                              </StyledTableRow>
-                            );
-                          } else if (props.erp == 1) {
-                            return (
-                              <StyledTableRow
-                                hover
-                                role="checkbox"
-                                onClick={(event) => handleClick(event, row.id)}
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                key={row.id}
-                                selected={isItemSelected}
-                              >
-                                <StyledTableCell padding="checkbox">
-                                  <Checkbox
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputProps={{
-                                      "aria-labelledby": "Disconformidad",
-                                    }}
-                                  />
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  align="left"
-                                  component="th"
-                                  id={labelId}
-                                  scope="row"
-                                >
-                                  {row.folioReferencia}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.razonReferencia}
-                                  align="left"
-                                >
-                                  {row.razonReferencia}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.razonSocial}
-                                  align="left"
-                                >
-                                  {row.razonSocial}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.rut} align="left">
-                                  {row.rut}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.folio} align="left">
-                                  {row.folio}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.fechaCarta}
-                                  align="left"
-                                >
-                                  {row.fechaCarta}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.concepto}
-                                  align="left"
-                                >
-                                  {row.concepto}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.neto} align="left">
-                                  {chile.format(row.neto)}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.iva} align="left">
-                                  {chile.format(row.iva)}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.total} align="left">
-                                  {chile.format(row.total)}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.giro} align="left">
-                                  {row.giro}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.direccion}
-                                  align="left"
-                                >
-                                  {row.direccion}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.comuna} align="left">
-                                  {row.comuna}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.precio} align="left">
-                                  {chile.format(row.precio)}
-                                </StyledTableCell>
-                              </StyledTableRow>
-                            );
-                          } else if (props.erp == 7 || props.erp == 5) {
-                            return (
-                              <StyledTableRow
-                                hover
-                                role="checkbox"
-                                onClick={(event) => handleClick(event, row.id)}
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                key={row.id}
-                                selected={isItemSelected}
-                              >
-                                <StyledTableCell padding="checkbox">
-                                  <Checkbox
-                                    color="primary"
-                                    checked={isItemSelected}
-                                    inputProps={{
-                                      "aria-labelledby": "Disconformidad",
-                                    }}
-                                  />
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  align="left"
-                                  component="th"
-                                  id={labelId}
-                                  scope="row"
-                                >
-                                  {row.numeroCorrelativo}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.fecha} align="left">
-                                  {row.fecha}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.fechaVencimiento}
-                                  align="left"
-                                >
-                                  {row.fechaVencimiento}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.codigoCliente}
-                                  align="left"
-                                >
-                                  {row.codigoCliente}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.afecto} align="left">
-                                  {chile.format(row.afecto)}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.total} align="left">
-                                  {chile.format(row.total)}
-                                </StyledTableCell>
-                                <StyledTableCell key={row.nombre} align="left">
-                                  {row.nombre}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.direccion}
-                                  align="left"
-                                >
-                                  {row.direccion}
-                                </StyledTableCell>
-                                <StyledTableCell
-                                  key={row.comentarioProducto}
-                                  align="left"
-                                >
-                                  {row.comentarioProducto}
-                                </StyledTableCell>
-                              </StyledTableRow>
-                            );
-                          }
-                        }
-                      })
-                    : null}
-                  {paddingHeight > 0 && (
-                    <TableRow
-                      style={{
-                        height: paddingHeight,
-                      }}
-                    >
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-
-            <TablePagination
-              labelRowsPerPage="Filas por página"
-              variant="h5"
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
           </Box>
-          <FormControlLabel
-            control={<Switch checked={dense} onChange={handleChangeDense} />}
-            label="Disminuir espacio"
+
+          <TableContainer>
+            {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={dense ? "small" : "medium"}
+              stickyHeader
+            >
+              <EnhancedTableHead
+                erp={props.erp}
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {visibleRows
+                  ? visibleRows.map((row, index) => {
+                      const isItemSelected = isSelected(row.id);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+                      {
+                        if (props.erp == 2 || props.erp == 3) {
+                          return (
+                            <StyledTableRow
+                              hover
+                              onClick={(event) => handleClick(event, row.id)}
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row.id}
+                              selected={isItemSelected}
+                            >
+                              <StyledTableCell padding="checkbox">
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": "Disconformidad",
+                                  }}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell
+                                align="left"
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                              >
+                                {row.rut}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                key={row.razonSocial}
+                                align="left"
+                              >
+                                {row.razonSocial}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.giro} align="left">
+                                {row.giro}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.comuna} align="left">
+                                {row.comuna}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.direccion} align="left">
+                                {row.direccion}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.producto} align="left">
+                                {row.producto}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.precio} align="left">
+                                {chile.format(row.precio)}
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          );
+                        } else if (props.erp == 1) {
+                          return (
+                            <StyledTableRow
+                              hover
+                              role="checkbox"
+                              onClick={(event) => handleClick(event, row.id)}
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row.id}
+                              selected={isItemSelected}
+                            >
+                              <StyledTableCell padding="checkbox">
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": "Disconformidad",
+                                  }}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell
+                                align="left"
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                              >
+                                {row.folioReferencia}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                key={row.razonReferencia}
+                                align="left"
+                              >
+                                {row.razonReferencia}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                key={row.razonSocial}
+                                align="left"
+                              >
+                                {row.razonSocial}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.rut} align="left">
+                                {row.rut}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.folio} align="left">
+                                {row.folio}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                key={row.fechaCarta}
+                                align="left"
+                              >
+                                {row.fechaCarta}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.concepto} align="left">
+                                {row.concepto}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.neto} align="left">
+                                {chile.format(row.neto)}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.iva} align="left">
+                                {chile.format(row.iva)}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.total} align="left">
+                                {chile.format(row.total)}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.giro} align="left">
+                                {row.giro}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.direccion} align="left">
+                                {row.direccion}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.comuna} align="left">
+                                {row.comuna}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.precio} align="left">
+                                {chile.format(row.precio)}
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          );
+                        } else if (props.erp == 7 || props.erp == 5) {
+                          return (
+                            <StyledTableRow
+                              hover
+                              role="checkbox"
+                              onClick={(event) => handleClick(event, row.id)}
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row.id}
+                              selected={isItemSelected}
+                            >
+                              <StyledTableCell padding="checkbox">
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": "Disconformidad",
+                                  }}
+                                />
+                              </StyledTableCell>
+                              <StyledTableCell
+                                align="left"
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                              >
+                                {row.numeroCorrelativo}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.fecha} align="left">
+                                {row.fecha}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                key={row.fechaVencimiento}
+                                align="left"
+                              >
+                                {row.fechaVencimiento}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                key={row.codigoCliente}
+                                align="left"
+                              >
+                                {row.codigoCliente}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.afecto} align="left">
+                                {chile.format(row.afecto)}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.total} align="left">
+                                {chile.format(row.total)}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.nombre} align="left">
+                                {row.nombre}
+                              </StyledTableCell>
+                              <StyledTableCell key={row.direccion} align="left">
+                                {row.direccion}
+                              </StyledTableCell>
+                              <StyledTableCell
+                                key={row.comentarioProducto}
+                                align="left"
+                              >
+                                {row.comentarioProducto}
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          );
+                        }
+                      }
+                    })
+                  : null}
+                {paddingHeight > 0 && (
+                  <TableRow
+                    style={{
+                      height: paddingHeight,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          <TablePagination
+            labelRowsPerPage="Filas por página"
+            variant="h5"
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
-        </>
-      )}
+        </Box>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Disminuir espacio"
+        />
+      </>
     </Box>
   );
 }

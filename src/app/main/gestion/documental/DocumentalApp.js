@@ -206,35 +206,34 @@ function DocumentalApp(props) {
           </Tabs>
           {tabValue === 0 && (
             <Acreedor
-              cliente={client}
-              // dataExcelAcreedor={getDataAcreedor}
+              //EXCEL HISTORICOS
               dataExcel={getDataExcels}
               fetchingExcels={fetchingExcels}
-              idParticipant={client.id}
+              //DATOS CLIENTE
+              cliente={client}
             />
           )}
           {tabValue === 1 && (
             <Deudor
-              dataExcel={getDataExcels}
-              // dataExcelDeudor={getDataDeudor}
               //EXCEL HISTORICOS
-              cliente={client}
+              dataExcel={getDataExcels}
               fetchingExcels={fetchingExcels}
-              //
-              idParticipant={client.id}
+              //DATOS CLIENTE
+              cliente={client}
             />
           )}
           {tabValue === 2 && (
             <Facturacion
               dataExcel={getDataExcels}
               fetchingExcels={fetchingExcels}
-              idParticipant={client.id}
+              cliente={client}
             />
           )}
           {tabValue === 3 && (
             <NominaPago
-              dataExcel={getDataExcels}
-              fetchingExcels={fetchingExcels}
+              // dataExcel={getDataExcels}
+              // fetchingExcels={fetchingExcels}
+              cliente={client}
             />
           )}
         </div>

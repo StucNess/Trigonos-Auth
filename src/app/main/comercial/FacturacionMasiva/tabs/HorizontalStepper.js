@@ -6,9 +6,13 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
-
+import { useGetInstruccionesSpecmMutation } from "app/store/instrucciones/instruccionesApi";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
+// ELEMENTOS VISUALES
+import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
+//
 import Select from "@mui/material/Select";
 import { HiOutlineInformationCircle, HiOutlineUser } from "react-icons/hi";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -19,6 +23,7 @@ import { useGetInstruccionesQuery } from "app/store/instrucciones/instruccionesA
 import { useState } from "react";
 import { useEffect } from "react";
 import TabInstrucciones from "./TabInstrucciones";
+import { array } from "prop-types";
 
 // PARA EL ESTILO DEL SELECT MULTIPLE
 function getStyles(name, personName, theme) {
@@ -36,26 +41,21 @@ const steps = [
 ];
 // let idErp = 0;
 let erpSelect;
+let array2 = [];
 export default function HorizontalLinearStepper(props) {
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = useState(0);
   const [idParticipant, setIdParticipant] = useState(0);
+  const [getInstrucciones] = useGetInstruccionesSpecmMutation();
   const [facturador, setFacturador] = useState("Vacio");
+  const [cargando, setCargando] = useState(true);
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetInstruccionesQuery(idParticipant);
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    // setSkipped(newSkipped);
-  };
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
   useEffect(() => {
     if (idParticipant != 0) {
       erpSelect = props.dataParticipants.find(
         (d) => d.id == idParticipant
       ).trgns_erp;
     }
-
     if (erpSelect == 1) {
       setFacturador("SAP_ABASTIBLE");
     } else if (erpSelect == 2) {
@@ -67,20 +67,65 @@ export default function HorizontalLinearStepper(props) {
     } else if (erpSelect == 7) {
       setFacturador("DEFONTANA");
     }
-
-    console.log(props.dataParticipants);
   }, [idParticipant]);
+
+  const handleNext = () => {
+    callInstructions();
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+
+    // setSkipped(newSkipped);
+  };
+  const handleBack = () => {
+    // setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    array2 = [];
+    setActiveStep(0);
+    setCargando(true);
+  };
 
   const handleReset = () => {
     setActiveStep(0);
+    setCargando(true);
   };
-  const [cliente, setcliente] = React.useState("");
 
   const handleChange = (event) => {
     setIdParticipant(event.target.value);
     // idErp = props.dataParticipants.find((d) => d.id);
   };
-
+  const callInstructions = () => {
+    getInstrucciones({
+      id: idParticipant,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: {
+        Folio: 0,
+        Acreedor: idParticipant,
+        MontoNeto: 10,
+        EstadoEmision: "No Facturado",
+      },
+    }).then(({ data }) => {
+      let buclesF = Math.round(data.count / 100 + 0.49) + 2;
+      for (let x = 1; x < buclesF; x++) {
+        getInstrucciones({
+          id: idParticipant,
+          PageIndex: x,
+          PageSize: 100,
+          spec: {
+            Folio: 0,
+            Acreedor: idParticipant,
+            MontoNeto: 10,
+            EstadoEmision: "No Facturado",
+          },
+        }).then(({ data }) => {
+          data.data.map((e) => {
+            array2.push(e);
+          });
+          if (array2.length === data.count) {
+            setCargando(false);
+          }
+        });
+      }
+    });
+  };
   return (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
@@ -152,16 +197,23 @@ export default function HorizontalLinearStepper(props) {
           ) : activeStep === 1 ? ( //descarga de folio/instrucciones
             <>
               {/* <Box> */}
-
-              <TabInstrucciones
-                erp={
-                  props.dataParticipants.find((d) => d.id == idParticipant)
-                    .trgns_erp
-                }
-                id={
-                  props.dataParticipants.find((d) => d.id == idParticipant).id
-                }
-              />
+              {cargando == true ? (
+                <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                  {/* <p>Chupa Chupa .....</p> */}
+                  <LinearProgress color="primary" />
+                </Stack>
+              ) : (
+                <TabInstrucciones
+                  dataInstructions={array2}
+                  erp={
+                    props.dataParticipants.find((d) => d.id == idParticipant)
+                      .trgns_erp
+                  }
+                  id={
+                    props.dataParticipants.find((d) => d.id == idParticipant).id
+                  }
+                />
+              )}
 
               {/* </Box> */}
             </>
