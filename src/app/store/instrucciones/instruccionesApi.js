@@ -175,8 +175,7 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["concepto"],
     }),
-<<<<<<< HEAD
-=======
+
     getCodRef: builder.query({
       query: (data) => ({
         url: data.spec
@@ -302,7 +301,7 @@ export const instruccionesApi = createApi({
       providesTags: ["Carta"],
     }),
 
->>>>>>> 3fa9b96859c655c2b9f2f42ee5273f5f7dc04785
+
     getNombreAcreedor: builder.query({
       query: (data) => ({
         url: data.spec
@@ -1091,7 +1090,7 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudorMutation"],
     }),
-<<<<<<< HEAD
+
     ///////////////////////
     // PATCH MUTATION //
     patchInstruccionesSpec: builder.mutation({
@@ -1166,7 +1165,7 @@ export const instruccionesApi = createApi({
       }),
     }),
     ///////////////////////
-=======
+
     //CONTADORES SOLUCION DE CARGA TEMPORAL 
     getNumberConcept: builder.mutation({
       query: (data) => ({
@@ -1602,7 +1601,7 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudorMutation"],
     }),
->>>>>>> 3fa9b96859c655c2b9f2f42ee5273f5f7dc04785
+
   }),
 });
 export const {
@@ -1625,11 +1624,11 @@ export const {
   useGetRutAcreedormMutation,
   useGetNombreDeudormMutation,
   useGetNombreAcreedormMutation,
-<<<<<<< HEAD
+
   usePostFacturacionDeudorMutation,
   usePostFacturacionAcreedorMutation,
   usePostFacturacionMutation,
-=======
+
   useGetCodRefQuery,
   useGetCartaQuery,
   useGetNumberConceptMutation,
@@ -1640,5 +1639,5 @@ export const {
   useGetNumberNombreAcreedorMutation,
   useGetNumberNombreDeudorMutation,
 
->>>>>>> 3fa9b96859c655c2b9f2f42ee5273f5f7dc04785
+
 } = instruccionesApi;
