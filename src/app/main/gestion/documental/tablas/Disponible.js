@@ -1,12 +1,7 @@
-import { Paper, Typography, Button, Box } from "@mui/material";
-import * as React from "react";
+import { Box } from "@mui/material";
 import * as XLSX from "xlsx";
-
 import { SiMicrosoftexcel } from "react-icons/si";
 import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,29 +10,24 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 //DIALOG
-import WarningIcon from "@mui/icons-material/Warning";
 import CircularProgress from "@mui/material/CircularProgress";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import ReportIcon from "@mui/icons-material/Report";
 import { forwardRef } from "react";
 //
 //LLAMADAS A API REDUX
 import { useGetInstruccionesSpecmMutation } from "app/store/instrucciones/instruccionesApi";
 //
 import { useState } from "react";
-import { useEffect } from "react";
-import { id } from "date-fns/locale";
 //TRANSICION DEL DIALOG
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 //
+//ELEMENTOS DE LA TABLA
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#f1f5f9",
@@ -58,7 +48,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   // },
   // hide last border
 }));
-let head1 = [
+//
+//CABECERAS DEL EXCEL
+let headMasivoAcreedor = [
   [
     "ID Instruccion",
     "Nombre Acreedor",
@@ -71,7 +63,7 @@ let head1 = [
     "Monto",
   ],
 ];
-let head2 = [
+let headHistoricoAcreedor = [
   [
     "ID Instruccion",
     "Nombre Acreedor",
@@ -84,10 +76,40 @@ let head2 = [
     "Monto",
   ],
 ];
+let headMasivoDeudor = [
+  [
+    "ID Instruccion",
+    "Nombre Acreedor",
+    "Nombre Deudor",
+    "Rut",
+    "Folio",
+    "Fecha Recepcion",
+    "Fecha Aceptacion",
+    "Concepto",
+    "Monto",
+  ],
+];
+let headHistoricoDeudor = [
+  [
+    "ID Instruccion",
+    "Nombre Acreedor",
+    "Nombre Deudor",
+    "Rut",
+    "Folio",
+    "Fecha Recepcion",
+    "Fecha Aceptacion",
+    "Concepto",
+    "Fecha de Pago",
+    "Monto",
+  ],
+];
+//
+//VARBIABLES
 let array = [];
+//
 export default function Disponible(props) {
+  //STATES
   const [cargando, setCargando] = useState(true);
-  //PROPIEDADES DIALOG
   const [open, setOpen] = useState(false);
   const [stateDataExcel, setStateDataExcel] = useState({
     data: [],
@@ -95,41 +117,59 @@ export default function Disponible(props) {
     msgError: "",
     title: "Cargando porfavor espere",
   });
-
   //
   const [getInstructions, dataInstructions] =
     useGetInstruccionesSpecmMutation();
-  let tableUtils = [
-    {
-      id: 1,
-      name: `AC-${props.cliente.rut}`,
-      description: "Cuadre Masivo de instrucciones acreedor",
-      // dataExcel: cuadremasivo,
-      headerExcel: head1,
-    },
-    {
-      id: 2,
-      name: `AC-HIST-${props.cliente.rut}`,
-      description: "Historia de instrucciones de acreedor",
-      // dataExcel: historico,
-      headerExcel: head2,
-    },
-  ];
+  //DATOS EXCEL
+  let tableUtils = props.acreedor
+    ? [
+        {
+          id: 1,
+          name: `AC-${props.cliente.rut}`,
+          description: "Cuadre Masivo de instrucciones acreedor",
+          headerExcel: headMasivoAcreedor,
+        },
+        {
+          id: 2,
+          name: `AC-HIST-${props.cliente.rut}`,
+          description: "Historia de instrucciones de acreedor",
+          headerExcel: headHistoricoAcreedor,
+        },
+      ]
+    : [
+        {
+          id: 1,
+          name: `DC-${props.cliente.rut}`,
+          description: "Cuadre Masivo de instrucciones deudor",
+          headerExcel: headMasivoDeudor,
+        },
+        {
+          id: 2,
+          name: `DC-HIST-${props.cliente.rut}`,
+          description: "Historia de instrucciones de deudor",
+          headerExcel: headHistoricoDeudor,
+        },
+      ];
+  //
   const callAllInstructions = (header, name, idDocumento) => {
     let jsonApi = {};
     if (idDocumento == 1) {
       jsonApi = {
-        id: 196,
+        id: props.cliente.id,
         PageIndex: 1,
         PageSize: 100,
-        spec: { conFolio: "si", Pagada: true },
+        spec: props.acreedor
+          ? { conFolio: "si", Pagada: false, Acreedor: props.cliente.id }
+          : { Folio: 0, Pagada: false, Deudor: props.cliente.id },
       };
     } else {
       jsonApi = {
-        id: 196,
+        id: props.cliente.id,
         PageIndex: 1,
         PageSize: 100,
-        spec: { Folio: 0, Pagada: true },
+        spec: props.acreedor
+          ? { Folio: 0, Pagada: false, Acreedor: props.cliente.id }
+          : { Folio: 0, Pagada: false, Deudor: props.cliente.id },
       };
     }
     setOpen(true);
@@ -144,11 +184,11 @@ export default function Disponible(props) {
               getInstructions(jsonApi)
                 .then((response) => {
                   response.data.data.map((el) => {
-                    if (idDocumento == 1) {
+                    if (idDocumento == 1 && props.acreedor == true) {
                       array.push({
                         Id: el.id_instruccions,
                         nombre_acreedor: props.cliente.business_Name,
-                        nombre_deudor: el.giroDeudor,
+                        nombre_deudor: el.nombreDeudor,
                         rut: el.rutAcreedor,
                         folio: el.folio,
                         fecha_emision: el.fecha_emision,
@@ -156,16 +196,41 @@ export default function Disponible(props) {
                         glosa: el.glosa,
                         monto: el.montoNeto,
                       });
-                    } else {
+                    } else if (idDocumento == 2 && props.acreedor == true) {
                       array.push({
                         Id: el.id_instruccions,
                         nombre_acreedor: props.cliente.business_Name,
-                        nombre_deudor: el.giroDeudor,
+                        nombre_deudor: el.nombreDeudor,
                         rut: el.rutAcreedor,
                         folio: el.folio,
                         fecha_emision: el.fecha_emision,
                         fecha_pago: el.fecha_pago,
                         glosa: el.glosa,
+                        monto: el.montoNeto,
+                      });
+                    } else if (idDocumento == 1 && props.acreedor == false) {
+                      array.push({
+                        Id: el.id_instruccions,
+                        nombre_acreedor: el.nombreAcreedor,
+                        nombre_deudor: props.cliente.business_Name,
+                        rut: el.rutAcreedor,
+                        folio: el.folio,
+                        fecha_recepcion: el.fecha_recepcion,
+                        fecha_aceptacion: el.fecha_aceptacion,
+                        glosa: el.glosa,
+                        monto: el.montoNeto,
+                      });
+                    } else if (idDocumento == 2 && props.acreedor == false) {
+                      array.push({
+                        Id: el.id_instruccions,
+                        nombre_acreedor: el.nombreAcreedor,
+                        nombre_deudor: props.cliente.business_Name,
+                        rut: el.rutAcreedor,
+                        folio: el.folio,
+                        fecha_recepcion: el.fecha_recepcion,
+                        fecha_aceptacion: el.fecha_aceptacion,
+                        glosa: el.glosa,
+                        fecha_pago: el.fecha_pago,
                         monto: el.montoNeto,
                       });
                     }
@@ -202,7 +267,7 @@ export default function Disponible(props) {
             });
             setOpen(true);
             setTimeout(() => {
-              setOpen(false);
+              restablecerCargaDato();
             }, 2000);
           }
         }
@@ -216,7 +281,7 @@ export default function Disponible(props) {
         });
         setOpen(true);
         setTimeout(() => {
-          setOpen(false);
+          restablecerCargaDato();
         }, 2000);
       });
   };
