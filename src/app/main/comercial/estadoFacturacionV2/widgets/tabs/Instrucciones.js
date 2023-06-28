@@ -931,14 +931,17 @@ let condicionFilters = 0;
   }, [state.acreedor,state.deudor]);
 
   useEffect(() => {
-    setLoadingApis(true);
-    setSkipFetchs(
-      { 
-        ...skipFetchs,
-        skipInstructions:false,
-      })
-    FiltersOne();
-    refetchInstruc();
+    if(!table){
+      setLoadingApis(true);
+      setSkipFetchs(
+        { 
+          ...skipFetchs,
+          skipInstructions:false,
+        })
+      FiltersOne();
+      refetchInstruc();
+    }
+    
   }, [table])
   
 
