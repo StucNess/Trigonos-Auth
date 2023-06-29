@@ -34,7 +34,7 @@ export default function ModalCampo({
     setTable();
   };
   const prueba = rows.find((p) => p.id === valueId);
-
+  console.log(prueba);
   return (
     <div>
       <Modal

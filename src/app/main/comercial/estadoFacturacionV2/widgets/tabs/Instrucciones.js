@@ -515,6 +515,7 @@ let condicionFilters = 0;
     };
     getConceptMutation(Concept).then((response)=>{
       setConceptFilter(response.data);
+      console.log(response.data);
       setCargaConcept(false);
     }).catch((error)=>{
       setCargaConcept(false);
@@ -531,6 +532,9 @@ let condicionFilters = 0;
     }).catch((error)=>{
       setCargaCarta(false);
     });
+
+
+
     // try {
     //   console.log(dataSpec.spec)
     //   getNumConcept(Concept)

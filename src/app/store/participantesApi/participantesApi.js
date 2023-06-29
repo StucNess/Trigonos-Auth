@@ -4,7 +4,7 @@ export const participantesApi = createApi({
   reducerPath: "participantes",
   tagTypes: ["listparticipant", "proyectos", "participant"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/",
+    baseUrl: "http://localhost:5205/",
   }),
   endpoints: (builder) => ({
     getParticipantes: builder.query({
@@ -117,8 +117,8 @@ export const participantesApi = createApi({
       query: (parameters) =>
         `/api/Participantes/${parameters.id}?business_name=${parameters.business_name}?rut=${parameters.rut}`,
     }),
-    getHistorificacion: builder.query({
-      query: (id) => `/Historificacion?${id}`,
+    getHistorificacion: builder.mutation({
+      query: (data) => `/Historificacion/${data.id}?PageIndex=${data.PageIndex}&PageSize=${data.PageSize}`,
     }),
 
     //Optimos
@@ -151,7 +151,7 @@ export const {
   useGetBusinessNameQuery,
   useGetRutQuery,
   useGetParticipantesSpecQuery,
-  useGetHistorificacionQuery,
+  useGetHistorificacionMutation,
   useRefetchQueriesPartMutation,
   useGetPartAllQuery,
   useGetProyAllQuery,
