@@ -1,9 +1,11 @@
 import { useGetEstadoFacturacionQuery, useGetEstadoPagoQuery, useGetEstadoRecepcionadoQuery } from "app/store/metricsApi/metricsApi";
 import GraficoTorta from "./GraficoTorta";
 import { useEffect, useState } from "react";
+import { Stack } from "@mui/system";
+import LinearProgress from "@mui/material/LinearProgress";
 
 export default function Estadisticas(props){
-    const { participantId } = props
+    const { participantId,reLoad } = props
     const { data: getDataPago, isFetching: fetching, refetch: refetchEstPago} = useGetEstadoPagoQuery(participantId);
     const { data: getDataRecep, isFetching: fetchingRecepcionado, refetch: refetchEstRecep } = useGetEstadoRecepcionadoQuery(participantId);
     const { data: getDataFact, isFetching: fetchingFacturado, refetch : refetchEstFact} = useGetEstadoFacturacionQuery(participantId);
@@ -24,10 +26,15 @@ export default function Estadisticas(props){
       refetchEstPago()
       refetchEstRecep()
       refetchEstFact()
-    }, [participantId])
+    }, [participantId,reLoad])
     return (
         <div>
-            {carga ? <p>Cargando...</p>:
+            {carga ?<div className="flex items-center">
+                <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+                  {/* <p>Chupa Chupa .....</p> */}
+                  <LinearProgress color="primary" />
+                </Stack>
+              </div>:
             <GraficoTorta 
                 dataEstPago={getDataPago} 
                 dataEstRecept={getDataRecep} 

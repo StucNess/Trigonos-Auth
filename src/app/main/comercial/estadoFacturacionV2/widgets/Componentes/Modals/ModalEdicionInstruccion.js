@@ -444,7 +444,7 @@ export default function ModalEdicionInstruccion({
                 size="medium"
                 variant="contained"
                 color="primary"
-                // onClick={props.onClose}
+                onClick={handleClose}
             >
                 <ArrowCircleRightOutlinedIcon fontSize="large" />
             </IconButton>

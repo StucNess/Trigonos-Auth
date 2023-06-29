@@ -171,6 +171,8 @@ let condicionFilters = 0;
   const [cart, setCart] = useState([]);
   const [codRef, setCodRef] = useState([]);
   const [limpiar, setLimpiar] = useState(false);
+  
+  const [reloadEstadistica, setReloadEstadistica] = useState(false);
   const [selected, setSelected] = useState({
     sBusinessName: "",
     sRut: "",
@@ -184,6 +186,26 @@ let condicionFilters = 0;
     sTerminoPeriodo: "",
     buscar: false,
   });
+  const [dataSpec, setDataSpec] = useState({
+    id: id,
+    PageIndex: 1,
+    PageSize: 100,
+    spec:{
+      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+      Acreedor:state.acreedor?id:"",
+      Deudor:state.deudor?id:"",
+      EstadoEmision:state.estadoEmision?"Facturado":"",
+      EstadoPago:state.estadoPago?"Pagado":"",
+      RutDeudor:selected.buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+      RutAcreedor:selected.buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+      Glosa:selected.buscar?(selected.sConcept!=""?selected.sConcept:""):"",
+      MontoNeto:selected.buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
+      MontoBruto:selected.buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
+      Folio:selected.buscar?(selected.sFolio!=""?selected.sFolio:""):"",
+      NombreDeudor:selected.buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+      NombreAcreedor:selected.buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+    }})
   const clearFilters = () => {
     setSelected({
       sBusinessName: "",
@@ -220,11 +242,11 @@ let condicionFilters = 0;
   const [modal, setModal] = useState(false);
   const [editar, setEditar] = useState(false);
   
-//apis
-  const { data: getDataName, isFetching: fetchName, refetch: refetchName} = 
-  useGetBusinessNameQuery();
-  const { data: getDataRut, isFetching: fetchRut, refetch: refetchRut} = 
-  useGetRutQuery();
+
+  // const { data: getDataName, isFetching: fetchName, refetch: refetchName} = 
+  // useGetBusinessNameQuery();
+  // const { data: getDataRut, isFetching: fetchRut, refetch: refetchRut} = 
+  // useGetRutQuery();
   const [skipFetchs, setSkipFetchs] = useState({
     skipNombreAcre:false,
     skipRutAcre:false,
@@ -343,8 +365,14 @@ let condicionFilters = 0;
       FechaPago:"",
       FechaAceptacion:"",
       Concepto:"",
-      InicioPeriodo:"",
-      TerminoPeriodo:"",
+      InicioPeriodo:buscar?(sInicioPeriodo!=""?`20${sInicioPeriodo
+        .getYear()
+        .toString()
+        .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:""):"",
+      TerminoPeriodo:buscar?(sTerminoPeriodo!=""?`20${sTerminoPeriodo
+        .getYear()
+        .toString()
+        .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:""):"",
       OrderByNeto:"",
       OrderByBruto:"",
       OrderByFechaEmision:"",
@@ -361,85 +389,9 @@ let condicionFilters = 0;
     acreedor,
     deudor,
   } = state;
-  let dataSpec ={
-    id,
-    spec:{
-      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-      EstadoRecepcion:estadoRecepcion?"Recepcionado":"",
-      Acreedor:acreedor?id:"",
-      Deudor:deudor?id:"",
-      EstadoEmision:estadoEmision?"Facturado":"",
-      EstadoPago:estadoPago?"Pagado":"",
-      RutDeudor:buscar?(acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-      RutAcreedor:buscar?(deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-      Glosa:buscar?(sConcept!=""?sConcept:""):"",
-      MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-      MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-      Folio:buscar?(sFolio!=""?sFolio:""):"",
-      NombreDeudor:buscar?(acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-      NombreAcreedor:buscar?(deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-    }}
 
-  // const { data: getDataConcept, isFetching: fetchConcept, refetch: refetchConcept} = 
-  // useGetConceptoQuery(
-  //   {id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipConcept}
-  // );
-  // const { data: getDataCodRef, isFetching: fetchCodRef, refetch: refetchCodRef} = 
-  // useGetCodRefQuery(
-  //   {id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipCodRef}
-  // );
-  // const { data: getDataCarta, isFetching: fetchCarta, refetch: refetchCarta} = 
-  // useGetCartaQuery(
-  //   {id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipCarta}
-  // );
+ 
+
   //CONST QUE RECIBE DATA
   //--CONCEPTO CARTA CODREF
   const [conceptFilter, setConceptFilter] = useState([]);
@@ -486,6 +438,30 @@ let condicionFilters = 0;
   const [LoadingApis, setLoadingApis] = useState(true);
   //concept, carta, codref
   function FiltersOne(){
+    // let dataSpec ={
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 100,
+    //   spec:{
+    //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+    //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+    //     Acreedor:state.acreedor?id:"",
+    //     Deudor:state.deudor?id:"",
+    //     EstadoEmision:state.estadoEmision?"Facturado":"",
+    //     EstadoPago:state.estadoPago?"Pagado":"",
+    //     RutDeudor:buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+    //     RutAcreedor:buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+    //     Glosa:buscar?(selected.sConcept!=""?selected.sConcept:""):"",
+    //     MontoNeto:buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
+    //     MontoBruto:buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
+    //     Folio:buscar?(selected.sFolio!=""?selected.sFolio:""):"",
+    //     NombreDeudor:buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+    //     NombreAcreedor:buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+    //   }}
+    setPageIndex(1);
+    setPagination(0);
+    setPageCount(0);
+    setRowsPerPage(5);
     setConceptFilter();
     setCodRefFilter();
     setCartaFilter();
@@ -495,140 +471,87 @@ let condicionFilters = 0;
     setCargaCarta(true);
     setPeticionesCompletadas(0);
    
-    let Concept = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: dataSpec.spec,
-    };
-    let CodRef = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: dataSpec.spec,
-    };
-    let Carta = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: dataSpec.spec,
-    };
-    getConceptMutation(Concept).then((response)=>{
+    // let Concept = {
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 100,
+    //   spec: dataSpec.spec,
+    // };
+    // let CodRef = {
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 100,
+    //   spec: dataSpec.spec,
+    // };
+    // let Carta = {
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 100,
+    //   spec: dataSpec.spec,
+    // };
+    getConceptMutation(dataSpec).then((response)=>{
       setConceptFilter(response.data);
       console.log(response.data);
-      setCargaConcept(false);
+      console.log(dataSpec.spec);
+      
     }).catch((error)=>{
       setCargaConcept(false);
     });
-    getCodRefMutation(CodRef).then((response)=>{
+    getCodRefMutation(dataSpec).then((response)=>{
       setCodRefFilter(response.data);
-      setCargaCodRef(false);
+   
     }).catch((error)=>{
       setCargaCodRef(false);
     });
-    getCartaMutation(Carta).then((response)=>{
+    getCartaMutation(dataSpec).then((response)=>{
       setCartaFilter(response.data);
-      setCargaCarta(false);
+      
     }).catch((error)=>{
       setCargaCarta(false);
     });
 
 
 
-    // try {
-    //   console.log(dataSpec.spec)
-    //   getNumConcept(Concept)
-    //   .then((response) => {
-    //     const buclesF = Math.round(response.data / 200 + 0.49) + 1;
-    //     const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-    //       Concept.PageIndex = index + 1;
-    //       return getConceptMutation(Concept);
-    //     });
-
-    //     Promise.all(requests)
-    //       .then((responses) => {
-    //         const newData = _.uniqBy(responses.map((response) => response.data.data).flat(), 'label');
-    //         setConceptFilter((prevLista) => {
-    //           if (Array.isArray(prevLista)) {
-    //             return _.uniqBy([...prevLista, ...newData], 'label');
-    //           } else {
-    //             return [...newData];
-    //           }
-    //         });
-    //         setCargaConcept(false);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-      
     
-    
-    //   getNumCodRef(CodRef)
-    //   .then((response) => {
-    //     const buclesF = Math.round(response.data / 200 + 0.49) + 1;
-    //     const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-    //       CodRef.PageIndex = index + 1;
-    //       return getCodRefMutation(CodRef);
-    //     });
-
-    //     Promise.all(requests)
-    //       .then((responses) => {
-    //         const newData = _.uniqBy(responses.map((response) => response.data.data).flat(), 'label');
-    //         setCodRefFilter((prevLista) => {
-    //           if (Array.isArray(prevLista)) {
-    //             return [...prevLista, ...newData];
-    //           } else {
-    //             return [...newData];
-    //           }
-    //         });
-    //         setCargaCodRef(false);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    //   getNumCarta(Carta)
-    //   .then((response) => {
-    //     const buclesF = Math.round(response.data / 200 + 0.49) + 1;
-    //     const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-    //       Carta.PageIndex = index + 1;
-    //       return getCartaMutation(Carta);
-    //     });
-
-    //     Promise.all(requests)
-    //       .then((responses) => {
-    //         const newData = _.uniqBy(responses.map((response) => response.data.data).flat(), 'label');
-    //         setCartaFilter((prevLista) => {
-    //           if (Array.isArray(prevLista)) {
-    //             return [...prevLista, ...newData];
-    //           } else {
-    //             return [...newData];
-    //           }
-    //         });
-    //         setCargaCarta(false);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-      
-    // } catch (error) {
-      
-    // }
    
   }
+  useEffect(() => {
+    if(conceptFilter){
+      setCargaConcept(false);
+    }
+    if(codRefFilter){
+      setCargaCodRef(false);
+    }
+    if(cartaFilter){
+      setCargaCarta(false);
+    }
+
+  }, [conceptFilter, codRefFilter,cartaFilter])
+  
    //rut, nombre: acreedor y deudor
   function FiltersAcree(){
+    // let dataSpec ={
+    //   id,
+    //   spec:{
+    //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+    //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+    //     Acreedor:state.acreedor?id:"",
+    //     Deudor:state.deudor?id:"",
+    //     EstadoEmision:state.estadoEmision?"Facturado":"",
+    //     EstadoPago:state.estadoPago?"Pagado":"",
+    //     RutDeudor:buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+    //     RutAcreedor:buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+    //     Glosa:buscar?(selected.sConcept!=""?selected.sConcept:""):"",
+    //     MontoNeto:buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
+    //     MontoBruto:buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
+    //     Folio:buscar?(selected.sFolio!=""?selected.sFolio:""):"",
+    //     NombreDeudor:buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+    //     NombreAcreedor:buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+    //   }}
+    setPageIndex(1);
+    setPagination(0);
+    setPageCount(0);
+    setRowsPerPage(5);
     setBusinessName();
     setRutName();
     setLoadingApis(true);
@@ -636,97 +559,56 @@ let condicionFilters = 0;
     setCargaRutAcre(true);
     setRutAcreFilter(undefined);
     setNomAcreFilter(undefined);
-    let RutAcreedor = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 50,
-      spec: dataSpec.spec,
-    };
+    // let RutAcreedor = {
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 50,
+    //   spec: dataSpec.spec,
+    // };
 
-    let NombreAcre = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 50,
-      spec: dataSpec.spec,
-    };
-    getRutAcreMutation(RutAcreedor).then((response)=>{
+    // let NombreAcre = {
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 50,
+    //   spec: dataSpec.spec,
+    // };
+    getRutAcreMutation(dataSpec).then((response)=>{
       setRutName(response.data);
       setCargaRutAcre(false);
     }).catch((error)=>{
       setCargaRutAcre(false);
     });
-    getNombreAcreedor(NombreAcre).then((response)=>{
+    getNombreAcreedor(dataSpec).then((response)=>{
       setBusinessName(response.data);
       setCargaNombreAcre(false);
     }).catch((error)=>{
       setCargaNombreAcre(false);
     });
-    // try {
-     
-
-    //   getNumRutA(RutAcreedor)
-    //   .then((response) => {
-    //     const buclesF = Math.round(response.data / 50 + 0.49) + 1;
-    //     const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-    //       RutAcreedor.PageIndex = index + 1;
-    //       return getRutAcreMutation(RutAcreedor);
-    //     });
-
-    //     Promise.all(requests)
-    //       .then((responses) => {
-    //         const newData = _.uniqBy(responses.map((response) => response.data.data).flat(), 'label');
-    //         setRutName((prevLista) => {
-    //           if (Array.isArray(prevLista)) {
-    //             return [...prevLista, ...newData];
-    //           } else {
-    //             return [...newData];
-    //           }
-    //         });
-    //         setCargaRutAcre(false);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
     
-
-    //   getNumNomAcre(NombreAcre)
-    //   .then((response) => {
-    //     const buclesF = Math.round(response.data / 50 + 0.49) + 1;
-    //     const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-    //       NombreAcre.PageIndex = index + 1;
-    //       return getNombreAcreedor(NombreAcre);
-    //     });
-
-    //     Promise.all(requests)
-    //       .then((responses) => {
-    //         const newData = _.uniqBy(responses.map((response) => response.data.data).flat(), 'label');
-    //         setBusinessName((prevLista) => {
-    //           if (Array.isArray(prevLista)) {
-    //             return [...prevLista, ...newData];
-    //           } else {
-    //             return [...newData];
-    //           }
-    //         });
-    //         setCargaNombreAcre(false);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    
-
-    // } catch (error) {
-    //   console.log("ERROR 3");
-    // }
   }
   function FiltersDeu(){
+    // let dataSpec ={
+    //   id,
+    //   spec:{
+    //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+    //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+    //     Acreedor:state.acreedor?id:"",
+    //     Deudor:state.deudor?id:"",
+    //     EstadoEmision:state.estadoEmision?"Facturado":"",
+    //     EstadoPago:state.estadoPago?"Pagado":"",
+    //     RutDeudor:buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+    //     RutAcreedor:buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+    //     Glosa:buscar?(selected.sConcept!=""?selected.sConcept:""):"",
+    //     MontoNeto:buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
+    //     MontoBruto:buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
+    //     Folio:buscar?(selected.sFolio!=""?selected.sFolio:""):"",
+    //     NombreDeudor:buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+    //     NombreAcreedor:buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+    //   }}
+    setPageIndex(1);
+    setPagination(0);
+    setPageCount(0);
+    setRowsPerPage(5);
     setBusinessName();
     setRutName();
     setLoadingApis(true);
@@ -739,25 +621,25 @@ let condicionFilters = 0;
 
     setNomDeuFilter(undefined);
  
-    let RutDeudor = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 50,
-      spec: dataSpec.spec,
-    };
-    let NombreDeudor = {
-      id: id,
-      PageIndex: 1,
-      PageSize: 50,
-      spec: dataSpec.spec,
-    };
-    getRutDeudorMutation(RutDeudor).then((response)=>{
+    // let RutDeudor = {
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 50,
+    //   spec: dataSpec.spec,
+    // };
+    // let NombreDeudor = {
+    //   id: id,
+    //   PageIndex: 1,
+    //   PageSize: 50,
+    //   spec: dataSpec.spec,
+    // };
+    getRutDeudorMutation(dataSpec).then((response)=>{
       setRutName(response.data);
       setCargaRutDeudor(false);
     }).catch((error)=>{
       setCargaRutDeudor(false);
     });
-    getNombreDeudorMutation(RutDeudor).then((response)=>{
+    getNombreDeudorMutation(dataSpec).then((response)=>{
       setBusinessName(response.data);
       setCargaNombreDeu(false);
     }).catch((error)=>{
@@ -838,60 +720,29 @@ let condicionFilters = 0;
     return option.value === value;
   };
   useEffect(()=>{
+    if(!fetchInstructions){
+         setSkipFetchs(
+          { 
+            ...skipFetchs,
+            skipInstructions:true,
+          
+          })
+        }
     setLoadingApis(verificacarga())
     console.log(verificacarga())
   },[cargaConcept,cargaCodRef,cargaCarta,fetchInstructions,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor]);
   useEffect(() => {
-    FiltersOne();
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
     setRowsPerPage(5);
     clearFilters();
     clearStates();
+    FiltersOne();
     setSkipFetchs({...skipFetchs,skipInstructions:false,})
     refetchInstruc();
   }, [id])
-  // useEffect(() => {
-  //   console.log(peticionesCompletadas);
-  // }, [peticionesCompletadas])
-  
-  // useEffect(() => {
-  //   console.log(conceptFilter);
-  // }, [conceptFilter])
-  // useEffect(() => {
-  //   console.log(codRefFilter);
-  // }, [codRefFilter])
-  // useEffect(() => {
-  //   console.log(cartaFilter);
-  // }, [cartaFilter])
- 
-  
-  // ,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre,fetchCodRef,fetchCodRef
-  // function verificacarga() {
-  //   if ([fetchInstructions].every((valor) => valor === false)) {
-  //     return false;
-  //   } else {
-  //     return true;     
-  //   }
-  // }
-  // useEffect(()=>{
-  //   setCargando(verificacarga())
-  //   if(!verificacarga()){
-  //    setSkipFetchs(
-  //     { 
-  //       skipNombreAcre:true,
-  //       skipRutAcre:true,
-  //       skipNombreDeudor:true,
-  //       skipRutDeudor:true,
-  //       skipConcept:true,
-  //       skipInstructions:true,
-  //       skipCodRef:true,
-  //       skipCarta:true,
-  //     })
-  //   }
-  // },[fetchInstructions,fetchName,fetchRut,fetchConcept,fetchNombreAcre,fetchNombreDeudor,fetchRutDeudor,fetchRutAcre]);
-  // console.log();(getDataConcept)
+
   useEffect(() => {
     if(getDataInstruction){
       tableData = getDataInstruction.data
@@ -899,14 +750,36 @@ let condicionFilters = 0;
       setPageCount(getDataInstruction.pageCount + 1);
       setLoadingApis(verificacarga());
     }
-    // setCargando(verificacarga() )
+   
   }, [getDataInstruction,fetchInstructions])
-  // const [rutAcreFilter, setRutAcreFilter] = useState([]);
-  // const [rutDeuFilter, setRutDeuFilter] = useState([]);
-  // const [nomAcreFilter, setNomAcreFilter] = useState([]);
-  // const [nomDeuFilter, setNomDeuFilter] = useState([]);
   useEffect(() => {
-    
+      console.log("saihdhdikusahjkasdhjk")
+      setDataSpec(
+        {
+          id: id,
+          PageIndex: 1,
+          PageSize: 100,
+          spec:{
+            EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+            EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+            Acreedor:state.acreedor?id:"",
+            Deudor:state.deudor?id:"",
+            EstadoEmision:state.estadoEmision?"Facturado":"",
+            EstadoPago:state.estadoPago?"Pagado":"",
+            RutDeudor:selected.buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+            RutAcreedor:selected.buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
+            Glosa:selected.buscar?(selected.sConcept!=""?selected.sConcept:""):"",
+            MontoNeto:selected.buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
+            MontoBruto:selected.buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
+            Folio:selected.buscar?(selected.sFolio!=""?selected.sFolio:""):"",
+            NombreDeudor:selected.buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+            NombreAcreedor:selected.buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+          }}
+      )
+   
+  }, [selected,state])
+
+  useEffect(() => {
     if(state.acreedor){
       setLoadingApis(true)
       setSkipFetchs(
@@ -930,6 +803,15 @@ let condicionFilters = 0;
       FiltersOne();
       refetchInstruc();
      
+    }else{
+      setLoadingApis(true)
+      setSkipFetchs(
+        { 
+          ...skipFetchs,
+          skipInstructions:false,
+        })
+      FiltersOne();
+      refetchInstruc();
     }
   
   }, [state.acreedor,state.deudor]);
@@ -944,6 +826,8 @@ let condicionFilters = 0;
         })
       FiltersOne();
       refetchInstruc();
+      setReloadEstadistica(prevReloadEstadistica => !prevReloadEstadistica);
+
     }
     
   }, [table])
@@ -1042,8 +926,9 @@ let condicionFilters = 0;
     // refetchConcept();
     // refetchCodRef();
     // refetchCarta();
-    FiltersOne();
     refetchInstruc();
+    FiltersOne();
+    
 
 
   }
@@ -1057,9 +942,6 @@ let condicionFilters = 0;
           skipInstructions:false,
         })
       refetchInstruc();
-      // refetchConcept();
-      // refetchCodRef();
-      // refetchCarta();
       FiltersOne();
     }else{
       setSkipFetchs(
@@ -1068,9 +950,6 @@ let condicionFilters = 0;
           skipInstructions:false,
         })
       refetchInstruc();
-      // refetchConcept();
-      // refetchCodRef();
-      // refetchCarta();
       clearFilters();
       clearStates();
       FiltersOne();
@@ -1455,7 +1334,7 @@ let condicionFilters = 0;
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
-         <Estadisticas  participantId ={props.id} />
+         <Estadisticas  participantId ={props.id} reLoad={reloadEstadistica}/>
         </div>
       </div>
       <div className="hdmas:col-span-12  hd:col-span-2  bg-white rounded-md">
@@ -1489,7 +1368,7 @@ let condicionFilters = 0;
                         !state.deudor)
                         ? true
                         : false}
-                    options={!bussN? [{label:"Loading...", id:0}]:bussN}
+                    options={!bussN?["cargando"]:bussN}
                     value={selected.sBusinessName || null}
                     isOptionEqualToValue={(option, value) =>{if(value === option || value === null|| value ==="") { return true; }}}
                     // isOptionEqualToValue={(option, value) =>
@@ -1524,7 +1403,7 @@ let condicionFilters = 0;
                         ? true
                         : false}
                     value={selected.sRut|| null}
-                    options={ !rutN? [{label:"Loading...", id:0}]:rutN}
+                    options={ !rutN? ["cargando"]:rutN}
                     sx={{ width: 300, mb: 2 }}
                     onChange={(event, newValue) => {
                       if (newValue === null) {
