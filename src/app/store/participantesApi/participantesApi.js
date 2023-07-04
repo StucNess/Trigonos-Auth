@@ -4,7 +4,7 @@ export const participantesApi = createApi({
   reducerPath: "participantes",
   tagTypes: ["listparticipant", "proyectos", "participant"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/",
+    baseUrl: "http://localhost:5205/",
   }),
   endpoints: (builder) => ({
     getParticipantes: builder.query({
@@ -122,15 +122,30 @@ export const participantesApi = createApi({
     }),
 
     //Optimos
-    getPartAll: builder.query({
+    getPartAll: builder.mutation({
       query: (spec) =>
         `/api/Participantes?All=s&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
       providesTags: ["listparticipant"],
     }),
-    getProyAll: builder.query({
+    getNumberParticipant: builder.mutation({
+      query: (spec) =>
+        `/api/Participantes/CantidadParticipantes`,
+      providesTags: ["numberParticipant"],
+    }),
+    getProyAll: builder.mutation({
       query: (spec) =>
         `/api/Participantes/PaginationProyectos?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
       providesTags: ["proyectos"],
+    }),
+    getNumberProyecto: builder.mutation({
+      query: (spec) =>
+        `/api/Participantes/CantidadProyectos`,
+      providesTags: ["numberProyect"],
+    }),
+    getNumberFactCL: builder.mutation({
+      query: (spec) =>
+        `/api/Participantes/CantidadFactCl`,
+      providesTags: ["numberFactCl"],
     }),
     refetchQueriesPart: builder.mutation({
       queryFn: () => ({ data: null }),
@@ -153,6 +168,9 @@ export const {
   useGetParticipantesSpecQuery,
   useGetHistorificacionMutation,
   useRefetchQueriesPartMutation,
-  useGetPartAllQuery,
-  useGetProyAllQuery,
+  useGetPartAllMutation,
+  useGetNumberParticipantMutation,
+  useGetProyAllMutation,
+  useGetNumberProyectoMutation,
+  useGetNumberFactCLMutation,
 } = participantesApi;

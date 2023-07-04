@@ -72,6 +72,7 @@ function createData(campo, antiguo, nuevo) {
 }
 
 let rows = [];
+let rowsGestTrigonos = [];
 
 const steps = [
   "Coordinado",
@@ -100,7 +101,7 @@ export default function HorizontalNonLinearStepper(props) {
     msgError: false,
   });
   const { msgResp, msgText, msgError } = MsgAlert;
-
+  const [ren, setRen] = useState(0);
   const [postActProyect, dataActProyect] = usePostActualizarProyectoMutation();
   const [postAddFactCl, dataAddFactCl] = usePostFacturaAgregarMutation();
   const [postActFactCl, dataActFactCl] = usePostFacturaActualizarMutation();
@@ -175,31 +176,64 @@ export default function HorizontalNonLinearStepper(props) {
   });
   //formState es para actualizar datos de la tabla de participantes
   const [formState, setFormState] = useState({
-    id: props.fullData.dataParticipant.id,
-    name: props.fullData.dataParticipant.name,
-    rut: props.fullData.dataParticipant.rut,
-    verificationCode: props.fullData.dataParticipant.verification_Code,
-    businessName: props.fullData.dataParticipant.business_Name,
-    commercialBusiness: props.fullData.dataParticipant.commercial_Business,
-    email: props.fullData.dataParticipant.dte_Reception_Email,
-    bankAccount: props.fullData.dataParticipant.bank_Account,
-    bank: props.fullData.dataParticipant.bank,
-    banksName: props.fullData.dataParticipant.banksName,
-    commercialAddress: props.fullData.dataParticipant.commercial_address,
-    postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
-    manager: props.fullData.dataParticipant.manager,
-    payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
-    payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
-    payContactAddress: props.fullData.dataParticipant.pay_contact_address,
-    payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
-    payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-    billsContactLastName:
-      props.fullData.dataParticipant.bills_contact_last_name,
-    billsContactFirstName:
-      props.fullData.dataParticipant.bills_contact_first_name,
-    billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
-    billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
-    billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
+    dataParticipant:{
+      id: props.fullData.dataParticipant.id,
+      name: props.fullData.dataParticipant.name,
+      rut: props.fullData.dataParticipant.rut,
+      verificationCode: props.fullData.dataParticipant.verification_Code,
+      businessName: props.fullData.dataParticipant.business_Name,
+      commercialBusiness: props.fullData.dataParticipant.commercial_Business,
+      email: props.fullData.dataParticipant.dte_Reception_Email,
+      bankAccount: props.fullData.dataParticipant.bank_Account,
+      bank: props.fullData.dataParticipant.bank,
+      banksName: props.fullData.dataParticipant.banksName,
+      commercialAddress: props.fullData.dataParticipant.commercial_address,
+      postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
+      manager: props.fullData.dataParticipant.manager,
+      payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
+      payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
+      payContactAddress: props.fullData.dataParticipant.pay_contact_address,
+      payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
+      payContactEmail: props.fullData.dataParticipant.pay_contact_email,
+      billsContactLastName:
+        props.fullData.dataParticipant.bills_contact_last_name,
+      billsContactFirstName:
+        props.fullData.dataParticipant.bills_contact_first_name,
+      billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
+      billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
+      billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
+    },
+    dataProject:{
+      erp: props.fullData.dataProject.erp,
+      id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+      isclient: props.fullData.dataProject.vHabilitado,
+    },
+    dataFactCl:{
+      fact_pHabilitado:
+      props.fullData.dataFactCl !== {}
+        ? props.fullData.dataFactCl.phabilitado
+        : "Vacio",
+      fact_userProduccion: props.fullData.dataFactCl.usuario64
+        ? props.fullData.dataFactCl.usuario64
+        : "Vacio",
+      fact_claveProduccion: props.fullData.dataFactCl.clave64
+        ? props.fullData.dataFactCl.clave64
+        : "Vacio",
+      fact_rutProduccion: props.fullData.dataFactCl.ruT64
+        ? props.fullData.dataFactCl.ruT64
+        : "Vacio",
+      fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+        ? props.fullData.dataFactCl.usuarioTest
+        : "Vacio",
+      fact_clavePruebas: props.fullData.dataFactCl.claveTest
+        ? props.fullData.dataFactCl.claveTest
+        : "Vacio",
+      fact_rutPruebas: props.fullData.dataFactCl.rutTest
+        ? props.fullData.dataFactCl.rutTest
+        : "Vacio",
+    }
+
+   
   });
   const [alertOk, setAlertOk] = useState(false);
   const [alertError, setAlertError] = useState(false);
@@ -232,31 +266,62 @@ export default function HorizontalNonLinearStepper(props) {
     fact_rutPruebas: false,
   });
   const [dataConfirm, setDataConfirm] = useState({
-    id: props.fullData.dataParticipant.id,
-    name: props.fullData.dataParticipant.name,
-    rut: props.fullData.dataParticipant.rut,
-    verificationCode: props.fullData.dataParticipant.verification_Code,
-    businessName: props.fullData.dataParticipant.business_Name,
-    commercialBusiness: props.fullData.dataParticipant.commercial_Business,
-    email: props.fullData.dataParticipant.dte_Reception_Email,
-    bankAccount: props.fullData.dataParticipant.bank_Account,
-    bank: props.fullData.dataParticipant.bank,
-    banksName: props.fullData.dataParticipant.banksName,
-    commercialAddress: props.fullData.dataParticipant.commercial_address,
-    postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
-    manager: props.fullData.dataParticipant.manager,
-    payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
-    payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
-    payContactAddress: props.fullData.dataParticipant.pay_contact_address,
-    payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
-    payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-    billsContactLastName:
-      props.fullData.dataParticipant.bills_contact_last_name,
-    billsContactFirstName:
-      props.fullData.dataParticipant.bills_contact_first_name,
-    billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
-    billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
-    billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
+    dataParticipant:{
+      id: props.fullData.dataParticipant.id,
+      name: props.fullData.dataParticipant.name,
+      rut: props.fullData.dataParticipant.rut,
+      verificationCode: props.fullData.dataParticipant.verification_Code,
+      businessName: props.fullData.dataParticipant.business_Name,
+      commercialBusiness: props.fullData.dataParticipant.commercial_Business,
+      email: props.fullData.dataParticipant.dte_Reception_Email,
+      bankAccount: props.fullData.dataParticipant.bank_Account,
+      bank: props.fullData.dataParticipant.bank,
+      banksName: props.fullData.dataParticipant.banksName,
+      commercialAddress: props.fullData.dataParticipant.commercial_address,
+      postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
+      manager: props.fullData.dataParticipant.manager,
+      payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
+      payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
+      payContactAddress: props.fullData.dataParticipant.pay_contact_address,
+      payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
+      payContactEmail: props.fullData.dataParticipant.pay_contact_email,
+      billsContactLastName:
+        props.fullData.dataParticipant.bills_contact_last_name,
+      billsContactFirstName:
+        props.fullData.dataParticipant.bills_contact_first_name,
+      billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
+      billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
+      billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
+    },
+    dataProject:{
+      erp: props.fullData.dataProject.erp,
+      id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+      isclient: props.fullData.dataProject.vHabilitado,
+    },
+    dataFactCl:{
+      fact_pHabilitado:
+      props.fullData.dataFactCl !== {}
+        ? props.fullData.dataFactCl.phabilitado
+        : "Vacio",
+      fact_userProduccion: props.fullData.dataFactCl.usuario64
+        ? props.fullData.dataFactCl.usuario64
+        : "Vacio",
+      fact_claveProduccion: props.fullData.dataFactCl.clave64
+        ? props.fullData.dataFactCl.clave64
+        : "Vacio",
+      fact_rutProduccion: props.fullData.dataFactCl.ruT64
+        ? props.fullData.dataFactCl.ruT64
+        : "Vacio",
+      fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+        ? props.fullData.dataFactCl.usuarioTest
+        : "Vacio",
+      fact_clavePruebas: props.fullData.dataFactCl.claveTest
+        ? props.fullData.dataFactCl.claveTest
+        : "Vacio",
+      fact_rutPruebas: props.fullData.dataFactCl.rutTest
+        ? props.fullData.dataFactCl.rutTest
+        : "Vacio",
+    }
   });
   const [activeButton, setActiveButton] = useState(false);
   const [countActive, setCountActive] = useState(0);
@@ -269,40 +334,19 @@ export default function HorizontalNonLinearStepper(props) {
   const handleClickOpen = () => {
     //condiciones antes de enviar algo
     let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    let isEqualdos =
-      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
-    let isEqualtres =
-      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+    let isEqualDataParticipant = JSON.stringify(dataConfirm.dataParticipant) === JSON.stringify(formState.dataParticipant);
+    let isEqualFactCl = JSON.stringify(dataConfirm.dataFactCl) === JSON.stringify(formState.dataFactCl);
+    let isEqualProject= JSON.stringify(dataConfirm.dataProject) === JSON.stringify(formState.dataProject);
+    if (!isEqual) {
 
-    if (
-      formStateProjects.erp === 5 &&
-      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl) &&
-      props.fullData.dataFactCl.phabilitado === undefined
-    ) {
-      setOpenDialog(true);
-      setMsgAlert({
-        msgResp: true,
-        msgText: "Debe completar Facturación.CL",
-        msgError: true,
-      });
-      setTimeout(() => {
-        // refetchParticipant();
-        // refetchFact();
-        setMsgAlert({
-          msgResp: undefined,
-          msgText: "",
-          msgError: undefined,
-        });
-        setOpenDialog(false);
-      }, 1500);
-    } else {
-      if (!isEqual || !isEqualdos || !isEqualtres) {
-        setOpen(true);
-      } else {
+      console.log(dataConfirm.dataFactCl);
+      console.log(formState.dataFactCl);
+      if((formState.dataFactCl.fact_pHabilitado=== undefined && formState.dataProject.erp ===5)){
+        console.log("Validar que no se envie vacio y que no sea igual al seleccionar facturacion.cl")
         setOpenDialog(true);
         setMsgAlert({
           msgResp: true,
-          msgText: "Debe modificar algun campo",
+          msgText: "Debe seleccionar un ambiente para Facturación.CL",
           msgError: true,
         });
         setTimeout(() => {
@@ -315,8 +359,110 @@ export default function HorizontalNonLinearStepper(props) {
           });
           setOpenDialog(false);
         }, 1500);
+        
+      }else if((formState.dataFactCl.fact_pHabilitado!== undefined && formState.dataProject.erp ===5)){
+        
+
+        if(formState.dataFactCl.fact_pHabilitado ){
+          let isEqualUserPro = JSON.stringify(dataConfirm.dataFactCl.fact_userProduccion) === JSON.stringify(formState.dataFactCl.fact_userProduccion);
+          let isEqualClavePro = JSON.stringify(dataConfirm.dataFactCl.fact_claveProduccion) === JSON.stringify(formState.dataFactCl.fact_claveProduccion);
+          let isEqualRutPro = JSON.stringify(dataConfirm.dataFactCl.fact_rutProduccion) === JSON.stringify(formState.dataFactCl.fact_rutProduccion);
+          if((formState.dataFactCl.fact_userProduccion==="Vacio") && (formState.dataFactCl.fact_claveProduccion==="Vacio") && (dataConfirm.dataFactCl.fact_rutProduccion=== "Vacio")){
+            setOpenDialog(true);
+            setMsgAlert({
+              msgResp: true,
+              msgText: "Debe completar uno de los campos de Producción",
+              msgError: true,
+            });
+            setTimeout(() => {
+              // refetchParticipant();
+              // refetchFact();
+              setMsgAlert({
+                msgResp: undefined,
+                msgText: "",
+                msgError: undefined,
+              });
+              setOpenDialog(false);
+            }, 1500);
+          }else{
+            setOpen(true);
+          }
+
+        }else{
+          let isEqualUserTest = JSON.stringify(dataConfirm.dataFactCl.fact_userPruebas) === JSON.stringify(formState.dataFactCl.fact_userPruebas);
+            let isEqualClaveTest = JSON.stringify(dataConfirm.dataFactCl.fact_clavePruebas) === JSON.stringify(formState.dataFactCl.fact_clavePruebas);
+            let isEqualRutTest = JSON.stringify(dataConfirm.dataFactCl.fact_rutPruebas) === JSON.stringify(formState.dataFactCl.fact_rutPruebas);
+            if((formState.dataFactCl.fact_userPruebas==="Vacio") && (formState.dataFactCl.fact_clavePruebas==="Vacio") && (formState.dataFactCl.fact_rutPruebas==="Vacio")){
+              setOpenDialog(true);
+              setMsgAlert({
+                msgResp: true,
+                msgText: "Debe completar uno de los campos de Testing",
+                msgError: true,
+              });
+              setTimeout(() => {
+                // refetchParticipant();
+                // refetchFact();
+                setMsgAlert({
+                  msgResp: undefined,
+                  msgText: "",
+                  msgError: undefined,
+                });
+                setOpenDialog(false);
+              }, 1500);
+            }else{
+                setOpen(true);
+            }
+
+        }
+      }else{
+        setOpen(true);
       }
+     
     }
+    
+    else {
+
+      setOpenDialog(true);
+      setMsgAlert({
+        msgResp: true,
+        msgText: "Debe modificar algun campo",
+        msgError: true,
+      });
+      setTimeout(() => {
+        // refetchParticipant();
+        // refetchFact();
+        setMsgAlert({
+          msgResp: undefined,
+          msgText: "",
+          msgError: undefined,
+        });
+        setOpenDialog(false);
+      }, 1500);
+    }
+    // if (
+    //   formStateProjects.erp === 5 &&
+    //   JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl) &&
+    //   props.fullData.dataFactCl.phabilitado === undefined
+    // ) {
+    //   setOpenDialog(true);
+    //   setMsgAlert({
+    //     msgResp: true,
+    //     msgText: "Debe completar Facturación.CL",
+    //     msgError: true,
+    //   });
+    //   setTimeout(() => {
+    //     // refetchParticipant();
+    //     // refetchFact();
+    //     setMsgAlert({
+    //       msgResp: undefined,
+    //       msgText: "",
+    //       msgError: undefined,
+    //     });
+    //     setOpenDialog(false);
+    //   }, 1500);
+    // } else {
+      
+    // }
   };
 
   const handleCloseAlert = () => {
@@ -329,17 +475,34 @@ export default function HorizontalNonLinearStepper(props) {
   };
   const onInputChange = ({ target }) => {
     const { name, value } = target;
-    setFormState({
-      ...formState,
-      [name]: value,
-    });
+    // setFormState({
+    //   ...formState,
+    //     dataParticipant: {[name]: value, ...formState.dataParticipant,},
+      
+      
+    // });
+    setFormState(prevState => ({
+      ...prevState,
+      dataParticipant: {
+        ...prevState.dataParticipant,
+        [name]: value
+      }
+    }));
   };
   const onInputChangeFact = ({ target }) => {
     const { name, value } = target;
-    setformStateFactCl({
-      ...formStateFactCl,
-      [name]: value,
-    });
+    setFormState(prevState => ({
+      ...prevState,
+      dataFactCl: {
+        ...prevState.dataFactCl,
+        [name]: value,
+      
+      }
+    }));
+    // setformStateFactCl({
+    //   ...formStateFactCl,
+    //   [name]: value,
+    // });
   };
   function isOurClient(number) {
     if (number === 0) {
@@ -375,141 +538,146 @@ export default function HorizontalNonLinearStepper(props) {
       haveFactCl(props.fullData.dataFactCl.phabilitado);
       // console.log(props.fullData.dataFactCl.usuario64?props.fullData.dataFactCl.usuario64:"vacio" )
       setFormState({
-        id: props.fullData.dataParticipant.id,
-        name: props.fullData.dataParticipant.name,
-        rut: props.fullData.dataParticipant.rut,
-        verificationCode: props.fullData.dataParticipant.verification_Code,
-        businessName: props.fullData.dataParticipant.business_Name,
-        commercialBusiness: props.fullData.dataParticipant.commercial_Business,
-        email: props.fullData.dataParticipant.dte_Reception_Email,
-        bankAccount: props.fullData.dataParticipant.bank_Account,
-        bank: props.fullData.dataParticipant.bank,
-        banksName: props.fullData.dataParticipant.banksName,
-        commercialAddress: props.fullData.dataParticipant.commercial_address,
-        postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
-        manager: props.fullData.dataParticipant.manager,
-        payContactFirstName:
-          props.fullData.dataParticipant.pay_Contact_First_Name,
-        payContactLastName:
-          props.fullData.dataParticipant.pay_contact_last_name,
-        payContactAddress: props.fullData.dataParticipant.pay_contact_address,
-        payContactPhones:
+        dataParticipant:{
+          id: props.fullData.dataParticipant.id,
+          name: props.fullData.dataParticipant.name,
+          rut: props.fullData.dataParticipant.rut,
+          verificationCode: props.fullData.dataParticipant.verification_Code,
+          businessName: props.fullData.dataParticipant.business_Name,
+          commercialBusiness: props.fullData.dataParticipant.commercial_Business,
+          email: props.fullData.dataParticipant.dte_Reception_Email,
+          bankAccount: props.fullData.dataParticipant.bank_Account,
+          bank: props.fullData.dataParticipant.bank,
+          banksName: props.fullData.dataParticipant.banksName,
+          commercialAddress: props.fullData.dataParticipant.commercial_address,
+          postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
+          manager: props.fullData.dataParticipant.manager,
+          payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
+          payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
+          payContactAddress: props.fullData.dataParticipant.pay_contact_address,
+          // payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
+          payContactPhones:
           props.fullData.dataParticipant.pay_contact_phones.replace(
             /["\[\]"]/g,
             ""
           ),
-        payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-        billsContactLastName:
-          props.fullData.dataParticipant.bills_contact_last_name,
-        billsContactFirstName:
-          props.fullData.dataParticipant.bills_contact_first_name,
-        billsContactAddress:
-          props.fullData.dataParticipant.bills_contact_address,
-        billsContactPhones:
+          payContactEmail: props.fullData.dataParticipant.pay_contact_email,
+          billsContactLastName:
+            props.fullData.dataParticipant.bills_contact_last_name,
+          billsContactFirstName:
+            props.fullData.dataParticipant.bills_contact_first_name,
+          billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
+          // billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
+          billsContactPhones:
           props.fullData.dataParticipant.bills_contact_phones.replace(
             /["\[\]"]/g,
             ""
           ),
-        billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
+          billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
+        },
+        dataProject:{
+          erp: props.fullData.dataProject.erp,
+          id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+          isclient: props.fullData.dataProject.vHabilitado,
+        },
+        dataFactCl:{
+          fact_pHabilitado:
+          props.fullData.dataFactCl !== {}
+            ? props.fullData.dataFactCl.phabilitado
+            : "Vacio",
+          fact_userProduccion: props.fullData.dataFactCl.usuario64
+            ? props.fullData.dataFactCl.usuario64
+            : "Vacio",
+          fact_claveProduccion: props.fullData.dataFactCl.clave64
+            ? props.fullData.dataFactCl.clave64
+            : "Vacio",
+          fact_rutProduccion: props.fullData.dataFactCl.ruT64
+            ? props.fullData.dataFactCl.ruT64
+            : "Vacio",
+          fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+            ? props.fullData.dataFactCl.usuarioTest
+            : "Vacio",
+          fact_clavePruebas: props.fullData.dataFactCl.claveTest
+            ? props.fullData.dataFactCl.claveTest
+            : "Vacio",
+          fact_rutPruebas: props.fullData.dataFactCl.rutTest
+            ? props.fullData.dataFactCl.rutTest
+            : "Vacio",
+        }
+       
       });
       setDataConfirm({
-        id: props.fullData.dataParticipant.id,
-        name: props.fullData.dataParticipant.name,
-        rut: props.fullData.dataParticipant.rut,
-        verificationCode: props.fullData.dataParticipant.verification_Code,
-        businessName: props.fullData.dataParticipant.business_Name,
-        commercialBusiness: props.fullData.dataParticipant.commercial_Business,
-        email: props.fullData.dataParticipant.dte_Reception_Email,
-        bankAccount: props.fullData.dataParticipant.bank_Account,
-        bank: props.fullData.dataParticipant.bank,
-        banksName: props.fullData.dataParticipant.banksName,
-        commercialAddress: props.fullData.dataParticipant.commercial_address,
-        postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
-        manager: props.fullData.dataParticipant.manager,
-        payContactFirstName:
-          props.fullData.dataParticipant.pay_Contact_First_Name,
-        payContactLastName:
-          props.fullData.dataParticipant.pay_contact_last_name,
-        payContactAddress: props.fullData.dataParticipant.pay_contact_address,
-        payContactPhones:
+        dataParticipant:{
+          id: props.fullData.dataParticipant.id,
+          name: props.fullData.dataParticipant.name,
+          rut: props.fullData.dataParticipant.rut,
+          verificationCode: props.fullData.dataParticipant.verification_Code,
+          businessName: props.fullData.dataParticipant.business_Name,
+          commercialBusiness: props.fullData.dataParticipant.commercial_Business,
+          email: props.fullData.dataParticipant.dte_Reception_Email,
+          bankAccount: props.fullData.dataParticipant.bank_Account,
+          bank: props.fullData.dataParticipant.bank,
+          banksName: props.fullData.dataParticipant.banksName,
+          commercialAddress: props.fullData.dataParticipant.commercial_address,
+          postalAddress: props.fullData.dataParticipant.postal_address, //REVISAR
+          manager: props.fullData.dataParticipant.manager,
+          payContactFirstName: props.fullData.dataParticipant.pay_Contact_First_Name,
+          payContactLastName: props.fullData.dataParticipant.pay_contact_last_name,
+          payContactAddress: props.fullData.dataParticipant.pay_contact_address,
+          // payContactPhones: props.fullData.dataParticipant.pay_contact_phones,
+          payContactPhones:
           props.fullData.dataParticipant.pay_contact_phones.replace(
             /["\[\]"]/g,
             ""
           ),
-        payContactEmail: props.fullData.dataParticipant.pay_contact_email,
-        billsContactLastName:
-          props.fullData.dataParticipant.bills_contact_last_name,
-        billsContactFirstName:
-          props.fullData.dataParticipant.bills_contact_first_name,
-        billsContactAddress:
-          props.fullData.dataParticipant.bills_contact_address,
-        billsContactPhones:
+          payContactEmail: props.fullData.dataParticipant.pay_contact_email,
+          billsContactLastName:
+            props.fullData.dataParticipant.bills_contact_last_name,
+          billsContactFirstName:
+            props.fullData.dataParticipant.bills_contact_first_name,
+          billsContactAddress: props.fullData.dataParticipant.bills_contact_address,
+          // billsContactPhones: props.fullData.dataParticipant.bills_contact_phones,
+          billsContactPhones:
           props.fullData.dataParticipant.bills_contact_phones.replace(
             /["\[\]"]/g,
             ""
           ),
-        billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
-      });
-
-      setformStateFactCl({
-        fact_pHabilitado:
+          billsContactEmail: props.fullData.dataParticipant.bills_contact_email,
+        },
+        dataProject:{
+          erp: props.fullData.dataProject.erp,
+          id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
+          isclient: props.fullData.dataProject.vHabilitado,
+        },
+        dataFactCl:{
+          fact_pHabilitado:
           props.fullData.dataFactCl !== {}
             ? props.fullData.dataFactCl.phabilitado
             : "Vacio",
-        fact_userProduccion: props.fullData.dataFactCl.usuario64
-          ? props.fullData.dataFactCl.usuario64
-          : "Vacio",
-        fact_claveProduccion: props.fullData.dataFactCl.clave64
-          ? props.fullData.dataFactCl.clave64
-          : "Vacio",
-        fact_rutProduccion: props.fullData.dataFactCl.ruT64
-          ? props.fullData.dataFactCl.ruT64
-          : "Vacio",
-        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
-          ? props.fullData.dataFactCl.usuarioTest
-          : "Vacio",
-        fact_clavePruebas: props.fullData.dataFactCl.claveTest
-          ? props.fullData.dataFactCl.claveTest
-          : "Vacio",
-        fact_rutPruebas: props.fullData.dataFactCl.rutTest
-          ? props.fullData.dataFactCl.rutTest
-          : "Vacio",
-      });
-      setDataconfirmFactCl({
-        fact_pHabilitado:
-          props.fullData.dataFactCl !== {}
-            ? props.fullData.dataFactCl.phabilitado
+          fact_userProduccion: props.fullData.dataFactCl.usuario64
+            ? props.fullData.dataFactCl.usuario64
             : "Vacio",
-        fact_userProduccion: props.fullData.dataFactCl.usuario64
-          ? props.fullData.dataFactCl.usuario64
-          : "Vacio",
-        fact_claveProduccion: props.fullData.dataFactCl.clave64
-          ? props.fullData.dataFactCl.clave64
-          : "Vacio",
-        fact_rutProduccion: props.fullData.dataFactCl.ruT64
-          ? props.fullData.dataFactCl.ruT64
-          : "Vacio",
-        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
-          ? props.fullData.dataFactCl.usuarioTest
-          : "Vacio",
-        fact_clavePruebas: props.fullData.dataFactCl.claveTest
-          ? props.fullData.dataFactCl.claveTest
-          : "Vacio",
-        fact_rutPruebas: props.fullData.dataFactCl.rutTest
-          ? props.fullData.dataFactCl.rutTest
-          : "Vacio",
+          fact_claveProduccion: props.fullData.dataFactCl.clave64
+            ? props.fullData.dataFactCl.clave64
+            : "Vacio",
+          fact_rutProduccion: props.fullData.dataFactCl.ruT64
+            ? props.fullData.dataFactCl.ruT64
+            : "Vacio",
+          fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+            ? props.fullData.dataFactCl.usuarioTest
+            : "Vacio",
+          fact_clavePruebas: props.fullData.dataFactCl.claveTest
+            ? props.fullData.dataFactCl.claveTest
+            : "Vacio",
+          fact_rutPruebas: props.fullData.dataFactCl.rutTest
+            ? props.fullData.dataFactCl.rutTest
+            : "Vacio",
+        }
       });
 
-      setformStateProjects({
-        erp: props.fullData.dataProject.erp,
-        id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
-        isclient: props.fullData.dataProject.vHabilitado,
-      });
-      setDataconfirmProjects({
-        erp: props.fullData.dataProject.erp,
-        id_nomina_pago: props.fullData.dataProject.id_nomina_pago,
-        isclient: props.fullData.dataProject.vHabilitado,
-      });
+      
+
+     
     })();
   }, [props.fullData.dataParticipant.id, alertOk]);
   useEffect(() => {
@@ -572,24 +740,53 @@ export default function HorizontalNonLinearStepper(props) {
       }
     });
 
-    setFormState({
-      ...formState,
-      banksName: event.target.value,
-      bank: idBank,
-    });
+    // setFormState({
+    //   ...formState,
+    //   dataParticipant:{
+    //     ...formState.dataParticipant,
+    //     banksName: event.target.value,
+    //     bank: idBank,
+    //   }
+    // });
+    setFormState(prevState => ({
+      ...prevState,
+      dataParticipant: {
+        ...prevState.dataParticipant,
+        banksName: event.target.value,
+        bank: idBank,
+      }
+    }));
     setBankk(event.target.value);
   };
   const handleChangeNomina = (event) => {
-    setformStateProjects({
-      ...formStateProjects,
-      id_nomina_pago: event.target.value,
-    });
+    // setformStateProjects({
+    //   ...formStateProjects,
+    //   id_nomina_pago: event.target.value,
+    // });
+
+    setFormState(prevState => ({
+      ...prevState,
+      dataProject: {
+        ...prevState.dataProject,
+        id_nomina_pago:event.target.value,
+      
+      }
+    }));
   };
   const handleChangeERP = (event) => {
-    setformStateProjects({
-      ...formStateProjects,
-      erp: event.target.value,
-    });
+    // setformStateProjects({
+    //   ...formStateProjects,
+    //   erp: event.target.value,
+    // });
+    
+    setFormState(prevState => ({
+      ...prevState,
+      dataProject: {
+        ...prevState.dataProject,
+        erp:event.target.value,
+      
+      }
+    }));
 
     if (event.target.value === 5) {
       haveFactCl(props.fullData.dataFactCl.phabilitado);
@@ -604,54 +801,68 @@ export default function HorizontalNonLinearStepper(props) {
         fact_clavePruebas: false,
         fact_rutPruebas: false,
       });
-      setformStateFactCl({
-        fact_pHabilitado:
+      setFormState(prevState => ({
+        ...prevState,
+        dataFactCl: {
+          fact_pHabilitado:
           props.fullData.dataFactCl !== {}
             ? props.fullData.dataFactCl.phabilitado
             : "Vacio",
-        fact_userProduccion: props.fullData.dataFactCl.usuario64
-          ? props.fullData.dataFactCl.usuario64
-          : "Vacio",
-        fact_claveProduccion: props.fullData.dataFactCl.clave64
-          ? props.fullData.dataFactCl.clave64
-          : "Vacio",
-        fact_rutProduccion: props.fullData.dataFactCl.ruT64
-          ? props.fullData.dataFactCl.ruT64
-          : "Vacio",
-        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
-          ? props.fullData.dataFactCl.usuarioTest
-          : "Vacio",
-        fact_clavePruebas: props.fullData.dataFactCl.claveTest
-          ? props.fullData.dataFactCl.claveTest
-          : "Vacio",
-        fact_rutPruebas: props.fullData.dataFactCl.rutTest
-          ? props.fullData.dataFactCl.rutTest
-          : "Vacio",
-      });
-      setDataconfirmFactCl({
-        fact_pHabilitado:
+          fact_userProduccion: props.fullData.dataFactCl.usuario64
+            ? props.fullData.dataFactCl.usuario64
+            : "Vacio",
+          fact_claveProduccion: props.fullData.dataFactCl.clave64
+            ? props.fullData.dataFactCl.clave64
+            : "Vacio",
+          fact_rutProduccion: props.fullData.dataFactCl.ruT64
+            ? props.fullData.dataFactCl.ruT64
+            : "Vacio",
+          fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+            ? props.fullData.dataFactCl.usuarioTest
+            : "Vacio",
+          fact_clavePruebas: props.fullData.dataFactCl.claveTest
+            ? props.fullData.dataFactCl.claveTest
+            : "Vacio",
+          fact_rutPruebas: props.fullData.dataFactCl.rutTest
+            ? props.fullData.dataFactCl.rutTest
+            : "Vacio",
+        
+        }
+      }));
+      setDataConfirm(prevState => ({
+        ...prevState,
+        dataFactCl: {
+          fact_pHabilitado:
           props.fullData.dataFactCl !== {}
             ? props.fullData.dataFactCl.phabilitado
             : "Vacio",
-        fact_userProduccion: props.fullData.dataFactCl.usuario64
-          ? props.fullData.dataFactCl.usuario64
-          : "Vacio",
-        fact_claveProduccion: props.fullData.dataFactCl.clave64
-          ? props.fullData.dataFactCl.clave64
-          : "Vacio",
-        fact_rutProduccion: props.fullData.dataFactCl.ruT64
-          ? props.fullData.dataFactCl.ruT64
-          : "Vacio",
-        fact_userPruebas: props.fullData.dataFactCl.usuarioTest
-          ? props.fullData.dataFactCl.usuarioTest
-          : "Vacio",
-        fact_clavePruebas: props.fullData.dataFactCl.claveTest
-          ? props.fullData.dataFactCl.claveTest
-          : "Vacio",
-        fact_rutPruebas: props.fullData.dataFactCl.rutTest
-          ? props.fullData.dataFactCl.rutTest
-          : "Vacio",
-      });
+          fact_userProduccion: props.fullData.dataFactCl.usuario64
+            ? props.fullData.dataFactCl.usuario64
+            : "Vacio",
+          fact_claveProduccion: props.fullData.dataFactCl.clave64
+            ? props.fullData.dataFactCl.clave64
+            : "Vacio",
+          fact_rutProduccion: props.fullData.dataFactCl.ruT64
+            ? props.fullData.dataFactCl.ruT64
+            : "Vacio",
+          fact_userPruebas: props.fullData.dataFactCl.usuarioTest
+            ? props.fullData.dataFactCl.usuarioTest
+            : "Vacio",
+          fact_clavePruebas: props.fullData.dataFactCl.claveTest
+            ? props.fullData.dataFactCl.claveTest
+            : "Vacio",
+          fact_rutPruebas: props.fullData.dataFactCl.rutTest
+            ? props.fullData.dataFactCl.rutTest
+            : "Vacio",
+        
+        }
+      }));
+      // setformStateFactCl({
+      
+      // });
+      // setDataconfirmFactCl({
+       
+      // });
     } else {
       haveFactCl(undefined);
       setUpdate({
@@ -673,15 +884,34 @@ export default function HorizontalNonLinearStepper(props) {
         fact_clavePruebas: "Vacio",
         fact_rutPruebas: "Vacio",
       });
-      setDataconfirmFactCl({
-        fact_pHabilitado: undefined,
-        fact_userProduccion: "Vacio",
-        fact_claveProduccion: "Vacio",
-        fact_rutProduccion: "Vacio",
-        fact_userPruebas: "Vacio",
-        fact_clavePruebas: "Vacio",
-        fact_rutPruebas: "Vacio",
-      });
+
+      setFormState(prevState => ({
+        ...prevState,
+        dataFactCl: {
+          fact_pHabilitado: undefined,
+          fact_userProduccion: "Vacio",
+          fact_claveProduccion: "Vacio",
+          fact_rutProduccion: "Vacio",
+          fact_userPruebas: "Vacio",
+          fact_clavePruebas: "Vacio",
+          fact_rutPruebas: "Vacio",
+        
+        }
+      }));
+      setDataConfirm(prevState => ({
+        ...prevState,
+        dataFactCl: {
+          fact_pHabilitado: undefined,
+          fact_userProduccion: "Vacio",
+          fact_claveProduccion: "Vacio",
+          fact_rutProduccion: "Vacio",
+          fact_userPruebas: "Vacio",
+          fact_clavePruebas: "Vacio",
+          fact_rutPruebas: "Vacio",
+        
+        }
+      }));
+ 
     }
     // setErp(event.target.value);
   };
@@ -759,182 +989,230 @@ export default function HorizontalNonLinearStepper(props) {
                 </Typography> */
   }
   const FetchDatas = () => {
-    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    let isEqualdos =
-      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
-    let isEqualtres =
-      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
+    let isEqualDataGeneral = JSON.stringify(dataConfirm) === JSON.stringify(formState);
+    let isEqualDataParticipant = JSON.stringify(dataConfirm.dataParticipant) === JSON.stringify(formState.dataParticipant);
+    let isEqualGestTrgns =
+      JSON.stringify(dataConfirm.dataProject) === JSON.stringify(formState.dataProject) && JSON.stringify(dataConfirm.dataFactCl) === JSON.stringify(formState.dataFactCl);
 
     rows = [
-      dataConfirm.name === formState.name
+       dataConfirm.dataParticipant.name === formState.dataParticipant.name
         ? undefined
-        : createData("Nombre", dataConfirm.name, formState.name),
-      dataConfirm.businessName === formState.businessName
+        : createData("Nombre",  dataConfirm.dataParticipant.name, formState.dataParticipant.name),
+       dataConfirm.dataParticipant.businessName === formState.dataParticipant.businessName
         ? undefined
         : createData(
             "Razón Social",
-            dataConfirm.businessName,
-            formState.businessName
+             dataConfirm.dataParticipant.businessName,
+            formState.dataParticipant.businessName
           ),
-      dataConfirm.commercialBusiness === formState.commercialBusiness
+       dataConfirm.dataParticipant.commercialBusiness === formState.dataParticipant.commercialBusiness
         ? undefined
         : createData(
             "Giro",
-            dataConfirm.commercialBusiness,
-            formState.commercialBusiness
+             dataConfirm.dataParticipant.commercialBusiness,
+            formState.dataParticipant.commercialBusiness
           ),
-      dataConfirm.manager === formState.manager
+       dataConfirm.dataParticipant.manager === formState.dataParticipant.manager
         ? undefined
-        : createData("Gerente general", dataConfirm.manager, formState.manager),
-      dataConfirm.commercialAddress === formState.commercialAddress
+        : createData("Gerente general",  dataConfirm.dataParticipant.manager, formState.dataParticipant.manager),
+       dataConfirm.dataParticipant.commercialAddress === formState.dataParticipant.commercialAddress
         ? undefined
         : createData(
             "Dirección Comercial",
-            dataConfirm.commercialAddress,
-            formState.commercialAddress
+             dataConfirm.dataParticipant.commercialAddress,
+            formState.dataParticipant.commercialAddress
           ),
-      dataConfirm.email === formState.email
+       dataConfirm.dataParticipant.email === formState.dataParticipant.email
         ? undefined
-        : createData("Email DTE", dataConfirm.email, formState.email),
-      dataConfirm.payContactPhones === formState.payContactPhones
+        : createData("Email DTE",  dataConfirm.dataParticipant.email, formState.dataParticipant.email),
+       dataConfirm.dataParticipant.payContactPhones === formState.dataParticipant.payContactPhones
         ? undefined
         : createData(
             "Teléfono de Contacto Pago",
-            dataConfirm.payContactPhones,
-            formState.payContactPhones
+             dataConfirm.dataParticipant.payContactPhones,
+            formState.dataParticipant.payContactPhones
           ),
-      dataConfirm.billsContactPhones === formState.billsContactPhones
+       dataConfirm.dataParticipant.billsContactPhones === formState.dataParticipant.billsContactPhones
         ? undefined
         : createData(
             "Teléfono de Contacto Factura",
-            dataConfirm.billsContactPhones,
-            formState.billsContactPhones
+             dataConfirm.dataParticipant.billsContactPhones,
+            formState.dataParticipant.billsContactPhones
           ),
-      dataConfirm.banksName === formState.banksName
+       dataConfirm.dataParticipant.banksName === formState.dataParticipant.banksName
         ? undefined
-        : createData("Banco", dataConfirm.banksName, formState.banksName),
-      dataConfirm.bankAccount === formState.bankAccount
+        : createData("Banco",  dataConfirm.dataParticipant.banksName, formState.dataParticipant.banksName),
+       dataConfirm.dataParticipant.bankAccount === formState.dataParticipant.bankAccount
         ? undefined
         : createData(
             "Cuenta Corriente",
-            dataConfirm.bankAccount,
-            formState.bankAccount
+             dataConfirm.dataParticipant.bankAccount,
+            formState.dataParticipant.bankAccount
           ),
-      dataconfirmProjects.isclient === formStateProjects.isclient
-        ? undefined
-        : createData(
-            "Tipo de Cliente",
-            dataconfirmProjects.isclient === 0 ? "Externo" : "Bluetree",
-            formStateProjects.isclient === 0 ? "Externo" : "Bluetree"
-          ),
-      dataconfirmProjects.erp === formStateProjects.erp
-        ? undefined
-        : createData(
-            "Tipo de Facturador",
-            props.facturadorErp.filter(
-              (data) => data.id === dataconfirmProjects.erp
-            )[0].nombreErp,
-            props.facturadorErp.filter(
-              (data) => data.id === formStateProjects.erp
-            )[0].nombreErp
-          ),
-      dataconfirmProjects.id_nomina_pago === formStateProjects.id_nomina_pago
-        ? undefined
-        : createData(
-            "Tipo de Nomina",
-            props.nominaPago.filter(
-              (data) => data.id === dataconfirmProjects.id_nomina_pago
-            )[0].nombreBanco,
-            props.nominaPago.filter(
-              (data) => data.id === formStateProjects.id_nomina_pago
-            )[0].nombreBanco
-          ),
+      
+    ];
+    rowsGestTrigonos = [
+      dataConfirm.dataProject.isclient === formState.dataProject.isclient
+      ? undefined
+      : createData(
+          "Tipo de Cliente",
+          dataConfirm.dataProject.isclient === 0 ? "Externo" : "Bluetree",
+          formState.dataProject.isclient === 0 ? "Externo" : "Bluetree"
+        ),
+        dataConfirm.dataProject.erp === formState.dataProject.erp
+      ? undefined
+      : createData(
+          "Tipo de Facturador",( !dataConfirm.dataProject.erp? "Sin asiganción":
+          props.facturadorErp.filter( 
+            (data) => data.id ===  dataConfirm.dataProject.erp
+          )[0].nombreErp),
+          props.facturadorErp.filter(
+            (data) => data.id === formState.dataProject.erp
+          )[0].nombreErp
+        ),
+        dataConfirm.dataProject.id_nomina_pago === formState.dataProject.id_nomina_pago
+      ? undefined
+      : createData(
+          "Tipo de Nomina",( !dataConfirm.dataProject.id_nomina_pago? "Sin asiganción":
+          props.nominaPago.filter(
+            (data) => data.id ===  dataConfirm.dataProject.id_nomina_pago
+          )[0].nombreBanco),
+          props.nominaPago.filter(
+            (data) => data.id === formState.dataProject.id_nomina_pago
+          )[0].nombreBanco
+        ),
 
-      dataconfirmFactCl.fact_pHabilitado === formStateFactCl.fact_pHabilitado
-        ? undefined
-        : createData(
-            "Facturación.CL Tipo de Ambiente",
-            dataconfirmFactCl.fact_pHabilitado ? "Producción" : "Testing",
-            formStateFactCl.fact_pHabilitado ? "Producción" : "Testing"
-          ),
-      dataconfirmFactCl.fact_userProduccion ===
-      formStateFactCl.fact_userProduccion
-        ? undefined
-        : createData(
-            "Usuario de Producción",
-            dataconfirmFactCl.fact_userProduccion,
-            formStateFactCl.fact_userProduccion
-          ),
-      dataconfirmFactCl.fact_rutProduccion ===
-      formStateFactCl.fact_rutProduccion
-        ? undefined
-        : createData(
-            "Rut de Producción",
-            dataconfirmFactCl.fact_rutProduccion,
-            formStateFactCl.fact_rutProduccion
-          ),
+    dataConfirm.dataFactCl.fact_pHabilitado === formState.dataFactCl.fact_pHabilitado
+      ? undefined
+      : createData(
+          "Facturación.CL Tipo de Ambiente", ( !dataConfirm.dataFactCl.fact_pHabilitado ? "Sin asiganción":
+          dataConfirm.dataFactCl.fact_pHabilitado ? "Producción" : "Testing"),
+          formState.dataFactCl.fact_pHabilitado ? "Producción" : "Testing"
+        ),
+    dataConfirm.dataFactCl.fact_userProduccion ===
+    formState.dataFactCl.fact_userProduccion
+      ? undefined
+      : createData(
+          "Usuario de Producción",
+          dataConfirm.dataFactCl.fact_userProduccion,
+          formState.dataFactCl.fact_userProduccion
+        ),
+    dataConfirm.dataFactCl.fact_rutProduccion ===
+    formState.dataFactCl.fact_rutProduccion
+      ? undefined
+      : createData(
+          "Rut de Producción",
+          dataConfirm.dataFactCl.fact_rutProduccion,
+          formState.dataFactCl.fact_rutProduccion
+        ),
 
-      dataconfirmFactCl.fact_claveProduccion ===
-      formStateFactCl.fact_claveProduccion
-        ? undefined
-        : createData(
-            "Clave de Producción",
-            dataconfirmFactCl.fact_claveProduccion,
-            formStateFactCl.fact_claveProduccion
-          ),
-      dataconfirmFactCl.fact_userPruebas === formStateFactCl.fact_userPruebas
-        ? undefined
-        : createData(
-            "Usuario de Pruebas",
-            dataconfirmFactCl.fact_userPruebas,
-            formStateFactCl.fact_userPruebas
-          ),
-      dataconfirmFactCl.fact_rutPruebas === formStateFactCl.fact_rutPruebas
-        ? undefined
-        : createData(
-            "Rut de Pruebas",
-            dataconfirmFactCl.fact_rutPruebas,
-            formStateFactCl.fact_rutPruebas
-          ),
-      dataconfirmFactCl.fact_clavePruebas === formStateFactCl.fact_clavePruebas
-        ? undefined
-        : createData(
-            "Clave de Pruebas",
-            dataconfirmFactCl.fact_clavePruebas,
-            formStateFactCl.fact_clavePruebas
-          ),
+    dataConfirm.dataFactCl.fact_claveProduccion ===
+    formState.dataFactCl.fact_claveProduccion
+      ? undefined
+      : createData(
+          "Clave de Producción",
+          dataConfirm.dataFactCl.fact_claveProduccion,
+          formState.dataFactCl.fact_claveProduccion
+        ),
+    dataConfirm.dataFactCl.fact_userPruebas === formState.dataFactCl.fact_userPruebas
+      ? undefined
+      : createData(
+          "Usuario de Pruebas",
+          dataConfirm.dataFactCl.fact_userPruebas,
+          formState.dataFactCl.fact_userPruebas
+        ),
+    dataConfirm.dataFactCl.fact_rutPruebas === formState.dataFactCl.fact_rutPruebas
+      ? undefined
+      : createData(
+          "Rut de Pruebas",
+          dataConfirm.dataFactCl.fact_rutPruebas,
+          formState.dataFactCl.fact_rutPruebas
+        ),
+    dataConfirm.dataFactCl.fact_clavePruebas === formState.dataFactCl.fact_clavePruebas
+      ? undefined
+      : createData(
+          "Clave de Pruebas",
+          dataConfirm.dataFactCl.fact_clavePruebas,
+          formState.dataFactCl.fact_clavePruebas
+        ),
     ];
 
     rows = rows.filter((x) => x !== undefined);
-    if (isEqual && isEqualdos && isEqualtres) {
+    rowsGestTrigonos = rowsGestTrigonos.filter((x) => x !== undefined);
+    if (isEqualDataGeneral) {
       return <div>No se han encontrado cambios</div>;
     } else {
       return (
-        <TableContainer component={Paper} className="bg-grey-100">
-          <Table aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Nombre Campo</TableCell>
-                <TableCell align="left">Atributo Antiguo</TableCell>
-                <TableCell align="left">Atributo Nuevo</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.campo}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.campo}
-                  </TableCell>
-                  <TableCell align="left">{row.antiguo}</TableCell>
-                  <TableCell align="left">{row.nuevo}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Box className="">
+          {
+            isEqualDataParticipant? <></>: 
+            <Box>
+               <Typography variant="h6" className="mb-4" color="primary">
+                  Datos Generales
+                </Typography>
+                <TableContainer component={Paper} className="bg-grey-100">
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nombre Campo</TableCell>
+                        <TableCell align="left">Atributo Antiguo</TableCell>
+                        <TableCell align="left">Atributo Nuevo</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rows.map((row) => (
+                        <TableRow
+                          key={row.campo}
+                          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.campo}
+                          </TableCell>
+                          <TableCell align="left">{row.antiguo}</TableCell>
+                          <TableCell align="left">{row.nuevo}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+            </Box>
+          }
+       {
+            isEqualGestTrgns? <></>: 
+            <Box>
+               <Typography variant="h6" className="mb-4" color="primary">
+                  Datos Gestión Trígonos
+                </Typography>
+                <TableContainer component={Paper} className="bg-grey-100">
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nombre Campo</TableCell>
+                        <TableCell align="left">Atributo Antiguo</TableCell>
+                        <TableCell align="left">Atributo Nuevo</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rowsGestTrigonos.map((row) => (
+                        <TableRow
+                          key={row.campo}
+                          sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {row.campo}
+                          </TableCell>
+                          <TableCell align="left">{row.antiguo}</TableCell>
+                          <TableCell align="left">{row.nuevo}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+            </Box>
+          }
+          
+        </Box>
+        
       );
     }
   };
@@ -956,6 +1234,11 @@ export default function HorizontalNonLinearStepper(props) {
     if (ver) {
       setOpenDialog(false);
       setLoading(false);
+      setRen((prevRen) => prevRen + 1);
+      console.log(ren)
+      if(ren>0){
+        props.sendIdAndLoad();
+      }
     }
   }, [
     dataActFactCl.isLoading,
@@ -965,175 +1248,179 @@ export default function HorizontalNonLinearStepper(props) {
 
   function SubmitActProject(isEqual) {
     if (!isEqual) {
-      console.log(formStateProjects.erp);
-      console.log(dataconfirmProjects.erp);
+      // console.log(formStateProjects.erp);
+      // console.log(dataconfirmProjects.erp);
       postActProyect({
         id_participants: props.fullData.dataParticipant.id,
         erp:
-          formStateProjects.erp != dataconfirmProjects.erp
-            ? formStateProjects.erp
+          formState.dataProject.erp != dataConfirm.dataProject.erp
+            ? formState.dataProject.erp
             : null,
         vHabilitado:
-          formStateProjects.isclient != dataconfirmProjects.isclient
-            ? formStateProjects.isclient
+        formState.dataProject.isclient != dataConfirm.dataProject.isclient
+            ? formState.dataProject.isclient
             : null,
         id_nomina_pago:
-          formStateProjects.id_nomina_pago != dataconfirmProjects.id_nomina_pago
-            ? formStateProjects.id_nomina_pago
+        formState.dataProject.id_nomina_pago != dataConfirm.dataProject.id_nomina_pago
+            ? formState.dataProject.id_nomina_pago
             : null,
       }).then((response) => {
-        refetchParticipant();
-        refetchFact();
+        // refetchParticipant();
+        // refetchFact();
       });
     } else {
     }
   }
-  function SubmitFactCl(isEqual) {
+  function SubmitFactCl() {
     if (props.fullData.dataFactCl.phabilitado != undefined) {
       //ejecuta el post de actualizar
-
-      if (!isEqual) {
+      if (checkProduccion || checkPrueba) {
         postActFactCl({
           idParticipante: props.fullData.dataParticipant.id,
           usuario64:
-            formStateFactCl.fact_userProduccion.trim() !=
-            dataconfirmFactCl.fact_userProduccion.trim()
-              ? formStateFactCl.fact_userProduccion
+            formState.dataFactCl.fact_userProduccion.trim() !=
+            dataConfirm.dataFactCl.fact_userProduccion.trim()
+              ? formState.dataFactCl.fact_userProduccion
               : null,
           ruT64:
-            formStateFactCl.fact_rutProduccion.trim() !=
-            dataconfirmFactCl.fact_rutProduccion.trim()
-              ? formStateFactCl.fact_rutProduccion
+            formState.dataFactCl.fact_rutProduccion.trim() !=
+            dataConfirm.dataFactCl.fact_rutProduccion.trim()
+              ? formState.dataFactCl.fact_rutProduccion
               : null,
           clave64:
-            formStateFactCl.fact_claveProduccion.trim() !=
-            dataconfirmFactCl.fact_claveProduccion.trim()
-              ? formStateFactCl.fact_claveProduccion
+            formState.dataFactCl.fact_claveProduccion.trim() !=
+            dataConfirm.dataFactCl.fact_claveProduccion.trim()
+              ? formState.dataFactCl.fact_claveProduccion
               : null,
           puerto64: null,
           incluyeLink64: null,
           usuarioTest:
-            formStateFactCl.fact_userPruebas.trim() !=
-            dataconfirmFactCl.fact_userPruebas.trim()
-              ? formStateFactCl.fact_userPruebas
+            formState.dataFactCl.fact_userPruebas.trim() !=
+            dataConfirm.dataFactCl.fact_userPruebas.trim()
+              ? formState.dataFactCl.fact_userPruebas
               : null,
           claveTest:
-            formStateFactCl.fact_clavePruebas.trim() !=
-            dataconfirmFactCl.fact_clavePruebas.trim()
-              ? formStateFactCl.fact_clavePruebas
+            formState.dataFactCl.fact_clavePruebas.trim() !=
+            dataConfirm.dataFactCl.fact_clavePruebas.trim()
+              ? formState.dataFactCl.fact_clavePruebas
               : null,
           rutTest:
-            formStateFactCl.fact_rutPruebas.trim() !=
-            dataconfirmFactCl.fact_rutPruebas.trim()
-              ? formStateFactCl.fact_rutPruebas
+            formState.dataFactCl.fact_rutPruebas.trim() !=
+            dataConfirm.dataFactCl.fact_rutPruebas.trim()
+              ? formState.dataFactCl.fact_rutPruebas
               : null,
           phabilitado:
-            formStateFactCl.fact_pHabilitado !=
-            dataconfirmFactCl.fact_pHabilitado
-              ? formStateFactCl.fact_pHabilitado
-              : dataconfirmFactCl.fact_pHabilitado,
+            formState.dataFactCl.fact_pHabilitado !=
+            dataConfirm.dataFactCl.fact_pHabilitado
+              ? formState.dataFactCl.fact_pHabilitado
+              : dataConfirm.dataFactCl.fact_pHabilitado,
         }).then((response) => {
-          refetchParticipant();
-          refetchFact();
+          // refetchParticipant();
+          // refetchFact();
         });
       }
     } else {
       //ejecuta el post de agregar
       if (checkProduccion || checkPrueba) {
-        if (!isEqual) {
+       
           postAddFactCl({
             idParticipante: props.fullData.dataParticipant.id,
             usuario64:
-              formStateFactCl.fact_userProduccion.trim() !=
-              dataconfirmFactCl.fact_userProduccion.trim()
-                ? formStateFactCl.fact_userProduccion
+              formState.dataFactCl.fact_userProduccion.trim() !=
+              dataConfirm.dataFactCl.fact_userProduccion.trim()
+                ? formState.dataFactCl.fact_userProduccion
                 : null,
             ruT64:
-              formStateFactCl.fact_rutProduccion.trim() !=
-              dataconfirmFactCl.fact_rutProduccion.trim()
-                ? formStateFactCl.fact_rutProduccion
+              formState.dataFactCl.fact_rutProduccion.trim() !=
+              dataConfirm.dataFactCl.fact_rutProduccion.trim()
+                ? formState.dataFactCl.fact_rutProduccion
                 : null,
             clave64:
-              formStateFactCl.fact_claveProduccion.trim() !=
-              dataconfirmFactCl.fact_claveProduccion.trim()
-                ? formStateFactCl.fact_claveProduccion
+              formState.dataFactCl.fact_claveProduccion.trim() !=
+              dataConfirm.dataFactCl.fact_claveProduccion.trim()
+                ? formState.dataFactCl.fact_claveProduccion
                 : null,
             puerto64: null,
             incluyeLink64: null,
             usuarioTest:
-              formStateFactCl.fact_userPruebas.trim() !=
-              dataconfirmFactCl.fact_userPruebas.trim()
-                ? formStateFactCl.fact_userPruebas
+              formState.dataFactCl.fact_userPruebas.trim() !=
+              dataConfirm.dataFactCl.fact_userPruebas.trim()
+                ? formState.dataFactCl.fact_userPruebas
                 : null,
             claveTest:
-              formStateFactCl.fact_clavePruebas.trim() !=
-              dataconfirmFactCl.fact_clavePruebas.trim()
-                ? formStateFactCl.fact_clavePruebas
+              formState.dataFactCl.fact_clavePruebas.trim() !=
+              dataConfirm.dataFactCl.fact_clavePruebas.trim()
+                ? formState.dataFactCl.fact_clavePruebas
                 : null,
             rutTest:
-              formStateFactCl.fact_rutPruebas.trim() !=
-              dataconfirmFactCl.fact_rutPruebas.trim()
-                ? formStateFactCl.fact_rutPruebas
+              formState.dataFactCl.fact_rutPruebas.trim() !=
+              dataConfirm.dataFactCl.fact_rutPruebas.trim()
+                ? formState.dataFactCl.fact_rutPruebas
                 : null,
-            phabilitado: formStateFactCl.fact_pHabilitado,
+            phabilitado: formState.dataFactCl.fact_pHabilitado,
           }).then((response) => {
-            refetchParticipant();
-            refetchFact();
+            // refetchParticipant();
+            // refetchFact();
           });
-        }
+        
       }
     }
   }
-  function SubmitActParticipant(isEqual) {
-    if (isEqual) {
-      // console.log("No se realiza envio a API");
-    } else {
-      let formatBillsContactPhones =
-        '["' + formState.billsContactPhones.replace(/,/g, '","') + '"]';
-      let formatpayContactPhones =
-        '["' + formState.payContactPhones.replace(/,/g, '","') + '"]';
+  function SubmitActParticipant() {
+    let formatBillsContactPhones =
+    '["' + formState.dataParticipant.billsContactPhones.replace(/,/g, '","') + '"]';
+    let formatpayContactPhones =
+      '["' + formState.dataParticipant.payContactPhones.replace(/,/g, '","') + '"]';
 
-      patchActPart({
-        id: formState.id,
-        name: formState.name,
-        rut: formState.rut,
-        verificationCode: formState.verificationCode,
-        businessName: formState.businessName,
-        commercialBusiness: formState.commercialBusiness,
-        email: formState.email,
-        bankAccount: formState.bankAccount,
-        bank: formState.bank,
-        commercialAddress: formState.commercialAddress,
-        postalAddress: formState.postalAddress,
-        manager: formState.manager,
-        payContactFirstName: formState.payContactFirstName,
-        payContactLastName: formState.payContactLastName,
-        payContactAddress: formState.payContactAddress,
-        formatpayContactPhones: formatpayContactPhones,
-        payContactEmail: formState.payContactEmail,
-        billsContactFirstName: formState.billsContactFirstName,
-        billsContactLastName: formState.billsContactLastName,
-        billsContactAddress: formState.billsContactAddress,
-        formatBillsContactPhones: formatBillsContactPhones,
-        billsContactEmail: formState.billsContactEmail,
-      })
-        .then((response) => {})
-        .catch((error) => {});
-    }
+    patchActPart({
+      id: formState.dataParticipant.id,
+      name: formState.dataParticipant.name,
+      rut: formState.dataParticipant.rut,
+      verificationCode: formState.dataParticipant.verificationCode,
+      businessName: formState.dataParticipant.businessName,
+      commercialBusiness: formState.dataParticipant.commercialBusiness,
+      email: formState.dataParticipant.email,
+      bankAccount: formState.dataParticipant.bankAccount,
+      bank: formState.dataParticipant.bank,
+      commercialAddress: formState.dataParticipant.commercialAddress,
+      postalAddress: formState.dataParticipant.postalAddress,
+      manager: formState.dataParticipant.manager,
+      payContactFirstName: formState.dataParticipant.payContactFirstName,
+      payContactLastName: formState.dataParticipant.payContactLastName,
+      payContactAddress: formState.dataParticipant.payContactAddress,
+      formatpayContactPhones: formatpayContactPhones,
+      payContactEmail: formState.dataParticipant.payContactEmail,
+      billsContactFirstName: formState.dataParticipant.billsContactFirstName,
+      billsContactLastName: formState.dataParticipant.billsContactLastName,
+      billsContactAddress: formState.dataParticipant.billsContactAddress,
+      formatBillsContactPhones: formatBillsContactPhones,
+      billsContactEmail: formState.dataParticipant.billsContactEmail,
+    })
+      .then((response) => {})
+      .catch((error) => {});
   }
 
   const ApiPatch = () => {
-    let isEqual = JSON.stringify(dataConfirm) === JSON.stringify(formState);
-    let isEqualdos =
-      JSON.stringify(dataconfirmFactCl) === JSON.stringify(formStateFactCl);
-    let isEqualtres =
-      JSON.stringify(dataconfirmProjects) === JSON.stringify(formStateProjects);
-
+    let isEqual = JSON.stringify(dataConfirm.dataParticipant) !== JSON.stringify(formState.dataParticipant);
+    let isEqualFactCl = JSON.stringify(dataConfirm.dataFactCl) !== JSON.stringify(formState.dataFactCl);
+    let isEqualProject= JSON.stringify(dataConfirm.dataProject) !== JSON.stringify(formState.dataProject);
+    console.log("data participant distinto de dataconfirm ",isEqual);
+    console.log("data facturacion distinto de dataconfirm ",isEqualFactCl);
+    console.log("data tipo cliente nomina etc distinto de dataconfirm ",isEqualProject);
     setOpenDialog(true);
     setLoading(true);
-    SubmitActProject(isEqualtres);
-    SubmitFactCl(isEqualdos);
-    SubmitActParticipant(isEqual);
+    if(isEqual){
+    SubmitActParticipant();
+    }
+    if(isEqualFactCl){
+    SubmitFactCl();
+
+    }
+    if(isEqualProject){
+    SubmitActProject();
+    
+    }
+  
   };
   useEffect(() => {
     countActive === 0 ? setActiveButton(false) : setActiveButton(true);
@@ -1142,7 +1429,7 @@ export default function HorizontalNonLinearStepper(props) {
   useEffect(() => {
     props.sendChange(alertOk);
 
-    props.sendIdParticipant(formState.id);
+    props.sendIdParticipant(formState.dataParticipant.id);
   }, [alertOk]);
   return (
     <Box className="w-full h-full">
@@ -1245,7 +1532,7 @@ export default function HorizontalNonLinearStepper(props) {
                           name="name"
                           defaultValue="Vacio"
                           disabled={name ? false : true}
-                          value={formState.name}
+                          value={formState.dataParticipant.name}
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
@@ -1269,11 +1556,24 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          name: props.fullData.dataParticipant
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant: {
+                                        //     ...formState.dataParticipant,
+                                        //     name: props.fullData.dataParticipant
+                                        //     .name,
+                                        //   }
+                                         
+                                        // });
+
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            name: props.fullData.dataParticipant
                                             .name,
-                                        });
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           name: false,
@@ -1325,7 +1625,7 @@ export default function HorizontalNonLinearStepper(props) {
                           name="businessName"
                           onChange={onInputChange}
                           defaultValue="Vacio"
-                          value={formState.businessName}
+                          value={formState.dataParticipant.businessName}
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
@@ -1348,12 +1648,25 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          businessName:
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant: {
+                                        //     ...formState.dataParticipant,
+                                        //     businessName:
+                                        //     props.fullData.dataParticipant
+                                        //       .business_Name,
+                                        //   }
+                                         
+                                        // });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            businessName:
                                             props.fullData.dataParticipant
                                               .business_Name,
-                                        });
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           businessName: false,
@@ -1405,7 +1718,7 @@ export default function HorizontalNonLinearStepper(props) {
                           onChange={onInputChange}
                           name="commercialBusiness"
                           disabled={commercialBusiness ? false : true}
-                          value={formState.commercialBusiness}
+                          value={formState.dataParticipant.commercialBusiness}
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
@@ -1428,12 +1741,25 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          commercialBusiness:
-                                            props.fullData.dataParticipant
-                                              .commercial_Business,
-                                        });
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     commercialBusiness:
+                                        //     props.fullData.dataParticipant
+                                        //       .commercial_Business,
+                                        //   }
+                                        
+                                        // });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            commercialBusiness:
+                                                props.fullData.dataParticipant
+                                                  .commercial_Business,
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           commercialBusiness: false,
@@ -1484,7 +1810,7 @@ export default function HorizontalNonLinearStepper(props) {
                         onChange={onInputChange}
                         name="rut"
                         disabled
-                        value={formState.rut}
+                        value={formState.dataParticipant.rut}
                         // InputProps={{
                         //   startAdornment: (
                         //     <InputAdornment position="start">
@@ -1541,7 +1867,7 @@ export default function HorizontalNonLinearStepper(props) {
                           onChange={onInputChange}
                           name="manager"
                           disabled={manager ? false : true}
-                          value={formState.manager}
+                          value={formState.dataParticipant.manager}
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
@@ -1564,12 +1890,25 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          manager:
-                                            props.fullData.dataParticipant
-                                              .manager,
-                                        });
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     manager:
+                                        //     props.fullData.dataParticipant
+                                        //       .manager,
+                                        //   }
+                                        
+                                        // });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            manager:
+                                                props.fullData.dataParticipant
+                                                  .manager,
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           manager: false,
@@ -1627,7 +1966,7 @@ export default function HorizontalNonLinearStepper(props) {
                           name="commercialAddress"
                           disabled={commercialAddress ? false : true}
                           defaultValue="Vacio"
-                          value={formState.commercialAddress}
+                          value={formState.dataParticipant.commercialAddress}
                           onChange={onInputChange}
                           InputProps={{
                             startAdornment: (
@@ -1651,12 +1990,25 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          commercialAddress:
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     commercialAddress:
+                                        //     props.fullData.dataParticipant
+                                        //       .commercial_address,
+                                        //   }
+                                         
+                                        // });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            commercialAddress:
                                             props.fullData.dataParticipant
                                               .commercial_address,
-                                        });
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           commercialAddress: false,
@@ -1724,7 +2076,7 @@ export default function HorizontalNonLinearStepper(props) {
                           defaultValue="Vacio"
                           name="email"
                           disabled={email ? false : true}
-                          value={formState.email}
+                          value={formState.dataParticipant.email}
                           onChange={onInputChange}
                           InputProps={{
                             startAdornment: (
@@ -1748,12 +2100,25 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          email:
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     email:
+                                        //     props.fullData.dataParticipant
+                                        //       .dte_Reception_Email,
+                                        //   }
+                                         
+                                        // });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            email:
                                             props.fullData.dataParticipant
                                               .dte_Reception_Email,
-                                        });
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           email: false,
@@ -1804,7 +2169,7 @@ export default function HorizontalNonLinearStepper(props) {
                           defaultValue="Vacio"
                           name="payContactPhones"
                           disabled={payContactPhones ? false : true}
-                          value={formState.payContactPhones}
+                          value={formState.dataParticipant.payContactPhones}
                           onChange={onInputChange}
                           InputProps={{
                             startAdornment: (
@@ -1828,14 +2193,29 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          payContactPhones:
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     payContactPhones:
+                                        //     props.fullData.dataParticipant.pay_contact_phones.replace(
+                                        //       /["\[\]"]/g,
+                                        //       ""
+                                        //     ),
+                                        //   }
+                                         
+                                        // });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            payContactPhones:
                                             props.fullData.dataParticipant.pay_contact_phones.replace(
                                               /["\[\]"]/g,
                                               ""
                                             ),
-                                        });
+                                          }
+                                        }));
                                         pointer;
                                         setUpdate({
                                           ...update,
@@ -1886,7 +2266,7 @@ export default function HorizontalNonLinearStepper(props) {
                           defaultValue="Vacio"
                           name="billsContactPhones"
                           disabled={billsContactPhones ? false : true}
-                          value={formState.billsContactPhones}
+                          value={formState.dataParticipant.billsContactPhones}
                           onChange={onInputChange}
                           InputProps={{
                             startAdornment: (
@@ -1911,14 +2291,29 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
-                                        setFormState({
-                                          ...formState,
-                                          billsContactPhones:
+                                        // setFormState({
+                                        //   ...formState,
+                                        //   dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     billsContactPhones:
+                                        //     props.fullData.dataParticipant.bills_contact_phones.replace(
+                                        //       /["\[\]"]/g,
+                                        //       ""
+                                        //     ),
+                                        //   }
+                                        
+                                        // });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            billsContactPhones:
                                             props.fullData.dataParticipant.bills_contact_phones.replace(
                                               /["\[\]"]/g,
                                               ""
                                             ),
-                                        });
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           billsContactPhones: false,
@@ -1992,7 +2387,7 @@ export default function HorizontalNonLinearStepper(props) {
                           id="standard-select-currency"
                           select
                           label="Banco"
-                          value={formState.banksName}
+                          value={formState.dataParticipant.banksName}
                           onChange={handleChangee}
                           variant="filled"
                           name="banksName"
@@ -2026,20 +2421,31 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
+                                     
                                         // setFormState({
                                         //   ...formState,
-                                        //   email:
-                                        //     props.fullData.dataParticipant
-                                        //       .dte_Reception_Email,
+                                        //     dataParticipant:{
+                                        //       ...formState.dataParticipant,
+                                        //     banksName: props.fullData.dataParticipant
+                                        //         .banksName,
+                                        //     bank: props.fullData.dataParticipant
+                                        //       .bank,
+                                        //       }
+                                          
+                                          
                                         // });
-                                        setFormState({
-                                          ...formState,
-                                          banksName:
-                                            props.fullData.dataParticipant
-                                              .banksName,
-                                          bank: props.fullData.dataParticipant
-                                            .bank,
-                                        });
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            banksName: props.fullData.dataParticipant
+                                                .banksName,
+                                            bank: props.fullData.dataParticipant
+                                              .bank,
+                                          
+                                          }
+                                        }));
+                                        
                                         setBankk(
                                           props.fullData.dataParticipant
                                             .banksName
@@ -2101,7 +2507,7 @@ export default function HorizontalNonLinearStepper(props) {
                           className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                           label="RUT Cuenta Corriente"
                           type="text"
-                          value={formState.rut}
+                          value={formState.dataParticipant.rut}
                           onChange={onInputChange}
                           name="rut"
                           disabled={rut ? false : true}
@@ -2127,17 +2533,25 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
+                                        
                                         // setFormState({
                                         //   ...formState,
-                                        //   email:
-                                        //     props.fullData.dataParticipant
-                                        //       .dte_Reception_Email,
+                                        //    dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     rut: props.fullData.dataParticipant
+                                        //     .rut,
+                                        //    }
+                                          
                                         // });
-                                        setFormState({
-                                          ...formState,
-                                          rut: props.fullData.dataParticipant
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            rut: props.fullData.dataParticipant
                                             .rut,
-                                        });
+                                          
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           rut: false,
@@ -2185,7 +2599,7 @@ export default function HorizontalNonLinearStepper(props) {
                           className="zerorange:w-[250px]  lg:w-[400px] w-[300px]  mdmax:m-[20px] m-[20px] zerorange:m-[10px] "
                           label="Cuenta Corriente"
                           type="text"
-                          value={formState.bankAccount}
+                          value={formState.dataParticipant.bankAccount}
                           onChange={onInputChange}
                           name="bankAccount"
                           disabled={bankAccount ? false : true}
@@ -2211,18 +2625,27 @@ export default function HorizontalNonLinearStepper(props) {
                                     <DisabledByDefaultIcon
                                       style={{ cursor: "pointer" }}
                                       onClick={() => {
+                                        
                                         // setFormState({
                                         //   ...formState,
-                                        //   email:
+                                        //   dataParticipant:{
+                                        //     ...formState.dataParticipant,
+                                        //     bankAccount:
                                         //     props.fullData.dataParticipant
-                                        //       .dte_Reception_Email,
+                                        //       .bank_Account,
+                                        //   }
+                                       
                                         // });
-                                        setFormState({
-                                          ...formState,
-                                          bankAccount:
+                                        setFormState(prevState => ({
+                                          ...prevState,
+                                          dataParticipant: {
+                                            ...prevState.dataParticipant,
+                                            bankAccount:
                                             props.fullData.dataParticipant
                                               .bank_Account,
-                                        });
+                                          
+                                          }
+                                        }));
                                         setUpdate({
                                           ...update,
                                           bankAccount: false,
@@ -2275,7 +2698,7 @@ export default function HorizontalNonLinearStepper(props) {
                     {/* Tipo usuario */}
                     <Box className="flex flex-wrap">
                       <Box>
-                        <Box className="flex flex-col  w-full p-[10px] ">
+                      <Box className="flex flex-col  w-full p-[10px] ">
                           <Box className="flex flex-row">
                             <Typography
                               variant="subtitle1"
@@ -2308,10 +2731,17 @@ export default function HorizontalNonLinearStepper(props) {
                                         ...update,
                                         typeClient: false,
                                       });
-                                      setformStateProjects({
-                                        ...formStateProjects,
-                                        isclient: dataconfirmProjects.isclient,
-                                      });
+                                      setFormState(prevState => ({
+                                        ...prevState,
+                                        dataProject: {
+                                          ...prevState.dataProject,
+                                          isclient:
+                                          props.fullData.dataProject
+                                            .isclient,
+                                        
+                                        }
+                                      }));
+                                    
                                       isOurClient(dataconfirmProjects.isclient);
                                       setCountActive(
                                         countActive > 0
@@ -2363,10 +2793,13 @@ export default function HorizontalNonLinearStepper(props) {
                                         onClick={() => {
                                           setCheckedBlue(true);
                                           setCheckedExt(false);
-                                          setformStateProjects({
-                                            ...formStateProjects,
-                                            isclient: 1,
-                                          });
+                                          setFormState(prevState => ({
+                                            ...prevState,
+                                            dataProject: {
+                                              ...prevState.dataProject,
+                                              isclient:1,
+                                            }
+                                          }));
                                         }}
                                       />
                                     }
@@ -2381,10 +2814,18 @@ export default function HorizontalNonLinearStepper(props) {
                                         onClick={() => {
                                           setCheckedExt(true);
                                           setCheckedBlue(false);
-                                          setformStateProjects({
-                                            ...formStateProjects,
-                                            isclient: 0,
-                                          });
+                                          // setformStateProjects({
+                                          //   ...formStateProjects,
+                                          //   isclient: 0,
+                                          // });
+                                          setFormState(prevState => ({
+                                            ...prevState,
+                                            dataProject: {
+                                              ...prevState.dataProject,
+                                              isclient:0,
+                                            
+                                            }
+                                          }));
                                         }}
                                       />
                                     }
@@ -2406,10 +2847,8 @@ export default function HorizontalNonLinearStepper(props) {
                               <></>
                             )}
                           </div>
-                        </Box>
-                        {/* Facturación cl */}
-
-                        <Box className="flex flex-col  w-full p-[10px]   ">
+                      </Box>
+                      <Box className="flex flex-col  w-full p-[10px]   ">
                           <Box className="flex flex-row">
                             <Typography
                               variant="subtitle1"
@@ -2419,7 +2858,7 @@ export default function HorizontalNonLinearStepper(props) {
                               Facturación.CL
                             </Typography>
 
-                            {formStateProjects.erp === 5 && erp === false ? (
+                            {formState.dataProject.erp === 5 && erp === false ? (
                               <>
                                 <InputAdornment className="m-[10px]">
                                   {facturacioncl ? (
@@ -2451,25 +2890,46 @@ export default function HorizontalNonLinearStepper(props) {
                                             fact_clavePruebas: false,
                                             fact_rutPruebas: false,
                                           });
-                                          setformStateFactCl({
-                                            ...formStateFactCl,
-                                            fact_pHabilitado:
-                                              dataconfirmFactCl.fact_pHabilitado,
+                                          // setFormState({
+                                          //   ...formStateFactCl,
+
+                                          //   fact_pHabilitado:
+                                          //     dataconfirmFactCl.fact_pHabilitado,
+                                          //   fact_userProduccion:
+                                          //     dataconfirmFactCl.fact_userProduccion,
+                                          //   fact_claveProduccion:
+                                          //     dataconfirmFactCl.fact_claveProduccion,
+                                          //   fact_rutProduccion:
+                                          //     dataconfirmFactCl.fact_rutProduccion,
+                                          //   fact_userPruebas:
+                                          //     dataconfirmFactCl.fact_userPruebas,
+                                          //   fact_clavePruebas:
+                                          //     dataconfirmFactCl.fact_clavePruebas,
+                                          //   fact_rutPruebas:
+                                          //     dataconfirmFactCl.fact_rutPruebas,
+                                          // });
+                                          setFormState(prevState => ({
+                                            ...prevState,
+                                            dataFactCl: {
+                                              fact_pHabilitado:
+                                              dataConfirm.dataFactCl.fact_pHabilitado,
                                             fact_userProduccion:
-                                              dataconfirmFactCl.fact_userProduccion,
+                                              dataConfirm.dataFactCl.fact_userProduccion,
                                             fact_claveProduccion:
-                                              dataconfirmFactCl.fact_claveProduccion,
+                                              dataConfirm.dataFactCl.fact_claveProduccion,
                                             fact_rutProduccion:
-                                              dataconfirmFactCl.fact_rutProduccion,
+                                              dataConfirm.dataFactCl.fact_rutProduccion,
                                             fact_userPruebas:
-                                              dataconfirmFactCl.fact_userPruebas,
+                                              dataConfirm.dataFactCl.fact_userPruebas,
                                             fact_clavePruebas:
-                                              dataconfirmFactCl.fact_clavePruebas,
+                                              dataConfirm.dataFactCl.fact_clavePruebas,
                                             fact_rutPruebas:
-                                              dataconfirmFactCl.fact_rutPruebas,
-                                          });
+                                              dataConfirm.dataFactCl.fact_rutPruebas,
+                                            
+                                            }
+                                          }));
                                           haveFactCl(
-                                            dataconfirmFactCl.fact_pHabilitado
+                                            dataConfirm.dataFactCl.fact_pHabilitado
                                           );
                                           setCountActive(
                                             countActive > 0
@@ -2531,10 +2991,18 @@ export default function HorizontalNonLinearStepper(props) {
                                   onClick={() => {
                                     setCheckProduccion(true);
                                     setCheckPrueba(false);
-                                    setformStateFactCl({
-                                      ...formStateFactCl,
-                                      fact_pHabilitado: true,
-                                    });
+                                    setFormState(prevState => ({
+                                      ...prevState,
+                                      dataFactCl: {
+                                        ...prevState.dataFactCl,
+                                        fact_pHabilitado: true,
+                                      
+                                      }
+                                    }));
+                                    // setformStateFactCl({
+                                    //   ...formStateFactCl,
+                                    //   fact_pHabilitado: true,
+                                    // });
                                   }}
                                 />
                               </div>
@@ -2542,13 +3010,13 @@ export default function HorizontalNonLinearStepper(props) {
                                 className="w-full mb-[10px]"
                                 label="Usuario de Producción"
                                 type="text"
-                                value={formStateFactCl.fact_userProduccion}
+                                value={formState.dataFactCl.fact_userProduccion}
                                 onChange={onInputChangeFact}
                                 name="fact_userProduccion"
                                 disabled={fact_userProduccion ? false : true}
                                 InputProps={{
                                   defaultValue:
-                                    formStateFactCl.fact_userProduccion,
+                                    formState.dataFactCl.fact_userProduccion,
                                   startAdornment: checkProduccion ? (
                                     <InputAdornment position="start">
                                       {fact_userProduccion ? (
@@ -2570,11 +3038,20 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateFactCl({
-                                                ...formStateFactCl,
-                                                fact_userProduccion:
-                                                  dataconfirmFactCl.fact_userProduccion,
-                                              });
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataFactCl: {
+                                                  ...prevState.dataFactCl,
+                                                  fact_userProduccion:
+                                                  dataConfirm.dataFactCl.fact_userProduccion,
+                                                
+                                                }
+                                              }));
+                                              // setformStateFactCl({
+                                              //   ...formStateFactCl,
+                                              //   fact_userProduccion:
+                                              //     dataconfirmFactCl.fact_userProduccion,
+                                              // });
                                               setUpdate({
                                                 ...update,
                                                 fact_userProduccion: false,
@@ -2611,13 +3088,13 @@ export default function HorizontalNonLinearStepper(props) {
                                 className="w-full mb-[10px]"
                                 label="Clave de Producción"
                                 type="text"
-                                value={formStateFactCl.fact_claveProduccion}
+                                value={formState.dataFactCl.fact_claveProduccion}
                                 onChange={onInputChangeFact}
                                 name="fact_claveProduccion"
                                 disabled={fact_claveProduccion ? false : true}
                                 InputProps={{
                                   defaultValue:
-                                    formStateFactCl.fact_claveProduccion,
+                                  formState.dataFactCl.fact_claveProduccion,
                                   startAdornment: checkProduccion ? (
                                     <InputAdornment position="start">
                                       {fact_claveProduccion ? (
@@ -2639,11 +3116,20 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateFactCl({
-                                                ...formStateFactCl,
-                                                fact_claveProduccion:
-                                                  dataconfirmFactCl.fact_claveProduccion,
-                                              });
+                                              // setformStateFactCl({
+                                              //   ...formStateFactCl,
+                                              //   fact_claveProduccion:
+                                              //     dataconfirmFactCl.fact_claveProduccion,
+                                              // });
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataFactCl: {
+                                                  ...prevState.dataFactCl,
+                                                  fact_claveProduccion:
+                                                  dataConfirm.dataFactCl.fact_claveProduccion,
+                                                
+                                                }
+                                              }));
                                               setUpdate({
                                                 ...update,
                                                 fact_claveProduccion: false,
@@ -2680,13 +3166,13 @@ export default function HorizontalNonLinearStepper(props) {
                                 className="w-full"
                                 label="Rut de Producción"
                                 type="text"
-                                value={formStateFactCl.fact_rutProduccion}
+                                value={formState.dataFactCl.fact_rutProduccion}
                                 onChange={onInputChangeFact}
                                 name="fact_rutProduccion"
                                 disabled={fact_rutProduccion ? false : true}
                                 InputProps={{
                                   defaultValue:
-                                    formStateFactCl.fact_rutProduccion,
+                                    formState.dataFactCl.fact_rutProduccion,
                                   startAdornment: checkProduccion ? (
                                     <InputAdornment position="start">
                                       {fact_rutProduccion ? (
@@ -2708,11 +3194,20 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateFactCl({
-                                                ...formStateFactCl,
-                                                fact_rutProduccion:
-                                                  dataconfirmFactCl.fact_rutProduccion,
-                                              });
+                                              // setformStateFactCl({
+                                              //   ...formStateFactCl,
+                                              //   fact_rutProduccion:
+                                              //     dataconfirmFactCl.fact_rutProduccion,
+                                              // });
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataFactCl: {
+                                                  ...prevState.dataFactCl,
+                                                  fact_rutProduccion:
+                                                  dataConfirm.dataFactCl.fact_rutProduccion,
+                                                
+                                                }
+                                              }));
                                               setUpdate({
                                                 ...update,
                                                 fact_rutProduccion: false,
@@ -2764,10 +3259,18 @@ export default function HorizontalNonLinearStepper(props) {
                                   onClick={() => {
                                     setCheckPrueba(true);
                                     setCheckProduccion(false);
-                                    setformStateFactCl({
-                                      ...formStateFactCl,
-                                      fact_pHabilitado: false,
-                                    });
+                                    // setformStateFactCl({
+                                    //   ...formStateFactCl,
+                                    //   fact_pHabilitado: false,
+                                    // });
+                                    setFormState(prevState => ({
+                                      ...prevState,
+                                      dataFactCl: {
+                                        ...prevState.dataFactCl,
+                                        fact_pHabilitado: false,
+                                      
+                                      }
+                                    }));
                                   }}
                                 />
                               </div>
@@ -2775,13 +3278,13 @@ export default function HorizontalNonLinearStepper(props) {
                                 className="w-full mb-[10px] "
                                 label="Usuario de Pruebas"
                                 type="text"
-                                value={formStateFactCl.fact_userPruebas}
+                                value={formState.dataFactCl.fact_userPruebas}
                                 onChange={onInputChangeFact}
                                 name="fact_userPruebas"
                                 disabled={fact_userPruebas ? false : true}
                                 InputProps={{
                                   defaultValue:
-                                    formStateFactCl.fact_userPruebas,
+                                    formState.dataFactCl.fact_userPruebas,
                                   startAdornment: checkPrueba ? (
                                     <InputAdornment position="start">
                                       {fact_userPruebas ? (
@@ -2803,11 +3306,20 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateFactCl({
-                                                ...formStateFactCl,
-                                                fact_userPruebas:
-                                                  dataconfirmFactCl.fact_userPruebas,
-                                              });
+                                              // setformStateFactCl({
+                                              //   ...formStateFactCl,
+                                              //   fact_userPruebas:
+                                              //     dataConfirm.dataFactCl.fact_userPruebas,
+                                              // });
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataFactCl: {
+                                                  ...prevState.dataFactCl,
+                                                  fact_userPruebas:
+                                                  dataConfirm.dataFactCl.fact_userPruebas,
+                                                
+                                                }
+                                              }));
                                               setUpdate({
                                                 ...update,
                                                 fact_userPruebas: false,
@@ -2844,13 +3356,13 @@ export default function HorizontalNonLinearStepper(props) {
                                 className="w-full mb-[10px] "
                                 label="Clave de Pruebas"
                                 type="text"
-                                value={formStateFactCl.fact_clavePruebas}
+                                value={formState.dataFactCl.fact_clavePruebas}
                                 onChange={onInputChangeFact}
                                 name="fact_clavePruebas"
                                 disabled={fact_clavePruebas ? false : true}
                                 InputProps={{
                                   defaultValue:
-                                    formStateFactCl.fact_clavePruebas,
+                                    formState.dataFactCl.fact_clavePruebas,
                                   startAdornment: checkPrueba ? (
                                     <InputAdornment position="start">
                                       {fact_clavePruebas ? (
@@ -2872,11 +3384,20 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateFactCl({
-                                                ...formStateFactCl,
-                                                fact_clavePruebas:
-                                                  dataconfirmFactCl.fact_clavePruebas,
-                                              });
+                                              // setformStateFactCl({
+                                              //   ...formStateFactCl,
+                                              //   fact_clavePruebas:
+                                              //     dataConfirm.dataFactCl.fact_clavePruebas,
+                                              // });
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataFactCl: {
+                                                  ...prevState.dataFactCl,
+                                                  fact_clavePruebas:
+                                                  dataConfirm.dataFactCl.fact_clavePruebas,
+                                                
+                                                }
+                                              }));
                                               setUpdate({
                                                 ...update,
                                                 fact_clavePruebas: false,
@@ -2912,12 +3433,12 @@ export default function HorizontalNonLinearStepper(props) {
                                 className="w-full "
                                 label="Rut de Pruebas"
                                 type="text"
-                                value={formStateFactCl.fact_rutPruebas}
+                                value={formState.dataFactCl.fact_rutPruebas}
                                 onChange={onInputChangeFact}
                                 name="fact_rutPruebas"
                                 disabled={fact_rutPruebas ? false : true}
                                 InputProps={{
-                                  defaultValue: formStateFactCl.fact_rutPruebas,
+                                  defaultValue: formState.dataFactCl.fact_rutPruebas,
                                   startAdornment: checkPrueba ? (
                                     <InputAdornment position="start">
                                       {fact_rutPruebas ? (
@@ -2939,11 +3460,20 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateFactCl({
-                                                ...formStateFactCl,
-                                                fact_rutPruebas:
-                                                  dataconfirmFactCl.fact_rutPruebas,
-                                              });
+                                              // setformStateFactCl({
+                                              //   ...formStateFactCl,
+                                              //   fact_rutPruebas:
+                                              //     dataConfirm.dataFactCl.fact_rutPruebas,
+                                              // });
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataFactCl: {
+                                                  ...prevState.dataFactCl,
+                                                  fact_rutPruebas:
+                                                  dataConfirm.dataFactCl.fact_rutPruebas,
+                                                
+                                                }
+                                              }));
                                               setUpdate({
                                                 ...update,
                                                 fact_rutPruebas: false,
@@ -2984,7 +3514,6 @@ export default function HorizontalNonLinearStepper(props) {
                             )}
                           </div>
                         </Box>
-                      </Box>
                       <Box>
                         <Box className="flex flex-col  w-full p-[10px]  ">
                           <div
@@ -3006,7 +3535,7 @@ export default function HorizontalNonLinearStepper(props) {
                                 id="standard-select-currency"
                                 select
                                 label="Facturador"
-                                value={formStateProjects.erp}
+                                value={formState.dataProject.erp}
                                 onChange={handleChangeERP}
                                 variant="filled"
                                 name="erp"
@@ -3034,11 +3563,17 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateProjects({
-                                                ...formStateProjects,
-                                                erp: props.fullData.dataProject
+                                            
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataProject: {
+                                                  ...prevState.dataProject,
+                                                  erp:
+                                                  props.fullData.dataProject
                                                   .erp,
-                                              });
+                                                
+                                                }
+                                              }));
 
                                               setUpdate({
                                                 ...update,
@@ -3093,7 +3628,7 @@ export default function HorizontalNonLinearStepper(props) {
                                 id="standard-select-currency"
                                 select
                                 label="Nomina de Pago"
-                                value={formStateProjects.id_nomina_pago}
+                                value={formState.dataProject.id_nomina_pago || "Sin asignar"}
                                 onChange={handleChangeNomina}
                                 variant="filled"
                                 name="nominaPago"
@@ -3121,13 +3656,22 @@ export default function HorizontalNonLinearStepper(props) {
                                           <DisabledByDefaultIcon
                                             style={{ cursor: "pointer" }}
                                             onClick={() => {
-                                              setformStateProjects({
-                                                ...formStateProjects,
-                                                id_nomina_pago:
+                                              // setformStateProjects({
+                                              //   ...formStateProjects,
+                                              //   id_nomina_pago:
+                                              //     props.fullData.dataProject
+                                              //       .id_nomina_pago,
+                                              // });
+                                              setFormState(prevState => ({
+                                                ...prevState,
+                                                dataProject: {
+                                                  ...prevState.dataProject,
+                                                  id_nomina_pago:
                                                   props.fullData.dataProject
                                                     .id_nomina_pago,
-                                              });
-
+                                                
+                                                }
+                                              }));
                                               setUpdate({
                                                 ...update,
                                                 id_nomina_pago: false,
@@ -3175,28 +3719,23 @@ export default function HorizontalNonLinearStepper(props) {
                           </div>
                         </Box>
                       </Box>
+                        
+                      
+                      </Box>
+                      
                     </Box>
+                    
+                      
                   </Box>
                 ) : (
-                  //HACER LA HISTORIFICACION TERMINARLA ANTES DE LAS 4
+               
                   <Box>
                     <Box className="Flex flex-col w-full h-full">
                       <Typography variant="h6" className="mb-4" color="primary">
                         Historificación
                       </Typography>
                     </Box>
-
-                    {/* <Typography variant="h6" className="mb-4 ml-4">
-                        Cambios realizados 
-                    </Typography> */}
-
                     <Paper>
-                      {/* Debo ingresar a la bd y consultar estos campos uwu */}
-                      {/* PAPER PARA FIULTROS */}
-                      {/* <TablaUltimosCambios
-                        idParticipant={props.fullData.dataParticipant.id}
-                      /> */}
-
                       <TablaHistorificacion
                         idParticipant={props.fullData.dataParticipant.id}
                       />
@@ -3208,7 +3747,6 @@ export default function HorizontalNonLinearStepper(props) {
           )}
         </Box>
       </Box>
-      {/* SECCION BOTONES OCUPA TODO EL LARGO  */}
       <Box className=" flex justify-end w-full m-[20px]">
         {alertOk && (
           <Stack sx={{ width: "100%" }} spacing={2}>
@@ -3239,7 +3777,7 @@ export default function HorizontalNonLinearStepper(props) {
           className="w-[100px] ml-[10px] mr-[10px]"
           variant="contained"
           color="secondary"
-          // startIcon={<SearchIcon />}
+         
           onClick={handleNext}
         >
           Siguiente
@@ -3249,8 +3787,7 @@ export default function HorizontalNonLinearStepper(props) {
           className="w-[100px] mr-[10px]"
           variant="contained"
           color="primary"
-          // startIcon={<SearchIcon />}
-          // disabled={activeStep === 0}
+          
           onClick={handleClickOpen}
         >
           Guardar

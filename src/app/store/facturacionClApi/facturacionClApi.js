@@ -16,10 +16,11 @@ export const facturacionClApi = createApi({
         method: "GET",
       }),
     }),
-    getFactCLAll: builder.query({
-      query: () => `/NpaginationDecode`,
+    getFactCLAll: builder.mutation({
+      query: (spec) => `/PaginationDecode?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
       providesTags: ["FacturacionesCl"],
     }),
+    
     postFacturaAgregar: builder.mutation({
       query: (data) => ({
         headers: {
@@ -54,5 +55,6 @@ export const {
   usePostFacturaActualizarMutation,
   useGetFacturaByIdMutation,
   useRefetchQueriesFactMutation,
-  useGetFactCLAllQuery,
+  useGetFactCLAllMutation,
+ 
 } = facturacionClApi;
