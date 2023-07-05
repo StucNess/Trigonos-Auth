@@ -55,7 +55,7 @@ function DocumentalApp(props) {
   const user = useSelector(selectUser);
   const [carga, setCarga] = useState(true);
   const [tabValue, setTabValue] = useState(0);
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(false);
   const [client, setClient] = useState(null);
   const [stateInstuctions, setStateInstuctions] = useState({});
   const [cargando, setCargando] = useState(false);
@@ -71,7 +71,6 @@ function DocumentalApp(props) {
     useGetExcelById_Query(client != null ? client.id : 0);
   useEffect(() => {
     setStateInstuctions(array);
-    console.log(array);
   }, [cargando]);
 
   useEffect(() => {
@@ -141,15 +140,16 @@ function DocumentalApp(props) {
 
             <Menu
               id="project-menu"
-              anchorEl={open}
+              // anchorEl={open}
               open={open}
               onClose={handleclose}
+              ñ
             >
               {getData.data &&
                 getData.data.map((cliente) => (
                   <MenuItem
                     key={cliente.id}
-                    onClick={(ev) => {
+                    onClick={() => {
                       setClient(cliente);
                       handleclose();
                     }}
@@ -231,8 +231,8 @@ function DocumentalApp(props) {
           )}
           {tabValue === 3 && (
             <NominaPago
-              // dataExcel={getDataExcels}
-              // fetchingExcels={fetchingExcels}
+              dataExcel={getDataExcels}
+              fetchingExcels={fetchingExcels}
               cliente={client}
             />
           )}
