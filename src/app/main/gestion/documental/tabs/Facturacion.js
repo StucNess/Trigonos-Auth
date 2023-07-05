@@ -1,29 +1,20 @@
-import { Paper, Typography, Button, Box, ButtonBase } from "@mui/material";
+import { Typography, ButtonBase } from "@mui/material";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { usePostFacturacionMutation } from "app/store/instrucciones/instruccionesApi";
 import * as XLSX from "xlsx";
-import axios from "axios";
-import Tooltip from "@mui/material/Tooltip";
-import IconButton from "@mui/material/IconButton";
-import DoneAllIcon from "@mui/icons-material/DoneAll";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
 import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Disponible from "../tablas/Disponible";
+// LIBRERIAS MODAL
 import Dialog from "@mui/material/Dialog";
 import WarningIcon from "@mui/icons-material/Warning";
 import CircularProgress from "@mui/material/CircularProgress";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import HistorialCarga from "../tablas/HistorialCarga";
-import { setRole } from "app/store/Role";
-
+////
 import { useState } from "react";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: "#f1f5f9",
@@ -35,18 +26,18 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  // '&:nth-of-type(odd)': {
-  //   backgroundColor: theme.palette.action.hover,
-  // },
-  // '&:nth-of-type(odd)': {
-  //   backgroundColor: theme.palette.action.hover,
-  // },
-  // hide last border
-}));
-function createData(name, estado) {
-  return { name, estado };
-}
+// const StyledTableRow = styled(TableRow)(({ theme }) => ({
+//   // '&:nth-of-type(odd)': {
+//   //   backgroundColor: theme.palette.action.hover,
+//   // },
+//   // '&:nth-of-type(odd)': {
+//   //   backgroundColor: theme.palette.action.hover,
+//   // },
+//   // hide last border
+// }));
+// function createData(name, estado) {
+//   return { name, estado };
+// }
 
 export default function Facturacion(props) {
   const [cargando, setCargando] = useState(false);
@@ -74,8 +65,19 @@ export default function Facturacion(props) {
     let fechaCorta = año + "-" + mes + "-" + dia;
     return fechaCorta;
   };
-  const rows = [createData("Excel 1", false), createData("Excel 2", true)];
   const mostrarMensaje = (response) => {
+    console.log(response);
+    if (response.status == "FETCH_ERROR") {
+      setMsgAlert({
+        msgResp: true,
+        msgText: "EXITO",
+        msgError: false,
+      });
+      setCargando(false);
+      setTimeout(() => {
+        setOpenDialog(false);
+      }, 2000);
+    }
     if (!(response.error == undefined)) {
       setMsgAlert({
         msgResp: true,
@@ -105,11 +107,7 @@ export default function Facturacion(props) {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
-    let dataPrueba = [];
     let name = event.target.files[0].name;
-    let fecha = devuelveFechaHoy();
-    let idParticipant = props.idParticipant;
-    let type = "Facturacion Masiva";
 
     reader.onload = (e) => {
       setOpenDialog(true);
@@ -121,15 +119,18 @@ export default function Facturacion(props) {
       if (jsonData.length < 2000) {
         postFacturacion({
           id: props.cliente.id,
+          erp: props.cliente.trgns_erp,
+          excelName: name,
           body: jsonData.slice(0, 1000),
         }).then((response) => {
-          console.log(response);
           if (!(response.error == undefined)) {
             mostrarMensaje(response);
           } else {
             if (jsonData.length > 1000) {
-              postFacturacionDeudor({
+              postFacturacion({
                 id: props.cliente.id,
+                erp: props.cliente.trgns_erp,
+                excelName: name,
                 body: jsonData.slice(1000, 2003),
               }).then((response) => {
                 mostrarMensaje(response);
@@ -142,70 +143,10 @@ export default function Facturacion(props) {
       } else {
         mostrarMensaje({ error: "true" });
       }
-      // let description = "Se actualizo todo correctamente";
-      // let status = "OK";
-      // let json = {
-      //   excelName: name,
-      //   status: status,
-      //   idParticipant: props.idParticipant,
-      //   type: type,
-      //   description: description,
-      // };
-      // let url = `https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar`;
-      // axios
-      //   .post(url, json)
-      //   .then(function (response) {
-      //     setMsgAlert({
-      //       msgResp: true,
-      //       msgText: "Exito, Archivo Subido!",
-      //       msgError: false,
-      //     });
-      //     setCargando(false);
-      //     setTimeout(() => {
-      //       window.location.reload();
-      //     }, 2000);
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error);
-      //   });
-
-      // .catch((error) => {
-      //   // let description = error.response.data.message;
-      //   // let status = "ERROR";
-      //   // let json = {
-      //   //   excelName: name,
-      //   //   status: status,
-      //   //   idParticipant: props.idParticipant,
-      //   //   type: type,
-      //   //   description: description,
-      //   // };
-      //   // let url =
-      //   //   "https://trigonosapi.azurewebsites.net/api/Instrucciones/Agregar";
-      //   // axios
-      //   //   .post(url, json)
-      //   //   .then(function (response) {
-      //   //     setMsgAlert({
-      //   //       msgResp: true,
-      //   //       msgText: "Error, Archivo subido con errores!",
-      //   //       msgError: true,
-      //   //     });
-      //   //     setCargando(false);
-      //   //     setTimeout(() => {
-      //   //       window.location.reload();
-      //   //     }, 2000);
-
-      //   //     //window.location.reload();
-      //   //   })
-      //   //   .catch(function (error) {
-      //   //     console.log(error);
-      //   //   });
-      //   // window.location.reload();
-      // });
     };
 
     reader.readAsArrayBuffer(file);
   };
-
   return (
     <div className="grid grid-cols-9 gap-12 p-[20px]">
       <div className="col-span-3 bg-white rounded-md">

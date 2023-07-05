@@ -319,6 +319,7 @@ export default function Disponible(props) {
         <TableBody>
           {tableUtils.map((row) => (
             <Tooltip
+              key={row.id}
               title="Descargar"
               arrow
               placement="right"

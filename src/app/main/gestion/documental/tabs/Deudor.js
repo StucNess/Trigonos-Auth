@@ -56,9 +56,7 @@ export default function Deudor(props) {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
-    let dataPrueba = [];
     let name = event.target.files[0].name;
-    let type = "Deudor";
     reader.onload = (e) => {
       setOpenDialog(true);
       setCargando(true);
@@ -66,10 +64,10 @@ export default function Deudor(props) {
       const workbook = XLSX.read(data, { type: "array" });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
       if (jsonData.length < 2000) {
         postFacturacionDeudor({
           id: props.cliente.id,
+          excelName: name,
           body: jsonData.slice(0, 1000),
         }).then((response) => {
           if (!(response.error == undefined)) {
@@ -78,6 +76,7 @@ export default function Deudor(props) {
             if (jsonData.length > 1000) {
               postFacturacionDeudor({
                 id: props.cliente.id,
+                excelName: name,
                 body: jsonData.slice(1000, 2003),
               }).then((response) => {
                 mostrarMensaje(response);

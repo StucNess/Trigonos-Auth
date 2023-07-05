@@ -4,7 +4,7 @@ export const instruccionesApi = createApi({
   reducerPath: "instrucciones",
   tagTypes: ["instruccionesDef"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/",
+    baseUrl: "http://localhost:5205",
   }),
   endpoints: (builder) => ({
     // GET QUERY //
@@ -175,7 +175,6 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["concepto"],
     }),
-
     getCodRef: builder.query({
       query: (data) => ({
         url: data.spec
@@ -300,7 +299,6 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["Carta"],
     }),
-
 
     getNombreAcreedor: builder.query({
       query: (data) => ({
@@ -649,7 +647,6 @@ export const instruccionesApi = createApi({
       providesTags: ["instruccionesDef"],
     }),
     getConceptom: builder.mutation({
-      timeout: 60000,
       query: (data) => ({
         url: data.spec
           ? `/ConceptFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
@@ -712,7 +709,6 @@ export const instruccionesApi = createApi({
       providesTags: ["conceptoMutation"],
     }),
     getCodRefm: builder.mutation({
-      timeout: 60000,
       query: (data) => ({
         url: data.spec
           ? `/CodRefFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
@@ -775,7 +771,6 @@ export const instruccionesApi = createApi({
       providesTags: ["conceptoMutation"],
     }),
     getCartam: builder.mutation({
-      timeout: 60000,
       query: (data) => ({
         url: data.spec
           ? `/CartaFilter?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
@@ -839,7 +834,6 @@ export const instruccionesApi = createApi({
     }),
     getNombreAcreedorm: builder.mutation({
       query: (data) => ({
-        timeout: 60000,
         url: data.spec
           ? `/sFiltrosNameCreditor?id=${data.id}` +
             (data.spec.FechaEmision != undefined
@@ -902,7 +896,6 @@ export const instruccionesApi = createApi({
     }),
     getRutAcreedorm: builder.mutation({
       query: (data) => ({
-        timeout: 60000,
         url: data.spec
           ? `/sFiltrosRutCreditor?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
             (data.spec.FechaEmision != undefined
@@ -958,7 +951,6 @@ export const instruccionesApi = createApi({
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
               : "")
-            
           : `/sFiltrosRutCreditor?id=${data.id}`,
         method: "GET",
       }),
@@ -966,7 +958,6 @@ export const instruccionesApi = createApi({
     }),
     getNombreDeudorm: builder.mutation({
       query: (data) => ({
-        timeout: 60000,
         url: data.spec
           ? `/sFiltrosNameDebtor?id=${data.id}` +
             (data.spec.FechaEmision != undefined
@@ -1029,7 +1020,6 @@ export const instruccionesApi = createApi({
     }),
     getRutDeudorm: builder.mutation({
       query: (data) => ({
-        timeout: 60000,
         url: data.spec
           ? `/sFiltrosRutDeudor?id=${data.id}` +
             (data.spec.FechaEmision != undefined
@@ -1090,7 +1080,6 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudorMutation"],
     }),
-
     ///////////////////////
     // PATCH MUTATION //
     patchInstruccionesSpec: builder.mutation({
@@ -1139,7 +1128,7 @@ export const instruccionesApi = createApi({
         headers: {
           "Content-type": "application/json",
         },
-        url: `/api/Instrucciones/CuadreMasivoAcreedor?id=${data.id}`,
+        url: `/api/Instrucciones/CuadreMasivoAcreedor?id=${data.id}&excelName=${data.excelName}`,
         body: data.body,
         method: "POST",
       }),
@@ -1149,7 +1138,7 @@ export const instruccionesApi = createApi({
         headers: {
           "Content-type": "application/json",
         },
-        url: `/api/Instrucciones/ActualizarFacDeudor?id=${data.id}`,
+        url: `/api/Instrucciones/ActualizarFacDeudor?id=${data.id}&excelName=${data.excelName}`,
         body: data.body,
         method: "POST",
       }),
@@ -1159,14 +1148,23 @@ export const instruccionesApi = createApi({
         headers: {
           "Content-type": "application/json",
         },
-        url: `/api/Instrucciones/FacturacionMasiva?id=${data.id}`,
+        url: `/api/Instrucciones/FacturacionMasiva?id=${data.id}&erp=${data.erp}&excelName=${data.excelName}`,
+        body: data.body,
+        method: "POST",
+      }),
+    }),
+    postNominasPago: builder.mutation({
+      query: (data) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/api/Instrucciones/NominasDePago?id=${data.id}&bank=${data.bank}&fechaPago=${data.fechaPago}&excelName=${data.excelName}`,
         body: data.body,
         method: "POST",
       }),
     }),
     ///////////////////////
-
-    //CONTADORES SOLUCION DE CARGA TEMPORAL 
+    //CONTADORES SOLUCION DE CARGA TEMPORAL
     getNumberConcept: builder.mutation({
       query: (data) => ({
         url: data.spec
@@ -1601,7 +1599,6 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudorMutation"],
     }),
-
   }),
 });
 export const {
@@ -1624,11 +1621,10 @@ export const {
   useGetRutAcreedormMutation,
   useGetNombreDeudormMutation,
   useGetNombreAcreedormMutation,
-
   usePostFacturacionDeudorMutation,
   usePostFacturacionAcreedorMutation,
   usePostFacturacionMutation,
-
+  usePostNominasPagoMutation,
   useGetCodRefQuery,
   useGetCartaQuery,
   useGetNumberConceptMutation,
@@ -1638,6 +1634,4 @@ export const {
   useGetNumberRutDeudorMutation,
   useGetNumberNombreAcreedorMutation,
   useGetNumberNombreDeudorMutation,
-
-
 } = instruccionesApi;
