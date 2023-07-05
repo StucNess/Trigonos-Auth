@@ -6,14 +6,19 @@ import FacturacionMasivaAppHeader from "./ParticipantsAppHeader";
 import VerticalStepper from "./tabs/VerticalStepper";
 import ErrorOutlinedIcon from "@mui/icons-material/ErrorOutlined";
 import FiltrosParticipant from "./tabs/FiltrosParticipant";
-import Stack from "@mui/material/Stack";
-import LinearProgress from "@mui/material/LinearProgress";
+
 import { CallApi } from "./store/CallApi";
 import { useEffect, useState } from "react";
-import { useGetPartAllQuery, useGetProyAllQuery } from "app/store/participantesApi/participantesApi";
-import { useGetFactCLAllQuery } from "app/store/facturacionClApi/facturacionClApi";
+import { useGetNumberFactCLMutation, useGetNumberParticipantMutation, useGetNumberParticipantQuery, useGetNumberProyectoMutation, useGetPartAllMutation,useGetProyAllMutation } from "app/store/participantesApi/participantesApi";
+import { useGetFactCLAllMutation, useGetFactCLAllQuery } from "app/store/facturacionClApi/facturacionClApi";
 import { useGetFacturadorERPTableQuery, useGetNominaPagoTableQuery } from "app/store/nominasApi/nominasApi";
-
+import Autocomplete from "@mui/material/Autocomplete";
+import AdviceModule from "../AdviceModule";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
+import { FastForward } from "@mui/icons-material";
 const Root = styled(FusePageSimple)(({ theme }) => ({
   "& .FusePageSimple-header": {
     backgroundColor: theme.palette.background.paper,
@@ -24,16 +29,153 @@ let participants = [];
 const NominaPagoApp = () => {
   const [isloading, setIsloading] = useState(true);
   const [carga, setCarga] = useState(true);
-  const [dataParticipant, setDataParticipant] = useState([]);
-  const [fullData, setFullData] = useState(undefined);
-  const {data: getParticipant, isFetching: fetchParticipant }= useGetPartAllQuery({PageIndex:1,PageSize:1000});
-  const {data: getProject, isFetching: fetchProject }= useGetProyAllQuery({PageIndex:1,PageSize:1000});
-  const {data: getFactCl, isFetching: fetchFact }= useGetFactCLAllQuery();
   const {data: getFactErp, isFetching: fetchFactErp }= useGetFacturadorERPTableQuery();
   const {data: getNomPago, isFetching: fetchNomPag }= useGetNominaPagoTableQuery();
-  const [datapermanet, setDatapermanet] = useState([])
-  let ArrayFetchs = [fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag];
-    let ArrayDatas = [getParticipant,getProject,getFactCl,getFactErp,getNomPago];
+  const [id, setId] = useState(undefined);
+  const [fullData, setFullData] = useState([{}]);
+  // allparticipants={getParticipant.data}
+  // allprojects={getProject.data}
+  // allfactcl={getFactCl}
+  // sendFullData={getFullData}
+  // change={carga}
+  // idParticipant={datapermanet}
+  
+  //OBTENER CANTIDAD PARA ITERAR
+  const [getNumParticipant, {isLoading : isLoadingNParticipant}] = useGetNumberParticipantMutation();
+  const [getNumProyecto, {isLoading : isLoadingNProyecto}] = useGetNumberProyectoMutation();
+  const [getNumFactCl, {isLoading : isLoadingNFactCl}] = useGetNumberFactCLMutation();
+
+  //MUTATIONS QUE DEBEN SER ITERADOS
+  const [getPartMutation, {isLoading : isLoadingPartm}] = useGetPartAllMutation();
+  const [getProyectoMutation, {isLoading : isLoadingProyectom}] = useGetProyAllMutation();
+  const [getFactClMutation, {isLoading : isLoadingFactClm}] = useGetFactCLAllMutation();
+
+  //VARIABLES QUE RECIBEN LOS DATOS EN LA ITERACIÓN
+  const [participantes, setParticipantes] = useState([]);
+  const [proyectos, setProyectos] = useState([]);
+  const [facturacionCl, setFacturacionCl] = useState([]);
+
+  //VARIABLES BOOL PARA VERIFICAR CARGA
+  const [cargaParticipant, setCargaParticipant] = useState(true);
+  const [cargaProyectos, setCargaProyectos] = useState(true);
+  const [cargafacturacionCl, setCargafacturacionCl] = useState(true);
+
+  function GetDataMutations(){
+    
+    try {
+      setParticipantes([]);
+      setProyectos([]);
+      setFacturacionCl([]);
+      
+      setIsloading(true);
+      setCargaParticipant(true);
+      setCargaProyectos(true);
+      setCargafacturacionCl(true);
+      let specParticipant = {
+        PageIndex: 1,
+        PageSize: 200,
+    
+      };
+      let specProyectos = {
+        PageIndex: 1,
+        PageSize: 200,
+    
+      };
+      let specFacturacionCl = {
+        PageIndex: 1,
+        PageSize: 200,
+    
+      };
+      getNumParticipant(specParticipant)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          specParticipant.PageIndex = index + 1;
+          return getPartMutation(specParticipant);
+        });
+       
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setParticipantes((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+            setCargaParticipant(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      getNumProyecto(specProyectos)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          specProyectos.PageIndex = index + 1;
+          return getProyectoMutation(specProyectos);
+        });
+       
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setProyectos((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+            setCargaProyectos(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+      getNumFactCl(specFacturacionCl)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF  }, (_, index) => {
+          specFacturacionCl.PageIndex = index + 1;
+          return getFactClMutation(specFacturacionCl);
+        });
+        console.log("facturacion", specFacturacionCl)
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setFacturacionCl((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+            setCargafacturacionCl(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    } catch (error) {
+      console.log("ERROR LOGICA NUMBERS Y PARTICIPANTES");
+    }
+  }
+
+  let ArrayFetchs = [fetchFactErp,fetchNomPag];
+    let ArrayDatas = [getFactErp,getNomPago];
     function verificarLista() {
       if (ArrayFetchs.every((valor) => valor === true)) {
         return true;
@@ -49,13 +191,11 @@ const NominaPagoApp = () => {
       }
     }
   
-  // let isloadingg =verificarLista();
-  // // console.log(fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag)
-  // // console.log(isloadingg)
+
   useEffect(() => {
  
       function verificacarga() {
-        if ([fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag].every((valor) => valor === false)) {
+        if ([fetchFactErp,fetchNomPag,cargaParticipant,cargaProyectos,cargafacturacionCl].every((valor) => valor === false)) {
           return false;
         } else {
           return true;
@@ -64,59 +204,64 @@ const NominaPagoApp = () => {
         }
       }
     
-    setCarga(verificacarga() )
+
+    if(verificacarga()===false){
+   
+      if(!cargaParticipant && !cargaProyectos && !cargafacturacionCl){
+        setIsloading(false)
+        if(id){
+          setFullData({
+            dataParticipant: participantes.filter((data) => data.id ===id)[0]||{},
+            dataProject:proyectos.filter((data) => data.id_participants ===id)[0]||{},
+            dataFactCl:facturacionCl.filter((data) => data.idParticipante ===id)[0]||{}
+    
+          });
+        }else{
+          setFullData({
+            dataParticipant: participantes[0],
+            dataProject:proyectos.filter((data) => data.id_participants ===participantes[0].id)[0]||{},
+            dataFactCl:facturacionCl.filter((data) => data.idParticipante ===participantes[0].id)[0]||{}
+    
+          });
+          setId(participantes[0].id)
+        }
+        
+      }
+    }
   
   
 
-  }, [fetchParticipant,fetchProject,fetchFact,fetchFactErp,fetchNomPag])
+  }, [fetchFactErp,fetchNomPag,cargaParticipant,cargaProyectos,cargafacturacionCl])
+
+
   useEffect(() => {
-    if(!carga){
-      setTimeout(() => {
-        if(fullData != undefined){
-          setIsloading(false);
-          setDatapermanet([fullData.dataParticipant.id])
-        }
-      }, 1300);
-    }
-   
-  }, [carga])
-  
- 
-  
+    GetDataMutations()
+  }, [])
   useEffect(() => {
-    
-    if(fullData != undefined){
-      setIsloading(false);
-    }
+    console.log(fullData);
   }, [fullData])
+  
+
+  
   
  
 
   const [change, setChange] = useState(false);
   const [idParticipant, setIdParticipant] = useState();
-  const [tipoCliente, setTipoCliente] = useState({id: 7455, id_participants: 2, vHabilitado: 0});
+
   const getIdParticipant = (data) => {
     
     setIdParticipant(data);
   };
-  const getFullData = (data) => {
-   
-    setFullData(data);
-  };
-  const getDataParticipants = (data) => {
-    setDataParticipant(data);
-  };
+
   const getChange = (data) => {
     
     
     setChange(data);
   };
-  const getTipoCliente = (data) => {
-    setTipoCliente(data);
-  };
-  // const getIsloading = (data) => {
-  //   setIsloading(data);
-  // };
+
+
+ 
   return (
     <Root
       // header={<FacturacionMasivaAppHeader />}
@@ -140,7 +285,7 @@ const NominaPagoApp = () => {
               </div>
             </Box>
           </Box>
-          {carga?<Paper className="w-full p-[20px] mb-[20px]">
+          {isloading?<Paper className="w-full p-[20px] mb-[20px]">
             <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
                   
                     <LinearProgress color="primary" />
@@ -149,7 +294,7 @@ const NominaPagoApp = () => {
 
          <>
          <Paper className="w-full p-[20px] mb-[20px]">
-         
+      {/*   
          <FiltrosParticipant
            allparticipants={getParticipant.data}
            allprojects={getProject.data}
@@ -159,7 +304,70 @@ const NominaPagoApp = () => {
            idParticipant={datapermanet}
           //  isLoading={getIsloading}
          
-         />
+         /> */}
+         <Box className="flex flex-col w-full mb-[20px] ">
+        <AdviceModule
+          direction={"ltr"}
+          textwidth={500}
+          msg={
+            'Mediante los siguientes listas "Razón Social", "Rut" usted podrá buscar al participante deseado, ya sea desplazandose por la lista o escribiendo directamente en el campo.'
+          }
+          className={"relative h-32 w-32 "}
+          classnamesegund={"absolute h-14 w-14 -right-[230px] -bottom-[5px]"}
+          classPopover={"ml-[20px] mr-[100px]"}
+        />
+        <Typography variant="h6" className="mb-4" color="primary">
+          Búsqueda de Participante
+        </Typography>
+        <span>Introducir términos de búsqueda</span>
+      </Box>
+          <Box className="flex  w-full   mdmax:flex-wrap justify-evenly   lg:justify-start">
+          <Autocomplete
+            className="m-[10px] w-[300px] md:w-[500px]"
+            disablePortal
+            options={participantes}
+            value={fullData.dataParticipant}
+            onChange={(event, newValue) =>
+              {newValue != undefined && 
+              setFullData( {
+                dataParticipant: newValue,
+                dataProject:proyectos.filter((data) => data.id_participants ===newValue.id)[0]||{},
+                dataFactCl:facturacionCl.filter((data) => data.idParticipante ===newValue.id)[0]||{}
+              
+              }); newValue != undefined && setId(newValue.id);}
+            }
+            getOptionLabel={(option) =>
+              option.business_Name 
+            }
+           
+            id="combo-box-demo"
+            renderInput={(params) => (
+              <TextField {...params} key={params.business_Name} label="Razón Social" />
+            )}
+          />
+          <Autocomplete
+            className="m-[10px] w-[300px] md:w-[500px]"
+            disablePortal
+            onChange={(event, newValue) =>
+              {newValue != undefined && 
+                setFullData( {
+                  dataParticipant: newValue,
+                  dataProject:proyectos.filter((data) => data.id_participants ===newValue.id)[0]||{},
+                  dataFactCl:facturacionCl.filter((data) => data.idParticipante ===newValue.id)[0]||{}
+                
+                }); newValue != undefined && setId(newValue.id);}
+            }
+          
+            getOptionLabel={(option) =>
+              option.rutCompleto 
+          
+            }
+            id="combo-box-demo_dos"
+            options={participantes}
+            value={fullData.dataParticipant}
+            renderInput={(params) => <TextField {...params}  key={params.rutCompleto}  label="Rut" />}
+          />
+        </Box>
        </Paper>
         {isloading?  <Paper className="w-full p-[20px] mb-[20px]">
        <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
@@ -169,13 +377,12 @@ const NominaPagoApp = () => {
        </Paper>:
           <Paper className="w-full p-[20px] ">
          <VerticalStepper
-          
            fullData={fullData}
            nominaPago={getNomPago}
            facturadorErp={getFactErp}
            sendChange={getChange}
            sendIdParticipant={getIdParticipant}
-           
+           sendIdAndLoad={GetDataMutations}
           //  isLoading ={isloading}
          />
        </Paper>
