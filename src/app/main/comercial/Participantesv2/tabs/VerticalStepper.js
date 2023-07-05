@@ -31,6 +31,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Select from "@mui/material/Select";
 // import TextField from "@mui/material/TextField";
 import TablaUltimosCambios from "./widgets/TablaUltimosCambios";
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import Paper from "@mui/material/Paper";
 import { CallBanks } from "../store/CallBanks";
 import { useEffect, useState } from "react";
@@ -66,6 +67,7 @@ import {
 import WarningIcon from "@mui/icons-material/Warning";
 import CircularProgress from "@mui/material/CircularProgress";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import TablaAgentes from "./TablaAgentes";
 //MODAL TABLA CAMBIOS
 function createData(campo, antiguo, nuevo) {
   return { campo, antiguo, nuevo };
@@ -78,6 +80,7 @@ const steps = [
   "Coordinado",
   "Datos de Contacto",
   "Datos Bancarios",
+  "Agentes",
   "Gestión Trígonos",
   "Historificación",
 ];
@@ -977,6 +980,8 @@ export default function HorizontalNonLinearStepper(props) {
     } else if (step === 2) {
       return <AssignmentIcon />;
     } else if (step === 3) {
+      return <SupportAgentIcon />;  
+    } else if (step === 4) {
       return <AccountBalanceIcon />;
     } else {
       return <ManageHistoryIcon />;
@@ -2691,6 +2696,20 @@ export default function HorizontalNonLinearStepper(props) {
                     </Box>
                   </Box>
                 ) : activeStep === 3 ? (
+
+                  <Box>
+                  <Box className="Flex flex-col w-full h-full">
+                    <Typography variant="h6" className="mb-4" color="primary">
+                      Agentes Asociados
+                    </Typography>
+                  </Box>
+                  <Paper>
+                  <TablaAgentes rutParticipant={props.fullData.dataParticipant.rutCompleto}/>
+                  </Paper>
+                </Box>
+
+                 
+                ) : activeStep === 4 ? (
                   <Box className=" w-full h-full">
                     <Typography variant="h6" className="mb-4" color="primary">
                       Gestión Trígonos

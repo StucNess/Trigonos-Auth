@@ -147,6 +147,11 @@ export const participantesApi = createApi({
         `/api/Participantes/CantidadFactCl`,
       providesTags: ["numberFactCl"],
     }),
+    getAgentesDeParticipante: builder.mutation({
+      query: (spec) =>
+        `/api/Participantes/AgentesDeParticipante?rutEmpresa=${spec.Rut}&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
+      providesTags: ["agentes"],
+    }),
     refetchQueriesPart: builder.mutation({
       queryFn: () => ({ data: null }),
       invalidatesTags: ["listparticipant", "proyectos", "participant"],
@@ -173,4 +178,6 @@ export const {
   useGetProyAllMutation,
   useGetNumberProyectoMutation,
   useGetNumberFactCLMutation,
+  useGetAgentesDeParticipanteMutation,
+
 } = participantesApi;
