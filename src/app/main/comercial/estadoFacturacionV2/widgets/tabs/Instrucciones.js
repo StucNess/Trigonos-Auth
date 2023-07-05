@@ -530,24 +530,7 @@ let condicionFilters = 0;
   
    //rut, nombre: acreedor y deudor
   function FiltersAcree(){
-    // let dataSpec ={
-    //   id,
-    //   spec:{
-    //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-    //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-    //     Acreedor:state.acreedor?id:"",
-    //     Deudor:state.deudor?id:"",
-    //     EstadoEmision:state.estadoEmision?"Facturado":"",
-    //     EstadoPago:state.estadoPago?"Pagado":"",
-    //     RutDeudor:buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     RutAcreedor:buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     Glosa:buscar?(selected.sConcept!=""?selected.sConcept:""):"",
-    //     MontoNeto:buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
-    //     MontoBruto:buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
-    //     Folio:buscar?(selected.sFolio!=""?selected.sFolio:""):"",
-    //     NombreDeudor:buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //     NombreAcreedor:buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //   }}
+   
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
@@ -559,19 +542,7 @@ let condicionFilters = 0;
     setCargaRutAcre(true);
     setRutAcreFilter(undefined);
     setNomAcreFilter(undefined);
-    // let RutAcreedor = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 50,
-    //   spec: dataSpec.spec,
-    // };
-
-    // let NombreAcre = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 50,
-    //   spec: dataSpec.spec,
-    // };
+    
     getRutAcreMutation(dataSpec).then((response)=>{
       setRutName(response.data);
       setCargaRutAcre(false);
@@ -587,24 +558,7 @@ let condicionFilters = 0;
     
   }
   function FiltersDeu(){
-    // let dataSpec ={
-    //   id,
-    //   spec:{
-    //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-    //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-    //     Acreedor:state.acreedor?id:"",
-    //     Deudor:state.deudor?id:"",
-    //     EstadoEmision:state.estadoEmision?"Facturado":"",
-    //     EstadoPago:state.estadoPago?"Pagado":"",
-    //     RutDeudor:buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     RutAcreedor:buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     Glosa:buscar?(selected.sConcept!=""?selected.sConcept:""):"",
-    //     MontoNeto:buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
-    //     MontoBruto:buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
-    //     Folio:buscar?(selected.sFolio!=""?selected.sFolio:""):"",
-    //     NombreDeudor:buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //     NombreAcreedor:buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //   }}
+  
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
@@ -621,18 +575,7 @@ let condicionFilters = 0;
 
     setNomDeuFilter(undefined);
  
-    // let RutDeudor = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 50,
-    //   spec: dataSpec.spec,
-    // };
-    // let NombreDeudor = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 50,
-    //   spec: dataSpec.spec,
-    // };
+   
     getRutDeudorMutation(dataSpec).then((response)=>{
       setRutName(response.data);
       setCargaRutDeudor(false);
@@ -645,69 +588,7 @@ let condicionFilters = 0;
     }).catch((error)=>{
       setCargaNombreDeu(false);
     });
-    // try {
-     
-   
-    //   getNumRutD(RutDeudor)
-    //   .then((response) => {
-    //     const buclesF = Math.round(response.data / 200 + 0.49) + 1;
-    //     const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-    //       RutDeudor.PageIndex = index + 1;
-    //       return getRutDeudorMutation(RutDeudor);
-    //     });
-
-    //     Promise.all(requests)
-    //       .then((responses) => {
-    //         const newData = _.uniqBy(responses.map((response) => response.data.data).flat(), 'label');
-    //         setRutName((prevLista) => {
-    //           if (Array.isArray(prevLista)) {
-    //             return [...prevLista, ...newData];
-    //           } else {
-    //             return [...newData];
-    //           }
-    //         });
-    //         setCargaRutDeudor(false);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
- 
-    //   getNumNomDeu(NombreDeudor)
-    //   .then((response) => {
-    //     const buclesF = Math.round(response.data / 200 + 0.49) + 1;
-    //     const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-    //       NombreDeudor.PageIndex = index + 1;
-    //       return getNombreDeudorMutation(NombreDeudor);
-    //     });
-
-    //     Promise.all(requests)
-    //       .then((responses) => {
-    //         const newData = _.uniqBy(responses.map((response) => response.data.data).flat(), 'label');
-               
-    //         setBusinessName((prevLista) => {
-    //           if (Array.isArray(prevLista)) {
-    //             return [...prevLista, ...newData];
-    //           } else {
-    //             return [...newData];
-    //           }
-    //         });
-    //         setCargaNombreDeu(false);
-    //       })
-    //       .catch((error) => {
-    //         console.log(error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-
-    // } catch (error) {
-    //   console.log("ERROR 3");
-    // }
+    
   }
   function verificacarga() {
     if ([fetchInstructions,cargaConcept,cargaCodRef,cargaCarta,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor].every((valor) => valor === false)) {
@@ -833,34 +714,6 @@ let condicionFilters = 0;
   }, [table])
   
 
-  // useEffect(() => {
-  //  console.log(bussN);
-  //  console.log(rutN);
-  // }, [bussN,rutN])
-  
-  // useEffect(() => {
-  //   if( getDataConcept ){
-  //     setConceptName(getDataConcept.label);
-  //   }
-  //   setCargando(verificacarga() )
-  // }, [fetchConcept,getDataConcept])
-  // useEffect(() => {
-  //   if( getDataCodRef ){
-  //     console.log(getDataCodRef)
-  //     setCodRef(getDataCodRef.codRef);
-  //   }
-  //   setCargando(verificacarga() )
-  // }, [fetchCodRef,getDataCodRef])
-  // useEffect(() => {
-  //   if( getDataCarta ){
-  //     console.log(getDataCarta)
-  //     setCart(getDataCarta.carta);
-  //   }
-  //   setCargando(verificacarga() )
-  // }, [fetchCarta,getDataCarta])
-
-//logica y control
-  //estados
  
   const handleChange = (event) => {
     
