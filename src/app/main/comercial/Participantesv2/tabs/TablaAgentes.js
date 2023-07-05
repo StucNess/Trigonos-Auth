@@ -98,7 +98,7 @@ const columns = [
   { id: "id", label: "ID", minWidth: 20 },
   { id: "nombre", label: "Nombre", minWidth: 40 },
   { id: "correo", label: "Correo", minWidth: 40 },
-  { id: "telefono", label: "Telefono", minWidth: 40 },
+  { id: "telefono", label: "Teléfono", minWidth: 40 },
   { id: "nombreEmpresa", label: "Nombre Empresa", minWidth: 40 },
   { id: "rutEmpresa", label: "Rut Empresa", minWidth: 40 },
 ];

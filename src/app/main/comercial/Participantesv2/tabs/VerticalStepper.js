@@ -103,6 +103,7 @@ export default function HorizontalNonLinearStepper(props) {
     msgText: "",
     msgError: false,
   });
+  
   const { msgResp, msgText, msgError } = MsgAlert;
   const [ren, setRen] = useState(0);
   const [postActProyect, dataActProyect] = usePostActualizarProyectoMutation();
@@ -534,6 +535,8 @@ export default function HorizontalNonLinearStepper(props) {
   }
 
   useEffect(() => {
+ 
+
     (async () => {
       dataBank = await CallBanks(props.fullData.dataParticipant.bank);
       setBankk(dataBank.name);
@@ -684,6 +687,12 @@ export default function HorizontalNonLinearStepper(props) {
     })();
   }, [props.fullData.dataParticipant.id, alertOk]);
   useEffect(() => {
+    setOpenDialog(true);
+    setMsgAlert({
+      msgResp: true,
+      msgText: "Debe seleccionar un ambiente para Facturación.CL",
+      msgError: true,
+    });
     (async () => {
       banks = await CallBanks(1, 2);
     })();
@@ -3856,22 +3865,22 @@ export default function HorizontalNonLinearStepper(props) {
           ) : (
             <div>
               {msgResp && (
-                <div className="flex justify-center items-center h-[250px] w-[300px]">
+                <div className="grid justify-items-center content-center h-[250px] w-[300px]">
                   {msgError ? (
-                    <div className="flex justify-center items-center h-[250px] w-[300px]">
-                      <WarningIcon className="w-[68px] h-[68px] text-red" />
-                      <span className="absolute bottom-[70px] text-red">
-                        {" "}
-                        <b>{msgText}</b>
-                      </span>
+                    <>
+                    <div className="">
+                    <WarningIcon className="w-[68px] h-[68px] text-red" />
                     </div>
+                    <b className="text-justify text-red p-[20px]">{msgText}</b>
+                    </>
+                    
                   ) : (
-                    <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    <div className="grid justify-items-center content-center h-[250px] w-[300px]">
+                      <div>
                       <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
-                      <span className="absolute bottom-[70px] text-green">
-                        {" "}
-                        <b>{msgText}</b>
-                      </span>
+                      </div>
+                      
+                      <b className="text-justify text-red p-[20px]">{msgText}</b>
                     </div>
                   )}
                 </div>
