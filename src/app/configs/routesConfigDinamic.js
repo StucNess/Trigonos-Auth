@@ -27,7 +27,7 @@ function routesConfigDinamic({ data }) {
     ),
     {
       path: "/",
-      element: <Navigate to="/comercial/estadoFacturacion" />,
+      element: <Navigate to="/comercial/estadoFacturacionV2" />,
       auth: settingsConfig.defaultAuth,
     },
     {

@@ -160,7 +160,7 @@ export function navigationConfigAsync (item =[],data =[]){
                   title: "Estado Facturación",
                   type: "item",
                   icon: "heroicons-outline:clipboard-check",
-                  url: "/comercial/estadoFacturacion",
+                  url: "/comercial/estadoFacturacionV2",
                   auth:getListRoles(idEstFacturacion)
                 },
                 {
@@ -182,14 +182,14 @@ export function navigationConfigAsync (item =[],data =[]){
                 },
               ],
             },
-            {
-              id: "4.4",
-              title: "TEST",
-              type: "item",
-              icon: "heroicons-outline:clipboard-check",
-              url: "/comercial/estadoFacturacionV2",
-              auth: getListRoles(idEstFacturacion)
-            },
+            // {
+            //   id: "4.4",
+            //   title: "TEST",
+            //   type: "item",
+            //   icon: "heroicons-outline:clipboard-check",
+            //   url: "/comercial/estadoFacturacionV2",
+            //   auth: getListRoles(idEstFacturacion)
+            // },
           ],
         },
         {
