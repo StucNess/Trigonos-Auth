@@ -18,6 +18,7 @@ import {
   TableHead,
   TablePagination,
   TableRow, MenuItem } from "@mui/material";
+
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Stack } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
@@ -32,6 +33,8 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import TuneIcon from '@mui/icons-material/Tune';
 import * as React from "react";
 import * as XLSX from "xlsx";
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+
 import _ from 'lodash';
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -42,6 +45,8 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 // import Table from "@mui/material/Table";
+import LoadingButton from '@mui/lab/LoadingButton';
+import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 
 // import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 // import TableContainer from "@mui/material/TableContainer";
@@ -243,10 +248,7 @@ let condicionFilters = 0;
   const [editar, setEditar] = useState(false);
   
 
-  // const { data: getDataName, isFetching: fetchName, refetch: refetchName} = 
-  // useGetBusinessNameQuery();
-  // const { data: getDataRut, isFetching: fetchRut, refetch: refetchRut} = 
-  // useGetRutQuery();
+
   const [skipFetchs, setSkipFetchs] = useState({
     skipNombreAcre:false,
     skipRutAcre:false,
@@ -258,84 +260,6 @@ let condicionFilters = 0;
     skipCarta:false,
 
   })
-  // const { data: getDataNombreAcre, isFetching: fetchNombreAcre, refetch: refetchNombreAcre} = 
-  // useGetNombreAcreedorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipNombreAcre});//propiedad skip es para no iniciar la carga previa
-
-  // const { data: getDataRutAcre, isFetching: fetchRutAcre, refetch: refetchRutAcre} = 
-  // useGetRutAcreedorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipRutAcre});//propiedad skip es para no iniciar la carga previa
-  // const { data: getDataNombreDeudor, isFetching: fetchNombreDeudor, refetch: refetchNombreDeudor} = 
-  // useGetNombreDeudorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipNombreDeudor});//propiedad skip es para no iniciar la carga previa
-
-  // const { data: getDataRutDeudor, isFetching: fetchRutDeudor, refetch: refetchRutDeudor} = 
-  // useGetRutDeudorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipRutDeudor});//propiedad skip es para no iniciar la carga previa
 
   const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
   useGetInstruccionesSpecQuery(
@@ -438,26 +362,7 @@ let condicionFilters = 0;
   const [LoadingApis, setLoadingApis] = useState(true);
   //concept, carta, codref
   function FiltersOne(){
-    // let dataSpec ={
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec:{
-    //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-    //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-    //     Acreedor:state.acreedor?id:"",
-    //     Deudor:state.deudor?id:"",
-    //     EstadoEmision:state.estadoEmision?"Facturado":"",
-    //     EstadoPago:state.estadoPago?"Pagado":"",
-    //     RutDeudor:buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     RutAcreedor:buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     Glosa:buscar?(selected.sConcept!=""?selected.sConcept:""):"",
-    //     MontoNeto:buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
-    //     MontoBruto:buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
-    //     Folio:buscar?(selected.sFolio!=""?selected.sFolio:""):"",
-    //     NombreDeudor:buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //     NombreAcreedor:buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //   }}
+ 
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
@@ -471,24 +376,7 @@ let condicionFilters = 0;
     setCargaCarta(true);
     setPeticionesCompletadas(0);
    
-    // let Concept = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec: dataSpec.spec,
-    // };
-    // let CodRef = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec: dataSpec.spec,
-    // };
-    // let Carta = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec: dataSpec.spec,
-    // };
+ 
     getConceptMutation(dataSpec).then((response)=>{
       setConceptFilter(response.data);
       console.log(response.data);
@@ -719,7 +607,7 @@ let condicionFilters = 0;
     
     if (event.target.name === "acreedor" &&
     event.target.checked === true) {
-      // setLoadingApis(true)
+     
       setState({
         ...state,
         [event.target.name]: event.target.checked,
@@ -731,24 +619,15 @@ let condicionFilters = 0;
       event.target.name === "deudor" &&
       event.target.checked === true
     ) {
-      // setLoadingApis(true)
+      
       setState({
         ...state,
         [event.target.name]: event.target.checked,
         acreedor: false,
       });
-      // setSkipFetchs(
-      //   { 
-      //     ...skipFetchs,
-      //     skipInstructions:false,
-      //   })
-      // FiltersAcree();
-      // // refetchNombreAcre();
-      // // refetchRutAcre();
-      // FiltersOne();
-      // refetchInstruc();
+    
     } else {
-      // setLoadingApis(true)
+    
       setState({
         ...state,
         [event.target.name]: event.target.checked,
@@ -758,17 +637,13 @@ let condicionFilters = 0;
           ...skipFetchs,
           skipInstructions:false,
         })
-      // refetchConcept();
-      // refetchCodRef();
-      // refetchCarta();
-      // FiltersOne();
-      // 
+     
       setLoadingApis(true)
       FiltersOne();
       refetchInstruc();
     }
   };
-  //filtros
+ 
   function searchFilter(){
     setSelected({...selected,buscar: true});
     setSkipFetchs(
@@ -776,9 +651,7 @@ let condicionFilters = 0;
         ...skipFetchs,
         skipInstructions:false,
       })
-    // refetchConcept();
-    // refetchCodRef();
-    // refetchCarta();
+    
     refetchInstruc();
     FiltersOne();
     
@@ -1029,6 +902,9 @@ let condicionFilters = 0;
   return (
     <div className="grid grid-cols-12 gap-12 p-[20px]">
       <div className="hd:col-span-6  hdmas:col-span-12   bg-white rounded-md">
+
+        <div className="grid grid-cols-6 ">
+        <div className="col-span-2  border-solid border-r-2">
         <div className="flex flex-row  m-[20px]">
           <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
             Estados
@@ -1040,15 +916,16 @@ let condicionFilters = 0;
         <div className="p-[20px]">
         <Grid
             container
-            direction="row"
+            direction="column"
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
             justifyContent="space-evenly"
-            alignItems="flex-start"
+            alignItems="stretch"
+            // alignItems="flex-start"
           >
-                <Grid item xs="auto" sm="auto" md="auto">
-                  <Item>
-                    <FormControlLabel
+                <Grid item className="w-full" >
+                <Item className="shadow rounded-xl"> 
+                    <FormControlLabel className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
@@ -1071,9 +948,9 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-                <Grid item xs="auto" sm="auto" md="auto">
-                  <Item>
-                    <FormControlLabel
+                <Grid item className="w-full">
+                <Item className="shadow rounded-xl"> 
+                    <FormControlLabel className="flex justify-normal"
                       control={
                         <Switch
                          disabled={LoadingApis}
@@ -1090,9 +967,9 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-                <Grid item xs="auto" sm="auto" md="auto">
-                  <Item>
-                    <FormControlLabel
+                <Grid item className="w-full">
+                <Item className="shadow rounded-xl"> 
+                    <FormControlLabel  className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
@@ -1115,9 +992,9 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-                <Grid item xs="auto" sm="auto" md="auto">
-                  <Item>
-                    <FormControlLabel
+                <Grid item className="w-full">
+                <Item className="shadow rounded-xl"> 
+                    <FormControlLabel  className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
@@ -1138,9 +1015,32 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-                <Grid item xs="auto" sm="auto" md="auto">
-                  <Item>
-                    <FormControlLabel
+                
+        </Grid>
+        </div>
+        </div>
+        <div className="col-span-2  border-solid border-r-2">
+        <div className="flex flex-row  mx-[5px] my-[20px]" >
+          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+            Tipos de instrucción
+          </Typography>
+          <SupervisedUserCircleIcon className="ml-[10px] text-pantoneazul" />
+        </div>
+        <h1 className="border border-b-pantoneazul w-full"></h1>
+        
+        <div className="p-[20px]">
+        <Grid
+          container
+          direction="column"
+          spacing={{ xs: 2, md: 3 }}
+          columns={{ xs: 4, sm: 8, md: 12 }}
+          justifyContent="space-evenly"
+          alignItems="stretch"
+            // alignItems="flex-start"
+          >
+             <Grid item className="w-full ">
+                  <Item className="shadow rounded-xl"> 
+                    <FormControlLabel  className="flex justify-normal "
                       control={
                         <Switch
                           disabled={LoadingApis}
@@ -1157,9 +1057,9 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-                <Grid item xs="auto" sm="auto" md="auto">
-                  <Item>
-                    <FormControlLabel
+                <Grid item className="w-full">
+                <Item className="shadow rounded-xl"> 
+                    <FormControlLabel className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
@@ -1174,9 +1074,87 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-              </Grid>
+                
+        </Grid>
         </div>
+        </div>
+        <div className="col-span-2  ">
+        <div className="flex flex-row  m-[20px]">
+          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+            Excel Disponibles
+          </Typography>
+          <AssignmentIcon className="ml-[10px] text-pantoneazul" />
+        </div>
+        <h1 className="border border-b-pantoneazul w-full"></h1>
+        
+        <div className="p-[20px]">
+        <Grid
+            container
+            direction="column"
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+            justifyContent="space-evenly"
+            alignItems="stretch"
+            // alignItems="flex-start"
+          >
+              <Grid item className="w-full">
+              <Tooltip  
+              title="Desactivado" 
+              arrow 
+              placement="top"
+              >
+                <span>
+                <LoadingButton
+                className="w-full"
+                  loading ={true}
+                  loadingPosition="start"
+                  startIcon={<SiMicrosoftexcel />}
+                  variant="contained"
+                  color="success"
+                  // onClick={()=>{
+                  //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                  // }}
+                >
+                  Todos
+                </LoadingButton>
+                </span>
+              </Tooltip>
+                </Grid>
+                <Grid item className="w-full">
+                  <Tooltip  
+                    title="Desactivado"
+                    //Descargar Excel 
+                    arrow 
+                    placement="top"
+                  >
+                        <span>
+                        <LoadingButton
+                          className="w-full"
+                          loading ={true}
+                          loadingPosition="start"
+                          startIcon={<SiMicrosoftexcel />}
+                          variant="contained"
+                          color="success"
+                          // onClick={()=>{
+                          //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                          // }}
+                        >
+                      Todos
+                    </LoadingButton>
+                    </span>
+                  </Tooltip>
+                </Grid>
+                
+        </Grid>
+       
+           
+        </div>
+        </div>
+        </div>
+
+        
       </div>
+
 
       <div className="hd:col-span-6  hdmas:col-span-12  bg-white rounded-md">
         <div className="flex flex-row  m-[20px]">
@@ -1201,13 +1179,13 @@ let condicionFilters = 0;
         {LoadingApis?  
         <div className="flex items-center">
           <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-            {/* <p>Chupa Chupa .....</p> */}
-            <LinearProgress color="primary" />
+            
+            <LinearProgress color="primary"/>
           </Stack>
         </div>:
         <div className="flex flex-col flex-auto mt-6">
         <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-          <Box className="flex flex-col hd:flex-col  ">
+          <Box className="flex flex-col hd:flex-col p-[20px] ">
             {/* sx={{  width: 1000}} */}
 
            
@@ -1647,7 +1625,7 @@ let condicionFilters = 0;
        
         {LoadingApis? <div className="flex items-center">
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                  {/* <p>Chupa Chupa .....</p> */}
+                  
                   <LinearProgress color="primary" />
                 </Stack>
               </div>: 

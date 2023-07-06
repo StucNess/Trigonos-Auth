@@ -199,7 +199,7 @@ export default function HorizontalLinearStepper(props) {
               {/* <Box> */}
               {cargando == true ? (
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                  {/* <p>Chupa Chupa .....</p> */}
+                  
                   <LinearProgress color="primary" />
                 </Stack>
               ) : (

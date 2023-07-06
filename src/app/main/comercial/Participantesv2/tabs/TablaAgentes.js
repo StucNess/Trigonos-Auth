@@ -2,7 +2,10 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
-
+import LoadingButton from '@mui/lab/LoadingButton';
+import * as XLSX from "xlsx";
+import SaveIcon from '@mui/icons-material/Save';
+import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ModalCampo from "./widgets/ModalCampo";
@@ -37,7 +40,7 @@ import { Stack } from "@mui/system";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import LinearProgress from "@mui/material/LinearProgress";
-import { useGetAgentesDeParticipanteMutation } from "app/store/participantesApi/participantesApi";
+import { useGetAgentesDeParticipanteMutation, useGetNumAgentesMutation } from "app/store/participantesApi/participantesApi";
 function createData(
   id,
   editor,
@@ -93,7 +96,17 @@ function CleanArray(value) {
     return "";
   }
 }
-
+//CABECERAS DEL EXCEL
+let headAgentes = [
+  [
+    "ID",
+    "Nombre",
+    "Correo",
+    "Telefono",
+    "Nombre_Empresa",
+    "Rut_Empresa",
+  ],
+];
 const columns = [
   { id: "id", label: "ID", minWidth: 20 },
   { id: "nombre", label: "Nombre", minWidth: 40 },
@@ -207,12 +220,99 @@ export default function TablaAgentes(props) {
   const [DataRows, setDataRows] = useState([]);
   const [sendData, setSendData] = useState([]);
   const [getDataAgent, {isLoading : isLoadingHist}] = useGetAgentesDeParticipanteMutation();
+  const [getAllData, {isLoading : isLoadingAllData}] = useGetAgentesDeParticipanteMutation();
+  const [getNumAgent, {isLoading : isLoadingNumAgent}] = useGetNumAgentesMutation();
+  const [getExcelData, setGetExcelData] = useState([]);
+  const [cargaGetAgentsData, setCargaGetAgentsData] = useState(true);
     
   // const { data: getDataHist, isFetching: fetchHist, refetch: refetchHist} =  useGetHistorificacionMutation({id:props.idParticipant, PageIndex:pageIndex, PageSize:rowsPerPage  });
   // let url = ` https://trigonosapi.azurewebsites.net/Historificacion?id=${props.idParticipant}`;
+
+  const convertAndDownloadExcel = (header, data, name,tipoExcel) => {
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(ws, header);
+    if (tipoExcel){
+      const data_ = data.map(function (el) {
+        return {id: el.id, 
+          nombre: (el.nombre? el.nombre.trim() !="": el.nombre )? el.nombre:"Sin Nombre",
+          correo: (el.correo? el.correo.trim() !="": el.correo )? el.correo:"Sin Correo",
+          telefono: (el.telefono? el.telefono.trim().replace("[]", "") !="": el.telefono )? el.telefono:"Sin Teléfono",
+          nombreEmpresa: el.nombreEmpresa,
+          rutEmpresa: el.rutEmpresa,
+         }})
+    
+      const sheet = XLSX.utils.sheet_add_json(ws,data_ , {
+        origin: "A2",
+        skipHeader: true,
+      });
+      
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+      XLSX.writeFile(wb, `${name}.xlsx`);
+    }else{
+      const sheet = XLSX.utils.sheet_add_json(ws, data, {
+        origin: "A2",
+        skipHeader: true,
+      });
+        
+      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+      XLSX.writeFile(wb, `${name}.xlsx`);
+    }
+    
+    
+  };
+  function getAllDataToExcel(){
+    setGetExcelData([]);
+    setCargaGetAgentsData(true);
+    let specData = {
+      PageIndex: 1,
+      PageSize: 1000,
+    };
+
+    getNumAgent(specData)
+    .then((response) => {
+      console.log(response)
+      const buclesF = Math.round(response.data / 1000 + 0.49) + 1;
+      console.log(buclesF)
+      const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+        specData.PageIndex = index + 1;
+        return getAllData(specData);
+      });
+      console.log(requests)
+
+     
+      Promise.all(requests)
+        .then((responses) => {
+          const newData = responses.map((response) => response.data.data).flat();
+          setGetExcelData((prevLista) => {
+            if (Array.isArray(prevLista)) {
+              return [...prevLista, ...newData];
+            } else {
+              return [...newData];
+            }
+          });
+          setCargaGetAgentsData(false);
+          console.log(newData)
+
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+
+
+
+
+  }
   function getHistData(){
     setLoadingApis(true);
-    getDataAgent({Rut:props.rutParticipant, PageIndex:pageIndex, PageSize:rowsPerPage  }).then((response)=>{
+    getDataAgent({PageIndex:pageIndex, PageSize:rowsPerPage,Rut:props.rutParticipant}).then((response)=>{
     //   console.log("id",props.idParticipant);
     //   console.log("Respuesta",response);
       const { data, count, pageCount, pageIndex, pageSize } = response.data;
@@ -223,9 +323,9 @@ export default function TablaAgentes(props) {
             return {id: el.id, 
               nombre: (el.nombre? el.nombre.trim() !="": el.nombre )? el.nombre:"Sin Nombre",
               correo: (el.correo? el.correo.trim() !="": el.correo )? el.correo:"Sin Correo",
-              telefono: (el.telefono? el.telefono.trim() !="": el.telefono )? el.telefono:"Sin Teléfono",
+              telefono: (el.telefono? el.telefono.trim().replace("[]", "") !="": el.telefono )? el.telefono:"Sin Teléfono",
               nombreEmpresa: el.nombreEmpresa,
-              rutEmpresa: el.rutEmpresa,
+              rutEmpresa: el.rutEmpresa, 
              }}))
         // console.log(rows);
         setPagination(count)
@@ -242,6 +342,7 @@ export default function TablaAgentes(props) {
   
   useEffect(() => {
     getHistData();
+    getAllDataToExcel();
   }, [props.rutParticipant,pageIndex,rowsPerPage]);
   let rows = [];
 
@@ -334,7 +435,7 @@ export default function TablaAgentes(props) {
          
     <Box className=" relative lfmax:w-[600px] p-[30px] ">
       <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-        {/* <p>Chupa Chupa .....</p> */}
+     
         <LinearProgress color="primary" />
       </Stack>
     </Box>
@@ -344,6 +445,51 @@ export default function TablaAgentes(props) {
   }else{
     return(
       <Box className=" relative lfmax:w-[600px] p-[30px] ">
+          <Box className="flex justify-end space-x-[20px]">
+          
+            <Tooltip  
+              title="Descargar Excel del Participante Actual" 
+              arrow 
+              placement="top"
+            >
+              <span>
+              <LoadingButton
+                loading ={cargaGetAgentsData}
+                loadingPosition="start"
+                startIcon={<SiMicrosoftexcel />}
+                variant="contained"
+                color="success"
+                onClick={()=>{
+                  convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                }}
+              >
+                Agentes del Participante Actual
+              </LoadingButton>
+              </span>
+            </Tooltip>
+            <Tooltip  
+              title="Descargar Excel de todos los participantes" 
+              arrow 
+              placement="top"
+            >
+              <span>
+              <LoadingButton
+                loading ={cargaGetAgentsData}
+                loadingPosition="start"
+                startIcon={<SiMicrosoftexcel />}
+                variant="contained"
+                color="success"
+                onClick={()=>{
+                  convertAndDownloadExcel(headAgentes,getExcelData,`Excel Todos los Agentes`,true)
+                }}
+              >
+                Todos los Agentes
+              </LoadingButton>
+              </span>
+            </Tooltip>
+          </Box>
+          
+         
       <div className="flex flex-row justify-between items-center">
             <div className="flex flex-row items-center">
             <div className="flex flex-row justify-center items-center">

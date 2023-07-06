@@ -147,14 +147,30 @@ export const participantesApi = createApi({
         `/api/Participantes/CantidadFactCl`,
       providesTags: ["numberFactCl"],
     }),
+    getNumAgentes: builder.mutation({
+      query: () =>
+        `/api/Participantes/CantidadAgentes`,
+      providesTags: ["cantidadAgentes"],
+    }),
     getAgentesDeParticipante: builder.mutation({
-      query: (spec) =>
-        `/api/Participantes/AgentesDeParticipante?rutEmpresa=${spec.Rut}&PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`,
-      providesTags: ["agentes"],
+      // query: (spec) =>
+      //   `/api/Participantes/AgentesDeParticipante?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`+ spec.Rut? `&rutEmpresa=${spec.Rut}`: "",
+      // providesTags: ["agentes"],
+      query: (spec) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url:
+          `/api/Participantes/AgentesDeParticipante?PageIndex=${spec.PageIndex}&` +
+          `PageSize=${spec.PageSize}&` +
+          (spec.Rut != undefined ? `&rutEmpresa=${spec.Rut}` : ""),
+         
+        method: "GET",
+      }),
     }),
     refetchQueriesPart: builder.mutation({
       queryFn: () => ({ data: null }),
-      invalidatesTags: ["listparticipant", "proyectos", "participant"],
+      invalidatesTags: ["agentes"],
     }),
   }),
 });
@@ -179,5 +195,6 @@ export const {
   useGetNumberProyectoMutation,
   useGetNumberFactCLMutation,
   useGetAgentesDeParticipanteMutation,
+  useGetNumAgentesMutation,
 
 } = participantesApi;

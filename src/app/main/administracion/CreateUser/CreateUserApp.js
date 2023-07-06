@@ -462,7 +462,7 @@ export default function CreateUserApp(props) {
                   {isFecthRoles?
                   <div className="flex items-center ml-[20px] mr-[20px] mb-[20px]">
                     <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                      {/* <p>Chupa Chupa .....</p> */}
+                      
                       <LinearProgress color="primary" />
                     </Stack>
                   </div>:
@@ -510,7 +510,7 @@ export default function CreateUserApp(props) {
                   {isLoadParticipant?
                   <div className="flex items-center ml-[20px] mr-[20px] mb-[20px]">
                     <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                      {/* <p>Chupa Chupa .....</p> */}
+                      
                       <LinearProgress color="primary" />
                     </Stack>
                   </div>:
@@ -714,7 +714,7 @@ export default function CreateUserApp(props) {
                 {isLoadEmpresas?
                   <div className="flex items-center ml-[20px] mr-[20px]">
                     <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                      {/* <p>Chupa Chupa .....</p> */}
+                      
                       <LinearProgress color="primary" />
                     </Stack>
                   </div>:
