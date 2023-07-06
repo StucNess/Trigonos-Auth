@@ -139,7 +139,7 @@ const AppContextProvider = ({ children }) => {
       ...FuseUtils.generateRoutesFromConfigs(routeConfigs, defaultAuth),
       {
         path: "/",
-        element: getListRoless(9).includes(user.role)? <Navigate to="/comercial/estadoFacturacion" /> : <Error404Page /> ,
+        element: getListRoless(9).includes(user.role)? <Navigate to="/comercial/estadoFacturacionV2" /> : <Error404Page /> ,
         auth: defaultAuth,
       },
       {
