@@ -459,7 +459,9 @@ let condicionFilters = 0;
         MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
         Folio:selected.sFolio!=""?selected.sFolio:"",
         NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        Carta:selected.sCarta!=""?selected.sCarta:"",
+        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
       }}).then((response)=>{
       setConceptFilter(response.data);
    
@@ -485,7 +487,9 @@ let condicionFilters = 0;
         MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
         Folio:selected.sFolio!=""?selected.sFolio:"",
         NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        Carta:selected.sCarta!=""?selected.sCarta:"",
+        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
       }}).then((response)=>{
       setCodRefFilter(response.data);
    
@@ -510,7 +514,9 @@ let condicionFilters = 0;
         MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
         Folio:selected.sFolio!=""?selected.sFolio:"",
         NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        Carta:selected.sCarta!=""?selected.sCarta:"",
+        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
       }}).then((response)=>{
       setCartaFilter(response.data);
       
@@ -571,7 +577,9 @@ let condicionFilters = 0;
         MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
         Folio:selected.sFolio!=""?selected.sFolio:"",
         NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        Carta:selected.sCarta!=""?selected.sCarta:"",
+        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
       }}).then((response)=>{
       setRutName(response.data);
       setCargaRutAcre(false);
@@ -596,7 +604,9 @@ let condicionFilters = 0;
         MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
         Folio:selected.sFolio!=""?selected.sFolio:"",
         NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        Carta:selected.sCarta!=""?selected.sCarta:"",
+        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
       }}).then((response)=>{
       setBusinessName(response.data);
       setCargaNombreAcre(false);
@@ -642,7 +652,9 @@ let condicionFilters = 0;
         MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
         Folio:selected.sFolio!=""?selected.sFolio:"",
         NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        Carta:selected.sCarta!=""?selected.sCarta:"",
+        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
       }}).then((response)=>{
       setRutName(response.data);
       setCargaRutDeudor(false);
@@ -667,7 +679,9 @@ let condicionFilters = 0;
         MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
         Folio:selected.sFolio!=""?selected.sFolio:"",
         NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        Carta:selected.sCarta!=""?selected.sCarta:"",
+        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
       }}).then((response)=>{
       setBusinessName(response.data);
       setCargaNombreDeu(false);
@@ -677,7 +691,16 @@ let condicionFilters = 0;
     
   }
 
+  function searchFilter(){
+    // setSelected({...selected,buscar: true});
+    
+    FiltersOne();
+    GetInstructions();
   
+    
+
+
+  }
   useEffect(() => {
  
     function verificacarga() {
@@ -812,16 +835,7 @@ let condicionFilters = 0;
     }
   };
  
-  function searchFilter(){
-    setSelected({...selected,buscar: true});
-    
-    
-    GetInstructions();
-    FiltersOne();
-    
 
-
-  }
   const clearAllFilters = () => {
     
     if(condicionFilters === 0){
