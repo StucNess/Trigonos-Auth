@@ -208,7 +208,7 @@ const NominaPagoApp = () => {
     if(verificacarga()===false){
    
       if(!cargaParticipant && !cargaProyectos && !cargafacturacionCl){
-        setIsloading(false)
+        setIsloading(false);
         if(id){
           setFullData({
             dataParticipant: participantes.filter((data) => data.id ===id)[0]||{},

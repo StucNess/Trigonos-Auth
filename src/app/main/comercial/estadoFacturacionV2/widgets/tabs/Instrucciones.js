@@ -65,9 +65,10 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from "react";
 import TablaInstrucciones from "../Componentes/TablaInstrucciones/TablaInstrucciones";
-import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery, useGetConceptomMutation, useGetRutDeudormMutation, useGetNombreDeudormMutation, useGetNombreAcreedormMutation, useGetRutAcreedormMutation, useGetCartaQuery, useGetCodRefQuery, useGetNumberConceptMutation, useGetNumberCodRefMutation, useGetNumberCartaMutation, useGetNumberRutAcreedorMutation, useGetNumberRutDeudorMutation, useGetNumberNombreAcreedorMutation, useGetNumberNombreDeudorMutation, useGetCartamMutation, useGetCodRefmMutation} from "app/store/instrucciones/instruccionesApi";
+import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery, useGetConceptomMutation, useGetRutDeudormMutation, useGetNombreDeudormMutation, useGetNombreAcreedormMutation, useGetRutAcreedormMutation, useGetCartaQuery, useGetCodRefQuery, useGetNumberConceptMutation, useGetNumberCodRefMutation, useGetNumberCartaMutation, useGetNumberRutAcreedorMutation, useGetNumberRutDeudorMutation, useGetNumberNombreAcreedorMutation, useGetNumberNombreDeudorMutation, useGetCartamMutation, useGetCodRefmMutation, useGetInstruccionesSpecmMutation} from "app/store/instrucciones/instruccionesApi";
 import { useGetBusinessNameQuery, useGetRutQuery } from "app/store/participantesApi/participantesApi";
 import ModalEdicionInstruccion from "../Componentes/Modals/ModalEdicionInstruccion";
+import { useRefetchQueriesMetricsMutation } from "app/store/metricsApi/metricsApi";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -202,14 +203,14 @@ let condicionFilters = 0;
       Deudor:state.deudor?id:"",
       EstadoEmision:state.estadoEmision?"Facturado":"",
       EstadoPago:state.estadoPago?"Pagado":"",
-      RutDeudor:selected.buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-      RutAcreedor:selected.buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-      Glosa:selected.buscar?(selected.sConcept!=""?selected.sConcept:""):"",
-      MontoNeto:selected.buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
-      MontoBruto:selected.buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
-      Folio:selected.buscar?(selected.sFolio!=""?selected.sFolio:""):"",
-      NombreDeudor:selected.buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-      NombreAcreedor:selected.buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
+      RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+      RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+      Glosa:selected.sConcept!=""?selected.sConcept:"",
+      MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+      MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+      Folio:selected.sFolio!=""?selected.sFolio:"",
+      NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+      NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
     }})
   const clearFilters = () => {
     setSelected({
@@ -260,51 +261,51 @@ let condicionFilters = 0;
     skipCarta:false,
 
   })
-
-  const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
-  useGetInstruccionesSpecQuery(
-    {
-    id: id,
-    PageIndex: pageIndex,
-    PageSize:rowsPerPage,
-    spec: {
-      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-      Acreedor:state.acreedor?id:"",
-      Deudor:state.deudor?id:"",
-      EstadoEmision:state.estadoEmision?"Facturado":"",
-      EstadoPago:state.estadoPago?"Pagado":"",
-      RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-      RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-      Glosa:buscar?(sConcept!=""?sConcept:""):"",
-      MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-      MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-      Folio:buscar?(sFolio!=""?sFolio:""):"",
-      NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-      NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-      Carta:buscar?(sCarta!=""?sCarta:""):"",
-      CodigoRef:buscar?(sCodRef!=""?sCodRef:""):"",
-      FechaEmision:"",
-      FechaRecepcion:"",
-      FechaPago:"",
-      FechaAceptacion:"",
-      Concepto:"",
-      InicioPeriodo:buscar?(sInicioPeriodo!=""?`20${sInicioPeriodo
-        .getYear()
-        .toString()
-        .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:""):"",
-      TerminoPeriodo:buscar?(sTerminoPeriodo!=""?`20${sTerminoPeriodo
-        .getYear()
-        .toString()
-        .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:""):"",
-      OrderByNeto:"",
-      OrderByBruto:"",
-      OrderByFechaEmision:"",
-      OrderByFechaPago:"",
-      OrderByFechaCarta:"",
-      OrderByFolio:"",
-    }
-    },{skip:skipFetchs.skipInstructions});
+  
+  // const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
+  // useGetInstruccionesSpecQuery(
+  //   {
+  //   id: id,
+  //   PageIndex: pageIndex,
+  //   PageSize:rowsPerPage,
+  //   spec: {
+  //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //     Acreedor:state.acreedor?id:"",
+  //     Deudor:state.deudor?id:"",
+  //     EstadoEmision:state.estadoEmision?"Facturado":"",
+  //     EstadoPago:state.estadoPago?"Pagado":"",
+  //     RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //     RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //     Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //     MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //     MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //     Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //     NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //     NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //     Carta:buscar?(sCarta!=""?sCarta:""):"",
+  //     CodigoRef:buscar?(sCodRef!=""?sCodRef:""):"",
+  //     FechaEmision:"",
+  //     FechaRecepcion:"",
+  //     FechaPago:"",
+  //     FechaAceptacion:"",
+  //     Concepto:"",
+  //     InicioPeriodo:buscar?(sInicioPeriodo!=""?`20${sInicioPeriodo
+  //       .getYear()
+  //       .toString()
+  //       .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:""):"",
+  //     TerminoPeriodo:buscar?(sTerminoPeriodo!=""?`20${sTerminoPeriodo
+  //       .getYear()
+  //       .toString()
+  //       .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:""):"",
+  //     OrderByNeto:"",
+  //     OrderByBruto:"",
+  //     OrderByFechaEmision:"",
+  //     OrderByFechaPago:"",
+  //     OrderByFechaCarta:"",
+  //     OrderByFolio:"",
+  //   }
+  //   },{skip:skipFetchs.skipInstructions});
   const {
     estadoEmision,
     estadoPago,
@@ -321,6 +322,7 @@ let condicionFilters = 0;
   const [conceptFilter, setConceptFilter] = useState([]);
   const [codRefFilter, setCodRefFilter] = useState([]);
   const [cartaFilter, setCartaFilter] = useState([]);
+  const [dataInstruction,setDataInstruction ] = useState([]);
   //--RutAcre RutDeudor NombreDeudor NombreAcreedor
   const [rutAcreFilter, setRutAcreFilter] = useState([]);
   const [rutDeuFilter, setRutDeuFilter] = useState([]);
@@ -345,7 +347,12 @@ let condicionFilters = 0;
   const [getRutAcreMutation, {isLoading : isLoadingRutAcreedorm}] = useGetRutAcreedormMutation();
   const [getNombreDeudorMutation, {isLoading : isLoadingNombreDm}] = useGetNombreDeudormMutation();
   const [getNombreAcreedor, {isLoading : isLoadingNombreAm}] = useGetNombreAcreedormMutation();
+  const [getInstrucciones, {isLoading : isLoadingInst}] = useGetInstruccionesSpecmMutation();
 
+  //--Mutation recargar peticiones
+  const [reloadEstadisticas, {isLoading : isLoadingQueris}] = useRefetchQueriesMetricsMutation();
+
+  
   //cargas individuales pasaran por el verificar carga hasta que no se me ocurra otra manera
   const [cargaConcept, setCargaConcept] = useState(true);
   const [cargaCodRef, setCargaCodRef] = useState(true);
@@ -355,11 +362,68 @@ let condicionFilters = 0;
   const [cargaRutAcre, setCargaRutAcre] = useState(false);
   const [cargaNombreAcre, setCargaNombreAcre] = useState(false);
   const [cargaNombreDeu, setCargaNombreDeu] = useState(false);
+  const [cargaInstructions, setCargaInstructions] = useState(false);
 
 
-  //contador para la carga no funciona 
-  const [peticionesCompletadas, setPeticionesCompletadas] = useState(0);
+
   const [LoadingApis, setLoadingApis] = useState(true);
+
+  function GetInstructions(){
+    setLoadingApis(true);
+    setCargaInstructions(true);
+    setDataInstruction();
+    getInstrucciones(
+      {
+        
+    id: id,
+    PageIndex: pageIndex,
+    PageSize:rowsPerPage,
+     spec:{
+      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+      Acreedor:state.acreedor?id:"",
+      Deudor:state.deudor?id:"",
+      EstadoEmision:state.estadoEmision?"Facturado":"",
+      EstadoPago:state.estadoPago?"Pagado":"",
+      RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+      RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+      Glosa:selected.sConcept!=""?selected.sConcept:"",
+      MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+      MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+      Folio:selected.sFolio!=""?selected.sFolio:"",
+      NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+      NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+      Carta:sCarta!=""?sCarta:"",
+      CodigoRef:sCodRef!=""?sCodRef:"",
+      FechaEmision:"",
+      FechaRecepcion:"",
+      FechaPago:"",
+      FechaAceptacion:"",
+      Concepto:"",
+      InicioPeriodo:sInicioPeriodo!=""?`20${sInicioPeriodo
+        .getYear()
+        .toString()
+        .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:"",
+      TerminoPeriodo:sTerminoPeriodo!=""?`20${sTerminoPeriodo
+        .getYear()
+        .toString()
+        .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:"",
+      OrderByNeto:"",
+      OrderByBruto:"",
+      OrderByFechaEmision:"",
+      OrderByFechaPago:"",
+      OrderByFechaCarta:"",
+      OrderByFolio:"",
+    }}
+    ).then((response)=>{
+      setDataInstruction(response.data);
+      setPagination(response.data.count)
+      setPageCount(response.data.pageCount + 1);
+      setCargaInstructions(false);
+    }).catch((error)=>{
+      setCargaInstructions(false);
+    })
+  }
   //concept, carta, codref
   function FiltersOne(){
  
@@ -374,24 +438,80 @@ let condicionFilters = 0;
     setCargaConcept(true);
     setCargaCodRef(true);
     setCargaCarta(true);
-    setPeticionesCompletadas(0);
+
    
  
-    getConceptMutation(dataSpec).then((response)=>{
+    getConceptMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+      }}).then((response)=>{
       setConceptFilter(response.data);
-      console.log(response.data);
-      console.log(dataSpec.spec);
+   
       
     }).catch((error)=>{
       setCargaConcept(false);
     });
-    getCodRefMutation(dataSpec).then((response)=>{
+    getCodRefMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+      }}).then((response)=>{
       setCodRefFilter(response.data);
    
     }).catch((error)=>{
       setCargaCodRef(false);
     });
-    getCartaMutation(dataSpec).then((response)=>{
+    getCartaMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+      }}).then((response)=>{
       setCartaFilter(response.data);
       
     }).catch((error)=>{
@@ -416,6 +536,8 @@ let condicionFilters = 0;
 
   }, [conceptFilter, codRefFilter,cartaFilter])
   
+
+  
    //rut, nombre: acreedor y deudor
   function FiltersAcree(){
    
@@ -431,13 +553,51 @@ let condicionFilters = 0;
     setRutAcreFilter(undefined);
     setNomAcreFilter(undefined);
     
-    getRutAcreMutation(dataSpec).then((response)=>{
+    getRutAcreMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+      }}).then((response)=>{
       setRutName(response.data);
       setCargaRutAcre(false);
     }).catch((error)=>{
       setCargaRutAcre(false);
     });
-    getNombreAcreedor(dataSpec).then((response)=>{
+    getNombreAcreedor({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+      }}).then((response)=>{
       setBusinessName(response.data);
       setCargaNombreAcre(false);
     }).catch((error)=>{
@@ -464,13 +624,51 @@ let condicionFilters = 0;
     setNomDeuFilter(undefined);
  
    
-    getRutDeudorMutation(dataSpec).then((response)=>{
+    getRutDeudorMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+      }}).then((response)=>{
       setRutName(response.data);
       setCargaRutDeudor(false);
     }).catch((error)=>{
       setCargaRutDeudor(false);
     });
-    getNombreDeudorMutation(dataSpec).then((response)=>{
+    getNombreDeudorMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec:{
+        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+        Acreedor:state.acreedor?id:"",
+        Deudor:state.deudor?id:"",
+        EstadoEmision:state.estadoEmision?"Facturado":"",
+        EstadoPago:state.estadoPago?"Pagado":"",
+        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+        Glosa:selected.sConcept!=""?selected.sConcept:"",
+        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+        Folio:selected.sFolio!=""?selected.sFolio:"",
+        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
+      }}).then((response)=>{
       setBusinessName(response.data);
       setCargaNombreDeu(false);
     }).catch((error)=>{
@@ -478,28 +676,39 @@ let condicionFilters = 0;
     });
     
   }
-  function verificacarga() {
-    if ([fetchInstructions,cargaConcept,cargaCodRef,cargaCarta,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor].every((valor) => valor === false)) {
-      return false;
-    } else {
-      return true;     
+
+  
+  useEffect(() => {
+ 
+    function verificacarga() {
+      if ([cargaInstructions , cargaConcept, cargaCodRef ,cargaCarta , cargaNombreAcre, cargaNombreDeu ,cargaRutAcre ,cargaRutDeudor].every((valor) => valor === false)) {
+        return false;
+      } else {
+        return true;
+
+        
+      }
+    }
+  
+
+  if(verificacarga()===false){
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAA")
+    if(!cargaInstructions && ! cargaConcept && ! cargaCodRef && ! cargaCarta  && ! cargaNombreAcre && !cargaNombreDeu && !cargaRutAcre && !cargaRutDeudor){
+      setLoadingApis(false);
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAA")
+      
     }
   }
+
+  console.log(verificacarga())
+
+}, [cargaInstructions , cargaConcept, cargaCodRef ,cargaCarta , cargaNombreAcre, cargaNombreDeu ,cargaRutAcre ,cargaRutDeudor])
+
+  
   const isOptionEqualToValue = (option, value) => {
     return option.value === value;
   };
-  useEffect(()=>{
-    if(!fetchInstructions){
-         setSkipFetchs(
-          { 
-            ...skipFetchs,
-            skipInstructions:true,
-          
-          })
-        }
-    setLoadingApis(verificacarga())
-    console.log(verificacarga())
-  },[cargaConcept,cargaCodRef,cargaCarta,fetchInstructions,cargaNombreAcre,cargaNombreDeu,cargaRutAcre,cargaRutDeudor]);
+ 
   useEffect(() => {
     setPageIndex(1);
     setPagination(0);
@@ -508,98 +717,61 @@ let condicionFilters = 0;
     clearFilters();
     clearStates();
     FiltersOne();
-    setSkipFetchs({...skipFetchs,skipInstructions:false,})
-    refetchInstruc();
+    GetInstructions();
+
   }, [id])
 
+  // useEffect(() => {
+  //   if(getDataInstruction){
+  //     tableData = getDataInstruction.data
+  //     setPagination(getDataInstruction.count)
+  //     setPageCount(getDataInstruction.pageCount + 1);
+  //     setLoadingApis(verificacarga());
+  //   }
+   
+  // }, [getDataInstruction,fetchInstructions])
   useEffect(() => {
-    if(getDataInstruction){
-      tableData = getDataInstruction.data
-      setPagination(getDataInstruction.count)
-      setPageCount(getDataInstruction.pageCount + 1);
-      setLoadingApis(verificacarga());
+
+    
+    if(!table){
+      setPageIndex(1);
+      setPagination(0);
+      setPageCount(0);
+      setRowsPerPage(5);
+
+      FiltersOne();
+      GetInstructions();
+      reloadEstadisticas();
+      setReloadEstadistica(!reloadEstadistica);
     }
    
-  }, [getDataInstruction,fetchInstructions])
-  useEffect(() => {
-      console.log("saihdhdikusahjkasdhjk")
-      setDataSpec(
-        {
-          id: id,
-          PageIndex: 1,
-          PageSize: 100,
-          spec:{
-            EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-            EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-            Acreedor:state.acreedor?id:"",
-            Deudor:state.deudor?id:"",
-            EstadoEmision:state.estadoEmision?"Facturado":"",
-            EstadoPago:state.estadoPago?"Pagado":"",
-            RutDeudor:selected.buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-            RutAcreedor:selected.buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-            Glosa:selected.buscar?(selected.sConcept!=""?selected.sConcept:""):"",
-            MontoNeto:selected.buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
-            MontoBruto:selected.buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
-            Folio:selected.buscar?(selected.sFolio!=""?selected.sFolio:""):"",
-            NombreDeudor:selected.buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-            NombreAcreedor:selected.buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-          }}
-      )
-   
-  }, [selected,state])
+  }, [table])
 
   useEffect(() => {
     if(state.acreedor){
       setLoadingApis(true)
-      setSkipFetchs(
-        { 
-          ...skipFetchs,
-          skipInstructions:false,
-        })
+     
       FiltersDeu();
       FiltersOne();
-      refetchInstruc();
+      GetInstructions();
       
     }
     else if(state.deudor){
       setLoadingApis(true)
-      setSkipFetchs(
-        { 
-          ...skipFetchs,
-          skipInstructions:false,
-        })
       FiltersAcree();
       FiltersOne();
-      refetchInstruc();
+      GetInstructions();
      
     }else{
       setLoadingApis(true)
-      setSkipFetchs(
-        { 
-          ...skipFetchs,
-          skipInstructions:false,
-        })
+ 
       FiltersOne();
-      refetchInstruc();
+      GetInstructions();
     }
   
-  }, [state.acreedor,state.deudor]);
+  }, [state]);
 
-  useEffect(() => {
-    if(!table){
-      setLoadingApis(true);
-      setSkipFetchs(
-        { 
-          ...skipFetchs,
-          skipInstructions:false,
-        })
-      FiltersOne();
-      refetchInstruc();
-      setReloadEstadistica(prevReloadEstadistica => !prevReloadEstadistica);
 
-    }
-    
-  }, [table])
   
 
  
@@ -632,27 +804,19 @@ let condicionFilters = 0;
         ...state,
         [event.target.name]: event.target.checked,
       });
-      setSkipFetchs(
-        { 
-          ...skipFetchs,
-          skipInstructions:false,
-        })
+    
      
-      setLoadingApis(true)
-      FiltersOne();
-      refetchInstruc();
+      // setLoadingApis(true)
+      // FiltersOne();
+      // GetInstructions();
     }
   };
  
   function searchFilter(){
     setSelected({...selected,buscar: true});
-    setSkipFetchs(
-      { 
-        ...skipFetchs,
-        skipInstructions:false,
-      })
     
-    refetchInstruc();
+    
+    GetInstructions();
     FiltersOne();
     
 
@@ -662,20 +826,12 @@ let condicionFilters = 0;
     
     if(condicionFilters === 0){
       clearFilters();
-      setSkipFetchs(
-        { 
-          ...skipFetchs,
-          skipInstructions:false,
-        })
-      refetchInstruc();
+      
+      GetInstructions();
       FiltersOne();
     }else{
-      setSkipFetchs(
-        { 
-          ...skipFetchs,
-          skipInstructions:false,
-        })
-      refetchInstruc();
+     
+      GetInstructions();
       clearFilters();
       clearStates();
       FiltersOne();
@@ -703,12 +859,9 @@ let condicionFilters = 0;
       setLoadingApis(false);
     }
     // setPage(pageIndex + 1);
-    console.log(`${pageIndex} ${pageCount}`)
-    setSkipFetchs(
-      {...skipFetchs,
-        skipInstructions:false,
-      })
-    refetchInstruc();
+  
+   
+    GetInstructions();
     
   };
   const handleOpen= (row) => {
@@ -737,12 +890,9 @@ let condicionFilters = 0;
     if(pageIndex===1){
       setLoadingApis(false);
     }
-    // setPage(pageIndex + 1);
-    setSkipFetchs(
-      {...skipFetchs,
-        skipInstructions:false,
-      })
-    refetchInstruc();
+
+    
+    GetInstructions();
     
   };
   const handleChangeRowsCount = (option) => {
@@ -751,13 +901,10 @@ let condicionFilters = 0;
       setLoadingApis(true);
       setRowsPerPage(option)
       setPageIndex(1);
-      setSkipFetchs(
-        {...skipFetchs,
-          skipInstructions:false,
-        })
-      refetchInstruc();
+
+    
     }
-    // setPage(pageIndex + 1);
+  
 
     
   };
@@ -1749,7 +1896,7 @@ let condicionFilters = 0;
                 </TableRow>
               </TableHead>
               <TableBody>
-                {getDataInstruction.data
+                {dataInstruction.data
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row) => {
                     return (
