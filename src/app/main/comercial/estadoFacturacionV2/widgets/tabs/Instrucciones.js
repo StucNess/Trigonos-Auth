@@ -20,6 +20,7 @@ import {
   TableRow,
   MenuItem,
 } from "@mui/material";
+
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Stack } from "@mui/system";
 import SearchIcon from "@mui/icons-material/Search";
@@ -34,6 +35,8 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TuneIcon from "@mui/icons-material/Tune";
 import * as React from "react";
 import * as XLSX from "xlsx";
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
+
 import _ from "lodash";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -44,7 +47,7 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 // import Table from "@mui/material/Table";
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from "@mui/lab/LoadingButton";
 import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 
 // import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -85,6 +88,7 @@ import {
   useGetNumberNombreDeudorMutation,
   useGetCartamMutation,
   useGetCodRefmMutation,
+  useGetInstruccionesSpecmMutation,
 } from "app/store/instrucciones/instruccionesApi";
 import {
   useGetBusinessNameQuery,
@@ -221,52 +225,28 @@ export default function Instrucciones(props) {
       Deudor: state.deudor ? id : "",
       EstadoEmision: state.estadoEmision ? "Facturado" : "",
       EstadoPago: state.estadoPago ? "Pagado" : "",
-      RutDeudor: selected.buscar
-        ? state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
+      RutDeudor: state.acreedor
+        ? selected.sRut != ""
+          ? selected.sRut.slice(0, 8)
           : ""
         : "",
-      RutAcreedor: selected.buscar
-        ? state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
+      RutAcreedor: state.deudor
+        ? selected.sRut != ""
+          ? selected.sRut.slice(0, 8)
           : ""
         : "",
-      Glosa: selected.buscar
-        ? selected.sConcept != ""
-          ? selected.sConcept
+      Glosa: selected.sConcept != "" ? selected.sConcept : "",
+      MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+      MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+      Folio: selected.sFolio != "" ? selected.sFolio : "",
+      NombreDeudor: state.acreedor
+        ? selected.sBusinessName != ""
+          ? selected.sBusinessName
           : ""
         : "",
-      MontoNeto: selected.buscar
-        ? selected.sMontoNeto != ""
-          ? selected.sMontoNeto
-          : ""
-        : "",
-      MontoBruto: selected.buscar
-        ? selected.sMontoBruto != ""
-          ? selected.sMontoBruto
-          : ""
-        : "",
-      Folio: selected.buscar
-        ? selected.sFolio != ""
-          ? selected.sFolio
-          : ""
-        : "",
-      NombreDeudor: selected.buscar
-        ? state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : ""
-        : "",
-      NombreAcreedor: selected.buscar
-        ? state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
+      NombreAcreedor: state.deudor
+        ? selected.sBusinessName != ""
+          ? selected.sBusinessName
           : ""
         : "",
     },
@@ -307,10 +287,6 @@ export default function Instrucciones(props) {
   const [modal, setModal] = useState(false);
   const [editar, setEditar] = useState(false);
 
-  // const { data: getDataName, isFetching: fetchName, refetch: refetchName} =
-  // useGetBusinessNameQuery();
-  // const { data: getDataRut, isFetching: fetchRut, refetch: refetchRut} =
-  // useGetRutQuery();
   const [skipFetchs, setSkipFetchs] = useState({
     skipNombreAcre: false,
     skipRutAcre: false,
@@ -321,164 +297,51 @@ export default function Instrucciones(props) {
     skipCodRef: false,
     skipCarta: false,
   });
-  // const { data: getDataNombreAcre, isFetching: fetchNombreAcre, refetch: refetchNombreAcre} =
-  // useGetNombreAcreedorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipNombreAcre});//propiedad skip es para no iniciar la carga previa
 
-  // const { data: getDataRutAcre, isFetching: fetchRutAcre, refetch: refetchRutAcre} =
-  // useGetRutAcreedorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipRutAcre});//propiedad skip es para no iniciar la carga previa
-  // const { data: getDataNombreDeudor, isFetching: fetchNombreDeudor, refetch: refetchNombreDeudor} =
-  // useGetNombreDeudorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipNombreDeudor});//propiedad skip es para no iniciar la carga previa
-
-  // const { data: getDataRutDeudor, isFetching: fetchRutDeudor, refetch: refetchRutDeudor} =
-  // useGetRutDeudorQuery(
-  //   {id:id,
-  //     spec:{
-  //       EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //       EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //       Acreedor:state.acreedor?id:"",
-  //       Deudor:state.deudor?id:"",
-  //       EstadoEmision:state.estadoEmision?"Facturado":"",
-  //       EstadoPago:state.estadoPago?"Pagado":"",
-  //       RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //       Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //       MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //       MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //       Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //       NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //       NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  // }},{skip:skipFetchs.skipRutDeudor});//propiedad skip es para no iniciar la carga previa
-
-  const {
-    data: getDataInstruction,
-    isFetching: fetchInstructions,
-    refetch: refetchInstruc,
-  } = useGetInstruccionesSpecQuery(
-    {
-      id: id,
-      PageIndex: pageIndex,
-      PageSize: rowsPerPage,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: buscar
-          ? state.acreedor
-            ? sRut != ""
-              ? sRut.slice(0, 8)
-              : ""
-            : ""
-          : "",
-        RutAcreedor: buscar
-          ? state.deudor
-            ? sRut != ""
-              ? sRut.slice(0, 8)
-              : ""
-            : ""
-          : "",
-        Glosa: buscar ? (sConcept != "" ? sConcept : "") : "",
-        MontoNeto: buscar ? (sMontoNeto != "" ? sMontoNeto : "") : "",
-        MontoBruto: buscar ? (sMontoBruto != "" ? sMontoBruto : "") : "",
-        Folio: buscar ? (sFolio != "" ? sFolio : "") : "",
-        NombreDeudor: buscar
-          ? state.acreedor
-            ? sBusinessName != ""
-              ? sBusinessName
-              : ""
-            : ""
-          : "",
-        NombreAcreedor: buscar
-          ? state.deudor
-            ? sBusinessName != ""
-              ? sBusinessName
-              : ""
-            : ""
-          : "",
-        Carta: buscar ? (sCarta != "" ? sCarta : "") : "",
-        CodigoRef: buscar ? (sCodRef != "" ? sCodRef : "") : "",
-        FechaEmision: "",
-        FechaRecepcion: "",
-        FechaPago: "",
-        FechaAceptacion: "",
-        Concepto: "",
-        InicioPeriodo: buscar
-          ? sInicioPeriodo != ""
-            ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
-                sInicioPeriodo.getMonth() + 1
-              }/01`
-            : ""
-          : "",
-        TerminoPeriodo: buscar
-          ? sTerminoPeriodo != ""
-            ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
-                sTerminoPeriodo.getMonth() + 1
-              }/01`
-            : ""
-          : "",
-        OrderByNeto: "",
-        OrderByBruto: "",
-        OrderByFechaEmision: "",
-        OrderByFechaPago: "",
-        OrderByFechaCarta: "",
-        OrderByFolio: "",
-      },
-    },
-    { skip: skipFetchs.skipInstructions }
-  );
+  // const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} =
+  // useGetInstruccionesSpecQuery(
+  //   {
+  //   id: id,
+  //   PageIndex: pageIndex,
+  //   PageSize:rowsPerPage,
+  //   spec: {
+  //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+  //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+  //     Acreedor:state.acreedor?id:"",
+  //     Deudor:state.deudor?id:"",
+  //     EstadoEmision:state.estadoEmision?"Facturado":"",
+  //     EstadoPago:state.estadoPago?"Pagado":"",
+  //     RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //     RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
+  //     Glosa:buscar?(sConcept!=""?sConcept:""):"",
+  //     MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
+  //     MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
+  //     Folio:buscar?(sFolio!=""?sFolio:""):"",
+  //     NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //     NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
+  //     Carta:buscar?(sCarta!=""?sCarta:""):"",
+  //     CodigoRef:buscar?(sCodRef!=""?sCodRef:""):"",
+  //     FechaEmision:"",
+  //     FechaRecepcion:"",
+  //     FechaPago:"",
+  //     FechaAceptacion:"",
+  //     Concepto:"",
+  //     InicioPeriodo:buscar?(sInicioPeriodo!=""?`20${sInicioPeriodo
+  //       .getYear()
+  //       .toString()
+  //       .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:""):"",
+  //     TerminoPeriodo:buscar?(sTerminoPeriodo!=""?`20${sTerminoPeriodo
+  //       .getYear()
+  //       .toString()
+  //       .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:""):"",
+  //     OrderByNeto:"",
+  //     OrderByBruto:"",
+  //     OrderByFechaEmision:"",
+  //     OrderByFechaPago:"",
+  //     OrderByFechaCarta:"",
+  //     OrderByFolio:"",
+  //   }
+  //   },{skip:skipFetchs.skipInstructions});
   const {
     estadoEmision,
     estadoPago,
@@ -493,7 +356,7 @@ export default function Instrucciones(props) {
   const [conceptFilter, setConceptFilter] = useState([]);
   const [codRefFilter, setCodRefFilter] = useState([]);
   const [cartaFilter, setCartaFilter] = useState([]);
-  const [dataInstruction,setDataInstruction ] = useState([]);
+  const [dataInstruction, setDataInstruction] = useState([]);
   //--RutAcre RutDeudor NombreDeudor NombreAcreedor
   const [rutAcreFilter, setRutAcreFilter] = useState([]);
   const [rutDeuFilter, setRutDeuFilter] = useState([]);
@@ -532,11 +395,13 @@ export default function Instrucciones(props) {
     useGetNombreDeudormMutation();
   const [getNombreAcreedor, { isLoading: isLoadingNombreAm }] =
     useGetNombreAcreedormMutation();
+  const [getInstrucciones, { isLoading: isLoadingInst }] =
+    useGetInstruccionesSpecmMutation();
 
   //--Mutation recargar peticiones
-  const [reloadEstadisticas, {isLoading : isLoadingQueris}] = useRefetchQueriesMetricsMutation();
+  const [reloadEstadisticas, { isLoading: isLoadingQueris }] =
+    useRefetchQueriesMetricsMutation();
 
-  
   //cargas individuales pasaran por el verificar carga hasta que no se me ocurra otra manera
   const [cargaConcept, setCargaConcept] = useState(true);
   const [cargaCodRef, setCargaCodRef] = useState(true);
@@ -548,89 +413,86 @@ export default function Instrucciones(props) {
   const [cargaNombreDeu, setCargaNombreDeu] = useState(false);
   const [cargaInstructions, setCargaInstructions] = useState(false);
 
-
-  //contador para la carga no funciona
-  const [peticionesCompletadas, setPeticionesCompletadas] = useState(0);
   const [LoadingApis, setLoadingApis] = useState(true);
 
-  function GetInstructions(){
+  function GetInstructions() {
     setLoadingApis(true);
     setCargaInstructions(true);
     setDataInstruction();
-    getInstrucciones(
-      {
-        
-    id: id,
-    PageIndex: pageIndex,
-    PageSize:rowsPerPage,
-     spec:{
-      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-      Acreedor:state.acreedor?id:"",
-      Deudor:state.deudor?id:"",
-      EstadoEmision:state.estadoEmision?"Facturado":"",
-      EstadoPago:state.estadoPago?"Pagado":"",
-      RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-      RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-      Glosa:selected.sConcept!=""?selected.sConcept:"",
-      MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-      MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-      Folio:selected.sFolio!=""?selected.sFolio:"",
-      NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-      NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-      Carta:sCarta!=""?sCarta:"",
-      CodigoRef:sCodRef!=""?sCodRef:"",
-      FechaEmision:"",
-      FechaRecepcion:"",
-      FechaPago:"",
-      FechaAceptacion:"",
-      Concepto:"",
-      InicioPeriodo:sInicioPeriodo!=""?`20${sInicioPeriodo
-        .getYear()
-        .toString()
-        .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:"",
-      TerminoPeriodo:sTerminoPeriodo!=""?`20${sTerminoPeriodo
-        .getYear()
-        .toString()
-        .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:"",
-      OrderByNeto:"",
-      OrderByBruto:"",
-      OrderByFechaEmision:"",
-      OrderByFechaPago:"",
-      OrderByFechaCarta:"",
-      OrderByFolio:"",
-    }}
-    ).then((response)=>{
-      setDataInstruction(response.data);
-      setPagination(response.data.count)
-      setPageCount(response.data.pageCount + 1);
-      setCargaInstructions(false);
-    }).catch((error)=>{
-      setCargaInstructions(false);
+    getInstrucciones({
+      id: id,
+      PageIndex: pageIndex,
+      PageSize: rowsPerPage,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: sCarta != "" ? sCarta : "",
+        CodigoRef: sCodRef != "" ? sCodRef : "",
+        FechaEmision: "",
+        FechaRecepcion: "",
+        FechaPago: "",
+        FechaAceptacion: "",
+        Concepto: "",
+        InicioPeriodo:
+          sInicioPeriodo != ""
+            ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
+                sInicioPeriodo.getMonth() + 1
+              }/01`
+            : "",
+        TerminoPeriodo:
+          sTerminoPeriodo != ""
+            ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
+                sTerminoPeriodo.getMonth() + 1
+              }/01`
+            : "",
+        OrderByNeto: "",
+        OrderByBruto: "",
+        OrderByFechaEmision: "",
+        OrderByFechaPago: "",
+        OrderByFechaCarta: "",
+        OrderByFolio: "",
+      },
     })
+      .then((response) => {
+        setDataInstruction(response.data);
+        setPagination(response.data.count);
+        setPageCount(response.data.pageCount + 1);
+        setCargaInstructions(false);
+      })
+      .catch((error) => {
+        setCargaInstructions(false);
+      });
   }
   //concept, carta, codref
   function FiltersOne() {
-    // let dataSpec ={
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec:{
-    //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-    //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-    //     Acreedor:state.acreedor?id:"",
-    //     Deudor:state.deudor?id:"",
-    //     EstadoEmision:state.estadoEmision?"Facturado":"",
-    //     EstadoPago:state.estadoPago?"Pagado":"",
-    //     RutDeudor:buscar?(state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     RutAcreedor:buscar?(state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):("")):"",
-    //     Glosa:buscar?(selected.sConcept!=""?selected.sConcept:""):"",
-    //     MontoNeto:buscar?(selected.sMontoNeto!=""?selected.sMontoNeto:""):"",
-    //     MontoBruto:buscar?(selected.sMontoBruto!=""?selected.sMontoBruto:""):"",
-    //     Folio:buscar?(selected.sFolio!=""?selected.sFolio:""):"",
-    //     NombreDeudor:buscar?(state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //     NombreAcreedor:buscar?(state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")):"",
-    //   }}
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
@@ -642,43 +504,130 @@ export default function Instrucciones(props) {
     setCargaConcept(true);
     setCargaCodRef(true);
     setCargaCarta(true);
-    setPeticionesCompletadas(0);
 
-    // let Concept = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec: dataSpec.spec,
-    // };
-    // let CodRef = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec: dataSpec.spec,
-    // };
-    // let Carta = {
-    //   id: id,
-    //   PageIndex: 1,
-    //   PageSize: 100,
-    //   spec: dataSpec.spec,
-    // };
-    getConceptMutation(dataSpec)
+    getConceptMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+      },
+    })
       .then((response) => {
         setConceptFilter(response.data);
-        console.log(response.data);
-        console.log(dataSpec.spec);
       })
       .catch((error) => {
         setCargaConcept(false);
       });
-    getCodRefMutation(dataSpec)
+    getCodRefMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+      },
+    })
       .then((response) => {
         setCodRefFilter(response.data);
       })
       .catch((error) => {
         setCargaCodRef(false);
       });
-    getCartaMutation(dataSpec)
+    getCartaMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+      },
+    })
       .then((response) => {
         setCartaFilter(response.data);
       })
@@ -712,7 +661,43 @@ export default function Instrucciones(props) {
     setRutAcreFilter(undefined);
     setNomAcreFilter(undefined);
 
-    getRutAcreMutation(dataSpec)
+    getRutAcreMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+      },
+    })
       .then((response) => {
         setRutName(response.data);
         setCargaRutAcre(false);
@@ -720,7 +705,43 @@ export default function Instrucciones(props) {
       .catch((error) => {
         setCargaRutAcre(false);
       });
-    getNombreAcreedor(dataSpec)
+    getNombreAcreedor({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+      },
+    })
       .then((response) => {
         setBusinessName(response.data);
         setCargaNombreAcre(false);
@@ -746,102 +767,7 @@ export default function Instrucciones(props) {
 
     setNomDeuFilter(undefined);
 
-    getRutDeudorMutation(dataSpec)
-      .then((response) => {
-        setRutName(response.data);
-        setCargaRutDeudor(false);
-      })
-      .catch((error) => {
-        setCargaRutDeudor(false);
-      });
-    getNombreDeudorMutation(dataSpec)
-      .then((response) => {
-        setBusinessName(response.data);
-        setCargaNombreDeu(false);
-      })
-      .catch((error) => {
-        setCargaNombreDeu(false);
-      });
-  }
-  function verificacarga() {
-    if (
-      [
-        fetchInstructions,
-        cargaConcept,
-        cargaCodRef,
-        cargaCarta,
-        cargaNombreAcre,
-        cargaNombreDeu,
-        cargaRutAcre,
-        cargaRutDeudor,
-      ].every((valor) => valor === false)
-    ) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  console.log(verificacarga())
-
-}, [cargaInstructions , cargaConcept, cargaCodRef ,cargaCarta , cargaNombreAcre, cargaNombreDeu ,cargaRutAcre ,cargaRutDeudor])
-
-  
-  const isOptionEqualToValue = (option, value) => {
-    return option.value === value;
-  };
-  useEffect(() => {
-    if (!fetchInstructions) {
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: true,
-      });
-    }
-    setLoadingApis(verificacarga());
-
-    console.log(verificacarga());
-  }, [
-    cargaConcept,
-    cargaCodRef,
-    cargaCarta,
-    fetchInstructions,
-    cargaNombreAcre,
-    cargaNombreDeu,
-    cargaRutAcre,
-    cargaRutDeudor,
-  ]);
-  useEffect(() => {
-    setPageIndex(1);
-    setPagination(0);
-    setPageCount(0);
-    setRowsPerPage(5);
-    clearFilters();
-    clearStates();
-    FiltersOne();
-    setSkipFetchs({ ...skipFetchs, skipInstructions: false });
-    refetchInstruc();
-  }, [id]);
-
-  // useEffect(() => {
-  //   if(getDataInstruction){
-  //     tableData = getDataInstruction.data
-  //     setPagination(getDataInstruction.count)
-  //     setPageCount(getDataInstruction.pageCount + 1);
-  //     setLoadingApis(verificacarga());
-  //   }
-   
-  // }, [getDataInstruction,fetchInstructions])
-  useEffect(() => {
-    if (getDataInstruction) {
-      tableData = getDataInstruction.data;
-      setPagination(getDataInstruction.count);
-      setPageCount(getDataInstruction.pageCount + 1);
-      setLoadingApis(verificacarga());
-    }
-  }, [getDataInstruction, fetchInstructions]);
-  useEffect(() => {
-    console.log("saihdhdikusahjkasdhjk");
-    setDataSpec({
+    getRutDeudorMutation({
       id: id,
       PageIndex: 1,
       PageSize: 100,
@@ -852,104 +778,194 @@ export default function Instrucciones(props) {
         Deudor: state.deudor ? id : "",
         EstadoEmision: state.estadoEmision ? "Facturado" : "",
         EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: selected.buscar
-          ? state.acreedor
-            ? selected.sRut != ""
-              ? selected.sRut.slice(0, 8)
-              : ""
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
             : ""
           : "",
-        RutAcreedor: selected.buscar
-          ? state.deudor
-            ? selected.sRut != ""
-              ? selected.sRut.slice(0, 8)
-              : ""
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
             : ""
           : "",
-        Glosa: selected.buscar
-          ? selected.sConcept != ""
-            ? selected.sConcept
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
             : ""
           : "",
-        MontoNeto: selected.buscar
-          ? selected.sMontoNeto != ""
-            ? selected.sMontoNeto
-            : ""
-          : "",
-        MontoBruto: selected.buscar
-          ? selected.sMontoBruto != ""
-            ? selected.sMontoBruto
-            : ""
-          : "",
-        Folio: selected.buscar
-          ? selected.sFolio != ""
-            ? selected.sFolio
-            : ""
-          : "",
-        NombreDeudor: selected.buscar
-          ? state.acreedor
-            ? selected.sBusinessName != ""
-              ? selected.sBusinessName
-              : ""
-            : ""
-          : "",
-        NombreAcreedor: selected.buscar
-          ? state.deudor
-            ? selected.sBusinessName != ""
-              ? selected.sBusinessName
-              : ""
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
             : ""
           : "",
       },
-    });
-  }, [selected, state]);
+    })
+      .then((response) => {
+        setRutName(response.data);
+        setCargaRutDeudor(false);
+      })
+      .catch((error) => {
+        setCargaRutDeudor(false);
+      });
+    getNombreDeudorMutation({
+      id: id,
+      PageIndex: 1,
+      PageSize: 100,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+      },
+    })
+      .then((response) => {
+        setBusinessName(response.data);
+        setCargaNombreDeu(false);
+      })
+      .catch((error) => {
+        setCargaNombreDeu(false);
+      });
+  }
+
+  useEffect(() => {
+    function verificacarga() {
+      if (
+        [
+          cargaInstructions,
+          cargaConcept,
+          cargaCodRef,
+          cargaCarta,
+          cargaNombreAcre,
+          cargaNombreDeu,
+          cargaRutAcre,
+          cargaRutDeudor,
+        ].every((valor) => valor === false)
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    if (verificacarga() === false) {
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
+      if (
+        !cargaInstructions &&
+        !cargaConcept &&
+        !cargaCodRef &&
+        !cargaCarta &&
+        !cargaNombreAcre &&
+        !cargaNombreDeu &&
+        !cargaRutAcre &&
+        !cargaRutDeudor
+      ) {
+        setLoadingApis(false);
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
+      }
+    }
+
+    console.log(verificacarga());
+  }, [
+    cargaInstructions,
+    cargaConcept,
+    cargaCodRef,
+    cargaCarta,
+    cargaNombreAcre,
+    cargaNombreDeu,
+    cargaRutAcre,
+    cargaRutDeudor,
+  ]);
+
+  const isOptionEqualToValue = (option, value) => {
+    return option.value === value;
+  };
+
+  useEffect(() => {
+    setPageIndex(1);
+    setPagination(0);
+    setPageCount(0);
+    setRowsPerPage(5);
+    clearFilters();
+    clearStates();
+    FiltersOne();
+    GetInstructions();
+  }, [id]);
+
+  // useEffect(() => {
+  //   if(getDataInstruction){
+  //     tableData = getDataInstruction.data
+  //     setPagination(getDataInstruction.count)
+  //     setPageCount(getDataInstruction.pageCount + 1);
+  //     setLoadingApis(verificacarga());
+  //   }
+
+  // }, [getDataInstruction,fetchInstructions])
+  useEffect(() => {
+    if (!table) {
+      setPageIndex(1);
+      setPagination(0);
+      setPageCount(0);
+      setRowsPerPage(5);
+
+      FiltersOne();
+      GetInstructions();
+      reloadEstadisticas();
+      setReloadEstadistica(!reloadEstadistica);
+    }
+  }, [table]);
 
   useEffect(() => {
     if (state.acreedor) {
       setLoadingApis(true);
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: false,
-      });
+
       FiltersDeu();
       FiltersOne();
-      refetchInstruc();
+      GetInstructions();
     } else if (state.deudor) {
       setLoadingApis(true);
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: false,
-      });
       FiltersAcree();
       FiltersOne();
-      refetchInstruc();
+      GetInstructions();
     } else {
       setLoadingApis(true);
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: false,
-      });
+
       FiltersOne();
       GetInstructions();
     }
-  }, [state.acreedor, state.deudor]);
-
-  useEffect(() => {
-    if (!table) {
-      setLoadingApis(true);
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: false,
-      });
-      FiltersOne();
-      refetchInstruc();
-      setReloadEstadistica((prevReloadEstadistica) => !prevReloadEstadistica);
-    }
-  }, [table]);
+  }, [state]);
 
   const handleChange = (event) => {
     if (event.target.name === "acreedor" && event.target.checked === true) {
-      // setLoadingApis(true)
       setState({
         ...state,
         [event.target.name]: event.target.checked,
@@ -959,70 +975,37 @@ export default function Instrucciones(props) {
       event.target.name === "deudor" &&
       event.target.checked === true
     ) {
-      
       setState({
         ...state,
         [event.target.name]: event.target.checked,
         acreedor: false,
       });
-      // setSkipFetchs(
-      //   {
-      //     ...skipFetchs,
-      //     skipInstructions:false,
-      //   })
-      // FiltersAcree();
-      // // refetchNombreAcre();
-      // // refetchRutAcre();
-      // FiltersOne();
-      // refetchInstruc();
     } else {
-    
       setState({
         ...state,
         [event.target.name]: event.target.checked,
       });
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: false,
-      });
-      // refetchConcept();
-      // refetchCodRef();
-      // refetchCarta();
+
+      // setLoadingApis(true)
       // FiltersOne();
-      //
-      setLoadingApis(true);
-      FiltersOne();
-      refetchInstruc();
+      // GetInstructions();
     }
   };
-  //filtros
+
   function searchFilter() {
     setSelected({ ...selected, buscar: true });
-    setSkipFetchs({
-      ...skipFetchs,
-      skipInstructions: false,
-    });
-    // refetchConcept();
-    // refetchCodRef();
-    // refetchCarta();
-    refetchInstruc();
+
+    GetInstructions();
     FiltersOne();
   }
   const clearAllFilters = () => {
     if (condicionFilters === 0) {
       clearFilters();
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: false,
-      });
-      refetchInstruc();
+
+      GetInstructions();
       FiltersOne();
     } else {
-      setSkipFetchs({
-        ...skipFetchs,
-        skipInstructions: false,
-      });
-      refetchInstruc();
+      GetInstructions();
       clearFilters();
       clearStates();
       FiltersOne();
@@ -1046,12 +1029,11 @@ export default function Instrucciones(props) {
 
     setPageIndex(pageIndex === pageCount ? pageIndex : pageIndex + 1);
     if (pageIndex === pageCount) {
-      // setLoadingApis(false);
+      setLoadingApis(false);
     }
     // setPage(pageIndex + 1);
-    console.log(`${pageIndex} ${pageCount}`);
-    setSkipFetchs({ ...skipFetchs, skipInstructions: false });
-    refetchInstruc();
+
+    GetInstructions();
   };
   const handleOpen = (row) => {
     const coincide = props.participants.some((item) => {
@@ -1081,21 +1063,17 @@ export default function Instrucciones(props) {
 
     setPageIndex(pageIndex > 1 ? pageIndex - 1 : 1);
     if (pageIndex === 1) {
-      // setLoadingApis(false);
+      setLoadingApis(false);
     }
-    // setPage(pageIndex + 1);
-    setSkipFetchs({ ...skipFetchs, skipInstructions: false });
-    refetchInstruc();
+
+    GetInstructions();
   };
   const handleChangeRowsCount = (option) => {
     if (rowsPerPage != option) {
       setLoadingApis(true);
       setRowsPerPage(option);
       setPageIndex(1);
-      setSkipFetchs({ ...skipFetchs, skipInstructions: false });
-      refetchInstruc();
     }
-    // setPage(pageIndex + 1);
   };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -1238,219 +1216,246 @@ export default function Instrucciones(props) {
   return (
     <div className="grid grid-cols-12 gap-12 p-[20px]">
       <div className="hd:col-span-6  hdmas:col-span-12   bg-white rounded-md">
-
         <div className="grid grid-cols-6 ">
-        <div className="col-span-2  border-solid border-r-2">
-        <div className="flex flex-row  m-[20px]">
-          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
-            Estados
-          </Typography>
-          <TuneIcon className="ml-[10px] text-pantoneazul" />
-        </div>
-        <h1 className="border border-b-pantoneazul w-full"></h1>
+          <div className="col-span-2  border-solid border-r-2">
+            <div className="flex flex-row  m-[20px]">
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Estados
+              </Typography>
+              <TuneIcon className="ml-[10px] text-pantoneazul" />
+            </div>
+            <h1 className="border border-b-pantoneazul w-full"></h1>
 
-        <div className="p-[20px]">
-          <Grid
-            container
-            direction="column"
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-            justifyContent="space-evenly"
-            alignItems="stretch"
-            // alignItems="flex-start"
-          >
-            <Grid item xs="auto" sm="auto" md="auto">
-              <Item>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={LoadingApis}
-                      checked={state.estadoEmision}
-                      onChange={handleChange}
-                      name="estadoEmision"
-                    />
-                  }
-                  label={
-                    state.estadoEmision
-                      ? "Factura Emitida"
-                      : "Factura No Emitida"
-                  }
-                  sx={
-                    state.estadoEmision ? { color: "green" } : { color: "red" }
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid item xs="auto" sm="auto" md="auto">
-              <Item>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={LoadingApis}
-                      checked={state.estadoPago}
-                      onChange={handleChange}
-                      name="estadoPago"
-                    />
-                  }
-                  label={state.estadoPago ? "Pagado" : "No Pagado"}
-                  sx={state.estadoPago ? { color: "green" } : { color: "red" }}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs="auto" sm="auto" md="auto">
-              <Item>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={LoadingApis}
-                      checked={state.estadoRecepcion}
-                      onChange={handleChange}
-                      name="estadoRecepcion"
-                    />
-                  }
-                  label={
-                    state.estadoRecepcion ? "Recepcionado" : "No Recepcionado"
-                  }
-                  sx={
-                    state.estadoRecepcion
-                      ? { color: "green" }
-                      : { color: "red" }
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid item xs="auto" sm="auto" md="auto">
-              <Item>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={LoadingApis}
-                      checked={state.estadoAceptacion}
-                      onChange={handleChange}
-                      name="estadoAceptacion"
-                    />
-                  }
-                  label={state.estadoAceptacion ? "Aceptado" : "No Aceptado"}
-                  sx={
-                    state.estadoAceptacion
-                      ? { color: "green" }
-                      : { color: "red" }
-                  }
-                />
-              </Item>
-            </Grid>
-            <Grid item xs="auto" sm="auto" md="auto">
-              <Item>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={LoadingApis}
-                      checked={state.acreedor}
-                      onChange={handleChange}
-                      name="acreedor"
-                    />
-                  }
-                  label="Acreedor"
-                  sx={state.acreedor ? { color: "green" } : { color: "red" }}
-                />
-              </Item>
-            </Grid>
-            <Grid item xs="auto" sm="auto" md="auto">
-              <Item>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      disabled={LoadingApis}
-                      checked={state.deudor}
-                      onChange={handleChange}
-                      name="deudor"
-                    />
-                  }
-                  label="Deudor"
-                  sx={state.deudor ? { color: "green" } : { color: "red" }}
-                />
-              </Item>
-            </Grid>
-          </Grid>
-        </div>
-        </div>
-        <div className="col-span-2  ">
-        <div className="flex flex-row  m-[20px]">
-          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
-            Excel Disponibles
-          </Typography>
-          <AssignmentIcon className="ml-[10px] text-pantoneazul" />
-        </div>
-        <h1 className="border border-b-pantoneazul w-full"></h1>
-        
-        <div className="p-[20px]">
-        <Grid
-            container
-            direction="column"
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-            justifyContent="space-evenly"
-            alignItems="stretch"
-            // alignItems="flex-start"
-          >
-              <Grid item className="w-full">
-              <Tooltip  
-              title="Desactivado" 
-              arrow 
-              placement="top"
+            <div className="p-[20px]">
+              <Grid
+                container
+                direction="column"
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                justifyContent="space-evenly"
+                alignItems="stretch"
+                // alignItems="flex-start"
               >
-                <span>
-                <LoadingButton
-                className="w-full"
-                  loading ={true}
-                  loadingPosition="start"
-                  startIcon={<SiMicrosoftexcel />}
-                  variant="contained"
-                  color="success"
-                  // onClick={()=>{
-                  //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
-                  // }}
-                >
-                  Todos
-                </LoadingButton>
-                </span>
-              </Tooltip>
+                <Grid item className="w-full">
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
+                      control={
+                        <Switch
+                          disabled={LoadingApis}
+                          checked={state.estadoEmision}
+                          onChange={handleChange}
+                          name="estadoEmision"
+                        />
+                      }
+                      label={
+                        state.estadoEmision
+                          ? "Factura Emitida"
+                          : "Factura No Emitida"
+                      }
+                      sx={
+                        state.estadoEmision
+                          ? { color: "green" }
+                          : { color: "red" }
+                      }
+                    />
+                  </Item>
                 </Grid>
                 <Grid item className="w-full">
-                  <Tooltip  
-                    title="Desactivado"
-                    //Descargar Excel 
-                    arrow 
-                    placement="top"
-                  >
-                        <span>
-                        <LoadingButton
-                          className="w-full"
-                          loading ={true}
-                          loadingPosition="start"
-                          startIcon={<SiMicrosoftexcel />}
-                          variant="contained"
-                          color="success"
-                          // onClick={()=>{
-                          //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
-                          // }}
-                        >
-                      Todos
-                    </LoadingButton>
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
+                      control={
+                        <Switch
+                          disabled={LoadingApis}
+                          checked={state.estadoPago}
+                          onChange={handleChange}
+                          name="estadoPago"
+                        />
+                      }
+                      label={state.estadoPago ? "Pagado" : "No Pagado"}
+                      sx={
+                        state.estadoPago ? { color: "green" } : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item className="w-full">
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
+                      control={
+                        <Switch
+                          disabled={LoadingApis}
+                          checked={state.estadoRecepcion}
+                          onChange={handleChange}
+                          name="estadoRecepcion"
+                        />
+                      }
+                      label={
+                        state.estadoRecepcion
+                          ? "Recepcionado"
+                          : "No Recepcionado"
+                      }
+                      sx={
+                        state.estadoRecepcion
+                          ? { color: "green" }
+                          : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item className="w-full">
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
+                      control={
+                        <Switch
+                          disabled={LoadingApis}
+                          checked={state.estadoAceptacion}
+                          onChange={handleChange}
+                          name="estadoAceptacion"
+                        />
+                      }
+                      label={
+                        state.estadoAceptacion ? "Aceptado" : "No Aceptado"
+                      }
+                      sx={
+                        state.estadoAceptacion
+                          ? { color: "green" }
+                          : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+          <div className="col-span-2  border-solid border-r-2">
+            <div className="flex flex-row  mx-[5px] my-[20px]">
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Tipos de instrucción
+              </Typography>
+              <SupervisedUserCircleIcon className="ml-[10px] text-pantoneazul" />
+            </div>
+            <h1 className="border border-b-pantoneazul w-full"></h1>
+
+            <div className="p-[20px]">
+              <Grid
+                container
+                direction="column"
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                justifyContent="space-evenly"
+                alignItems="stretch"
+                // alignItems="flex-start"
+              >
+                <Grid item className="w-full ">
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal "
+                      control={
+                        <Switch
+                          disabled={LoadingApis}
+                          checked={state.acreedor}
+                          onChange={handleChange}
+                          name="acreedor"
+                        />
+                      }
+                      label="Acreedor"
+                      sx={
+                        state.acreedor ? { color: "green" } : { color: "red" }
+                      }
+                    />
+                  </Item>
+                </Grid>
+                <Grid item className="w-full">
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
+                      control={
+                        <Switch
+                          disabled={LoadingApis}
+                          checked={state.deudor}
+                          onChange={handleChange}
+                          name="deudor"
+                        />
+                      }
+                      label="Deudor"
+                      sx={state.deudor ? { color: "green" } : { color: "red" }}
+                    />
+                  </Item>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+          <div className="col-span-2  ">
+            <div className="flex flex-row  m-[20px]">
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Excel Disponibles
+              </Typography>
+              <AssignmentIcon className="ml-[10px] text-pantoneazul" />
+            </div>
+            <h1 className="border border-b-pantoneazul w-full"></h1>
+
+            <div className="p-[20px]">
+              <Grid
+                container
+                direction="column"
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                justifyContent="space-evenly"
+                alignItems="stretch"
+                // alignItems="flex-start"
+              >
+                <Grid item className="w-full">
+                  <Tooltip title="Desactivado" arrow placement="top">
+                    <span>
+                      <LoadingButton
+                        className="w-full"
+                        loading={true}
+                        loadingPosition="start"
+                        startIcon={<SiMicrosoftexcel />}
+                        variant="contained"
+                        color="success"
+                        // onClick={()=>{
+                        //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                        // }}
+                      >
+                        Todos
+                      </LoadingButton>
                     </span>
                   </Tooltip>
                 </Grid>
-                
-        </Grid>
-       
-           
+                <Grid item className="w-full">
+                  <Tooltip
+                    title="Desactivado"
+                    //Descargar Excel
+                    arrow
+                    placement="top"
+                  >
+                    <span>
+                      <LoadingButton
+                        className="w-full"
+                        loading={true}
+                        loadingPosition="start"
+                        startIcon={<SiMicrosoftexcel />}
+                        variant="contained"
+                        color="success"
+                        // onClick={()=>{
+                        //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                        // }}
+                      >
+                        Todos
+                      </LoadingButton>
+                    </span>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
         </div>
-        </div>
-        </div>
-
-        
       </div>
-
 
       <div className="hd:col-span-6  hdmas:col-span-12  bg-white rounded-md">
         <div className="flex flex-row  m-[20px]">
@@ -1475,14 +1480,13 @@ export default function Instrucciones(props) {
         {LoadingApis ? (
           <div className="flex items-center">
             <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-              {/* <p>Chupa Chupa .....</p> */}
               <LinearProgress color="primary" />
             </Stack>
           </div>
         ) : (
           <div className="flex flex-col flex-auto mt-6">
             <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-              <Box className="flex flex-col hd:flex-col  ">
+              <Box className="flex flex-col hd:flex-col p-[20px] ">
                 {/* sx={{  width: 1000}} */}
 
                 <>
@@ -1953,7 +1957,6 @@ export default function Instrucciones(props) {
         {LoadingApis ? (
           <div className="flex items-center">
             <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-              {/* <p>Chupa Chupa .....</p> */}
               <LinearProgress color="primary" />
             </Stack>
           </div>
@@ -2072,7 +2075,7 @@ export default function Instrucciones(props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {getDataInstruction.data
+                    {dataInstruction.data
                       .slice(
                         page * rowsPerPage,
                         page * rowsPerPage + rowsPerPage
