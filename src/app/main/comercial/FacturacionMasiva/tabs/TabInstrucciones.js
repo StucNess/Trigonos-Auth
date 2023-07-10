@@ -1068,12 +1068,14 @@ function TabInstrucciones(props) {
 
     XLSX.writeFile(wb, "filename.xlsx");
   }
+  const probandoFacturacion = () => {
+    console.log(selected);
+  };
   function downloadExcelFile(filename, nubox = 0) {
     let dataPrueba = [];
     const transformtToShortDate = (param) => {
       let fechaString = param;
       let fecha = new Date(fechaString);
-
       let dia = fecha.getDate();
       let mes = fecha.getMonth() + 1;
       let anio = fecha.getFullYear();
@@ -1460,7 +1462,7 @@ function TabInstrucciones(props) {
                   className=" rounded flex justify-start min-w-[170px] m-[5px]"
                   variant="contained"
                   color="customdos"
-                  onClick={() => downloadExcelFile("mydata", 0)}
+                  onClick={() => probandoFacturacion()}
                 >
                   <SiBitcoinsv size={30} className="mr-[10px]" />
                   Facturar

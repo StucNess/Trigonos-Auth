@@ -1,10 +1,10 @@
-import { 
-  Paper, 
-  Typography, 
-  Button, 
+import {
+  Paper,
+  Typography,
+  Button,
   Box,
-  Grid, 
-  Checkbox, 
+  Grid,
+  Checkbox,
   FormLabel,
   Autocomplete,
   FormControlLabel,
@@ -17,7 +17,9 @@ import {
   TableCell,
   TableHead,
   TablePagination,
-  TableRow, MenuItem } from "@mui/material";
+  TableRow,
+  MenuItem,
+} from "@mui/material";
 
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Stack } from "@mui/system";
@@ -28,14 +30,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { es } from "date-fns/locale";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import TuneIcon from '@mui/icons-material/Tune';
+import EqualizerIcon from "@mui/icons-material/Equalizer";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import TuneIcon from "@mui/icons-material/Tune";
 import * as React from "react";
 import * as XLSX from "xlsx";
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 
-import _ from 'lodash';
+import _ from "lodash";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import DoneAllIcon from "@mui/icons-material/DoneAll";
@@ -45,7 +47,7 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 // import Table from "@mui/material/Table";
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from "@mui/lab/LoadingButton";
 import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 
 // import TableCell, { tableCellClasses } from "@mui/material/TableCell";
@@ -59,14 +61,39 @@ import EditIcon from "@mui/icons-material/Edit";
 
 import { styled } from "@mui/material/styles";
 
-
-
 import FormHelperText from "@mui/material/FormHelperText";
 import Switch from "@mui/material/Switch";
 import { useEffect, useState } from "react";
 import TablaInstrucciones from "../Componentes/TablaInstrucciones/TablaInstrucciones";
-import { useGetConceptoQuery, useGetInstruccionesSpecQuery, useGetNombreAcreedorQuery, useGetRutAcreedorQuery,useGetNombreDeudorQuery ,useGetRutDeudorQuery, useGetConceptomMutation, useGetRutDeudormMutation, useGetNombreDeudormMutation, useGetNombreAcreedormMutation, useGetRutAcreedormMutation, useGetCartaQuery, useGetCodRefQuery, useGetNumberConceptMutation, useGetNumberCodRefMutation, useGetNumberCartaMutation, useGetNumberRutAcreedorMutation, useGetNumberRutDeudorMutation, useGetNumberNombreAcreedorMutation, useGetNumberNombreDeudorMutation, useGetCartamMutation, useGetCodRefmMutation, useGetInstruccionesSpecmMutation} from "app/store/instrucciones/instruccionesApi";
-import { useGetBusinessNameQuery, useGetRutQuery } from "app/store/participantesApi/participantesApi";
+import {
+  useGetConceptoQuery,
+  useGetInstruccionesSpecQuery,
+  useGetNombreAcreedorQuery,
+  useGetRutAcreedorQuery,
+  useGetNombreDeudorQuery,
+  useGetRutDeudorQuery,
+  useGetConceptomMutation,
+  useGetRutDeudormMutation,
+  useGetNombreDeudormMutation,
+  useGetNombreAcreedormMutation,
+  useGetRutAcreedormMutation,
+  useGetCartaQuery,
+  useGetCodRefQuery,
+  useGetNumberConceptMutation,
+  useGetNumberCodRefMutation,
+  useGetNumberCartaMutation,
+  useGetNumberRutAcreedorMutation,
+  useGetNumberRutDeudorMutation,
+  useGetNumberNombreAcreedorMutation,
+  useGetNumberNombreDeudorMutation,
+  useGetCartamMutation,
+  useGetCodRefmMutation,
+  useGetInstruccionesSpecmMutation,
+} from "app/store/instrucciones/instruccionesApi";
+import {
+  useGetBusinessNameQuery,
+  useGetRutQuery,
+} from "app/store/participantesApi/participantesApi";
 import ModalEdicionInstruccion from "../Componentes/Modals/ModalEdicionInstruccion";
 import { useRefetchQueriesMetricsMutation } from "app/store/metricsApi/metricsApi";
 const Item = styled(Paper)(({ theme }) => ({
@@ -76,7 +103,6 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
-
 
 const columns = [
   { id: "ceN_billing_status_type_name", label: "E.Emision" },
@@ -101,8 +127,6 @@ const columns = [
   { id: "editar", label: "editar" },
 ];
 
-
-
 let condicion = 1;
 let estados = [];
 let tableData = [];
@@ -122,7 +146,6 @@ let columnsOrder = [
   "Folio",
 ];
 
-
 let orderByList = {
   orderByNeto: "",
   orderByBruto: "",
@@ -132,23 +155,22 @@ let orderByList = {
   orderByFolio: "",
 };
 
-
 export default function Instrucciones(props) {
-  const { id } = props
+  const { id } = props;
   const [table, setTable] = useState(false);
-  const [dataEdit, setDataEdit] = useState({ 
-    dataRow:{},
+  const [dataEdit, setDataEdit] = useState({
+    dataRow: {},
     dataBoleean: false,
-    fechaEmision:undefined,
-    fechaRecepcion:undefined
-    })
+    fechaEmision: undefined,
+    fechaRecepcion: undefined,
+  });
   const [pageIndex, setPageIndex] = useState(1);
   const [pagination, setPagination] = useState(0);
   const [pageCount, setPageCount] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   // const [tableData, setTableData] = useState([]);
   const [cargando, setCargando] = useState(true);
- //estados
+  //estados
   const [state, setState] = useState({
     estadoEmision: false,
     estadoPago: false,
@@ -167,8 +189,8 @@ export default function Instrucciones(props) {
       deudor: false,
     });
   };
-//filtros
-let condicionFilters = 0;
+  //filtros
+  let condicionFilters = 0;
   let conditionPeriods = 0;
   const [disabledDateEnd, setDisabledDateEnd] = useState(false);
   const [bussN, setBusinessName] = useState();
@@ -177,7 +199,7 @@ let condicionFilters = 0;
   const [cart, setCart] = useState([]);
   const [codRef, setCodRef] = useState([]);
   const [limpiar, setLimpiar] = useState(false);
-  
+
   const [reloadEstadistica, setReloadEstadistica] = useState(false);
   const [selected, setSelected] = useState({
     sBusinessName: "",
@@ -196,22 +218,39 @@ let condicionFilters = 0;
     id: id,
     PageIndex: 1,
     PageSize: 100,
-    spec:{
-      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-      Acreedor:state.acreedor?id:"",
-      Deudor:state.deudor?id:"",
-      EstadoEmision:state.estadoEmision?"Facturado":"",
-      EstadoPago:state.estadoPago?"Pagado":"",
-      RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-      RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-      Glosa:selected.sConcept!=""?selected.sConcept:"",
-      MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-      MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-      Folio:selected.sFolio!=""?selected.sFolio:"",
-      NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-      NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):("")
-    }})
+    spec: {
+      EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+      EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+      Acreedor: state.acreedor ? id : "",
+      Deudor: state.deudor ? id : "",
+      EstadoEmision: state.estadoEmision ? "Facturado" : "",
+      EstadoPago: state.estadoPago ? "Pagado" : "",
+      RutDeudor: state.acreedor
+        ? selected.sRut != ""
+          ? selected.sRut.slice(0, 8)
+          : ""
+        : "",
+      RutAcreedor: state.deudor
+        ? selected.sRut != ""
+          ? selected.sRut.slice(0, 8)
+          : ""
+        : "",
+      Glosa: selected.sConcept != "" ? selected.sConcept : "",
+      MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+      MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+      Folio: selected.sFolio != "" ? selected.sFolio : "",
+      NombreDeudor: state.acreedor
+        ? selected.sBusinessName != ""
+          ? selected.sBusinessName
+          : ""
+        : "",
+      NombreAcreedor: state.deudor
+        ? selected.sBusinessName != ""
+          ? selected.sBusinessName
+          : ""
+        : "",
+    },
+  });
   const clearFilters = () => {
     setSelected({
       sBusinessName: "",
@@ -247,22 +286,19 @@ let condicionFilters = 0;
 
   const [modal, setModal] = useState(false);
   const [editar, setEditar] = useState(false);
-  
-
 
   const [skipFetchs, setSkipFetchs] = useState({
-    skipNombreAcre:false,
-    skipRutAcre:false,
-    skipNombreDeudor:false,
-    skipRutDeudor:false,
-    skipConcept:false,
-    skipInstructions:false,
-    skipCodRef:false,
-    skipCarta:false,
+    skipNombreAcre: false,
+    skipRutAcre: false,
+    skipNombreDeudor: false,
+    skipRutDeudor: false,
+    skipConcept: false,
+    skipInstructions: false,
+    skipCodRef: false,
+    skipCarta: false,
+  });
 
-  })
-  
-  // const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} = 
+  // const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} =
   // useGetInstruccionesSpecQuery(
   //   {
   //   id: id,
@@ -315,14 +351,12 @@ let condicionFilters = 0;
     deudor,
   } = state;
 
- 
-
   //CONST QUE RECIBE DATA
   //--CONCEPTO CARTA CODREF
   const [conceptFilter, setConceptFilter] = useState([]);
   const [codRefFilter, setCodRefFilter] = useState([]);
   const [cartaFilter, setCartaFilter] = useState([]);
-  const [dataInstruction,setDataInstruction ] = useState([]);
+  const [dataInstruction, setDataInstruction] = useState([]);
   //--RutAcre RutDeudor NombreDeudor NombreAcreedor
   const [rutAcreFilter, setRutAcreFilter] = useState([]);
   const [rutDeuFilter, setRutDeuFilter] = useState([]);
@@ -330,29 +364,44 @@ let condicionFilters = 0;
   const [nomDeuFilter, setNomDeuFilter] = useState([]);
   //MUTATIONS COUNTERS
 
-  const [getNumConcept, {isLoading : isLoadingNConcept}] = useGetNumberConceptMutation();
-  const [getNumCodRef, {isLoading : isLoadingNCodRef}] = useGetNumberCodRefMutation();
-  const [getNumCarta, {isLoading : isLoadingCart}] = useGetNumberCartaMutation();
-  const [getNumRutA, {isLoading : isLoadingRutAcre}] = useGetNumberRutAcreedorMutation();
-  const [getNumRutD, {isLoading : isLoadingRutDeu}] = useGetNumberRutDeudorMutation();
-  const [getNumNomAcre, {isLoading : isLoadingNnameAcre}] = useGetNumberNombreAcreedorMutation();
-  const [getNumNomDeu, {isLoading : isLoadingNnameDeu}] = useGetNumberNombreDeudorMutation();
-    
+  const [getNumConcept, { isLoading: isLoadingNConcept }] =
+    useGetNumberConceptMutation();
+  const [getNumCodRef, { isLoading: isLoadingNCodRef }] =
+    useGetNumberCodRefMutation();
+  const [getNumCarta, { isLoading: isLoadingCart }] =
+    useGetNumberCartaMutation();
+  const [getNumRutA, { isLoading: isLoadingRutAcre }] =
+    useGetNumberRutAcreedorMutation();
+  const [getNumRutD, { isLoading: isLoadingRutDeu }] =
+    useGetNumberRutDeudorMutation();
+  const [getNumNomAcre, { isLoading: isLoadingNnameAcre }] =
+    useGetNumberNombreAcreedorMutation();
+  const [getNumNomDeu, { isLoading: isLoadingNnameDeu }] =
+    useGetNumberNombreDeudorMutation();
+
   //MUTATIONS DATA
 
-  const [getConceptMutation, {isLoading : isLoadingConceptm}] = useGetConceptomMutation();
-  const [getCodRefMutation, {isLoading : isLoadingCodRefm}] = useGetCodRefmMutation();
-  const [getCartaMutation, {isLoading : isLoadingCartam}] = useGetCartamMutation();
-  const [getRutDeudorMutation, {isLoading : isLoadingRutDeudorm}] = useGetRutDeudormMutation();
-  const [getRutAcreMutation, {isLoading : isLoadingRutAcreedorm}] = useGetRutAcreedormMutation();
-  const [getNombreDeudorMutation, {isLoading : isLoadingNombreDm}] = useGetNombreDeudormMutation();
-  const [getNombreAcreedor, {isLoading : isLoadingNombreAm}] = useGetNombreAcreedormMutation();
-  const [getInstrucciones, {isLoading : isLoadingInst}] = useGetInstruccionesSpecmMutation();
+  const [getConceptMutation, { isLoading: isLoadingConceptm }] =
+    useGetConceptomMutation();
+  const [getCodRefMutation, { isLoading: isLoadingCodRefm }] =
+    useGetCodRefmMutation();
+  const [getCartaMutation, { isLoading: isLoadingCartam }] =
+    useGetCartamMutation();
+  const [getRutDeudorMutation, { isLoading: isLoadingRutDeudorm }] =
+    useGetRutDeudormMutation();
+  const [getRutAcreMutation, { isLoading: isLoadingRutAcreedorm }] =
+    useGetRutAcreedormMutation();
+  const [getNombreDeudorMutation, { isLoading: isLoadingNombreDm }] =
+    useGetNombreDeudormMutation();
+  const [getNombreAcreedor, { isLoading: isLoadingNombreAm }] =
+    useGetNombreAcreedormMutation();
+  const [getInstrucciones, { isLoading: isLoadingInst }] =
+    useGetInstruccionesSpecmMutation();
 
   //--Mutation recargar peticiones
-  const [reloadEstadisticas, {isLoading : isLoadingQueris}] = useRefetchQueriesMetricsMutation();
+  const [reloadEstadisticas, { isLoading: isLoadingQueris }] =
+    useRefetchQueriesMetricsMutation();
 
-  
   //cargas individuales pasaran por el verificar carga hasta que no se me ocurra otra manera
   const [cargaConcept, setCargaConcept] = useState(true);
   const [cargaCodRef, setCargaCodRef] = useState(true);
@@ -364,69 +413,86 @@ let condicionFilters = 0;
   const [cargaNombreDeu, setCargaNombreDeu] = useState(false);
   const [cargaInstructions, setCargaInstructions] = useState(false);
 
-
-
   const [LoadingApis, setLoadingApis] = useState(true);
 
-  function GetInstructions(){
+  function GetInstructions() {
     setLoadingApis(true);
     setCargaInstructions(true);
     setDataInstruction();
-    getInstrucciones(
-      {
-        
-    id: id,
-    PageIndex: pageIndex,
-    PageSize:rowsPerPage,
-     spec:{
-      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-      Acreedor:state.acreedor?id:"",
-      Deudor:state.deudor?id:"",
-      EstadoEmision:state.estadoEmision?"Facturado":"",
-      EstadoPago:state.estadoPago?"Pagado":"",
-      RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-      RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-      Glosa:selected.sConcept!=""?selected.sConcept:"",
-      MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-      MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-      Folio:selected.sFolio!=""?selected.sFolio:"",
-      NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-      NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-      Carta:sCarta!=""?sCarta:"",
-      CodigoRef:sCodRef!=""?sCodRef:"",
-      FechaEmision:"",
-      FechaRecepcion:"",
-      FechaPago:"",
-      FechaAceptacion:"",
-      Concepto:"",
-      InicioPeriodo:sInicioPeriodo!=""?`20${sInicioPeriodo
-        .getYear()
-        .toString()
-        .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:"",
-      TerminoPeriodo:sTerminoPeriodo!=""?`20${sTerminoPeriodo
-        .getYear()
-        .toString()
-        .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:"",
-      OrderByNeto:"",
-      OrderByBruto:"",
-      OrderByFechaEmision:"",
-      OrderByFechaPago:"",
-      OrderByFechaCarta:"",
-      OrderByFolio:"",
-    }}
-    ).then((response)=>{
-      setDataInstruction(response.data);
-      setPagination(response.data.count)
-      setPageCount(response.data.pageCount + 1);
-      setCargaInstructions(false);
-    }).catch((error)=>{
-      setCargaInstructions(false);
+    getInstrucciones({
+      id: id,
+      PageIndex: pageIndex,
+      PageSize: rowsPerPage,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: sCarta != "" ? sCarta : "",
+        CodigoRef: sCodRef != "" ? sCodRef : "",
+        FechaEmision: "",
+        FechaRecepcion: "",
+        FechaPago: "",
+        FechaAceptacion: "",
+        Concepto: "",
+        InicioPeriodo:
+          sInicioPeriodo != ""
+            ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
+                sInicioPeriodo.getMonth() + 1
+              }/01`
+            : "",
+        TerminoPeriodo:
+          sTerminoPeriodo != ""
+            ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
+                sTerminoPeriodo.getMonth() + 1
+              }/01`
+            : "",
+        OrderByNeto: "",
+        OrderByBruto: "",
+        OrderByFechaEmision: "",
+        OrderByFechaPago: "",
+        OrderByFechaCarta: "",
+        OrderByFolio: "",
+      },
     })
+      .then((response) => {
+        setDataInstruction(response.data);
+        setPagination(response.data.count);
+        setPageCount(response.data.pageCount + 1);
+        setCargaInstructions(false);
+      })
+      .catch((error) => {
+        setCargaInstructions(false);
+      });
   }
   //concept, carta, codref
-  function FiltersOne(){
- 
+  function FiltersOne() {
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
@@ -439,8 +505,6 @@ let condicionFilters = 0;
     setCargaCodRef(true);
     setCargaCarta(true);
 
-   
- 
     getConceptMutation({
       id: id,
       PageIndex: 1,
@@ -530,23 +594,19 @@ let condicionFilters = 0;
    
   }
   useEffect(() => {
-    if(conceptFilter){
+    if (conceptFilter) {
       setCargaConcept(false);
     }
-    if(codRefFilter){
+    if (codRefFilter) {
       setCargaCodRef(false);
     }
-    if(cartaFilter){
+    if (cartaFilter) {
       setCargaCarta(false);
     }
+  }, [conceptFilter, codRefFilter, cartaFilter]);
 
-  }, [conceptFilter, codRefFilter,cartaFilter])
-  
-
-  
-   //rut, nombre: acreedor y deudor
-  function FiltersAcree(){
-   
+  //rut, nombre: acreedor y deudor
+  function FiltersAcree() {
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
@@ -558,7 +618,7 @@ let condicionFilters = 0;
     setCargaRutAcre(true);
     setRutAcreFilter(undefined);
     setNomAcreFilter(undefined);
-    
+
     getRutAcreMutation({
       id: id,
       PageIndex: 1,
@@ -615,8 +675,7 @@ let condicionFilters = 0;
     });
     
   }
-  function FiltersDeu(){
-  
+  function FiltersDeu() {
     setPageIndex(1);
     setPagination(0);
     setPageCount(0);
@@ -624,7 +683,7 @@ let condicionFilters = 0;
     setBusinessName();
     setRutName();
     setLoadingApis(true);
- 
+
     setCargaNombreDeu(true);
 
     setCargaRutDeudor(true);
@@ -632,8 +691,7 @@ let condicionFilters = 0;
     setRutDeuFilter(undefined);
 
     setNomDeuFilter(undefined);
- 
-   
+
     getRutDeudorMutation({
       id: id,
       PageIndex: 1,
@@ -702,36 +760,58 @@ let condicionFilters = 0;
 
   }
   useEffect(() => {
- 
     function verificacarga() {
-      if ([cargaInstructions , cargaConcept, cargaCodRef ,cargaCarta , cargaNombreAcre, cargaNombreDeu ,cargaRutAcre ,cargaRutDeudor].every((valor) => valor === false)) {
+      if (
+        [
+          cargaInstructions,
+          cargaConcept,
+          cargaCodRef,
+          cargaCarta,
+          cargaNombreAcre,
+          cargaNombreDeu,
+          cargaRutAcre,
+          cargaRutDeudor,
+        ].every((valor) => valor === false)
+      ) {
         return false;
       } else {
         return true;
-
-        
       }
     }
-  
 
-  if(verificacarga()===false){
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAA")
-    if(!cargaInstructions && ! cargaConcept && ! cargaCodRef && ! cargaCarta  && ! cargaNombreAcre && !cargaNombreDeu && !cargaRutAcre && !cargaRutDeudor){
-      setLoadingApis(false);
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAA")
-      
+    if (verificacarga() === false) {
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
+      if (
+        !cargaInstructions &&
+        !cargaConcept &&
+        !cargaCodRef &&
+        !cargaCarta &&
+        !cargaNombreAcre &&
+        !cargaNombreDeu &&
+        !cargaRutAcre &&
+        !cargaRutDeudor
+      ) {
+        setLoadingApis(false);
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
+      }
     }
-  }
 
-  console.log(verificacarga())
+    console.log(verificacarga());
+  }, [
+    cargaInstructions,
+    cargaConcept,
+    cargaCodRef,
+    cargaCarta,
+    cargaNombreAcre,
+    cargaNombreDeu,
+    cargaRutAcre,
+    cargaRutDeudor,
+  ]);
 
-}, [cargaInstructions , cargaConcept, cargaCodRef ,cargaCarta , cargaNombreAcre, cargaNombreDeu ,cargaRutAcre ,cargaRutDeudor])
-
-  
   const isOptionEqualToValue = (option, value) => {
     return option.value === value;
   };
- 
+
   useEffect(() => {
     setPageIndex(1);
     setPagination(0);
@@ -741,8 +821,7 @@ let condicionFilters = 0;
     clearStates();
     FiltersOne();
     GetInstructions();
-
-  }, [id])
+  }, [id]);
 
   // useEffect(() => {
   //   if(getDataInstruction){
@@ -751,12 +830,10 @@ let condicionFilters = 0;
   //     setPageCount(getDataInstruction.pageCount + 1);
   //     setLoadingApis(verificacarga());
   //   }
-   
+
   // }, [getDataInstruction,fetchInstructions])
   useEffect(() => {
-
-    
-    if(!table){
+    if (!table) {
       setPageIndex(1);
       setPagination(0);
       setPageCount(0);
@@ -767,68 +844,50 @@ let condicionFilters = 0;
       reloadEstadisticas();
       setReloadEstadistica(!reloadEstadistica);
     }
-   
-  }, [table])
+  }, [table]);
 
   useEffect(() => {
-    if(state.acreedor){
-      setLoadingApis(true)
-     
+    if (state.acreedor) {
+      setLoadingApis(true);
+
       FiltersDeu();
       FiltersOne();
       GetInstructions();
-      
-    }
-    else if(state.deudor){
-      setLoadingApis(true)
+    } else if (state.deudor) {
+      setLoadingApis(true);
       FiltersAcree();
       FiltersOne();
       GetInstructions();
-     
-    }else{
-      setLoadingApis(true)
- 
+    } else {
+      setLoadingApis(true);
+
       FiltersOne();
       GetInstructions();
     }
-  
   }, [state]);
 
-
-  
-
- 
   const handleChange = (event) => {
-    
-    if (event.target.name === "acreedor" &&
-    event.target.checked === true) {
-     
+    if (event.target.name === "acreedor" && event.target.checked === true) {
       setState({
         ...state,
         [event.target.name]: event.target.checked,
         deudor: false,
       });
-      
     } else if (
-      
       event.target.name === "deudor" &&
       event.target.checked === true
     ) {
-      
       setState({
         ...state,
         [event.target.name]: event.target.checked,
         acreedor: false,
       });
-    
     } else {
-    
       setState({
         ...state,
         [event.target.name]: event.target.checked,
       });
-    
-     
+
       // setLoadingApis(true)
       // FiltersOne();
       // GetInstructions();
@@ -837,20 +896,17 @@ let condicionFilters = 0;
  
 
   const clearAllFilters = () => {
-    
-    if(condicionFilters === 0){
+    if (condicionFilters === 0) {
       clearFilters();
-      
+
       GetInstructions();
       FiltersOne();
-    }else{
-     
+    } else {
       GetInstructions();
       clearFilters();
       clearStates();
       FiltersOne();
     }
-
   };
   const conditionFilters = (e) => {
     if (e.target.name === "estados" && e.target.checked === true) {
@@ -867,20 +923,18 @@ let condicionFilters = 0;
   //tabla
   const handleChangePage = () => {
     setLoadingApis(true);
-  
-    setPageIndex(pageIndex===pageCount?pageIndex: pageIndex + 1)
-    if(pageIndex===pageCount){
+
+    setPageIndex(pageIndex === pageCount ? pageIndex : pageIndex + 1);
+    if (pageIndex === pageCount) {
       setLoadingApis(false);
     }
     // setPage(pageIndex + 1);
-  
-   
+
     GetInstructions();
-    
   };
-  const handleOpen= (row) => {
+  const handleOpen = (row) => {
     const coincide = props.participants.some((item) => {
-      return item.business_Name === row.nombreAcreedor ;
+      return item.business_Name === row.nombreAcreedor;
     });
     let billingDate = new Date(row.fecha_emision);
     let receptionDate = new Date(row.fecha_recepcion);
@@ -892,35 +946,31 @@ let condicionFilters = 0;
     }/${receptionDate.getDate()}`;
     emisione === "2017/1/1" ? (emisione = false) : (emisione = true);
     recepcione === "2017/1/1" ? (recepcione = false) : (recepcione = true);
-    setDataEdit({dataBoleean:coincide,dataRow:row,fechaEmision:emisione,fechaRecepcion: recepcione})
+    setDataEdit({
+      dataBoleean: coincide,
+      dataRow: row,
+      fechaEmision: emisione,
+      fechaRecepcion: recepcione,
+    });
     setTable(true);
   };
 
-  
   const handleChangePagedos = () => {
     setLoadingApis(true);
-   
-    setPageIndex(pageIndex >1? pageIndex - 1:1)
-    if(pageIndex===1){
+
+    setPageIndex(pageIndex > 1 ? pageIndex - 1 : 1);
+    if (pageIndex === 1) {
       setLoadingApis(false);
     }
 
-    
     GetInstructions();
-    
   };
   const handleChangeRowsCount = (option) => {
-   
-    if(rowsPerPage!=option){
+    if (rowsPerPage != option) {
       setLoadingApis(true);
-      setRowsPerPage(option)
+      setRowsPerPage(option);
       setPageIndex(1);
-
-    
     }
-  
-
-    
   };
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -1063,34 +1113,33 @@ let condicionFilters = 0;
   return (
     <div className="grid grid-cols-12 gap-12 p-[20px]">
       <div className="hd:col-span-6  hdmas:col-span-12   bg-white rounded-md">
-
         <div className="grid grid-cols-6 ">
-        <div className="col-span-2  border-solid border-r-2">
-        <div className="flex flex-row  m-[20px]">
-          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
-            Estados
-          </Typography>
-          <TuneIcon className="ml-[10px] text-pantoneazul" />
-        </div>
-        <h1 className="border border-b-pantoneazul w-full"></h1>
-        
-        <div className="p-[20px]">
-        <Grid
-            container
-            direction="column"
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-            justifyContent="space-evenly"
-            alignItems="stretch"
-            // alignItems="flex-start"
-          >
-                <Grid item className="w-full" >
-                <Item className="shadow rounded-xl"> 
-                    <FormControlLabel className="flex justify-normal"
+          <div className="col-span-2  border-solid border-r-2">
+            <div className="flex flex-row  m-[20px]">
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Estados
+              </Typography>
+              <TuneIcon className="ml-[10px] text-pantoneazul" />
+            </div>
+            <h1 className="border border-b-pantoneazul w-full"></h1>
+
+            <div className="p-[20px]">
+              <Grid
+                container
+                direction="column"
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                justifyContent="space-evenly"
+                alignItems="stretch"
+                // alignItems="flex-start"
+              >
+                <Grid item className="w-full">
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
-
                           checked={state.estadoEmision}
                           onChange={handleChange}
                           name="estadoEmision"
@@ -1110,12 +1159,12 @@ let condicionFilters = 0;
                   </Item>
                 </Grid>
                 <Grid item className="w-full">
-                <Item className="shadow rounded-xl"> 
-                    <FormControlLabel className="flex justify-normal"
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
                       control={
                         <Switch
-                         disabled={LoadingApis}
-
+                          disabled={LoadingApis}
                           checked={state.estadoPago}
                           onChange={handleChange}
                           name="estadoPago"
@@ -1129,12 +1178,12 @@ let condicionFilters = 0;
                   </Item>
                 </Grid>
                 <Grid item className="w-full">
-                <Item className="shadow rounded-xl"> 
-                    <FormControlLabel  className="flex justify-normal"
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
-
                           checked={state.estadoRecepcion}
                           onChange={handleChange}
                           name="estadoRecepcion"
@@ -1154,12 +1203,12 @@ let condicionFilters = 0;
                   </Item>
                 </Grid>
                 <Grid item className="w-full">
-                <Item className="shadow rounded-xl"> 
-                    <FormControlLabel  className="flex justify-normal"
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
-
                           checked={state.estadoAceptacion}
                           onChange={handleChange}
                           name="estadoAceptacion"
@@ -1176,36 +1225,35 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-                
-        </Grid>
-        </div>
-        </div>
-        <div className="col-span-2  border-solid border-r-2">
-        <div className="flex flex-row  mx-[5px] my-[20px]" >
-          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
-            Tipos de instrucción
-          </Typography>
-          <SupervisedUserCircleIcon className="ml-[10px] text-pantoneazul" />
-        </div>
-        <h1 className="border border-b-pantoneazul w-full"></h1>
-        
-        <div className="p-[20px]">
-        <Grid
-          container
-          direction="column"
-          spacing={{ xs: 2, md: 3 }}
-          columns={{ xs: 4, sm: 8, md: 12 }}
-          justifyContent="space-evenly"
-          alignItems="stretch"
-            // alignItems="flex-start"
-          >
-             <Grid item className="w-full ">
-                  <Item className="shadow rounded-xl"> 
-                    <FormControlLabel  className="flex justify-normal "
+              </Grid>
+            </div>
+          </div>
+          <div className="col-span-2  border-solid border-r-2">
+            <div className="flex flex-row  mx-[5px] my-[20px]">
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Tipos de instrucción
+              </Typography>
+              <SupervisedUserCircleIcon className="ml-[10px] text-pantoneazul" />
+            </div>
+            <h1 className="border border-b-pantoneazul w-full"></h1>
+
+            <div className="p-[20px]">
+              <Grid
+                container
+                direction="column"
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                justifyContent="space-evenly"
+                alignItems="stretch"
+                // alignItems="flex-start"
+              >
+                <Grid item className="w-full ">
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal "
                       control={
                         <Switch
                           disabled={LoadingApis}
-
                           checked={state.acreedor}
                           onChange={handleChange}
                           name="acreedor"
@@ -1219,12 +1267,12 @@ let condicionFilters = 0;
                   </Item>
                 </Grid>
                 <Grid item className="w-full">
-                <Item className="shadow rounded-xl"> 
-                    <FormControlLabel className="flex justify-normal"
+                  <Item className="shadow rounded-xl">
+                    <FormControlLabel
+                      className="flex justify-normal"
                       control={
                         <Switch
                           disabled={LoadingApis}
-
                           checked={state.deudor}
                           onChange={handleChange}
                           name="deudor"
@@ -1235,87 +1283,76 @@ let condicionFilters = 0;
                     />
                   </Item>
                 </Grid>
-                
-        </Grid>
-        </div>
-        </div>
-        <div className="col-span-2  ">
-        <div className="flex flex-row  m-[20px]">
-          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
-            Excel Disponibles
-          </Typography>
-          <AssignmentIcon className="ml-[10px] text-pantoneazul" />
-        </div>
-        <h1 className="border border-b-pantoneazul w-full"></h1>
-        
-        <div className="p-[20px]">
-        <Grid
-            container
-            direction="column"
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-            justifyContent="space-evenly"
-            alignItems="stretch"
-            // alignItems="flex-start"
-          >
-              <Grid item className="w-full">
-              <Tooltip  
-              title="Desactivado" 
-              arrow 
-              placement="top"
+              </Grid>
+            </div>
+          </div>
+          <div className="col-span-2  ">
+            <div className="flex flex-row  m-[20px]">
+              <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+                Excel Disponibles
+              </Typography>
+              <AssignmentIcon className="ml-[10px] text-pantoneazul" />
+            </div>
+            <h1 className="border border-b-pantoneazul w-full"></h1>
+
+            <div className="p-[20px]">
+              <Grid
+                container
+                direction="column"
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+                justifyContent="space-evenly"
+                alignItems="stretch"
+                // alignItems="flex-start"
               >
-                <span>
-                <LoadingButton
-                className="w-full"
-                  loading ={true}
-                  loadingPosition="start"
-                  startIcon={<SiMicrosoftexcel />}
-                  variant="contained"
-                  color="success"
-                  // onClick={()=>{
-                  //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
-                  // }}
-                >
-                  Todos
-                </LoadingButton>
-                </span>
-              </Tooltip>
-                </Grid>
                 <Grid item className="w-full">
-                  <Tooltip  
-                    title="Desactivado"
-                    //Descargar Excel 
-                    arrow 
-                    placement="top"
-                  >
-                        <span>
-                        <LoadingButton
-                          className="w-full"
-                          loading ={true}
-                          loadingPosition="start"
-                          startIcon={<SiMicrosoftexcel />}
-                          variant="contained"
-                          color="success"
-                          // onClick={()=>{
-                          //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
-                          // }}
-                        >
-                      Todos
-                    </LoadingButton>
+                  <Tooltip title="Desactivado" arrow placement="top">
+                    <span>
+                      <LoadingButton
+                        className="w-full"
+                        loading={true}
+                        loadingPosition="start"
+                        startIcon={<SiMicrosoftexcel />}
+                        variant="contained"
+                        color="success"
+                        // onClick={()=>{
+                        //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                        // }}
+                      >
+                        Todos
+                      </LoadingButton>
                     </span>
                   </Tooltip>
                 </Grid>
-                
-        </Grid>
-       
-           
+                <Grid item className="w-full">
+                  <Tooltip
+                    title="Desactivado"
+                    //Descargar Excel
+                    arrow
+                    placement="top"
+                  >
+                    <span>
+                      <LoadingButton
+                        className="w-full"
+                        loading={true}
+                        loadingPosition="start"
+                        startIcon={<SiMicrosoftexcel />}
+                        variant="contained"
+                        color="success"
+                        // onClick={()=>{
+                        //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                        // }}
+                      >
+                        Todos
+                      </LoadingButton>
+                    </span>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
         </div>
-        </div>
-        </div>
-
-        
       </div>
-
 
       <div className="hd:col-span-6  hdmas:col-span-12  bg-white rounded-md">
         <div className="flex flex-row  m-[20px]">
@@ -1326,7 +1363,7 @@ let condicionFilters = 0;
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
         <div className="p-[20px]">
-         <Estadisticas  participantId ={props.id} reLoad={reloadEstadistica}/>
+          <Estadisticas participantId={props.id} reLoad={reloadEstadistica} />
         </div>
       </div>
       <div className="hdmas:col-span-12  hd:col-span-2  bg-white rounded-md">
@@ -1337,384 +1374,416 @@ let condicionFilters = 0;
           <FilterAltIcon className="ml-[10px] text-pantoneazul" />
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1>
-        {LoadingApis?  
-        <div className="flex items-center">
-          <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-            
-            <LinearProgress color="primary"/>
-          </Stack>
-        </div>:
-        <div className="flex flex-col flex-auto mt-6">
-        <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
-          <Box className="flex flex-col hd:flex-col p-[20px] ">
-            {/* sx={{  width: 1000}} */}
+        {LoadingApis ? (
+          <div className="flex items-center">
+            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+              <LinearProgress color="primary" />
+            </Stack>
+          </div>
+        ) : (
+          <div className="flex flex-col flex-auto mt-6">
+            <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+              <Box className="flex flex-col hd:flex-col p-[20px] ">
+                {/* sx={{  width: 1000}} */}
 
-           
-              <>
-                <Box className="flex flex-wrap justify-evenly">
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    disabled={
-                      (!state.acreedor &&
-                        !state.deudor)
-                        ? true
-                        : false}
-                    options={!bussN?["cargando"]:bussN}
-                    value={selected.sBusinessName || null}
-                    isOptionEqualToValue={(option, value) =>{if(value === option || value === null|| value ==="") { return true; }}}
-                    // isOptionEqualToValue={(option, value) =>
-                    //   bussN.label === value.label
-                    // }
-                    name="cambio"
-                    sx={{ width: 300, mb: 2 }}
-                    onChange={(event, newValue) => {
-                      if (newValue === null) {
-                        setSelected({
-                          ...selected,
-                          sBusinessName: "",
-                          sRut: "",
-                        });
-                      } 
-                      else {
-                        setSelected({ ...selected, sBusinessName: newValue });
-                        // apiGet(1, newValue.label);
-                      }
-                    }}
-                    
-                    renderInput={(params) => (
-                      <TextField {...params} label="Coordinado" />
-                    )}
-                  />
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    disabled={
-                      (!state.acreedor &&
-                        !state.deudor)
-                        ? true
-                        : false}
-                    value={selected.sRut|| null}
-                    options={ !rutN? ["cargando"]:rutN}
-                    sx={{ width: 300, mb: 2 }}
-                    onChange={(event, newValue) => {
-                      if (newValue === null) {
-                        setSelected({
-                          ...selected,
-                          sRut: "",
-                          sBusinessName: "",
-                        });
-                      } else {
-                        setSelected({ ...selected, sRut: newValue });
-                        // apiGet(1, newValue.label);
-                      }
-                    }}
-                    isOptionEqualToValue={(option, value) =>{if(value === option|| value === null|| value ==="") { return true; }}}
-                    // isOptionEqualToValue={(option, value) =>
-                    //   rutN.label === value.label
-                    // }
-                    renderInput={(params) => (
-                      <TextField {...params} label="Rut" />
-                    )}
-                  />
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    options={conceptFilter}
-                    value={selected.sConcept || null}
-                    sx={{ width: 300, mb: 2 }}
-                    // onChange={(event, newValue, reason) => {
-                    //   if (newValue !=null) {
-                    //     setSelected({ ...selected, sConcept: newValue.label });
-                    //   }
-                    // }}
-                    onChange={(e, selectedObject) => {
-                      if (selectedObject !== null){
-                        setSelected({ ...selected, sConcept: selectedObject })
-                      }else{
-                        setSelected({ ...selected, sConcept: "" })
-                      }
-                      
-                  }}
-                    isOptionEqualToValue={(option, value) =>{if(value === option || value === null|| value ==="") { return true; }}}
-                    // isOptionEqualToValue={(option, value) => conceptN=== value.id}
-                    renderInput={(params) => (
-                      <TextField {...params} key={params.id} label="Concepto" />
-                    )}
-                  />
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    value={selected.sCarta||null}
-                    // disabled={props.cargando || !disabled ? true : false}
-                    options={cartaFilter}
-                    sx={{ width: 300, mb: 2 }}
-                    onChange={(event, newValue, reason) => {
-                      if (newValue !=null) {
-                        setSelected({ ...selected, sCarta: newValue });
-                      } else{
-                        setSelected({ ...selected, sCarta: ""});
+                <>
+                  <Box className="flex flex-wrap justify-evenly">
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      disabled={!state.acreedor && !state.deudor ? true : false}
+                      options={!bussN ? ["cargando"] : bussN}
+                      value={selected.sBusinessName || null}
+                      isOptionEqualToValue={(option, value) => {
+                        if (
+                          value === option ||
+                          value === null ||
+                          value === ""
+                        ) {
+                          return true;
+                        }
+                      }}
+                      // isOptionEqualToValue={(option, value) =>
+                      //   bussN.label === value.label
+                      // }
+                      name="cambio"
+                      sx={{ width: 300, mb: 2 }}
+                      onChange={(event, newValue) => {
+                        if (newValue === null) {
+                          setSelected({
+                            ...selected,
+                            sBusinessName: "",
+                            sRut: "",
+                          });
+                        } else {
+                          setSelected({ ...selected, sBusinessName: newValue });
+                          // apiGet(1, newValue.label);
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} label="Coordinado" />
+                      )}
+                    />
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      disabled={!state.acreedor && !state.deudor ? true : false}
+                      value={selected.sRut || null}
+                      options={!rutN ? ["cargando"] : rutN}
+                      sx={{ width: 300, mb: 2 }}
+                      onChange={(event, newValue) => {
+                        if (newValue === null) {
+                          setSelected({
+                            ...selected,
+                            sRut: "",
+                            sBusinessName: "",
+                          });
+                        } else {
+                          setSelected({ ...selected, sRut: newValue });
+                          // apiGet(1, newValue.label);
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => {
+                        if (
+                          value === option ||
+                          value === null ||
+                          value === ""
+                        ) {
+                          return true;
+                        }
+                      }}
+                      // isOptionEqualToValue={(option, value) =>
+                      //   rutN.label === value.label
+                      // }
+                      renderInput={(params) => (
+                        <TextField {...params} label="Rut" />
+                      )}
+                    />
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      options={conceptFilter}
+                      value={selected.sConcept || null}
+                      sx={{ width: 300, mb: 2 }}
+                      // onChange={(event, newValue, reason) => {
+                      //   if (newValue !=null) {
+                      //     setSelected({ ...selected, sConcept: newValue.label });
+                      //   }
+                      // }}
+                      onChange={(e, selectedObject) => {
+                        if (selectedObject !== null) {
+                          setSelected({
+                            ...selected,
+                            sConcept: selectedObject,
+                          });
+                        } else {
+                          setSelected({ ...selected, sConcept: "" });
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => {
+                        if (
+                          value === option ||
+                          value === null ||
+                          value === ""
+                        ) {
+                          return true;
+                        }
+                      }}
+                      // isOptionEqualToValue={(option, value) => conceptN=== value.id}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          key={params.id}
+                          label="Concepto"
+                        />
+                      )}
+                    />
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      value={selected.sCarta || null}
+                      // disabled={props.cargando || !disabled ? true : false}
+                      options={cartaFilter}
+                      sx={{ width: 300, mb: 2 }}
+                      onChange={(event, newValue, reason) => {
+                        if (newValue != null) {
+                          setSelected({ ...selected, sCarta: newValue });
+                        } else {
+                          setSelected({ ...selected, sCarta: "" });
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => {
+                        if (
+                          value === option ||
+                          value === null ||
+                          value === ""
+                        ) {
+                          return true;
+                        }
+                      }}
+                      // isOptionEqualToValue={(option, value) => cart === value}
+                      renderInput={(params) => (
+                        <TextField {...params} key={params.id} label="Carta" />
+                      )}
+                    />
+                    <Autocomplete
+                      disablePortal
+                      id="combo-box-demo"
+                      value={selected.sCodRef || null}
+                      // disabled={!disabled ? true : false}
+                      options={codRefFilter}
+                      sx={{ width: 300, mb: 2 }}
+                      onChange={(event, newValue, reason) => {
+                        if (newValue != null) {
+                          setSelected({ ...selected, sCodRef: newValue });
+                        } else {
+                          setSelected({ ...selected, sCodRef: "" });
+                        }
+                      }}
+                      isOptionEqualToValue={(option, value) => {
+                        if (
+                          value === option ||
+                          value === null ||
+                          value === ""
+                        ) {
+                          return true;
+                        }
+                      }}
+                      // isOptionEqualToValue={(option, value) => codRef === value}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          key={params.id}
+                          label="Codigo Referencia"
+                        />
+                      )}
+                    />
 
-                      } 
-                    }}
-                    isOptionEqualToValue={(option, value) =>{if(value === option || value === null|| value ==="") { return true; }}}
-                    // isOptionEqualToValue={(option, value) => cart === value}
-                    renderInput={(params) => (
-                      <TextField {...params}key={params.id} label="Carta" />
-                    )}
-                  />
-                  <Autocomplete
-                    disablePortal
-                    id="combo-box-demo"
-                    value={selected.sCodRef||null}
-                    // disabled={!disabled ? true : false}
-                    options={codRefFilter}
-                    sx={{ width: 300, mb: 2 }}
-                    onChange={(event, newValue, reason) => {
-                      if (newValue != null) {
-                        setSelected({ ...selected, sCodRef: newValue });
-                      } else{
-                        setSelected({ ...selected, sCodRef: "" });
-
-                      } 
-                    }}
-                    isOptionEqualToValue={(option, value) =>{if(value === option|| value === null|| value ==="") { return true; }}}
-                    // isOptionEqualToValue={(option, value) => codRef === value}
-                    renderInput={(params) => (
-                      <TextField {...params}  key={params.id} label="Codigo Referencia" />
-                    )}
-                  />
-
-                  <TextField
-                    label="Monto Neto"
-                    id="outlined-start-adornment"
-                    // disabled={!disabled ? true : false}
-                    sx={{ width: 300, mb: 2 }}
-                    value={
-                      limpiar || selected.sMontoNeto === ""
-                        ? null
-                        : chile.format(selected.sMontoNeto).replace("$", "")
-                    }
-                    onChange={(event) => {
-                      if (event.target.value === null) {
-                        setSelected({ ...selected, sMontoNeto: null });
-                      } else {
-                        setSelected({
-                          ...selected,
-                          sMontoNeto: event.target.value
-                            .replace(".", "")
-                            .replace(".", "")
-                            .replace(".", ""),
-                        });
+                    <TextField
+                      label="Monto Neto"
+                      id="outlined-start-adornment"
+                      // disabled={!disabled ? true : false}
+                      sx={{ width: 300, mb: 2 }}
+                      value={
+                        limpiar || selected.sMontoNeto === ""
+                          ? null
+                          : chile.format(selected.sMontoNeto).replace("$", "")
                       }
-                    }}
-                    
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    label="Monto Bruto"
-                    id="outlined-start-adornment"
-                    // disabled={!disabled ? true : false}
-                    sx={{ width: 300, mb: 2 }}
-                    value={
-                      limpiar || selected.sMontoBruto === ""
-                        ? ""
-                        : chile.format(selected.sMontoBruto).replace("$", "")
-                    }
-                    onChange={(event) => {
-                      if (event.target.value === null) {
-                        setSelected({ ...selected, sMontoBruto: null });
-                      } else {
-                        setSelected({
-                          ...selected,
-                          sMontoBruto: event.target.value
-                            .replace(".", "")
-                            .replace(".", "")
-                            .replace(".", ""),
-                        });
+                      onChange={(event) => {
+                        if (event.target.value === null) {
+                          setSelected({ ...selected, sMontoNeto: null });
+                        } else {
+                          setSelected({
+                            ...selected,
+                            sMontoNeto: event.target.value
+                              .replace(".", "")
+                              .replace(".", "")
+                              .replace(".", ""),
+                          });
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                      }}
+                    />
+                    <TextField
+                      label="Monto Bruto"
+                      id="outlined-start-adornment"
+                      // disabled={!disabled ? true : false}
+                      sx={{ width: 300, mb: 2 }}
+                      value={
+                        limpiar || selected.sMontoBruto === ""
+                          ? ""
+                          : chile.format(selected.sMontoBruto).replace("$", "")
                       }
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
-                      ),
-                    }}
-                  />
-                  <TextField
-                    label="Folio"
-                    id="outlined-start-adornment"
-                    // disabled={!disabled ? true : false}
-                    value={selected.sFolio}
-                    onChange={(event) => {
-                      if (event.target.value === null) {
-                        setSelected({ ...selected, sFolio: null });
-                      } else {
-                        setSelected({
-                          ...selected,
-                          sFolio: event.target.value,
-                        });
-                      }
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <ReceiptLongIcon />
-                        </InputAdornment>
-                      ),
-                    }}
-                    sx={{ mb: 2, width: 300 }}
-                  />
-                </Box>
+                      onChange={(event) => {
+                        if (event.target.value === null) {
+                          setSelected({ ...selected, sMontoBruto: null });
+                        } else {
+                          setSelected({
+                            ...selected,
+                            sMontoBruto: event.target.value
+                              .replace(".", "")
+                              .replace(".", "")
+                              .replace(".", ""),
+                          });
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">$</InputAdornment>
+                        ),
+                      }}
+                    />
+                    <TextField
+                      label="Folio"
+                      id="outlined-start-adornment"
+                      // disabled={!disabled ? true : false}
+                      value={selected.sFolio}
+                      onChange={(event) => {
+                        if (event.target.value === null) {
+                          setSelected({ ...selected, sFolio: null });
+                        } else {
+                          setSelected({
+                            ...selected,
+                            sFolio: event.target.value,
+                          });
+                        }
+                      }}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <ReceiptLongIcon />
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{ mb: 2, width: 300 }}
+                    />
+                  </Box>
 
-                <LocalizationProvider
-                  dateAdapter={AdapterDateFns}
-                  adapterLocale={es}
-                  
-                >
-                  <Box className="flex justify-center">
-
-                    <Box className="flex flex-col">
-                      {/* <FormControlLabel
+                  <LocalizationProvider
+                    dateAdapter={AdapterDateFns}
+                    adapterLocale={es}
+                  >
+                    <Box className="flex justify-center">
+                      <Box className="flex flex-col">
+                        {/* <FormControlLabel
                         control={<Checkbox />}
                         label="Desde"
                         disabled
                         checked
                         name="desde"
                       /> */}
-                      <DatePicker
-                        views={["year", "month"]}
-                        label="Fecha inicio"
-                        openTo="year"
-                        minDate={new Date("2017-02-01")}
-                        maxDate={new Date("2023-01-01")}
-                        value={sInicioPeriodo === "" ? null : sInicioPeriodo}
-                        onChange={(value) => {
-                          value != null &&
-                            setSelected({
-                              ...selected,
-                              sInicioPeriodo: value,
-                            });
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            helperText={null}
-                            sx={{  mb: 2 }}
-                          />
-                        )}
-                      />
-                  
-                      {/* <FormControlLabel
+                        <DatePicker
+                          views={["year", "month"]}
+                          label="Fecha inicio"
+                          openTo="year"
+                          minDate={new Date("2017-02-01")}
+                          maxDate={new Date("2023-01-01")}
+                          value={sInicioPeriodo === "" ? null : sInicioPeriodo}
+                          onChange={(value) => {
+                            value != null &&
+                              setSelected({
+                                ...selected,
+                                sInicioPeriodo: value,
+                              });
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              helperText={null}
+                              sx={{ mb: 2 }}
+                            />
+                          )}
+                        />
+
+                        {/* <FormControlLabel
                         control={<Checkbox />}
                         label="Hasta"
                         onChange={(e) => conditionalPeriods(e)}
                         name="hasta"
                       /> */}
-                      <DatePicker
-                        views={["year", "month"]}
-                        label="Fecha termino"
-                        openTo="year"
-                        // disabled={disabledDateEnd ? true : false}
-                        minDate={new Date("2017-02-01")}
-                        maxDate={new Date("2023-01-01")}
-                        value={sTerminoPeriodo === "" ? null : sTerminoPeriodo}
-                        onChange={(value) => {
-                          value != null &&
-                            setSelected({
-                              ...selected,
-                              sTerminoPeriodo: value,
-                            });
-                        }}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            helperText={null}
-                            
-                            sx={{  mb: 2 }}
-                          />
-                        )}
-                      />
-                   
+                        <DatePicker
+                          views={["year", "month"]}
+                          label="Fecha termino"
+                          openTo="year"
+                          // disabled={disabledDateEnd ? true : false}
+                          minDate={new Date("2017-02-01")}
+                          maxDate={new Date("2023-01-01")}
+                          value={
+                            sTerminoPeriodo === "" ? null : sTerminoPeriodo
+                          }
+                          onChange={(value) => {
+                            value != null &&
+                              setSelected({
+                                ...selected,
+                                sTerminoPeriodo: value,
+                              });
+                          }}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              helperText={null}
+                              sx={{ mb: 2 }}
+                            />
+                          )}
+                        />
+                      </Box>
                     </Box>
+                  </LocalizationProvider>
+                  <FormLabel className="text-center" component="legend">
+                    Limpieza Filtros
+                  </FormLabel>
+                  <Box className="flex flex-wrap justify-evenly">
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Checkbox defaultChecked />}
+                        label="Filtros"
+                        disabled
+                        onChange={(e) => conditionFilters(e)}
+                        name="filtros"
+                      />
+                      <FormControlLabel
+                        control={<Checkbox />}
+                        label="Estados"
+                        onChange={(e) => conditionFilters(e)}
+                        name="estados"
+                      />
+                    </FormGroup>
                   </Box>
-                </LocalizationProvider>
-                <FormLabel className="text-center" component="legend">
-                  Limpieza Filtros
-                </FormLabel>
-                <Box className="flex flex-wrap justify-evenly">
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Checkbox defaultChecked />}
-                      label="Filtros"
-                      disabled
-                      onChange={(e) => conditionFilters(e)}
-                      name="filtros"
-                    />
-                    <FormControlLabel
-                      control={<Checkbox />}
-                      label="Estados"
-                      onChange={(e) => conditionFilters(e)}
-                      name="estados"
-                    />
-                  </FormGroup>
-                </Box>
-                <Button
-                  className="w-[150px]"
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<SearchIcon />}
-                  // value={selected.sFolio}
-                  // onClick={() => {
-                  //   if (condicionFilters === 1) {
-                  //     clearAllFilters();
-                  //   } else {
-                  //     clearFilters();
-                  //   }
-                  // }}
-                  disabled ={LoadingApis}
-                  onClick={() => {
-                    clearAllFilters();
-                  }}
-                  style={{
-                    m: 1,
-                    width: 200,
-                    margin: "0 auto",
-                    display: "flex",
-                    marginTop: 25,
-                    // backgroundColor: "#002553",
-                    color: "white",
-                  }}
-                >
-                  Limpiar Filtros
-                </Button>
-                <Button
-                  className="w-[150px]"
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<SearchIcon />}
-                  onClick={ ()=>{
-                    searchFilter();
-                  }
-                 
-                  }
-                  disabled ={LoadingApis}
-                  style={{
-                    m: 1,
-                    width: 200,
-                    margin: "0 auto",
-                    display: "flex",
-                    marginTop: 25,
+                  <Button
+                    className="w-[150px]"
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<SearchIcon />}
+                    // value={selected.sFolio}
+                    // onClick={() => {
+                    //   if (condicionFilters === 1) {
+                    //     clearAllFilters();
+                    //   } else {
+                    //     clearFilters();
+                    //   }
+                    // }}
+                    disabled={LoadingApis}
+                    onClick={() => {
+                      clearAllFilters();
+                    }}
+                    style={{
+                      m: 1,
+                      width: 200,
+                      margin: "0 auto",
+                      display: "flex",
+                      marginTop: 25,
+                      // backgroundColor: "#002553",
+                      color: "white",
+                    }}
+                  >
+                    Limpiar Filtros
+                  </Button>
+                  <Button
+                    className="w-[150px]"
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<SearchIcon />}
+                    onClick={() => {
+                      searchFilter();
+                    }}
+                    disabled={LoadingApis}
+                    style={{
+                      m: 1,
+                      width: 200,
+                      margin: "0 auto",
+                      display: "flex",
+                      marginTop: 25,
 
-                    color: "white",
-                  }}
-                >
-                  Buscar
-                </Button>
-                {/* {props.cargando ? <>Cargando...</> :
+                      color: "white",
+                    }}
+                  >
+                    Buscar
+                  </Button>
+                  {/* {props.cargando ? <>Cargando...</> :
                   <><Button
                   className="w-[150px]"
                   variant="contained"
@@ -1767,13 +1836,11 @@ let condicionFilters = 0;
                   Buscar
                 </Button></>
                 } */}
-                
-              </>
-            
-          </Box>
-        </Box>
-        </div>}
-      
+                </>
+              </Box>
+            </Box>
+          </div>
+        )}
       </div>
       <div className=" hdmas:col-span-12   hd:col-span-10  bg-white rounded-md">
         {/* <div className="flex flex-row  m-[20px]">
@@ -1783,284 +1850,301 @@ let condicionFilters = 0;
           <FilterAltIcon className="ml-[10px] text-pantoneazul" />
         </div>
         <h1 className="border border-b-pantoneazul w-full"></h1> */}
-       
-        {LoadingApis? <div className="flex items-center">
-                <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                  
-                  <LinearProgress color="primary" />
-                </Stack>
-              </div>: 
-        <Box className="flex flex-col flex-auto p-[5px]  overflow-hidden h-full  w-full">
-        <div className="flex flex-col sm:flex-row items-start justify-between">
-          {alert && <AlertDialogSlide />}
-        </div>
-        <div className="flex flex-col flex-auto ">
-        
-        <div className="flex flex-row justify-between items-center">
-              <div className="flex flex-row items-center">
-              <div className="flex flex-row justify-center items-center">
-              Filas por Página
-              <TextField
-                id="PagePerRows"
-                select
-               
-                value={rowsPerPage}
-                variant="standard"
-                // size="small"
-              >
-                {[5, 10, 25].map((option) => (
-                  <MenuItem key={option} value={option} 
-                  onClick={()=>{handleChangeRowsCount(option)}}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
-              </div>
-              <div className="flex flex-row justify-center items-center"> 
-              </div>
-             
-              <Tooltip  
-                title="Previo" 
-                arrow 
-                placement="top"
-              >
-                <span>
-                <IconButton
-                  sx={{ "&:hover": { color: "#e4493f" } }}
-                  key="chechedRight"
-                  aria-label="Close"
-                  color="primary"
-                  onClick={handleChangePagedos}
-                  disabled={pageIndex===1}
-                  
-                  size="small"
-                >
-                  <NavigateBeforeIcon fontSize="large" />
-                </IconButton>
-                </span>
-              </Tooltip>
-                <Tooltip  
-                  title="Siguiente" 
-                  arrow 
-                  placement="top">
-                  <span>
-                  <IconButton
-                  sx={{ "&:hover": { color: "#e4493f" } }}
-                  key="chechedLeft"
-                  aria-label="Close"
-                  color="primary"
-                  onClick={handleChangePage}
-                  disabled={pageIndex===pageCount}
-                  // disabled={checkeddos.length === 0}
-                  size="small"
-                >
-                  <NavigateNextIcon fontSize="large" />
-                </IconButton>
-                  </span>
-               </Tooltip>
-              </div>
-              <div>
-               <b>{`Página ${pageIndex} de ${pageCount} / Total de instrucciones: ${pagination}`}</b> 
-              </div>
+
+        {LoadingApis ? (
+          <div className="flex items-center">
+            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+              <LinearProgress color="primary" />
+            </Stack>
           </div>
-          <TableContainer component={Paper}>
-            <Table
-              stickyHeader
-              sx={{ minWidth: 650 }}
-              aria-label="simple table"
-            >
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) =>
-                    columnsOrder.some((e) => e === column.label) ? (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        style={{ minWidth: column.minWidth }}
-                        sx={
-                          columnsHidden.some((e) => e === column.id)
-                            ? { display: { xl: "none", xs: "block" } }
-                            : {}
-                        }
-                      >
-                        <ImportExportIcon
+        ) : (
+          <Box className="flex flex-col flex-auto p-[5px]  overflow-hidden h-full  w-full">
+            <div className="flex flex-col sm:flex-row items-start justify-between">
+              {alert && <AlertDialogSlide />}
+            </div>
+            <div className="flex flex-col flex-auto ">
+              <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-row items-center">
+                  <div className="flex flex-row justify-center items-center">
+                    Filas por Página
+                    <TextField
+                      id="PagePerRows"
+                      select
+                      value={rowsPerPage}
+                      variant="standard"
+                      // size="small"
+                    >
+                      {[5, 10, 25].map((option) => (
+                        <MenuItem
+                          key={option}
+                          value={option}
                           onClick={() => {
-                            orderBy(column.label);
+                            handleChangeRowsCount(option);
                           }}
-                        />{" "}
-                        {column.label}
-                      </TableCell>
-                    ) : (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        style={{
-                          minWidth: column.minWidth,
-                        }}
-                        sx={
-                          columnsHidden.some((e) => e === column.id)
-                            ? { display: { xl: "none", xs: "block" } }
-                            : {}
-                        }
-                      >
-                        {column.label}
-                      </TableCell>
-                    )
-                  )}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {dataInstruction.data
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row) => {
-                    return (
-                      <TableRow
-                        hover
-                        role="checkbox"
-                        tabIndex={-1}
-                        key={row.id_instruccions}
-                      >
-                        {columns.map((column) => {
-                          const value = row[column.id];
-                          
+                        >
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  </div>
+                  <div className="flex flex-row justify-center items-center"></div>
 
-                          // !tableData.some(
-                          //   (e) => e.id_instruccions === id_instruccions
-                          // );
-
-                          if (
-                            columnsHidden.some((e) => e === column.id) &&
-                            column.label != "editar"
-                          ) {
-                            return (
-                              <TableCell
-                                key={column.id}
-                                align={column.align}
-                                sx={{ display: { xl: "none", xs: "block" } }}
-                              >
-                                {column.format && typeof value === "number"
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          } else if ("editar" === column.label) {
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                <Tooltip  
-                                  title="Actualizar Instrucción" 
-                                  arrow 
-                                  placement="top">
-                                  <span>
-                                  <IconButton
-                                  sx={{ "&:hover": { color: "#e4493f" } }}
-                                  key="chechedLeft"
-                                  aria-label="Close"
-                                  color="primary"
-                                  onClick={()=>{
-                                    handleOpen(row)
-                                  }}
-                                  disabled={table}
-                                  size="small"
-                                >
-                                  <EditIcon fontSize="medium" />
-                                </IconButton>
-                                  </span>
-                              </Tooltip>
-                              </TableCell>
-                            );
-                          } else if (
-                            "Monto Bruto" === column.label ||
-                            "Monto Neto" === column.label
-                          ) {
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {chile.format(
-                                  column.format && typeof value === "number"
-                                    ? column.format(value)
-                                    : value
-                                )}
-                              </TableCell>
-                            );
-                          } else if ("tipo_instruccion" === column.label) {
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {returnInstructionState(value)}
-                              </TableCell>
-                            );
-                          } else if (
-                            column.label === "Fecha emision" ||
-                            column.label === "Fecha pago" ||
-                            column.label === "Fecha carta"
-                          ) {
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {random(value)}
-                              </TableCell>
-                            );
-                          } else if (
-                            column.label === "E.Emision" ||
-                            column.label === "E.Pago"
-                          ) {
-                            if (value.includes("No")) {
-                              return (
-                                <TableCell
-                                  key={column.id}
-                                  align={column.align}
-                                  style={{ color: "red" }}
-                                >
-                                  {column.format && typeof value === "number"
-                                    ? column.format(value)
-                                    : value}
-                                </TableCell>
-                              );
-                            } else {
-                              return (
-                                <TableCell
-                                  key={column.id}
-                                  align={column.align}
-                                  style={{ color: "green" }}
-                                >
-                                  {column.format && typeof value === "number"
-                                    ? column.format(value)
-                                    : value}
-                                </TableCell>
-                              );
+                  <Tooltip title="Previo" arrow placement="top">
+                    <span>
+                      <IconButton
+                        sx={{ "&:hover": { color: "#e4493f" } }}
+                        key="chechedRight"
+                        aria-label="Close"
+                        color="primary"
+                        onClick={handleChangePagedos}
+                        disabled={pageIndex === 1}
+                        size="small"
+                      >
+                        <NavigateBeforeIcon fontSize="large" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                  <Tooltip title="Siguiente" arrow placement="top">
+                    <span>
+                      <IconButton
+                        sx={{ "&:hover": { color: "#e4493f" } }}
+                        key="chechedLeft"
+                        aria-label="Close"
+                        color="primary"
+                        onClick={handleChangePage}
+                        disabled={pageIndex === pageCount}
+                        // disabled={checkeddos.length === 0}
+                        size="small"
+                      >
+                        <NavigateNextIcon fontSize="large" />
+                      </IconButton>
+                    </span>
+                  </Tooltip>
+                </div>
+                <div>
+                  <b>{`Página ${pageIndex} de ${pageCount} / Total de instrucciones: ${pagination}`}</b>
+                </div>
+              </div>
+              <TableContainer component={Paper}>
+                <Table
+                  stickyHeader
+                  sx={{ minWidth: 650 }}
+                  aria-label="simple table"
+                >
+                  <TableHead>
+                    <TableRow>
+                      {columns.map((column) =>
+                        columnsOrder.some((e) => e === column.label) ? (
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            style={{ minWidth: column.minWidth }}
+                            sx={
+                              columnsHidden.some((e) => e === column.id)
+                                ? { display: { xl: "none", xs: "block" } }
+                                : {}
                             }
-                          } else {
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === "number"
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          }
-                        })}
-                      </TableRow>
-                    );
-                  })}
-              </TableBody>
-            </Table>
-          </TableContainer>
-     
-        </div>
-        {table && (
-            <ModalEdicionInstruccion
-              setTable={() => {
-                setTable(false); 
-                setDataEdit({ 
-                  dataRow:{},
-                  dataBoleean: false,
-                  fechaEmision:undefined,
-                  fechaRecepcion:undefined
-                  })
-              }}
-              dataEdit ={dataEdit}
-            />
-          )}
-      </Box>}
-      
-      
+                          >
+                            <ImportExportIcon
+                              onClick={() => {
+                                orderBy(column.label);
+                              }}
+                            />{" "}
+                            {column.label}
+                          </TableCell>
+                        ) : (
+                          <TableCell
+                            key={column.id}
+                            align={column.align}
+                            style={{
+                              minWidth: column.minWidth,
+                            }}
+                            sx={
+                              columnsHidden.some((e) => e === column.id)
+                                ? { display: { xl: "none", xs: "block" } }
+                                : {}
+                            }
+                          >
+                            {column.label}
+                          </TableCell>
+                        )
+                      )}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {dataInstruction.data
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row) => {
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            tabIndex={-1}
+                            key={row.id_instruccions}
+                          >
+                            {columns.map((column) => {
+                              const value = row[column.id];
+
+                              // !tableData.some(
+                              //   (e) => e.id_instruccions === id_instruccions
+                              // );
+
+                              if (
+                                columnsHidden.some((e) => e === column.id) &&
+                                column.label != "editar"
+                              ) {
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    sx={{
+                                      display: { xl: "none", xs: "block" },
+                                    }}
+                                  >
+                                    {column.format && typeof value === "number"
+                                      ? column.format(value)
+                                      : value}
+                                  </TableCell>
+                                );
+                              } else if ("editar" === column.label) {
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                  >
+                                    <Tooltip
+                                      title="Actualizar Instrucción"
+                                      arrow
+                                      placement="top"
+                                    >
+                                      <span>
+                                        <IconButton
+                                          sx={{
+                                            "&:hover": { color: "#e4493f" },
+                                          }}
+                                          key="chechedLeft"
+                                          aria-label="Close"
+                                          color="primary"
+                                          onClick={() => {
+                                            handleOpen(row);
+                                          }}
+                                          disabled={table}
+                                          size="small"
+                                        >
+                                          <EditIcon fontSize="medium" />
+                                        </IconButton>
+                                      </span>
+                                    </Tooltip>
+                                  </TableCell>
+                                );
+                              } else if (
+                                "Monto Bruto" === column.label ||
+                                "Monto Neto" === column.label
+                              ) {
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                  >
+                                    {chile.format(
+                                      column.format && typeof value === "number"
+                                        ? column.format(value)
+                                        : value
+                                    )}
+                                  </TableCell>
+                                );
+                              } else if ("tipo_instruccion" === column.label) {
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                  >
+                                    {returnInstructionState(value)}
+                                  </TableCell>
+                                );
+                              } else if (
+                                column.label === "Fecha emision" ||
+                                column.label === "Fecha pago" ||
+                                column.label === "Fecha carta"
+                              ) {
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                  >
+                                    {random(value)}
+                                  </TableCell>
+                                );
+                              } else if (
+                                column.label === "E.Emision" ||
+                                column.label === "E.Pago"
+                              ) {
+                                if (value.includes("No")) {
+                                  return (
+                                    <TableCell
+                                      key={column.id}
+                                      align={column.align}
+                                      style={{ color: "red" }}
+                                    >
+                                      {column.format &&
+                                      typeof value === "number"
+                                        ? column.format(value)
+                                        : value}
+                                    </TableCell>
+                                  );
+                                } else {
+                                  return (
+                                    <TableCell
+                                      key={column.id}
+                                      align={column.align}
+                                      style={{ color: "green" }}
+                                    >
+                                      {column.format &&
+                                      typeof value === "number"
+                                        ? column.format(value)
+                                        : value}
+                                    </TableCell>
+                                  );
+                                }
+                              } else {
+                                return (
+                                  <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                  >
+                                    {column.format && typeof value === "number"
+                                      ? column.format(value)
+                                      : value}
+                                  </TableCell>
+                                );
+                              }
+                            })}
+                          </TableRow>
+                        );
+                      })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+            {table && (
+              <ModalEdicionInstruccion
+                setTable={() => {
+                  setTable(false);
+                  setDataEdit({
+                    dataRow: {},
+                    dataBoleean: false,
+                    fechaEmision: undefined,
+                    fechaRecepcion: undefined,
+                  });
+                }}
+                dataEdit={dataEdit}
+              />
+            )}
+          </Box>
+        )}
       </div>
     </div>
   );

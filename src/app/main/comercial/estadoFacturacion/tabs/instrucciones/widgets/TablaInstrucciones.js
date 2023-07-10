@@ -146,6 +146,7 @@ let orderByList = {
 };
 // let editar;
 const TablaInstrucciones = (props) => {
+  esw3;
   const fontStyles = { color: "white", fontSize: "20px" };
   const [page, setPage] = useState(0);
   const [cargando, setCargando] = useState(true);
@@ -677,7 +678,6 @@ const TablaInstrucciones = (props) => {
           />
         )}
       </Paper>
-
     );
   }
 };
