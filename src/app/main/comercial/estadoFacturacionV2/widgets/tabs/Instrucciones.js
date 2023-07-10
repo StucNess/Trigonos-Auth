@@ -44,6 +44,8 @@ import ImportExportIcon from "@mui/icons-material/ImportExport";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 // import Table from "@mui/material/Table";
+import LoadingButton from '@mui/lab/LoadingButton';
+import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 
 // import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 // import TableContainer from "@mui/material/TableContainer";
@@ -89,6 +91,7 @@ import {
   useGetRutQuery,
 } from "app/store/participantesApi/participantesApi";
 import ModalEdicionInstruccion from "../Componentes/Modals/ModalEdicionInstruccion";
+import { useRefetchQueriesMetricsMutation } from "app/store/metricsApi/metricsApi";
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
   ...theme.typography.body2,
@@ -490,6 +493,7 @@ export default function Instrucciones(props) {
   const [conceptFilter, setConceptFilter] = useState([]);
   const [codRefFilter, setCodRefFilter] = useState([]);
   const [cartaFilter, setCartaFilter] = useState([]);
+  const [dataInstruction,setDataInstruction ] = useState([]);
   //--RutAcre RutDeudor NombreDeudor NombreAcreedor
   const [rutAcreFilter, setRutAcreFilter] = useState([]);
   const [rutDeuFilter, setRutDeuFilter] = useState([]);
@@ -529,6 +533,10 @@ export default function Instrucciones(props) {
   const [getNombreAcreedor, { isLoading: isLoadingNombreAm }] =
     useGetNombreAcreedormMutation();
 
+  //--Mutation recargar peticiones
+  const [reloadEstadisticas, {isLoading : isLoadingQueris}] = useRefetchQueriesMetricsMutation();
+
+  
   //cargas individuales pasaran por el verificar carga hasta que no se me ocurra otra manera
   const [cargaConcept, setCargaConcept] = useState(true);
   const [cargaCodRef, setCargaCodRef] = useState(true);
@@ -538,10 +546,69 @@ export default function Instrucciones(props) {
   const [cargaRutAcre, setCargaRutAcre] = useState(false);
   const [cargaNombreAcre, setCargaNombreAcre] = useState(false);
   const [cargaNombreDeu, setCargaNombreDeu] = useState(false);
+  const [cargaInstructions, setCargaInstructions] = useState(false);
+
 
   //contador para la carga no funciona
   const [peticionesCompletadas, setPeticionesCompletadas] = useState(0);
   const [LoadingApis, setLoadingApis] = useState(true);
+
+  function GetInstructions(){
+    setLoadingApis(true);
+    setCargaInstructions(true);
+    setDataInstruction();
+    getInstrucciones(
+      {
+        
+    id: id,
+    PageIndex: pageIndex,
+    PageSize:rowsPerPage,
+     spec:{
+      EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
+      EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
+      Acreedor:state.acreedor?id:"",
+      Deudor:state.deudor?id:"",
+      EstadoEmision:state.estadoEmision?"Facturado":"",
+      EstadoPago:state.estadoPago?"Pagado":"",
+      RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+      RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
+      Glosa:selected.sConcept!=""?selected.sConcept:"",
+      MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
+      MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
+      Folio:selected.sFolio!=""?selected.sFolio:"",
+      NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+      NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
+      Carta:sCarta!=""?sCarta:"",
+      CodigoRef:sCodRef!=""?sCodRef:"",
+      FechaEmision:"",
+      FechaRecepcion:"",
+      FechaPago:"",
+      FechaAceptacion:"",
+      Concepto:"",
+      InicioPeriodo:sInicioPeriodo!=""?`20${sInicioPeriodo
+        .getYear()
+        .toString()
+        .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:"",
+      TerminoPeriodo:sTerminoPeriodo!=""?`20${sTerminoPeriodo
+        .getYear()
+        .toString()
+        .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:"",
+      OrderByNeto:"",
+      OrderByBruto:"",
+      OrderByFechaEmision:"",
+      OrderByFechaPago:"",
+      OrderByFechaCarta:"",
+      OrderByFolio:"",
+    }}
+    ).then((response)=>{
+      setDataInstruction(response.data);
+      setPagination(response.data.count)
+      setPageCount(response.data.pageCount + 1);
+      setCargaInstructions(false);
+    }).catch((error)=>{
+      setCargaInstructions(false);
+    })
+  }
   //concept, carta, codref
   function FiltersOne() {
     // let dataSpec ={
@@ -714,6 +781,12 @@ export default function Instrucciones(props) {
       return true;
     }
   }
+
+  console.log(verificacarga())
+
+}, [cargaInstructions , cargaConcept, cargaCodRef ,cargaCarta , cargaNombreAcre, cargaNombreDeu ,cargaRutAcre ,cargaRutDeudor])
+
+  
   const isOptionEqualToValue = (option, value) => {
     return option.value === value;
   };
@@ -749,6 +822,15 @@ export default function Instrucciones(props) {
     refetchInstruc();
   }, [id]);
 
+  // useEffect(() => {
+  //   if(getDataInstruction){
+  //     tableData = getDataInstruction.data
+  //     setPagination(getDataInstruction.count)
+  //     setPageCount(getDataInstruction.pageCount + 1);
+  //     setLoadingApis(verificacarga());
+  //   }
+   
+  // }, [getDataInstruction,fetchInstructions])
   useEffect(() => {
     if (getDataInstruction) {
       tableData = getDataInstruction.data;
@@ -848,7 +930,7 @@ export default function Instrucciones(props) {
         skipInstructions: false,
       });
       FiltersOne();
-      refetchInstruc();
+      GetInstructions();
     }
   }, [state.acreedor, state.deudor]);
 
@@ -877,7 +959,7 @@ export default function Instrucciones(props) {
       event.target.name === "deudor" &&
       event.target.checked === true
     ) {
-      // setLoadingApis(true)
+      
       setState({
         ...state,
         [event.target.name]: event.target.checked,
@@ -894,7 +976,7 @@ export default function Instrucciones(props) {
       // FiltersOne();
       // refetchInstruc();
     } else {
-      // setLoadingApis(true)
+    
       setState({
         ...state,
         [event.target.name]: event.target.checked,
@@ -1156,6 +1238,9 @@ export default function Instrucciones(props) {
   return (
     <div className="grid grid-cols-12 gap-12 p-[20px]">
       <div className="hd:col-span-6  hdmas:col-span-12   bg-white rounded-md">
+
+        <div className="grid grid-cols-6 ">
+        <div className="col-span-2  border-solid border-r-2">
         <div className="flex flex-row  m-[20px]">
           <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
             Estados
@@ -1167,11 +1252,12 @@ export default function Instrucciones(props) {
         <div className="p-[20px]">
           <Grid
             container
-            direction="row"
+            direction="column"
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
             justifyContent="space-evenly"
-            alignItems="flex-start"
+            alignItems="stretch"
+            // alignItems="flex-start"
           >
             <Grid item xs="auto" sm="auto" md="auto">
               <Item>
@@ -1287,7 +1373,84 @@ export default function Instrucciones(props) {
             </Grid>
           </Grid>
         </div>
+        </div>
+        <div className="col-span-2  ">
+        <div className="flex flex-row  m-[20px]">
+          <Typography className="text-2xl font-medium tracking-tight text-pantoneazul leading-6 truncate">
+            Excel Disponibles
+          </Typography>
+          <AssignmentIcon className="ml-[10px] text-pantoneazul" />
+        </div>
+        <h1 className="border border-b-pantoneazul w-full"></h1>
+        
+        <div className="p-[20px]">
+        <Grid
+            container
+            direction="column"
+            spacing={{ xs: 2, md: 3 }}
+            columns={{ xs: 4, sm: 8, md: 12 }}
+            justifyContent="space-evenly"
+            alignItems="stretch"
+            // alignItems="flex-start"
+          >
+              <Grid item className="w-full">
+              <Tooltip  
+              title="Desactivado" 
+              arrow 
+              placement="top"
+              >
+                <span>
+                <LoadingButton
+                className="w-full"
+                  loading ={true}
+                  loadingPosition="start"
+                  startIcon={<SiMicrosoftexcel />}
+                  variant="contained"
+                  color="success"
+                  // onClick={()=>{
+                  //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                  // }}
+                >
+                  Todos
+                </LoadingButton>
+                </span>
+              </Tooltip>
+                </Grid>
+                <Grid item className="w-full">
+                  <Tooltip  
+                    title="Desactivado"
+                    //Descargar Excel 
+                    arrow 
+                    placement="top"
+                  >
+                        <span>
+                        <LoadingButton
+                          className="w-full"
+                          loading ={true}
+                          loadingPosition="start"
+                          startIcon={<SiMicrosoftexcel />}
+                          variant="contained"
+                          color="success"
+                          // onClick={()=>{
+                          //   convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                          // }}
+                        >
+                      Todos
+                    </LoadingButton>
+                    </span>
+                  </Tooltip>
+                </Grid>
+                
+        </Grid>
+       
+           
+        </div>
+        </div>
+        </div>
+
+        
       </div>
+
 
       <div className="hd:col-span-6  hdmas:col-span-12  bg-white rounded-md">
         <div className="flex flex-row  m-[20px]">

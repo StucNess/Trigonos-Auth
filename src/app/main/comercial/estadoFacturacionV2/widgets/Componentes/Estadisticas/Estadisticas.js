@@ -31,7 +31,7 @@ export default function Estadisticas(props){
         <div>
             {carga ?<div className="flex items-center">
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                  {/* <p>Chupa Chupa .....</p> */}
+                  
                   <LinearProgress color="primary" />
                 </Stack>
               </div>:

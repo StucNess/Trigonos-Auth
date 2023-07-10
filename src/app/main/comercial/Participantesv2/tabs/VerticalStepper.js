@@ -2713,7 +2713,7 @@ export default function HorizontalNonLinearStepper(props) {
                     </Typography>
                   </Box>
                   <Paper>
-                  <TablaAgentes rutParticipant={props.fullData.dataParticipant.rutCompleto}/>
+                  <TablaAgentes rutParticipant={props.fullData.dataParticipant.rutCompleto} nameParticipant={props.fullData.dataParticipant.business_Name}/>
                   </Paper>
                 </Box>
 

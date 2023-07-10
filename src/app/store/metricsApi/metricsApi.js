@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const metricsApi = createApi({
   reducerPath: "metrics",
+  tagTypes: ["estPago", "estRecept", "estFact"],
   baseQuery: fetchBaseQuery({
     baseUrl: "https://trigonosapi.azurewebsites.net/api/Metrics/",
   }),
@@ -14,6 +15,10 @@ export const metricsApi = createApi({
     }),
     getEstadoFacturacion: builder.query({
       query: (id) => `/EstadoDeFacturacion/${id}`,
+    }),
+    refetchQueriesMetrics: builder.mutation({
+      queryFn: () => ({ data: null }),
+      invalidatesTags: ["estPago", "estRecept", "estFact"],
     }),
 
     // getInstrucciones: builder.mutation({
@@ -32,4 +37,5 @@ export const {
   useGetEstadoPagoQuery,
   useGetEstadoRecepcionadoQuery,
   useGetEstadoFacturacionQuery,
+  useRefetchQueriesMetricsMutation,
 } = metricsApi;

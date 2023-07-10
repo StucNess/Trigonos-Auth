@@ -512,7 +512,7 @@ export default function TablaUltimosCambios(props) {
          
     <Box className=" relative lfmax:w-[600px] p-[30px] ">
       <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-        {/* <p>Chupa Chupa .....</p> */}
+        
         <LinearProgress color="primary" />
       </Stack>
     </Box>
