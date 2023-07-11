@@ -53,7 +53,7 @@ import PropTypes from "prop-types";
 import { Link as RouterLink, MemoryRouter } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
 
-import { useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery, usePostUserLockMutation, usePostUserUnlockMutation } from "app/store/usuariosApi/usuariosApi";
+import { useGetNumUsuariosMutation, useGetUsuariosPaginationMutation,  useGetUsuariosRolesQuery, usePostUserLockMutation, usePostUserUnlockMutation } from "app/store/usuariosApi/usuariosApi";
 import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
 import { useGetParticipantesByIdMutation, useGetParticipantesQuery } from "app/store/participantesApi/participantesApi";
 import Dialog from "@mui/material/Dialog";
@@ -326,6 +326,8 @@ EnhancedTableToolbar.propTypes = {
 };
 function EditUserApp(props) {
   // const theme = useTheme();
+  const [isloading, setIsloading] = useState(true);
+
   const [order, setOrder] = useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
   const [selected, setSelected] = useState([]);
@@ -339,16 +341,16 @@ function EditUserApp(props) {
   
   const [disableButton, setDisableButton] = useState(false);
   const [dataUser, setDataUser] = useState({});
-  const [dataParticipant, setDataParticipant] = useState([]);
+
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
   const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa, isFetching: isFetchEmpresas} = useGetEmpresasQuery();
 
  
-  const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
-    pageSize:1000,
-    token: window.localStorage.getItem("token")
-  });
-  console.log(isfetchingUsuarios);
+  // const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
+  //   pageSize:1000,
+  //   token: window.localStorage.getItem("token")
+  // });
+  // console.log(isfetchingUsuarios);
   const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
   const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
   const [getParticipantById, data_participant] = useGetParticipantesByIdMutation();
@@ -363,8 +365,143 @@ function EditUserApp(props) {
     msgError: false,
   });
   const { msgResp, msgText, msgError } = MsgAlert;
+
+   //OBTENER CANTIDAD PARA ITERAR
+   const [getNumUsers, {isLoading : isLoadingNUser}] = useGetNumUsuariosMutation();
  
+   //MUTATIONS QUE DEBEN SER ITERADOS
+   const [getUsersMutation, {isLoading : isLoadingPartm}] = useGetUsuariosPaginationMutation();
+     //VARIABLES QUE RECIBEN LOS DATOS EN LA ITERACIÓN
+  const [dataUsers, setDataUsers] = useState([]);
+
+
+  //VARIABLES BOOL PARA VERIFICAR CARGA
+  const [cargaUsers, setCargaUsuarios] = useState(true);
+  function GetDataMutations(){
+    try {
+      setDataUsers([]);      
+      setIsloading(true);
+      setCargaUsuarios(true);
+
+      let specUsers= {
+        PageIndex: 1,
+        PageSize: 200,
+        token: window.localStorage.getItem("token")
+      };
+ 
+      getNumUsers(specUsers)
+      .then((response) => {
+        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          specUsers.PageIndex = index + 1;
+          return getUsersMutation(specUsers);
+        });
+        console.log(requests)
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses.map((response) => response.data.data).flat();
+            setDataUsers((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+     
+           
+            setCargaUsuarios(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+     
+
+
+    } catch (error) {
+      console.log("ERROR LOGICA NUMBERS Y USUARIOS");
+    }
+  }
+  useEffect(() => {
+    GetDataMutations();
+  }, [])
+  useEffect(() => {
+ 
+    function verificacarga() {
+      if ([isFetchEmpresas,cargaUsers].every((valor) => valor === false)) {
+        return false;
+      } else {
+        return true;
+
+        
+      }
+    }
   
+
+  if(verificacarga()===false){
+ 
+    if(!isFetchEmpresas && !cargaUsers ){
+     
+      setDataUsers((prevUsers)=>{
+        let dataformated = prevUsers.map(function (el) {
+          let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+          return {
+            estado: estadonew,
+            rol: el.role,
+            email: el.email,
+            nombre: el.nombre,
+            apellido: el.apellido,
+            codempresa: el.idEmpresa,
+            empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+            usuario: el.username,
+            pais: el.pais,
+            id: el.id,
+          };
+          
+          });
+        rowspermanent = dataformated;
+        rowsOnMount();
+        setRowsPerPage(5);
+        let  newPage= 0;
+        setPage(newPage);
+       
+        const sortedRows = stableSort(dataformated, getComparator(order, orderBy));
+        const updatedRows = sortedRows.slice(
+          newPage * rowsPerPage,
+          newPage * rowsPerPage + rowsPerPage
+        );
+
+        setVisibleRows(updatedRows);
+        setIsloading(false);
+        // Avoid a layout jump when reaching the last page with empty rows.
+        const numEmptyRows =
+          newPage > 0
+            ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
+            : 0;
+
+        const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
+        setPaddingHeight(newPaddingHeight);
+
+
+        return dataformated
+      })
+      
+
+        
+      
+    }
+  }
+
+
+
+}, [isFetchEmpresas, cargaUsers])
+
+useEffect(() => {
+  console.log(visibleRows);
+}, [visibleRows])
 
   function search(searchString) {
     if (searchString.length === 0) {
@@ -562,56 +699,15 @@ function EditUserApp(props) {
       setPaddingHeight(newPaddingHeight);
   }
 
-  useEffect(() => {
-    
-   
 
-    // if(!isLoading){
-    //   GetUsers()
-    // }
-    if(!isFetchEmpresas){
-      if(!isfetchingUsuarios){
-        if(getUsuarios !=undefined){
-          GetUsers();
-        
-        }
-        
-      }
-    }
-    
-  }, [isLoading]);
   useEffect(() => {
 
     if(!table){
       setDisableButton(false);
     }
   }, [table]);
-  useEffect(() => {
-    if(!isFetchEmpresas){
-      if(!isfetchingUsuarios){
-        if(getUsuarios !=undefined){
-          GetUsers();
-        
-        }
-        
-      }
-    }
 
 
-  }, [isfetchingUsuarios])
-  useEffect(() => {
-    if(!isFetchEmpresas){
-      if(!isfetchingUsuarios){
-        if(getUsuarios !=undefined){
-          GetUsers();
-        
-        }
-        
-      }
-    }
-    
-
-  }, [isFetchEmpresas])
   
 
 
@@ -795,7 +891,7 @@ function EditUserApp(props) {
                 <PeopleIcon className="ml-[10px] text-pantoneazul" />
               </div>
               <h1 className="border border-b-pantoneazul w-full"></h1>
-              {isfetchingUsuarios?
+              {isloading?
               <div className="flex items-center">
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
                   

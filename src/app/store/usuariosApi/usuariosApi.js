@@ -10,20 +10,26 @@ export const usuariosApi = createApi({
     getUsuarios: builder.query({
       query: () => "",
     }),
-    //Revisar como utilizar el patch si no cambialo por post en .net
-    getUsuariosPagination: builder.query({
+    getNumUsuarios: builder.mutation({
       query: (spec) => ({
-        headers: { Authorization: `Bearer ${spec.token}` },
+        headers: { "Content-type": "application/json",Authorization: `Bearer ${spec.token}`},
+        url: "/NumUsuarios",
+        method: "GET",
+        
+      }),
+      providesTags: ["usuarios"],
+    }),
+    getUsuariosPagination: builder.mutation({
+      query: (spec) => ({
+        headers: {  "Content-type": "application/json",Authorization: `Bearer ${spec.token}` },
         url: spec
-          ? "/Pagination" +
-            (spec.nombre != undefined ? `?Nombre=${spec.nombre}` : "") +
-            (spec.apellido != undefined ? `?Apellido=${spec.apellido}` : "") +
-            (spec.sort != undefined ? `?Sort=${spec.sort}` : "") +
-            (spec.pageIndex != undefined
-              ? `?PageIndex=${spec.pageIndex}`
-              : "") +
-            (spec.pageSize != undefined ? `?PageSize=${spec.pageSize} ` : " ") +
-            (spec.search != undefined ? `?Search=${spec.search}` : "")
+          ? `/Pagination?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`+
+            (spec.nombre != undefined ? `&Nombre=${spec.nombre}` : "") +
+            (spec.apellido != undefined ? `&Apellido=${spec.apellido}` : "") +
+            (spec.sort != undefined ? `&Sort=${spec.sort}` : "") +
+           
+          
+            (spec.search != undefined ? `&Search=${spec.search}` : "")
           : "/Pagination",
         method: "GET",
       }),
@@ -127,10 +133,11 @@ export const usuariosApi = createApi({
 });
 export const {
   useGetUsuariosQuery,
-  useGetUsuariosPaginationQuery,
+  useGetUsuariosPaginationMutation,
   useGetUsuariosRolesQuery,
   usePostUsuariosActualizarMutation,
   usePostUsuariosRegistrarMutation,
   usePostUserUnlockMutation,
   usePostUserLockMutation,
+  useGetNumUsuariosMutation,
 } = usuariosApi;
