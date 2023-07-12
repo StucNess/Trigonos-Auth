@@ -212,7 +212,7 @@ export default function Instrucciones(props) {
     sCodRef: "",
     sInicioPeriodo: "",
     sTerminoPeriodo: "",
-    buscar: false,
+    buscar: true,
   });
   const [dataSpec, setDataSpec] = useState({
     id: id,
@@ -264,7 +264,11 @@ export default function Instrucciones(props) {
       sInicioPeriodo: "",
       sTerminoPeriodo: "",
       buscar: "",
+    },()=>{
+      console.log("funcion")
     });
+    // GetInstructions();
+    //   FiltersOne();
   };
   const {
     sBusinessName,
@@ -416,6 +420,7 @@ export default function Instrucciones(props) {
   const [LoadingApis, setLoadingApis] = useState(true);
 
   function GetInstructions() {
+    
     setLoadingApis(true);
     setCargaInstructions(true);
     setDataInstruction();
@@ -751,7 +756,11 @@ export default function Instrucciones(props) {
 
   function searchFilter(){
     // setSelected({...selected,buscar: true});
-    
+    setSelected({
+      ...selected,
+      buscar:true,
+  
+    });
     FiltersOne();
     GetInstructions();
   
@@ -780,7 +789,7 @@ export default function Instrucciones(props) {
     }
 
     if (verificacarga() === false) {
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
+   
       if (
         !cargaInstructions &&
         !cargaConcept &&
@@ -792,11 +801,11 @@ export default function Instrucciones(props) {
         !cargaRutDeudor
       ) {
         setLoadingApis(false);
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAA");
+   
       }
     }
 
-    console.log(verificacarga());
+  
   }, [
     cargaInstructions,
     cargaConcept,
@@ -817,12 +826,24 @@ export default function Instrucciones(props) {
     setPagination(0);
     setPageCount(0);
     setRowsPerPage(5);
-    clearFilters();
+    // clearFilters();
     clearStates();
     FiltersOne();
     GetInstructions();
   }, [id]);
-
+  useEffect(() => {
+    if(!selected.buscar){
+      setPageIndex(1);
+      setPagination(0);
+      setPageCount(0);
+      setRowsPerPage(5);
+    
+      clearStates();
+      FiltersOne();
+      GetInstructions();
+    }
+   
+  }, [selected.buscar]);
   // useEffect(() => {
   //   if(getDataInstruction){
   //     tableData = getDataInstruction.data
@@ -897,15 +918,15 @@ export default function Instrucciones(props) {
 
   const clearAllFilters = () => {
     if (condicionFilters === 0) {
-      clearFilters();
+      // clearFilters();
 
-      GetInstructions();
-      FiltersOne();
+      // GetInstructions();
+      // FiltersOne();
     } else {
-      GetInstructions();
-      clearFilters();
+      // clearFilters();
+      // GetInstructions();
       clearStates();
-      FiltersOne();
+      // FiltersOne();
     }
   };
   const conditionFilters = (e) => {
@@ -1748,7 +1769,23 @@ export default function Instrucciones(props) {
                     // }}
                     disabled={LoadingApis}
                     onClick={() => {
-                      clearAllFilters();
+                      setSelected((prevLista) => {
+                       
+                        return {sBusinessName: "",
+                        sRut: "",
+                        sConcept: "",
+                        sMontoNeto: "",
+                        sMontoBruto: "",
+                        sFolio: "",
+                        sCarta: "",
+                        sCodRef: "",
+                        sInicioPeriodo: "",
+                        sTerminoPeriodo: "",
+                        buscar: false,};
+                      });
+                      // setSelected({
+                        
+                      // });
                     }}
                     style={{
                       m: 1,
@@ -1769,6 +1806,7 @@ export default function Instrucciones(props) {
                     startIcon={<SearchIcon />}
                     onClick={() => {
                       searchFilter();
+
                     }}
                     disabled={LoadingApis}
                     style={{
