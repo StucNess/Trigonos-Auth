@@ -587,7 +587,7 @@ export default function TablaAgentes(props) {
                           key={column.id}
                           style={{ cursor: "pointer" }}
                         //   onClick={
-                        //     table
+                        //     table 
                         //       ? () => getModal(valuee.id, valuee.date)
                         //       : () => setTable(true)
                         //   }

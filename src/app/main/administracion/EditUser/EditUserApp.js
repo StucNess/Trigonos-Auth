@@ -7,10 +7,9 @@ import {
   responsiveFontSizes,
 } from "@mui/material/styles";
 import { esES } from "@mui/material/locale";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
+
+
+
 //ICONS
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -25,29 +24,52 @@ import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import PeopleIcon from "@mui/icons-material/People";
 
 import { alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
+
+import { tableCellClasses } from "@mui/material/TableCell";
 
 
 
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+
+
+
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
+
+
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useCallback, useEffect, useState } from "react";
 import ModalEditUser from "./widgets/ModalEditUser";
 import { forwardRef } from "react";
-
+import { 
+  Paper,
+  Button, 
+  Box,
+  Grid, 
+  Checkbox, 
+  FormLabel,
+  Autocomplete,
+  FormControlLabel,
+  FormGroup,
+  InputAdornment,
+  TextFieldTable,
+  Table,
+  TextField,
+  TableBody,
+  TableContainer,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Toolbar,
+  Typography,
+  Tooltip,
+  IconButton,
+  MenuItem } from "@mui/material";
 //SECCIÓN PARA REALIZAR REDIRECCION DE RUTA/LINK A OTRA VENTANA
 import PropTypes from "prop-types";
 import { Link as RouterLink, MemoryRouter } from "react-router-dom";
@@ -326,26 +348,26 @@ EnhancedTableToolbar.propTypes = {
 };
 function EditUserApp(props) {
   // const theme = useTheme();
+  const [timerId, setTimerId] = useState(null);
   const [isloading, setIsloading] = useState(true);
-
+  const [filtrarTabla, setFiltrarTabla] = useState("");
   const [order, setOrder] = useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [visibleRows, setVisibleRows] = useState(null);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
   const [cargando, setCargando] = useState(false);
-  
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pagination, setPagination] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [dataUser, setDataUser] = useState({});
-
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
   const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa, isFetching: isFetchEmpresas} = useGetEmpresasQuery();
-
- 
   // const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
   //   pageSize:1000,
   //   token: window.localStorage.getItem("token")
@@ -388,36 +410,55 @@ function EditUserApp(props) {
         PageSize: 200,
         token: window.localStorage.getItem("token")
       };
+      getUsersMutation({
+        PageIndex: pageIndex,
+        PageSize: rowsPerPage,
+        token: window.localStorage.getItem("token"),
+        search: filtrarTabla.trim(),
+      }).then((response)=>{
+
+        setDataUsers(response.data.data);
+        console.log(pageIndex); 
+        console.log(rowsPerPage); 
+        console.log(response.data.count)
+        console.log(response.data.pageCount)
+        setPagination(response.data.count);
+        setPageCount(response.data.pageCount);
+               
+        setCargaUsuarios(false);
+      }).catch((error)=>{
+
+      })
  
-      getNumUsers(specUsers)
-      .then((response) => {
-        const buclesF = Math.round(response.data / 200 + 0.49) + 1;
-        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-          specUsers.PageIndex = index + 1;
-          return getUsersMutation(specUsers);
-        });
-        console.log(requests)
-        Promise.all(requests)
-          .then((responses) => {
-            const newData = responses.map((response) => response.data.data).flat();
-            setDataUsers((prevLista) => {
-              if (Array.isArray(prevLista)) {
-                return [...prevLista, ...newData];
-              } else {
-                return [...newData];
-              }
-            });
+      // getNumUsers(specUsers)
+      // .then((response) => {
+      //   const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+      //   const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+      //     specUsers.PageIndex = index + 1;
+      //     return getUsersMutation(specUsers);
+      //   });
+      //   console.log(requests)
+      //   Promise.all(requests)
+      //     .then((responses) => {
+      //       const newData = responses.map((response) => response.data.data).flat();
+      //       setDataUsers((prevLista) => {
+      //         if (Array.isArray(prevLista)) {
+      //           return [...prevLista, ...newData];
+      //         } else {
+      //           return [...newData];
+      //         }
+      //       });
      
            
-            setCargaUsuarios(false);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      //       setCargaUsuarios(false);
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //     });
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
      
 
 
@@ -425,9 +466,9 @@ function EditUserApp(props) {
       console.log("ERROR LOGICA NUMBERS Y USUARIOS");
     }
   }
-  useEffect(() => {
-    GetDataMutations();
-  }, [])
+  // useEffect(() => {
+  //   GetDataMutations();
+  // }, [])
   useEffect(() => {
  
     function verificacarga() {
@@ -462,28 +503,12 @@ function EditUserApp(props) {
           };
           
           });
-        rowspermanent = dataformated;
-        rowsOnMount();
-        setRowsPerPage(5);
-        let  newPage= 0;
-        setPage(newPage);
+      
        
-        const sortedRows = stableSort(dataformated, getComparator(order, orderBy));
-        const updatedRows = sortedRows.slice(
-          newPage * rowsPerPage,
-          newPage * rowsPerPage + rowsPerPage
-        );
+  
 
-        setVisibleRows(updatedRows);
+        // setVisibleRows(updatedRows);
         setIsloading(false);
-        // Avoid a layout jump when reaching the last page with empty rows.
-        const numEmptyRows =
-          newPage > 0
-            ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
-            : 0;
-
-        const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
-        setPaddingHeight(newPaddingHeight);
 
 
         return dataformated
@@ -499,9 +524,7 @@ function EditUserApp(props) {
 
 }, [isFetchEmpresas, cargaUsers])
 
-useEffect(() => {
-  console.log(visibleRows);
-}, [visibleRows])
+
 
   function search(searchString) {
     if (searchString.length === 0) {
@@ -706,19 +729,59 @@ useEffect(() => {
       setDisableButton(false);
     }
   }, [table]);
-
+  useEffect(() => {
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+  
+    const newTimerId = setTimeout(() => {
+      GetDataMutations();
+    }, 800); // 500ms de retraso antes de realizar la llamada
+  
+    setTimerId(newTimerId);
+  }, [filtrarTabla])
+  
 
   
 
-
+  const handleChangeRowsCount = (option) => {
+    if (rowsPerPage != option) {
+      setIsloading(true);
+      setRowsPerPage(option);
+      setPageIndex(1);
+    }
+  };
   const handleSetRow = (event) => {
     const {
       target: { value },
     } = event;
-    rows = search(value.trim());
-    rowsOnMount();
+    setFiltrarTabla(value);
+   
+    // rows = search(value.trim());
+    // rowsOnMount();
   };
+  useEffect(() => {
+    GetDataMutations();
+  }, [pageIndex,rowsPerPage])
+  const handleChangePage = () => {
+  
 
+    setPageIndex(pageIndex === pageCount ? pageIndex : pageIndex + 1);
+    if (pageIndex === pageCount) {
+      setIsloading(false);
+    }
+    // setPage(pageIndex + 1);
+
+  
+  };
+  const handleChangePagedos = () => {
+
+    setPageIndex(pageIndex > 1 ? pageIndex - 1 : 1);
+    if (pageIndex === 1) {
+      setIsloading(false);
+    }
+
+  };
   const handleRequestSort = useCallback(
     (event, newOrderBy) => {
       const isAsc = orderBy === newOrderBy && order === "asc";
@@ -735,7 +798,7 @@ useEffect(() => {
         page * rowsPerPage + rowsPerPage
       );
 
-      setVisibleRows(updatedRows);
+      // setVisibleRows(updatedRows);
     },
     [order, orderBy, page, rowsPerPage]
   );
@@ -769,30 +832,30 @@ useEffect(() => {
     setSelected(newSelected);
   };
 
-  const handleChangePage = useCallback(
+  // const handleChangePage = useCallback(
 
-    (event, newPage) => {
-      setPage(newPage);
-      console.log(newPage);
-      const sortedRows = stableSort(rows, getComparator(order, orderBy));
-      const updatedRows = sortedRows.slice(
-        newPage * rowsPerPage,
-        newPage * rowsPerPage + rowsPerPage
-      );
+  //   (event, newPage) => {
+  //     setPage(newPage);
+  //     console.log(newPage);
+  //     const sortedRows = stableSort(rows, getComparator(order, orderBy));
+  //     const updatedRows = sortedRows.slice(
+  //       newPage * rowsPerPage,
+  //       newPage * rowsPerPage + rowsPerPage
+  //     );
 
-      setVisibleRows(updatedRows);
+  //     setVisibleRows(updatedRows);
 
-      // Avoid a layout jump when reaching the last page with empty rows.
-      const numEmptyRows =
-        newPage > 0
-          ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
-          : 0;
+  //     // Avoid a layout jump when reaching the last page with empty rows.
+  //     const numEmptyRows =
+  //       newPage > 0
+  //         ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
+  //         : 0;
 
-      const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
-      setPaddingHeight(newPaddingHeight);
-    },
-    [order, orderBy, dense, rowsPerPage]
-  );
+  //     const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
+  //     setPaddingHeight(newPaddingHeight);
+  //   },
+  //   [order, orderBy, dense, rowsPerPage]
+  // );
 
   const handleChangeRowsPerPage = useCallback(
     (event) => {
@@ -904,6 +967,7 @@ useEffect(() => {
                   id="outlined-basic"
                   label="Filtrar"
                   variant="filled"
+                  value={filtrarTabla}
                   onChange={(e) => {
                     handleSetRow(e);
                   }}
@@ -912,6 +976,78 @@ useEffect(() => {
             
               <Box className="m-[20px]">
                 <Box>
+                <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row items-center">
+            <div className="flex flex-row justify-center items-center">
+            Filas por Página
+            <TextField
+              id="PagePerRows"
+              select
+             
+              value={rowsPerPage}
+              variant="standard"
+              // size="small"
+            >
+              {[5, 10, 25].map((option) => (
+                <MenuItem key={option} value={option} 
+                onClick={()=>{
+                  handleChangeRowsCount(option)
+                  }}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+            </div>
+            <div className="flex flex-row justify-center items-center"> 
+            </div>
+                  
+                    <Tooltip  
+                      title="Previo" 
+                      arrow 
+                      placement="top"
+                    >
+                      <span>
+                      <IconButton
+                        sx={{ "&:hover": { color: "#e4493f" } }}
+                        key="chechedRight"
+                        aria-label="Close"
+                        color="primary"
+                        onClick={ handleChangePagedos
+                        }
+                        disabled={pageIndex===1}
+                        
+                        size="small"
+                      >
+                        <NavigateBeforeIcon fontSize="large" />
+                      </IconButton>
+                      </span>
+                    </Tooltip>
+                      <Tooltip  
+                        title="Siguiente" 
+                        arrow 
+                        placement="top">
+                        <span>
+                        <IconButton
+                        sx={{ "&:hover": { color: "#e4493f" } }}
+                        key="chechedLeft"
+                        aria-label="Close"
+                        color="primary"
+                       onClick={ handleChangePage
+                          
+                        }
+                        disabled={pageIndex===pageCount}
+                        // disabled={checkeddos.length === 0}
+                        size="small"
+                      >
+                        <NavigateNextIcon fontSize="large" />
+                      </IconButton>
+                        </span>
+                    </Tooltip>
+                    </div>
+                    <div>
+                    <b>{`Página ${pageIndex} de ${pageCount} / Total de filas: ${pagination}`}</b> 
+                    </div>
+                </div>
                   <TableContainer  > 
                     {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
                     <Table
@@ -929,8 +1065,8 @@ useEffect(() => {
                         rowCount={rows.length}
                       />
                       <TableBody >
-                        {visibleRows
-                          ? visibleRows.map((row, index) => {
+                        {dataUsers
+                          ? dataUsers.map((row, index) => {
                               const isItemSelected = isSelected(row.id);
                               const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -1090,7 +1226,7 @@ useEffect(() => {
                     </Table>
                   </TableContainer>
                   
-                  <TablePagination
+                  {/* <TablePagination
                   
                   labelRowsPerPage="Filas por página"
                   variant="h5"
@@ -1108,15 +1244,15 @@ useEffect(() => {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-                 
+                  */}
                   
                 </Box>
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={
                     <Switch checked={dense} onChange={handleChangeDense} />
                   }
                   label="Disminuir espacio"
-                />
+                /> */}
               </Box>
               </>}
             </div>
