@@ -348,6 +348,7 @@ EnhancedTableToolbar.propTypes = {
 };
 function EditUserApp(props) {
   // const theme = useTheme();
+  const [renderCount, setRenderCount] = useState(0);
   const [timerId, setTimerId] = useState(null);
   const [isloading, setIsloading] = useState(true);
   const [filtrarTabla, setFiltrarTabla] = useState("");
@@ -405,11 +406,7 @@ function EditUserApp(props) {
       setIsloading(true);
       setCargaUsuarios(true);
 
-      let specUsers= {
-        PageIndex: 1,
-        PageSize: 200,
-        token: window.localStorage.getItem("token")
-      };
+     
       getUsersMutation({
         PageIndex: pageIndex,
         PageSize: rowsPerPage,
@@ -730,15 +727,20 @@ function EditUserApp(props) {
     }
   }, [table]);
   useEffect(() => {
-    if (timerId) {
-      clearTimeout(timerId);
+    if(renderCount >0){
+      
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+    
+      const newTimerId = setTimeout(() => {
+        setPageIndex(1);
+        GetDataMutations();
+      }, 800); // 500ms de retraso antes de realizar la llamada
+    
+      setTimerId(newTimerId);
     }
-  
-    const newTimerId = setTimeout(() => {
-      GetDataMutations();
-    }, 800); // 500ms de retraso antes de realizar la llamada
-  
-    setTimerId(newTimerId);
+    
   }, [filtrarTabla])
   
 
@@ -761,6 +763,7 @@ function EditUserApp(props) {
     // rowsOnMount();
   };
   useEffect(() => {
+    setRenderCount(renderCount+1)
     GetDataMutations();
   }, [pageIndex,rowsPerPage])
   const handleChangePage = () => {
@@ -782,26 +785,27 @@ function EditUserApp(props) {
     }
 
   };
-  const handleRequestSort = useCallback(
+  const handleRequestSort = 
     (event, newOrderBy) => {
       const isAsc = orderBy === newOrderBy && order === "asc";
       const toggledOrder = isAsc ? "desc" : "asc";
       setOrder(toggledOrder);
       setOrderBy(newOrderBy);
-
+     
       const sortedRows = stableSort(
-        rows,
+        dataUsers,
         getComparator(toggledOrder, newOrderBy)
       );
+      console.log(dataUsers);
+      
       const updatedRows = sortedRows.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       );
 
-      // setVisibleRows(updatedRows);
-    },
-    [order, orderBy, page, rowsPerPage]
-  );
+      setDataUsers(updatedRows);
+    }
+  ;
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
