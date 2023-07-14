@@ -89,6 +89,8 @@ import {
   useGetCartamMutation,
   useGetCodRefmMutation,
   useGetInstruccionesSpecmMutation,
+  useGetNumFilterMutation,
+  useGetFiltersCCCMutation,
 } from "app/store/instrucciones/instruccionesApi";
 import {
   useGetBusinessNameQuery,
@@ -419,6 +421,170 @@ export default function Instrucciones(props) {
 
   const [LoadingApis, setLoadingApis] = useState(true);
 
+  //PRRUEBA
+  const [filtersPrueba, setFiltersPrueba] = useState([]);
+  
+  const [getNumFilter, { isLoading: isLoadinFilters }] =
+  useGetNumFilterMutation();
+  const [getFiltersCCC, { isLoading: isLoadingFilterCCC }] =
+  useGetFiltersCCCMutation();
+  const [cargaFiltersCCC, setCargaFiltersCCC] = useState(false);
+
+  function prueba(){
+    let specPrueba = {
+      PageIndex: 1,
+      PageSize: 500,
+  
+    };
+    getNumFilter({
+      id: id,
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: sCarta != "" ? sCarta : "",
+        CodigoRef: sCodRef != "" ? sCodRef : "",
+        FechaEmision: "",
+        FechaRecepcion: "",
+        FechaPago: "",
+        FechaAceptacion: "",
+        Concepto: "",
+        InicioPeriodo:
+          sInicioPeriodo != ""
+            ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
+                sInicioPeriodo.getMonth() + 1
+              }/01`
+            : "",
+        TerminoPeriodo:
+          sTerminoPeriodo != ""
+            ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
+                sTerminoPeriodo.getMonth() + 1
+              }/01`
+            : "",
+        OrderByNeto: "",
+        OrderByBruto: "",
+        OrderByFechaEmision: "",
+        OrderByFechaPago: "",
+        OrderByFechaCarta: "",
+        OrderByFolio: "",
+      },
+      PageIndex:specPrueba.PageIndex,
+      PageSize:specPrueba.PageSize})
+    .then((response) => {
+      const buclesF = Math.round(response.data / 500 + 0.49) + 1;
+      const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+        specPrueba.PageIndex = index + 1;
+        return getFiltersCCC({
+          id: id,
+          spec: {
+            EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+            EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+            Acreedor: state.acreedor ? id : "",
+            Deudor: state.deudor ? id : "",
+            EstadoEmision: state.estadoEmision ? "Facturado" : "",
+            EstadoPago: state.estadoPago ? "Pagado" : "",
+            RutDeudor: state.acreedor
+              ? selected.sRut != ""
+                ? selected.sRut.slice(0, 8)
+                : ""
+              : "",
+            RutAcreedor: state.deudor
+              ? selected.sRut != ""
+                ? selected.sRut.slice(0, 8)
+                : ""
+              : "",
+            Glosa: selected.sConcept != "" ? selected.sConcept : "",
+            MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+            MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+            Folio: selected.sFolio != "" ? selected.sFolio : "",
+            NombreDeudor: state.acreedor
+              ? selected.sBusinessName != ""
+                ? selected.sBusinessName
+                : ""
+              : "",
+            NombreAcreedor: state.deudor
+              ? selected.sBusinessName != ""
+                ? selected.sBusinessName
+                : ""
+              : "",
+            Carta: sCarta != "" ? sCarta : "",
+            CodigoRef: sCodRef != "" ? sCodRef : "",
+            FechaEmision: "",
+            FechaRecepcion: "",
+            FechaPago: "",
+            FechaAceptacion: "",
+            Concepto: "",
+            InicioPeriodo:
+              sInicioPeriodo != ""
+                ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
+                    sInicioPeriodo.getMonth() + 1
+                  }/01`
+                : "",
+            TerminoPeriodo:
+              sTerminoPeriodo != ""
+                ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
+                    sTerminoPeriodo.getMonth() + 1
+                  }/01`
+                : "",
+            OrderByNeto: "",
+            OrderByBruto: "",
+            OrderByFechaEmision: "",
+            OrderByFechaPago: "",
+            OrderByFechaCarta: "",
+            OrderByFolio: "",
+          },
+          PageIndex:specPrueba.PageIndex,
+          PageSize:specPrueba.PageSize});
+      });
+     
+      Promise.all(requests)
+        .then((responses) => {
+          const newData = responses.map((response) => response.data.data).flat();
+          setFiltersPrueba((prevLista) => {
+            if (Array.isArray(prevLista)) {
+              return [...prevLista, ...newData];
+            } else {
+              return [...newData];
+            }
+          });
+          console.log("PRUEBAAA",Array.from(new Set(newData.map(JSON.stringify)), JSON.parse))
+          setCargaFiltersCCC(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
   function GetInstructions() {
     
     setLoadingApis(true);
@@ -830,6 +996,7 @@ export default function Instrucciones(props) {
     clearStates();
     FiltersOne();
     GetInstructions();
+    prueba();
   }, [id]);
   useEffect(() => {
     if(!selected.buscar){
