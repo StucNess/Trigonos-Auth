@@ -1765,6 +1765,14 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudorMutation"],
     }),
+    //Mejoras
+    getAllInstructions: builder.mutation({
+      query: (data) => ({
+        url:`/api/Instrucciones/InstruccionesDef/${data.id}?PageIndex=${data.PageIndex}&PageSize=${data.PageSize}`,
+        method: "GET",
+      }),
+      providesTags: ["instruccionesDefAll"],
+    }),
   }),
 });
 export const {
@@ -1803,4 +1811,6 @@ export const {
   useGetNumberNombreDeudorMutation,
   useGetNumFilterMutation,
   useGetFiltersCCCMutation,
+  //Mejoras
+  useGetAllInstructionsMutation,
 } = instruccionesApi;
