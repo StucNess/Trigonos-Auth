@@ -620,6 +620,45 @@ export default function TablaAgentes(props) {
           </Box>
         </TableContainer>
         {/* <TablePagination
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              DataRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => {
+                return (
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      const valuee = row;
+                      return (
+                        <TableCell
+                          key={column.id}
+                          style={{ cursor: "pointer" }}
+                        //   onClick={
+                        //     table 
+                        //       ? () => getModal(valuee.id, valuee.date)
+                        //       : () => setTable(true)
+                        //   }
+                          align={column.align}
+                        >
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
+          </TableBody>
+        </Table>
+      </Box>
+    </TableContainer>
+    {/* <TablePagination
       rowsPerPageOptions={[6, 10, 25]}
       labelRowsPerPage="Filas por página"
       component="div"

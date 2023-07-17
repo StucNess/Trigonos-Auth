@@ -712,6 +712,72 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["conceptoMutation"],
     }),
+    getFiltersCCC: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/GetFiltersCCC?id=${data.id}&PageIndex=${data.PageIndex}&PageSize=${data.PageSize}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")+
+              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+              (data.spec.CodigoRef != undefined
+                ? `&CodigoRef=${data.spec.CodigoRef}`
+                : "") 
+          : `/GetFiltersCCC?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["filters"],
+    }),
     getCodRefm: builder.mutation({
       query: (data) => ({
         url: data.spec
@@ -1265,6 +1331,68 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["rutDeudorMutation"],
     }),
+    getNumFilter: builder.mutation({
+      query: (data) => ({
+        url: data.spec
+          ? `/NumberFilter?id=${data.id}` +
+            (data.spec.FechaEmision != undefined
+              ? `&FechaEmision=${data.spec.FechaEmision}`
+              : "") +
+            (data.spec.FechaRecepcion != undefined
+              ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+              : "") +
+            (data.spec.FechaPago != undefined
+              ? `&FechaPago=${data.spec.FechaPago}`
+              : "") +
+            (data.spec.FechaAceptacion != undefined
+              ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+              : "") +
+            (data.spec.Glosa != undefined ? `&Glosa=${data.spec.Glosa}` : "") +
+            (data.spec.Concepto != undefined
+              ? `&Concepto=${data.spec.Concepto}`
+              : "") +
+            (data.spec.EstadoAceptacion != undefined
+              ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+              : "") +
+            (data.spec.EstadoRecepcion != undefined
+              ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+              : "") +
+            (data.spec.Acreedor != undefined
+              ? `&Acreedor=${data.spec.Acreedor}`
+              : "") +
+            (data.spec.Deudor != undefined
+              ? `&Deudor=${data.spec.Deudor}`
+              : "") +
+            (data.spec.MontoNeto != undefined
+              ? `&MontoNeto=${data.spec.MontoNeto}`
+              : "") +
+            (data.spec.MontoBruto != undefined
+              ? `&MontoBruto=${data.spec.MontoBruto}`
+              : "") +
+            (data.spec.EstadoEmision != undefined
+              ? `&EstadoEmision=${data.spec.EstadoEmision}`
+              : "") +
+            (data.spec.EstadoPago != undefined
+              ? `&EstadoPago=${data.spec.EstadoPago}`
+              : "") +
+            (data.spec.RutAcreedor != undefined
+              ? `&RutAcreedor=${data.spec.RutAcreedor}`
+              : "") +
+            (data.spec.RutDeudor != undefined
+              ? `&RutDeudor=${data.spec.RutDeudor}`
+              : "") +
+            (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : "") +
+            (data.spec.NombreAcreedor != undefined
+              ? `&NombreAcreedor=${data.spec.NombreAcreedor}`
+              : "") +
+            (data.spec.NombreDeudor != undefined
+              ? `&NombreDeudor=${data.spec.NombreDeudor}`
+              : "")
+          : `/NumberFilter?id=${data.id}`,
+        method: "GET",
+      }),
+      providesTags: ["cantidadFiltros"],
+    }),
     getNumberCodRef: builder.mutation({
       query: (data) => ({
         url: data.spec
@@ -1673,4 +1801,6 @@ export const {
   useGetNumberRutDeudorMutation,
   useGetNumberNombreAcreedorMutation,
   useGetNumberNombreDeudorMutation,
+  useGetNumFilterMutation,
+  useGetFiltersCCCMutation,
 } = instruccionesApi;

@@ -81,7 +81,7 @@ function GraficoTorta(props){
                 
                 <div className="p-[5px]">
                 {estRecept.series.map((dataset, i) => (
-                    <div className='flex flex-row'>
+                    <div key={estRecept.options.labels[i]} className='flex flex-row'>
                         <Box
                         className="flex-0 w-10 h-10 rounded-full"
                         sx={{ backgroundColor: estRecept.options.colors[i] }}
@@ -100,7 +100,7 @@ function GraficoTorta(props){
                 </div>
                 <div className="p-[5px]">
                 {estPagado.series.map((dataset, i) => (
-                    <div className='flex flex-row'>
+                    <div  key={estPagado.options.labels[i]} className='flex flex-row'>
                         <Box
                         className="flex-0 w-10 h-10 rounded-full"
                         sx={{ backgroundColor: estPagado.options.colors[i] }}
@@ -120,7 +120,7 @@ function GraficoTorta(props){
                 
                 <div className="p-[5px]">
                 {estFact.series.map((dataset, i) => (
-                    <div className='flex flex-row'>
+                    <div key={estFact.options.labels[i]} className='flex flex-row'>
                         <Box
                         className="flex-0 w-10 h-10 rounded-full"
                         sx={{ backgroundColor: estFact.options.colors[i] }}

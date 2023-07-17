@@ -212,6 +212,26 @@ export function navigationConfigAsync (item =[],data =[]){
            
           ],
         },
+        // {
+        //   id: "4",
+        //   title: "USUARIO",
+        //   subtitle: "USUARIO",
+        //   type: "group",
+        //   icon: "heroicons-outline:home",
+          
+        //   children: [
+          
+        //     {
+        //       id: "4.1",
+        //       title: "",
+        //       type: "item",
+        //       icon: "heroicons-outline:clipboard-check",
+        //       url: "/sign-out/SignOutPage",
+        //       auth: []
+        //     },
+           
+        //   ],
+        // },
       ];
   return Config
   }

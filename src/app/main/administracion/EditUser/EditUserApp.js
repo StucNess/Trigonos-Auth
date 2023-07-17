@@ -7,10 +7,9 @@ import {
   responsiveFontSizes,
 } from "@mui/material/styles";
 import { esES } from "@mui/material/locale";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
+
+
+
 //ICONS
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -25,35 +24,58 @@ import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
 import PeopleIcon from "@mui/icons-material/People";
 
 import { alpha } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import TableSortLabel from "@mui/material/TableSortLabel";
-import Toolbar from "@mui/material/Toolbar";
+
+import { tableCellClasses } from "@mui/material/TableCell";
 
 
 
-import Tooltip from "@mui/material/Tooltip";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+
+
+
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
+
+
+
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { useCallback, useEffect, useState } from "react";
 import ModalEditUser from "./widgets/ModalEditUser";
 import { forwardRef } from "react";
-
+import { 
+  Paper,
+  Button, 
+  Box,
+  Grid, 
+  Checkbox, 
+  FormLabel,
+  Autocomplete,
+  FormControlLabel,
+  FormGroup,
+  InputAdornment,
+  TextFieldTable,
+  Table,
+  TextField,
+  TableBody,
+  TableContainer,
+  TableCell,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Toolbar,
+  Typography,
+  Tooltip,
+  IconButton,
+  MenuItem } from "@mui/material";
 //SECCIÓN PARA REALIZAR REDIRECCION DE RUTA/LINK A OTRA VENTANA
 import PropTypes from "prop-types";
 import { Link as RouterLink, MemoryRouter } from "react-router-dom";
 import { StaticRouter } from "react-router-dom/server";
 
-import { useGetUsuariosPaginationQuery, useGetUsuariosRolesQuery, usePostUserLockMutation, usePostUserUnlockMutation } from "app/store/usuariosApi/usuariosApi";
+import { useGetNumUsuariosMutation, useGetUsuariosPaginationMutation,  useGetUsuariosRolesQuery, usePostUserLockMutation, usePostUserUnlockMutation } from "app/store/usuariosApi/usuariosApi";
 import { useGetEmpresasQuery } from "app/store/empresaApi/empresaApi";
 import { useGetParticipantesByIdMutation, useGetParticipantesQuery } from "app/store/participantesApi/participantesApi";
 import Dialog from "@mui/material/Dialog";
@@ -326,29 +348,32 @@ EnhancedTableToolbar.propTypes = {
 };
 function EditUserApp(props) {
   // const theme = useTheme();
+  const [renderCount, setRenderCount] = useState(0);
+  const [timerId, setTimerId] = useState(null);
+  const [isloading, setIsloading] = useState(true);
+  const [filtrarTabla, setFiltrarTabla] = useState("");
   const [order, setOrder] = useState(DEFAULT_ORDER);
   const [orderBy, setOrderBy] = useState(DEFAULT_ORDER_BY);
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [visibleRows, setVisibleRows] = useState(null);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
   const [cargando, setCargando] = useState(false);
-  
+  const [pageIndex, setPageIndex] = useState(1);
+  const [pagination, setPagination] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
   const [disableButton, setDisableButton] = useState(false);
   const [dataUser, setDataUser] = useState({});
-  const [dataParticipant, setDataParticipant] = useState([]);
   const [apiResponseProyects, setApiResponseProyects] = useState([]);
   const {data: getEmpresas,isLoading:loadempresa , refetch: refreshEmpresa, isFetching: isFetchEmpresas} = useGetEmpresasQuery();
-
- 
-  const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
-    pageSize:1000,
-    token: window.localStorage.getItem("token")
-  });
-  console.log(isfetchingUsuarios);
+  // const {data: getUsuarios,isLoading , refetch, isFetching: isfetchingUsuarios} = useGetUsuariosPaginationQuery({
+  //   pageSize:1000,
+  //   token: window.localStorage.getItem("token")
+  // });
+  // console.log(isfetchingUsuarios);
   const {data: getParticipant,isLoading:loadParticipant , refetch: refetchParticipant} = useGetParticipantesQuery();
   const {data: dataUserRoles =[],isLoading: isloadRolesGet =true} = useGetUsuariosRolesQuery();
   const [getParticipantById, data_participant] = useGetParticipantesByIdMutation();
@@ -363,8 +388,140 @@ function EditUserApp(props) {
     msgError: false,
   });
   const { msgResp, msgText, msgError } = MsgAlert;
+
+   //OBTENER CANTIDAD PARA ITERAR
+   const [getNumUsers, {isLoading : isLoadingNUser}] = useGetNumUsuariosMutation();
  
+   //MUTATIONS QUE DEBEN SER ITERADOS
+   const [getUsersMutation, {isLoading : isLoadingPartm}] = useGetUsuariosPaginationMutation();
+     //VARIABLES QUE RECIBEN LOS DATOS EN LA ITERACIÓN
+  const [dataUsers, setDataUsers] = useState([]);
+
+
+  //VARIABLES BOOL PARA VERIFICAR CARGA
+  const [cargaUsers, setCargaUsuarios] = useState(true);
+  function GetDataMutations(){
+    try {
+      setDataUsers([]);      
+      setIsloading(true);
+      setCargaUsuarios(true);
+
+     
+      getUsersMutation({
+        PageIndex: pageIndex,
+        PageSize: rowsPerPage,
+        token: window.localStorage.getItem("token"),
+        search: filtrarTabla.trim(),
+      }).then((response)=>{
+
+        setDataUsers(response.data.data);
+        console.log(pageIndex); 
+        console.log(rowsPerPage); 
+        console.log(response.data.count)
+        console.log(response.data.pageCount)
+        setPagination(response.data.count);
+        setPageCount(response.data.pageCount);
+               
+        setCargaUsuarios(false);
+      }).catch((error)=>{
+
+      })
+ 
+      // getNumUsers(specUsers)
+      // .then((response) => {
+      //   const buclesF = Math.round(response.data / 200 + 0.49) + 1;
+      //   const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+      //     specUsers.PageIndex = index + 1;
+      //     return getUsersMutation(specUsers);
+      //   });
+      //   console.log(requests)
+      //   Promise.all(requests)
+      //     .then((responses) => {
+      //       const newData = responses.map((response) => response.data.data).flat();
+      //       setDataUsers((prevLista) => {
+      //         if (Array.isArray(prevLista)) {
+      //           return [...prevLista, ...newData];
+      //         } else {
+      //           return [...newData];
+      //         }
+      //       });
+     
+           
+      //       setCargaUsuarios(false);
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //     });
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
+     
+
+
+    } catch (error) {
+      console.log("ERROR LOGICA NUMBERS Y USUARIOS");
+    }
+  }
+  // useEffect(() => {
+  //   GetDataMutations();
+  // }, [])
+  useEffect(() => {
+ 
+    function verificacarga() {
+      if ([isFetchEmpresas,cargaUsers].every((valor) => valor === false)) {
+        return false;
+      } else {
+        return true;
+
+        
+      }
+    }
   
+
+  if(verificacarga()===false){
+ 
+    if(!isFetchEmpresas && !cargaUsers ){
+     
+      setDataUsers((prevUsers)=>{
+        let dataformated = prevUsers.map(function (el) {
+          let estadonew = el.lockoutEnd === null ? "Activo" : "Desactivado";
+          return {
+            estado: estadonew,
+            rol: el.role,
+            email: el.email,
+            nombre: el.nombre,
+            apellido: el.apellido,
+            codempresa: el.idEmpresa,
+            empresa: getEmpresas.find((p) => p.id == el.idEmpresa).nombreEmpresa,
+            usuario: el.username,
+            pais: el.pais,
+            id: el.id,
+          };
+          
+          });
+      
+       
+  
+
+        // setVisibleRows(updatedRows);
+        setIsloading(false);
+
+
+        return dataformated
+      })
+      
+
+        
+      
+    }
+  }
+
+
+
+}, [isFetchEmpresas, cargaUsers])
+
+
 
   function search(searchString) {
     if (searchString.length === 0) {
@@ -562,24 +719,7 @@ function EditUserApp(props) {
       setPaddingHeight(newPaddingHeight);
   }
 
-  useEffect(() => {
-    
-   
 
-    // if(!isLoading){
-    //   GetUsers()
-    // }
-    if(!isFetchEmpresas){
-      if(!isfetchingUsuarios){
-        if(getUsuarios !=undefined){
-          GetUsers();
-        
-        }
-        
-      }
-    }
-    
-  }, [isLoading]);
   useEffect(() => {
 
     if(!table){
@@ -587,62 +727,85 @@ function EditUserApp(props) {
     }
   }, [table]);
   useEffect(() => {
-    if(!isFetchEmpresas){
-      if(!isfetchingUsuarios){
-        if(getUsuarios !=undefined){
-          GetUsers();
-        
-        }
-        
+    if(renderCount >0){
+      
+      if (timerId) {
+        clearTimeout(timerId);
       }
-    }
-
-
-  }, [isfetchingUsuarios])
-  useEffect(() => {
-    if(!isFetchEmpresas){
-      if(!isfetchingUsuarios){
-        if(getUsuarios !=undefined){
-          GetUsers();
-        
-        }
-        
-      }
+    
+      const newTimerId = setTimeout(() => {
+        setPageIndex(1);
+        GetDataMutations();
+      }, 800); // 500ms de retraso antes de realizar la llamada
+    
+      setTimerId(newTimerId);
     }
     
-
-  }, [isFetchEmpresas])
+  }, [filtrarTabla])
   
 
+  
 
+  const handleChangeRowsCount = (option) => {
+    if (rowsPerPage != option) {
+      setIsloading(true);
+      setRowsPerPage(option);
+      setPageIndex(1);
+    }
+  };
   const handleSetRow = (event) => {
     const {
       target: { value },
     } = event;
-    rows = search(value.trim());
-    rowsOnMount();
+    setFiltrarTabla(value);
+   
+    // rows = search(value.trim());
+    // rowsOnMount();
   };
+  useEffect(() => {
+    setRenderCount(renderCount+1)
+    GetDataMutations();
+  }, [pageIndex,rowsPerPage])
+  const handleChangePage = () => {
+  
 
-  const handleRequestSort = useCallback(
+    setPageIndex(pageIndex === pageCount ? pageIndex : pageIndex + 1);
+    if (pageIndex === pageCount) {
+      setIsloading(false);
+    }
+    // setPage(pageIndex + 1);
+
+  
+  };
+  const handleChangePagedos = () => {
+
+    setPageIndex(pageIndex > 1 ? pageIndex - 1 : 1);
+    if (pageIndex === 1) {
+      setIsloading(false);
+    }
+
+  };
+  const handleRequestSort = 
     (event, newOrderBy) => {
       const isAsc = orderBy === newOrderBy && order === "asc";
       const toggledOrder = isAsc ? "desc" : "asc";
       setOrder(toggledOrder);
       setOrderBy(newOrderBy);
-
+     
       const sortedRows = stableSort(
-        rows,
+        dataUsers,
         getComparator(toggledOrder, newOrderBy)
       );
+      console.log(dataUsers);
+      
       const updatedRows = sortedRows.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       );
 
-      setVisibleRows(updatedRows);
-    },
-    [order, orderBy, page, rowsPerPage]
-  );
+      setDataUsers(updatedRows);
+    }
+  ;
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -673,30 +836,30 @@ function EditUserApp(props) {
     setSelected(newSelected);
   };
 
-  const handleChangePage = useCallback(
+  // const handleChangePage = useCallback(
 
-    (event, newPage) => {
-      setPage(newPage);
-      console.log(newPage);
-      const sortedRows = stableSort(rows, getComparator(order, orderBy));
-      const updatedRows = sortedRows.slice(
-        newPage * rowsPerPage,
-        newPage * rowsPerPage + rowsPerPage
-      );
+  //   (event, newPage) => {
+  //     setPage(newPage);
+  //     console.log(newPage);
+  //     const sortedRows = stableSort(rows, getComparator(order, orderBy));
+  //     const updatedRows = sortedRows.slice(
+  //       newPage * rowsPerPage,
+  //       newPage * rowsPerPage + rowsPerPage
+  //     );
 
-      setVisibleRows(updatedRows);
+  //     setVisibleRows(updatedRows);
 
-      // Avoid a layout jump when reaching the last page with empty rows.
-      const numEmptyRows =
-        newPage > 0
-          ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
-          : 0;
+  //     // Avoid a layout jump when reaching the last page with empty rows.
+  //     const numEmptyRows =
+  //       newPage > 0
+  //         ? Math.max(0, (1 + newPage) * rowsPerPage - rows.length)
+  //         : 0;
 
-      const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
-      setPaddingHeight(newPaddingHeight);
-    },
-    [order, orderBy, dense, rowsPerPage]
-  );
+  //     const newPaddingHeight = (dense ? 33 : 53) * numEmptyRows;
+  //     setPaddingHeight(newPaddingHeight);
+  //   },
+  //   [order, orderBy, dense, rowsPerPage]
+  // );
 
   const handleChangeRowsPerPage = useCallback(
     (event) => {
@@ -795,7 +958,7 @@ function EditUserApp(props) {
                 <PeopleIcon className="ml-[10px] text-pantoneazul" />
               </div>
               <h1 className="border border-b-pantoneazul w-full"></h1>
-              {isfetchingUsuarios?
+              {isloading?
               <div className="flex items-center">
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
                   
@@ -808,6 +971,7 @@ function EditUserApp(props) {
                   id="outlined-basic"
                   label="Filtrar"
                   variant="filled"
+                  value={filtrarTabla}
                   onChange={(e) => {
                     handleSetRow(e);
                   }}
@@ -816,6 +980,78 @@ function EditUserApp(props) {
             
               <Box className="m-[20px]">
                 <Box>
+                <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row items-center">
+            <div className="flex flex-row justify-center items-center">
+            Filas por Página
+            <TextField
+              id="PagePerRows"
+              select
+             
+              value={rowsPerPage}
+              variant="standard"
+              // size="small"
+            >
+              {[5, 10, 25].map((option) => (
+                <MenuItem key={option} value={option} 
+                onClick={()=>{
+                  handleChangeRowsCount(option)
+                  }}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+            </div>
+            <div className="flex flex-row justify-center items-center"> 
+            </div>
+                  
+                    <Tooltip  
+                      title="Previo" 
+                      arrow 
+                      placement="top"
+                    >
+                      <span>
+                      <IconButton
+                        sx={{ "&:hover": { color: "#e4493f" } }}
+                        key="chechedRight"
+                        aria-label="Close"
+                        color="primary"
+                        onClick={ handleChangePagedos
+                        }
+                        disabled={pageIndex===1}
+                        
+                        size="small"
+                      >
+                        <NavigateBeforeIcon fontSize="large" />
+                      </IconButton>
+                      </span>
+                    </Tooltip>
+                      <Tooltip  
+                        title="Siguiente" 
+                        arrow 
+                        placement="top">
+                        <span>
+                        <IconButton
+                        sx={{ "&:hover": { color: "#e4493f" } }}
+                        key="chechedLeft"
+                        aria-label="Close"
+                        color="primary"
+                       onClick={ handleChangePage
+                          
+                        }
+                        disabled={pageIndex===pageCount}
+                        // disabled={checkeddos.length === 0}
+                        size="small"
+                      >
+                        <NavigateNextIcon fontSize="large" />
+                      </IconButton>
+                        </span>
+                    </Tooltip>
+                    </div>
+                    <div>
+                    <b>{`Página ${pageIndex} de ${pageCount} / Total de filas: ${pagination}`}</b> 
+                    </div>
+                </div>
                   <TableContainer  > 
                     {/* sx={{ maxHeight: 360 , overflow:"true" }} */}
                     <Table
@@ -833,8 +1069,8 @@ function EditUserApp(props) {
                         rowCount={rows.length}
                       />
                       <TableBody >
-                        {visibleRows
-                          ? visibleRows.map((row, index) => {
+                        {dataUsers
+                          ? dataUsers.map((row, index) => {
                               const isItemSelected = isSelected(row.id);
                               const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -994,7 +1230,7 @@ function EditUserApp(props) {
                     </Table>
                   </TableContainer>
                   
-                  <TablePagination
+                  {/* <TablePagination
                   
                   labelRowsPerPage="Filas por página"
                   variant="h5"
@@ -1012,15 +1248,15 @@ function EditUserApp(props) {
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-                 
+                  */}
                   
                 </Box>
-                <FormControlLabel
+                {/* <FormControlLabel
                   control={
                     <Switch checked={dense} onChange={handleChangeDense} />
                   }
                   label="Disminuir espacio"
-                />
+                /> */}
               </Box>
               </>}
             </div>

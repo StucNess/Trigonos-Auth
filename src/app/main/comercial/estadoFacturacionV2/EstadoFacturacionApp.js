@@ -43,11 +43,11 @@ const Root = styled(FusePageSimple)(({ theme }) => ({
 
 function estadoFacturacion(props) {
   const [carga, setCarga] = useState(true);
-
+  const [anchorEl, setAnchorEl] = useState(null);
   const [tabValue, setTabValue] = useState(0);
   const user = useSelector(selectUser);
  
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(false);
   const { data: getData, isFetching: fetchListParticipant } = useGetParticipantesById_Query(
     user.idUser
   );
@@ -83,12 +83,14 @@ function estadoFacturacion(props) {
 
   }, [fetchListParticipant]);
 
-  function handleOpen() {
+  function handleOpen(event) {
+    setAnchorEl(event.currentTarget);
     setOpen(true);
   }
 
   function handleclose() {
-    setOpen(null);
+    setOpen(false);
+    setAnchorEl(null);
   }
   return carga ? (
     <Paper className="w-full p-[20px] mb-[20px]">
@@ -120,7 +122,7 @@ function estadoFacturacion(props) {
 
             <Menu
               id="project-menu"
-              anchorEl={open}
+              anchorEl={anchorEl}
               open={open}
               onClose={handleclose}
             >

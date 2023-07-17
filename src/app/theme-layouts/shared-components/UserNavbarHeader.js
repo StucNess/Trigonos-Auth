@@ -3,7 +3,11 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
 import { selectUser } from 'app/store/userSlice';
-
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import MenuItem from "@mui/material/MenuItem";
+import { Link, NavLink } from "react-router-dom";
+import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 const Root = styled('div')(({ theme }) => ({
   '& .username, & .email': {
     transition: theme.transitions.create('opacity', {
@@ -27,7 +31,11 @@ const Root = styled('div')(({ theme }) => ({
 
 function UserNavbarHeader(props) {
   const user = useSelector(selectUser);
+  // const [userMenu, setUserMenu] = useState(null);
 
+  // const userMenuClose = () => {
+  //   setUserMenu(null);
+  // };
   return (
     <Root className="user relative flex flex-col items-center justify-center p-16 pb-14 shadow-0">
       <div className="flex items-center justify-center mb-24">
@@ -49,6 +57,18 @@ function UserNavbarHeader(props) {
       <Typography className="email text-13 whitespace-nowrap font-medium" color="text.secondary">
         {user.data.email}
       </Typography>
+        <MenuItem
+          component={NavLink}
+          to="/sign-out"
+          // onClick={() => {
+          //   userMenuClose();
+          // }}
+          >
+          <ListItemIcon className="min-w-40">
+            <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
+          </ListItemIcon>
+          <ListItemText primary="Cerrar Sesión" />
+        </MenuItem>
     </Root>
   );
 }
