@@ -509,13 +509,13 @@ export default function Instrucciones(props) {
       return acc;
     }, {});
     const distinctValuesArray = {
-      glosa: [...distinctValues.glosa],
-      codigoRef: [...distinctValues.codigoRef],
-      carta: [...distinctValues.carta],
-      nombreAcreedor: [...distinctValues.nombreAcreedor],
-      nombreDeudor: [...distinctValues.nombreDeudor],
-      rutAcreedor: [...distinctValues.rutAcreedor],
-      rutDeudor: [...distinctValues.rutDeudor],
+      glosa: distinctValues.glosa? [...distinctValues.glosa]:[],
+      codigoRef: distinctValues.codigoRef?[...distinctValues.codigoRef]:[],
+      carta: distinctValues.carta?[...distinctValues.carta]:[],
+      nombreAcreedor:distinctValues.nombreAcreedor? [...distinctValues.nombreAcreedor]:[],
+      nombreDeudor: distinctValues.nombreDeudor?[...distinctValues.nombreDeudor]:[],
+      rutAcreedor: distinctValues.rutAcreedor?[...distinctValues.rutAcreedor]:[],
+      rutDeudor: distinctValues.rutDeudor?[...distinctValues.rutDeudor]:[],
     };
     return distinctValuesArray;
   }
@@ -551,8 +551,22 @@ export default function Instrucciones(props) {
     };
     return filtrarPorAtributos(objectToSearch);
   }
-  function setAllFilters(objtosearch) {
-    filterArrayOfObjectsByProperties;
+  function setAllFilters(arr,objtosearch, condition) {
+    
+    const distincts = distincFilters(filterArrayOfObjectsByProperties(arr,objtosearch));
+    console.log(distincts);
+    setConceptFilter(distincts.glosa?distincts.glosa:[]);
+    setCodRefFilter(distincts.codigoRef?distincts.codigoRef:[]);
+    setCartaFilter(distincts.carta?distincts.carta:[]);
+    if(condition){
+      setBusinessName(distincts.nombreDeudor?distincts.nombreDeudor:[]);
+      setRutName(distincts.rutDeudor?distincts.rutDeudor:[]);
+
+    }else{
+      setBusinessName(distincts.nombreAcreedor?distincts.nombreAcreedor:[]);
+      setRutName(distincts.rutAcreedor?distincts.rutAcreedor:[]);
+
+    }
   }
   useEffect(() => {
     console.log(allDataInstrucc);
@@ -1280,7 +1294,40 @@ export default function Instrucciones(props) {
   useEffect(() => {
     if (state.acreedor) {
       setLoadingApis(true);
-
+      setAllFilters(allDataInstrucc,{
+        // ceN_dte_acceptance_status_name: state.estadoAceptacion ? "Aceptado" : "",
+        // trgnS_dte_reception_status_name: state.estadoRecepcion ? "Recepcionado" : "",
+        acreedor:id,
+        // deudor: state.deudor ? id : "",
+        // ceN_billing_status_type_name: state.estadoEmision ? "Facturado" : "",
+        // ceN_payment_status_type_name: state.estadoPago ? "Pagado" : "",
+        // rutDeudor: state.acreedor
+        // ? selected.sRut != ""
+        //   ? selected.sRut.slice(0, 8)
+        //   : ""
+        // : "",
+        // rutAcreedor: state.deudor
+        // ? selected.sRut != ""
+        //   ? selected.sRut.slice(0, 8)
+        //   : ""
+        // : "",
+        // glosa: selected.sConcept != "" ? selected.sConcept : "",
+        // // MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        // // MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        // // Folio: selected.sFolio != "" ? selected.sFolio : "",
+        // nombreDeudor: state.acreedor
+        //   ? selected.sBusinessName != ""
+        //     ? selected.sBusinessName
+        //     : ""
+        //   : "",
+        // nombreAcreedor: state.deudor
+        // ? selected.sBusinessName != ""
+        //   ? selected.sBusinessName
+        //   : ""
+        // : "",
+        // carta: selected.sCarta != "" ? selected.sCarta : "",
+        // codigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },true);
       // FiltersDeu();
       // FiltersOne();
 
@@ -1291,6 +1338,40 @@ export default function Instrucciones(props) {
       setLoadingApis(true);
       // FiltersAcree();
       // FiltersOne();
+      setAllFilters(allDataInstrucc,{
+        // ceN_dte_acceptance_status_name: state.estadoAceptacion ? "Aceptado" : "",
+        // trgnS_dte_reception_status_name: state.estadoRecepcion ? "Recepcionado" : "",
+        deudor:id,
+        // deudor: state.deudor ? id : "",
+        // ceN_billing_status_type_name: state.estadoEmision ? "Facturado" : "",
+        // ceN_payment_status_type_name: state.estadoPago ? "Pagado" : "",
+        // rutDeudor: state.acreedor
+        // ? selected.sRut != ""
+        //   ? selected.sRut.slice(0, 8)
+        //   : ""
+        // : "",
+        // rutAcreedor: state.deudor
+        // ? selected.sRut != ""
+        //   ? selected.sRut.slice(0, 8)
+        //   : ""
+        // : "",
+        // glosa: selected.sConcept != "" ? selected.sConcept : "",
+        // // MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        // // MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        // // Folio: selected.sFolio != "" ? selected.sFolio : "",
+        // nombreDeudor: state.acreedor
+        //   ? selected.sBusinessName != ""
+        //     ? selected.sBusinessName
+        //     : ""
+        //   : "",
+        // nombreAcreedor: state.deudor
+        // ? selected.sBusinessName != ""
+        //   ? selected.sBusinessName
+        //   : ""
+        // : "",
+        // carta: selected.sCarta != "" ? selected.sCarta : "",
+        // codigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },false);
       GetInstructions();
     } else {
       setLoadingApis(true);
