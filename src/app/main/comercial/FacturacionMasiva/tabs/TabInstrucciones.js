@@ -19,7 +19,12 @@ import axios from "axios";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 
 import PeopleIcon from "@mui/icons-material/People";
-
+// MODAL
+import Dialog from "@mui/material/Dialog";
+import WarningIcon from "@mui/icons-material/Warning";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+//
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -56,7 +61,10 @@ import {
   useGetParticipantesByIdMutation,
   useGetParticipantesQuery,
 } from "app/store/participantesApi/participantesApi";
-import { useGetInstruccionesQuery } from "app/store/instrucciones/instruccionesApi";
+import {
+  useGetInstruccionesQuery,
+  usePostFacturacionClMutation,
+} from "app/store/instrucciones/instruccionesApi";
 import { id } from "date-fns/locale";
 
 let theme = createTheme(esES);
@@ -533,11 +541,21 @@ function TabInstrucciones(props) {
   const [paddingHeight, setPaddingHeight] = useState(0);
   const [table, setTable] = useState(false);
   const [cargando, setCargando] = useState(true);
+  const [postFacturacion] = usePostFacturacionClMutation();
   // const {
   //   data: props.dataInstructions = [],
   //   // isLoading: isLoadinginstructions = true,
   //   // isFetching: isfetchInstructions,
   // } = useGetInstruccionesQuery(props.id);
+  const [MsgAlert, setMsgAlert] = useState({
+    msgResp: false,
+    msgText: "",
+    msgError: false,
+  });
+  const [cargandoModal, setCargandoModal] = useState(true);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const { msgResp, msgText, msgError } = MsgAlert;
 
   function search(searchString) {
     if (searchString.length === 0) {
@@ -680,7 +698,32 @@ function TabInstrucciones(props) {
     }, 1000);
     // }
   }, []);
-
+  const mostrarMensaje = (response) => {
+    if (!(response.error == undefined)) {
+      setMsgAlert({
+        msgResp: true,
+        msgText:
+          response.error == "true"
+            ? "EL EXCEL DEBE TENER MENOS DE 2000 FILAS"
+            : response.error.data.message,
+        msgError: true,
+      });
+      setCargando(false);
+      setTimeout(() => {
+        setOpenDialog(false);
+      }, 4000);
+    } else {
+      setMsgAlert({
+        msgResp: true,
+        msgText: "SE HA FACTURADO CORRECTAMENTE",
+        msgError: false,
+      });
+      setCargando(false);
+      setTimeout(() => {
+        setOpenDialog(false);
+      }, 4000);
+    }
+  };
   const handleSetRow = (event) => {
     const {
       target: { value },
@@ -1069,7 +1112,11 @@ function TabInstrucciones(props) {
     XLSX.writeFile(wb, "filename.xlsx");
   }
   const probandoFacturacion = () => {
-    console.log(selected);
+    setOpenDialog(true);
+    setCargando(true);
+    postFacturacion({ id: props.id, body: selected }).then((response) => {
+      mostrarMensaje(response);
+    });
   };
   function downloadExcelFile(filename, nubox = 0) {
     let dataPrueba = [];
@@ -1721,6 +1768,43 @@ function TabInstrucciones(props) {
           control={<Switch checked={dense} onChange={handleChangeDense} />}
           label="Disminuir espacio"
         />
+        <Dialog
+          open={openDialog}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          scroll={"paper"}
+        >
+          {cargando ? (
+            <div className="flex justify-center items-center h-[250px] w-[300px]">
+              <CircularProgress color="secondary" />
+            </div>
+          ) : (
+            <div>
+              {msgResp && (
+                <div className="flex justify-center items-center h-[250px] w-[300px]">
+                  {msgError ? (
+                    <div className="flex justify-center items-center h-[250px] w-[300px]">
+                      <WarningIcon className="w-[68px] h-[68px]  text-red" />
+                      <span className="absolute bottom-[20px] text-red">
+                        {" "}
+                        <b>{msgText}</b>
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="flex justify-center items-center h-[250px] w-[300px]">
+                      <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                      <span className="absolute bottom-[70px] text-green">
+                        {" "}
+                        <b>{msgText}</b>
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </Dialog>
+        //
       </>
     </Box>
   );

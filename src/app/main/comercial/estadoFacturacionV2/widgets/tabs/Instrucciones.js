@@ -509,89 +509,137 @@ export default function Instrucciones(props) {
       id: id,
       PageIndex: 1,
       PageSize: 100,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        Glosa:selected.sConcept!=""?selected.sConcept:"",
-        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-        Folio:selected.sFolio!=""?selected.sFolio:"",
-        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        Carta:selected.sCarta!=""?selected.sCarta:"",
-        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
-      }}).then((response)=>{
-      setConceptFilter(response.data);
-   
-      
-    }).catch((error)=>{
-      setCargaConcept(false);
-    });
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: selected.sCarta != "" ? selected.sCarta : "",
+        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },
+    })
+      .then((response) => {
+        setConceptFilter(response.data);
+      })
+      .catch((error) => {
+        setCargaConcept(false);
+      });
     getCodRefMutation({
       id: id,
       PageIndex: 1,
       PageSize: 100,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        Glosa:selected.sConcept!=""?selected.sConcept:"",
-        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-        Folio:selected.sFolio!=""?selected.sFolio:"",
-        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        Carta:selected.sCarta!=""?selected.sCarta:"",
-        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
-      }}).then((response)=>{
-      setCodRefFilter(response.data);
-   
-    }).catch((error)=>{
-      setCargaCodRef(false);
-    });
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: selected.sCarta != "" ? selected.sCarta : "",
+        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },
+    })
+      .then((response) => {
+        setCodRefFilter(response.data);
+      })
+      .catch((error) => {
+        setCargaCodRef(false);
+      });
     getCartaMutation({
       id: id,
       PageIndex: 1,
       PageSize: 100,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        Glosa:selected.sConcept!=""?selected.sConcept:"",
-        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-        Folio:selected.sFolio!=""?selected.sFolio:"",
-        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        Carta:selected.sCarta!=""?selected.sCarta:"",
-        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
-      }}).then((response)=>{
-      setCartaFilter(response.data);
-      
-    }).catch((error)=>{
-      setCargaCarta(false);
-    });
-
-
-
-    
-   
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: selected.sCarta != "" ? selected.sCarta : "",
+        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },
+    })
+      .then((response) => {
+        setCartaFilter(response.data);
+      })
+      .catch((error) => {
+        setCargaCarta(false);
+      });
   }
   useEffect(() => {
     if (conceptFilter) {
@@ -623,57 +671,94 @@ export default function Instrucciones(props) {
       id: id,
       PageIndex: 1,
       PageSize: 100,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        Glosa:selected.sConcept!=""?selected.sConcept:"",
-        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-        Folio:selected.sFolio!=""?selected.sFolio:"",
-        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        Carta:selected.sCarta!=""?selected.sCarta:"",
-        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
-      }}).then((response)=>{
-      setRutName(response.data);
-      setCargaRutAcre(false);
-    }).catch((error)=>{
-      setCargaRutAcre(false);
-    });
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: selected.sCarta != "" ? selected.sCarta : "",
+        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },
+    })
+      .then((response) => {
+        setRutName(response.data);
+        setCargaRutAcre(false);
+      })
+      .catch((error) => {
+        setCargaRutAcre(false);
+      });
     getNombreAcreedor({
       id: id,
       PageIndex: 1,
       PageSize: 100,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        Glosa:selected.sConcept!=""?selected.sConcept:"",
-        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-        Folio:selected.sFolio!=""?selected.sFolio:"",
-        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        Carta:selected.sCarta!=""?selected.sCarta:"",
-        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
-      }}).then((response)=>{
-      setBusinessName(response.data);
-      setCargaNombreAcre(false);
-    }).catch((error)=>{
-      setCargaNombreAcre(false);
-    });
-    
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: selected.sCarta != "" ? selected.sCarta : "",
+        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },
+    })
+      .then((response) => {
+        setBusinessName(response.data);
+        setCargaNombreAcre(false);
+      })
+      .catch((error) => {
+        setCargaNombreAcre(false);
+      });
   }
   function FiltersDeu() {
     setPageIndex(1);
@@ -696,68 +781,101 @@ export default function Instrucciones(props) {
       id: id,
       PageIndex: 1,
       PageSize: 100,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        Glosa:selected.sConcept!=""?selected.sConcept:"",
-        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-        Folio:selected.sFolio!=""?selected.sFolio:"",
-        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        Carta:selected.sCarta!=""?selected.sCarta:"",
-        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
-      }}).then((response)=>{
-      setRutName(response.data);
-      setCargaRutDeudor(false);
-    }).catch((error)=>{
-      setCargaRutDeudor(false);
-    });
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: selected.sCarta != "" ? selected.sCarta : "",
+        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },
+    })
+      .then((response) => {
+        setRutName(response.data);
+        setCargaRutDeudor(false);
+      })
+      .catch((error) => {
+        setCargaRutDeudor(false);
+      });
     getNombreDeudorMutation({
       id: id,
       PageIndex: 1,
       PageSize: 100,
-      spec:{
-        EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-        EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-        Acreedor:state.acreedor?id:"",
-        Deudor:state.deudor?id:"",
-        EstadoEmision:state.estadoEmision?"Facturado":"",
-        EstadoPago:state.estadoPago?"Pagado":"",
-        RutDeudor:state.acreedor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        RutAcreedor:state.deudor?(selected.sRut!=""?selected.sRut.slice(0, 8):""):(""),
-        Glosa:selected.sConcept!=""?selected.sConcept:"",
-        MontoNeto:selected.sMontoNeto!=""?selected.sMontoNeto:"",
-        MontoBruto:selected.sMontoBruto!=""?selected.sMontoBruto:"",
-        Folio:selected.sFolio!=""?selected.sFolio:"",
-        NombreDeudor:state.acreedor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        NombreAcreedor:state.deudor?(selected.sBusinessName!=""?selected.sBusinessName:""):(""),
-        Carta:selected.sCarta!=""?selected.sCarta:"",
-        CodigoRef:selected.sCodRef!=""?selected.sCodRef:"",
-      }}).then((response)=>{
-      setBusinessName(response.data);
-      setCargaNombreDeu(false);
-    }).catch((error)=>{
-      setCargaNombreDeu(false);
-    });
-    
+      spec: {
+        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
+        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
+        Acreedor: state.acreedor ? id : "",
+        Deudor: state.deudor ? id : "",
+        EstadoEmision: state.estadoEmision ? "Facturado" : "",
+        EstadoPago: state.estadoPago ? "Pagado" : "",
+        RutDeudor: state.acreedor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        RutAcreedor: state.deudor
+          ? selected.sRut != ""
+            ? selected.sRut.slice(0, 8)
+            : ""
+          : "",
+        Glosa: selected.sConcept != "" ? selected.sConcept : "",
+        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        Folio: selected.sFolio != "" ? selected.sFolio : "",
+        NombreDeudor: state.acreedor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        NombreAcreedor: state.deudor
+          ? selected.sBusinessName != ""
+            ? selected.sBusinessName
+            : ""
+          : "",
+        Carta: selected.sCarta != "" ? selected.sCarta : "",
+        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
+      },
+    })
+      .then((response) => {
+        setBusinessName(response.data);
+        setCargaNombreDeu(false);
+      })
+      .catch((error) => {
+        setCargaNombreDeu(false);
+      });
   }
 
-  function searchFilter(){
+  function searchFilter() {
     // setSelected({...selected,buscar: true});
-    
+
     FiltersOne();
     GetInstructions();
-  
-    
-
-
   }
   useEffect(() => {
     function verificacarga() {
@@ -893,7 +1011,6 @@ export default function Instrucciones(props) {
       // GetInstructions();
     }
   };
- 
 
   const clearAllFilters = () => {
     if (condicionFilters === 0) {

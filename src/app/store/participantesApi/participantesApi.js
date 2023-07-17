@@ -118,7 +118,8 @@ export const participantesApi = createApi({
         `/api/Participantes/${parameters.id}?business_name=${parameters.business_name}?rut=${parameters.rut}`,
     }),
     getHistorificacion: builder.mutation({
-      query: (data) => `/Historificacion/${data.id}?PageIndex=${data.PageIndex}&PageSize=${data.PageSize}`,
+      query: (data) =>
+        `/Historificacion/${data.id}?PageIndex=${data.PageIndex}&PageSize=${data.PageSize}`,
     }),
 
     //Optimos
@@ -128,8 +129,7 @@ export const participantesApi = createApi({
       providesTags: ["listparticipant"],
     }),
     getNumberParticipant: builder.mutation({
-      query: (spec) =>
-        `/api/Participantes/CantidadParticipantes`,
+      query: (spec) => `/api/Participantes/CantidadParticipantes`,
       providesTags: ["numberParticipant"],
     }),
     getProyAll: builder.mutation({
@@ -138,18 +138,15 @@ export const participantesApi = createApi({
       providesTags: ["proyectos"],
     }),
     getNumberProyecto: builder.mutation({
-      query: (spec) =>
-        `/api/Participantes/CantidadProyectos`,
+      query: (spec) => `/api/Participantes/CantidadProyectos`,
       providesTags: ["numberProyect"],
     }),
     getNumberFactCL: builder.mutation({
-      query: (spec) =>
-        `/api/Participantes/CantidadFactCl`,
+      query: (spec) => `/api/Participantes/CantidadFactCl`,
       providesTags: ["numberFactCl"],
     }),
     getNumAgentes: builder.mutation({
-      query: () =>
-        `/api/Participantes/CantidadAgentes`,
+      query: () => `/api/Participantes/CantidadAgentes`,
       providesTags: ["cantidadAgentes"],
     }),
     getAgentesDeParticipante: builder.mutation({
@@ -164,7 +161,7 @@ export const participantesApi = createApi({
           `/api/Participantes/AgentesDeParticipante?PageIndex=${spec.PageIndex}&` +
           `PageSize=${spec.PageSize}&` +
           (spec.Rut != undefined ? `&rutEmpresa=${spec.Rut}` : ""),
-         
+
         method: "GET",
       }),
     }),
@@ -196,5 +193,4 @@ export const {
   useGetNumberFactCLMutation,
   useGetAgentesDeParticipanteMutation,
   useGetNumAgentesMutation,
-
 } = participantesApi;

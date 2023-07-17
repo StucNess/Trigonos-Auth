@@ -702,11 +702,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/ssFiltros?id=${data.id}`,
         method: "GET",
       }),
@@ -768,11 +768,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/ssFiltros?id=${data.id}`,
         method: "GET",
       }),
@@ -834,11 +834,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/ssFiltros?id=${data.id}`,
         method: "GET",
       }),
@@ -900,11 +900,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/sFiltrosNameCreditor?id=${data.id}`,
         method: "GET",
       }),
@@ -966,11 +966,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/sFiltrosRutCreditor?id=${data.id}`,
         method: "GET",
       }),
@@ -1032,11 +1032,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/sFiltrosNameDebtor?id=${data.id}`,
         method: "GET",
       }),
@@ -1098,11 +1098,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/sFiltrosRutDeudor?id=${data.id}`,
         method: "GET",
       }),
@@ -1187,6 +1187,16 @@ export const instruccionesApi = createApi({
           "Content-type": "application/json",
         },
         url: `/api/Instrucciones/NominasDePago?id=${data.id}&bank=${data.bank}&fechaPago=${data.fechaPago}&excelName=${data.excelName}`,
+        body: data.body,
+        method: "POST",
+      }),
+    }),
+    postFacturacionCl: builder.mutation({
+      query: (data) => ({
+        headers: {
+          "Content-type": "application/json",
+        },
+        url: `/api/Instrucciones/FacturacionCL?id=${data.id}`,
         body: data.body,
         method: "POST",
       }),
@@ -1653,6 +1663,7 @@ export const {
   usePostFacturacionAcreedorMutation,
   usePostFacturacionMutation,
   usePostNominasPagoMutation,
+  usePostFacturacionClMutation,
   useGetCodRefQuery,
   useGetCartaQuery,
   useGetNumberConceptMutation,

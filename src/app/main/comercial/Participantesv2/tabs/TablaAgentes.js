@@ -2,19 +2,19 @@ import * as React from "react";
 import PropTypes from "prop-types";
 import { alpha } from "@mui/material/styles";
 import { visuallyHidden } from "@mui/utils";
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from "@mui/lab/LoadingButton";
 import * as XLSX from "xlsx";
-import SaveIcon from '@mui/icons-material/Save';
+import SaveIcon from "@mui/icons-material/Save";
 import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import ModalCampo from "./widgets/ModalCampo";
-import { 
+import {
   Paper,
-  Button, 
+  Button,
   Box,
-  Grid, 
-  Checkbox, 
+  Grid,
+  Checkbox,
   FormLabel,
   Autocomplete,
   FormControlLabel,
@@ -34,13 +34,17 @@ import {
   Typography,
   Tooltip,
   IconButton,
-  MenuItem } from "@mui/material";
+  MenuItem,
+} from "@mui/material";
 import { Stack } from "@mui/system";
 
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import LinearProgress from "@mui/material/LinearProgress";
-import { useGetAgentesDeParticipanteMutation, useGetNumAgentesMutation } from "app/store/participantesApi/participantesApi";
+import {
+  useGetAgentesDeParticipanteMutation,
+  useGetNumAgentesMutation,
+} from "app/store/participantesApi/participantesApi";
 function createData(
   id,
   editor,
@@ -98,14 +102,7 @@ function CleanArray(value) {
 }
 //CABECERAS DEL EXCEL
 let headAgentes = [
-  [
-    "ID",
-    "Nombre",
-    "Correo",
-    "Telefono",
-    "Nombre_Empresa",
-    "Rut_Empresa",
-  ],
+  ["ID", "Nombre", "Correo", "Telefono", "Nombre_Empresa", "Rut_Empresa"],
 ];
 const columns = [
   { id: "id", label: "ID", minWidth: 20 },
@@ -219,51 +216,64 @@ export default function TablaAgentes(props) {
   const [LoadingApis, setLoadingApis] = useState(false);
   const [DataRows, setDataRows] = useState([]);
   const [sendData, setSendData] = useState([]);
-  const [getDataAgent, {isLoading : isLoadingHist}] = useGetAgentesDeParticipanteMutation();
-  const [getAllData, {isLoading : isLoadingAllData}] = useGetAgentesDeParticipanteMutation();
-  const [getNumAgent, {isLoading : isLoadingNumAgent}] = useGetNumAgentesMutation();
+  const [getDataAgent, { isLoading: isLoadingHist }] =
+    useGetAgentesDeParticipanteMutation();
+  const [getAllData, { isLoading: isLoadingAllData }] =
+    useGetAgentesDeParticipanteMutation();
+  const [getNumAgent, { isLoading: isLoadingNumAgent }] =
+    useGetNumAgentesMutation();
   const [getExcelData, setGetExcelData] = useState([]);
   const [cargaGetAgentsData, setCargaGetAgentsData] = useState(true);
-    
+
   // const { data: getDataHist, isFetching: fetchHist, refetch: refetchHist} =  useGetHistorificacionMutation({id:props.idParticipant, PageIndex:pageIndex, PageSize:rowsPerPage  });
   // let url = ` https://trigonosapi.azurewebsites.net/Historificacion?id=${props.idParticipant}`;
 
-  const convertAndDownloadExcel = (header, data, name,tipoExcel) => {
+  const convertAndDownloadExcel = (header, data, name, tipoExcel) => {
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet([]);
     XLSX.utils.sheet_add_aoa(ws, header);
-    if (tipoExcel){
+    if (tipoExcel) {
       const data_ = data.map(function (el) {
-        return {id: el.id, 
-          nombre: (el.nombre? el.nombre.trim() !="": el.nombre )? el.nombre:"Sin Nombre",
-          correo: (el.correo? el.correo.trim() !="": el.correo )? el.correo:"Sin Correo",
-          telefono: (el.telefono? el.telefono.trim().replace("[]", "") !="": el.telefono )? el.telefono:"Sin Teléfono",
+        return {
+          id: el.id,
+          nombre: (el.nombre ? el.nombre.trim() != "" : el.nombre)
+            ? el.nombre
+            : "Sin Nombre",
+          correo: (el.correo ? el.correo.trim() != "" : el.correo)
+            ? el.correo
+            : "Sin Correo",
+          telefono: (
+            el.telefono
+              ? el.telefono.trim().replace("[]", "") != ""
+              : el.telefono
+          )
+            ? el.telefono
+            : "Sin Teléfono",
           nombreEmpresa: el.nombreEmpresa,
           rutEmpresa: el.rutEmpresa,
-         }})
-    
-      const sheet = XLSX.utils.sheet_add_json(ws,data_ , {
+        };
+      });
+
+      const sheet = XLSX.utils.sheet_add_json(ws, data_, {
         origin: "A2",
         skipHeader: true,
       });
-      
+
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
+
       XLSX.writeFile(wb, `${name}.xlsx`);
-    }else{
+    } else {
       const sheet = XLSX.utils.sheet_add_json(ws, data, {
         origin: "A2",
         skipHeader: true,
       });
-        
+
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
+
       XLSX.writeFile(wb, `${name}.xlsx`);
     }
-    
-    
   };
-  function getAllDataToExcel(){
+  function getAllDataToExcel() {
     setGetExcelData([]);
     setCargaGetAgentsData(true);
     let specData = {
@@ -272,114 +282,120 @@ export default function TablaAgentes(props) {
     };
 
     getNumAgent(specData)
-    .then((response) => {
-      console.log(response)
-      const buclesF = Math.round(response.data / 1000 + 0.49) + 1;
-      console.log(buclesF)
-      const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
-        specData.PageIndex = index + 1;
-        return getAllData(specData);
-      });
-      console.log(requests)
-
-     
-      Promise.all(requests)
-        .then((responses) => {
-          const newData = responses.map((response) => response.data.data).flat();
-          setGetExcelData((prevLista) => {
-            if (Array.isArray(prevLista)) {
-              return [...prevLista, ...newData];
-            } else {
-              return [...newData];
-            }
-          });
-          setCargaGetAgentsData(false);
-          console.log(newData)
-
-        })
-        .catch((error) => {
-          console.log(error);
+      .then((response) => {
+        console.log(response);
+        const buclesF = Math.round(response.data / 1000 + 0.49) + 1;
+        console.log(buclesF);
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          specData.PageIndex = index + 1;
+          return getAllData(specData);
         });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+        console.log(requests);
 
-
-
-
-
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses
+              .map((response) => response.data.data)
+              .flat();
+            setGetExcelData((prevLista) => {
+              if (Array.isArray(prevLista)) {
+                return [...prevLista, ...newData];
+              } else {
+                return [...newData];
+              }
+            });
+            setCargaGetAgentsData(false);
+            console.log(newData);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
-  function getHistData(){
+  function getHistData() {
     setLoadingApis(true);
-    getDataAgent({PageIndex:pageIndex, PageSize:rowsPerPage,Rut:props.rutParticipant}).then((response)=>{
-    //   console.log("id",props.idParticipant);
-    //   console.log("Respuesta",response);
-      const { data, count, pageCount, pageIndex, pageSize } = response.data;
-      
-      if(response.data){
-        setSendData(data);
-        setDataRows(data.map(function (el) {
-            return {id: el.id, 
-              nombre: (el.nombre? el.nombre.trim() !="": el.nombre )? el.nombre:"Sin Nombre",
-              correo: (el.correo? el.correo.trim() !="": el.correo )? el.correo:"Sin Correo",
-              telefono: (el.telefono? el.telefono.trim().replace("[]", "") !="": el.telefono )? el.telefono:"Sin Teléfono",
-              nombreEmpresa: el.nombreEmpresa,
-              rutEmpresa: el.rutEmpresa, 
-             }}))
-        // console.log(rows);
-        setPagination(count)
-        setPageCount(pageCount);
-        setLoadingApis(false);
-        // setLoadingApis(verificacarga());
-      }
-    }).catch((error)=>{
-      console.log(error);
-      setLoadingApis(false);
+    getDataAgent({
+      PageIndex: pageIndex,
+      PageSize: rowsPerPage,
+      Rut: props.rutParticipant,
     })
+      .then((response) => {
+        //   console.log("id",props.idParticipant);
+        //   console.log("Respuesta",response);
+        const { data, count, pageCount, pageIndex, pageSize } = response.data;
+
+        if (response.data) {
+          setSendData(data);
+          setDataRows(
+            data.map(function (el) {
+              return {
+                id: el.id,
+                nombre: (el.nombre ? el.nombre.trim() != "" : el.nombre)
+                  ? el.nombre
+                  : "Sin Nombre",
+                correo: (el.correo ? el.correo.trim() != "" : el.correo)
+                  ? el.correo
+                  : "Sin Correo",
+                telefono: (
+                  el.telefono
+                    ? el.telefono.trim().replace("[]", "") != ""
+                    : el.telefono
+                )
+                  ? el.telefono
+                  : "Sin Teléfono",
+                nombreEmpresa: el.nombreEmpresa,
+                rutEmpresa: el.rutEmpresa,
+              };
+            })
+          );
+          // console.log(rows);
+          setPagination(count);
+          setPageCount(pageCount);
+          setLoadingApis(false);
+          // setLoadingApis(verificacarga());
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoadingApis(false);
+      });
   }
-  
-  
+
   useEffect(() => {
     getHistData();
     getAllDataToExcel();
-  }, [props.rutParticipant,pageIndex,rowsPerPage]);
+  }, [props.rutParticipant, pageIndex, rowsPerPage]);
   let rows = [];
 
   const handleChangePagedos = () => {
-   
     setLoadingApis(true);
-    setPageIndex(pageIndex >1? pageIndex - 1:1)
-    if(pageIndex===1){
+    setPageIndex(pageIndex > 1 ? pageIndex - 1 : 1);
+    if (pageIndex === 1) {
       setLoadingApis(false);
     }
 
- 
     // getHistData();
-    
   };
   const handleChangePage = () => {
     setLoadingApis(true);
-   
-    setPageIndex(pageIndex===pageCount?pageIndex: pageIndex + 1)
-    if(pageIndex===pageCount){
+
+    setPageIndex(pageIndex === pageCount ? pageIndex : pageIndex + 1);
+    if (pageIndex === pageCount) {
       setLoadingApis(false);
     }
 
     // getHistData();
-
   };
   const handleChangeRowsCount = (option) => {
-   
-    if(rowsPerPage!=option){
+    if (rowsPerPage != option) {
       setLoadingApis(true);
       setRowsPerPage(option);
       setPageIndex(1);
       // getHistData();
     }
- 
-
-    
   };
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -416,197 +432,194 @@ export default function TablaAgentes(props) {
     setSelected(newSelected);
   };
 
-  
-
- 
   const isSelected = (codigo) => selected.indexOf(codigo) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-//   const getModal = (rows, date) => {
-//     setHistId(rows);
-//     setHistDate(date);
- 
-//     setTable(false);
-//   };
-  if(LoadingApis ){
-    return(
-         
-    <Box className=" relative lfmax:w-[600px] p-[30px] ">
-      <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-     
-        <LinearProgress color="primary" />
-      </Stack>
-    </Box>
-           
-        
-    )
-  }else{
-    return(
+  //   const getModal = (rows, date) => {
+  //     setHistId(rows);
+  //     setHistDate(date);
+
+  //     setTable(false);
+  //   };
+  if (LoadingApis) {
+    return (
       <Box className=" relative lfmax:w-[600px] p-[30px] ">
-          <Box className="flex justify-end space-x-[20px]">
-          
-            <Tooltip  
-              title="Descargar Excel del Participante Actual" 
-              arrow 
-              placement="top"
-            >
-              <span>
+        <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
+          <LinearProgress color="primary" />
+        </Stack>
+      </Box>
+    );
+  } else {
+    return (
+      <Box className=" relative lfmax:w-[600px] p-[30px] ">
+        <Box className="flex justify-end space-x-[20px]">
+          <Tooltip
+            title="Descargar Excel del Participante Actual"
+            arrow
+            placement="top"
+          >
+            <span>
               <LoadingButton
-                loading ={cargaGetAgentsData}
+                loading={cargaGetAgentsData}
                 loadingPosition="start"
                 startIcon={<SiMicrosoftexcel />}
                 variant="contained"
                 color="success"
-                onClick={()=>{
-                  convertAndDownloadExcel(headAgentes,DataRows,`Excel del participante ${props.nameParticipant}`,false)
+                onClick={() => {
+                  convertAndDownloadExcel(
+                    headAgentes,
+                    DataRows,
+                    `Excel del participante ${props.nameParticipant}`,
+                    false
+                  );
                 }}
               >
                 Agentes del Participante Actual
               </LoadingButton>
-              </span>
-            </Tooltip>
-            <Tooltip  
-              title="Descargar Excel de todos los participantes" 
-              arrow 
-              placement="top"
-            >
-              <span>
+            </span>
+          </Tooltip>
+          <Tooltip
+            title="Descargar Excel de todos los participantes"
+            arrow
+            placement="top"
+          >
+            <span>
               <LoadingButton
-                loading ={cargaGetAgentsData}
+                loading={cargaGetAgentsData}
                 loadingPosition="start"
                 startIcon={<SiMicrosoftexcel />}
                 variant="contained"
                 color="success"
-                onClick={()=>{
-                  convertAndDownloadExcel(headAgentes,getExcelData,`Excel Todos los Agentes`,true)
+                onClick={() => {
+                  convertAndDownloadExcel(
+                    headAgentes,
+                    getExcelData,
+                    `Excel Todos los Agentes`,
+                    true
+                  );
                 }}
               >
                 Todos los Agentes
               </LoadingButton>
-              </span>
-            </Tooltip>
-          </Box>
-          
-         
-      <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row items-center">
+            </span>
+          </Tooltip>
+        </Box>
+
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row items-center">
             <div className="flex flex-row justify-center items-center">
-            Filas por Página
-            <TextField
-              id="PagePerRows"
-              select
-             
-              value={rowsPerPage}
-              variant="standard"
-              // size="small"
-            >
-              {[5, 10, 25].map((option) => (
-                <MenuItem key={option} value={option} 
-                onClick={()=>{handleChangeRowsCount(option)}}>
-                  {option}
-                </MenuItem>
-              ))}
-            </TextField>
-            </div>
-            <div className="flex flex-row justify-center items-center"> 
-            </div>
-           
-            <Tooltip  
-              title="Previo" 
-              arrow 
-              placement="top"
-            >
-              <span>
-              <IconButton
-                sx={{ "&:hover": { color: "#e4493f" } }}
-                key="chechedRight"
-                aria-label="Close"
-                color="primary"
-                onClick={handleChangePagedos}
-                disabled={pageIndex===1}
-                
-                size="small"
+              Filas por Página
+              <TextField
+                id="PagePerRows"
+                select
+                value={rowsPerPage}
+                variant="standard"
+                // size="small"
               >
-                <NavigateBeforeIcon fontSize="large" />
-              </IconButton>
+                {[5, 10, 25].map((option) => (
+                  <MenuItem
+                    key={option}
+                    value={option}
+                    onClick={() => {
+                      handleChangeRowsCount(option);
+                    }}
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+            <div className="flex flex-row justify-center items-center"></div>
+
+            <Tooltip title="Previo" arrow placement="top">
+              <span>
+                <IconButton
+                  sx={{ "&:hover": { color: "#e4493f" } }}
+                  key="chechedRight"
+                  aria-label="Close"
+                  color="primary"
+                  onClick={handleChangePagedos}
+                  disabled={pageIndex === 1}
+                  size="small"
+                >
+                  <NavigateBeforeIcon fontSize="large" />
+                </IconButton>
               </span>
             </Tooltip>
-              <Tooltip  
-                title="Siguiente" 
-                arrow 
-                placement="top">
-                <span>
+            <Tooltip title="Siguiente" arrow placement="top">
+              <span>
                 <IconButton
-                sx={{ "&:hover": { color: "#e4493f" } }}
-                key="chechedLeft"
-                aria-label="Close"
-                color="primary"
-                onClick={handleChangePage}
-                disabled={pageIndex===pageCount}
-                // disabled={checkeddos.length === 0}
-                size="small"
-              >
-                <NavigateNextIcon fontSize="large" />
-              </IconButton>
-                </span>
-             </Tooltip>
-            </div>
-            <div>
-             <b>{`Página ${pageIndex} de ${pageCount} / Total de filas: ${pagination}`}</b> 
-            </div>
-        </div>
-    <TableContainer>
-      <Box sx={{ maxHeight: 360 }} overflow-y-auto>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  sx={{ "&:hover": { color: "#e4493f" } }}
+                  key="chechedLeft"
+                  aria-label="Close"
+                  color="primary"
+                  onClick={handleChangePage}
+                  disabled={pageIndex === pageCount}
+                  // disabled={checkeddos.length === 0}
+                  size="small"
                 >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              DataRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      const valuee = row;
-                      return (
-                        <TableCell
-                          key={column.id}
-                          style={{ cursor: "pointer" }}
-                        //   onClick={
-                        //     table
-                        //       ? () => getModal(valuee.id, valuee.date)
-                        //       : () => setTable(true)
-                        //   }
-                          align={column.align}
-                        >
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
-          </TableBody>
-        </Table>
-      </Box>
-    </TableContainer>
-    {/* <TablePagination
+                  <NavigateNextIcon fontSize="large" />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </div>
+          <div>
+            <b>{`Página ${pageIndex} de ${pageCount} / Total de filas: ${pagination}`}</b>
+          </div>
+        </div>
+        <TableContainer>
+          <Box sx={{ maxHeight: 360 }} overflow-y-auto>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
+                    >
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {DataRows.slice(
+                  page * rowsPerPage,
+                  page * rowsPerPage + rowsPerPage
+                ).map((row) => {
+                  return (
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        const valuee = row;
+                        return (
+                          <TableCell
+                            key={column.id}
+                            style={{ cursor: "pointer" }}
+                            //   onClick={
+                            //     table
+                            //       ? () => getModal(valuee.id, valuee.date)
+                            //       : () => setTable(true)
+                            //   }
+                            align={column.align}
+                          >
+                            {column.format && typeof value === "number"
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </Box>
+        </TableContainer>
+        {/* <TablePagination
       rowsPerPageOptions={[6, 10, 25]}
       labelRowsPerPage="Filas por página"
       component="div"
@@ -616,7 +629,7 @@ export default function TablaAgentes(props) {
       onPageChange={handleChangePage}
       onRowsPerPageChange={handleChangeRowsPerPage}
     /> */}
-    {/* {!table && (
+        {/* {!table && (
       <ModalCampo
         rows={sendData}
         valueId={histId}
@@ -624,8 +637,7 @@ export default function TablaAgentes(props) {
         setTable={() => setTable(true)}
       />
     )} */}
-  </Box>
-    )
+      </Box>
+    );
   }
-
 }
