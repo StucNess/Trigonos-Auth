@@ -91,6 +91,7 @@ import {
   useGetInstruccionesSpecmMutation,
   useGetNumFilterMutation,
   useGetFiltersCCCMutation,
+  useGetAllInstructionsMutation,
 } from "app/store/instrucciones/instruccionesApi";
 import {
   useGetBusinessNameQuery,
@@ -433,6 +434,107 @@ export default function Instrucciones(props) {
     useGetFiltersCCCMutation();
   const [cargaFiltersCCC, setCargaFiltersCCC] = useState(false);
 
+  const [getAllDataInst, { isLoading: isLoadingAllData }] =
+  useGetAllInstructionsMutation();
+
+  function GetAllInstructions(){
+    setCargaFiltersCCC(true);
+    let specPrueba = {
+      PageIndex: 1,
+      PageSize: 500,
+    };
+    getNumFilter({
+      id: id,
+    })
+      .then((response) => {
+        const buclesF = Math.round(response.data / 500 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          specPrueba.PageIndex = index + 1;
+          return getAllDataInst({
+            id: id,
+            PageIndex: specPrueba.PageIndex,
+            PageSize: specPrueba.PageSize,
+          })
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses
+              .map((response) => response.data.data)
+              .flat();
+            // setFiltersPrueba((prevLista) => {
+            //   if (Array.isArray(prevLista)) {
+            //     return [...prevLista, ...newData];
+            //   } else {
+            //     return [...newData];
+            //   }
+            // });
+            console.log(
+              `TODAS LAS INSTRUCCIONES DEL PARTICIPANTE ${id}`,newData
+            );
+      
+            console.log(distincFilters(newData))
+            console.log(filterArrayOfObjectsByProperties(newData,["glosa","carta"],["SEN_[TEE_][Feb21][R][V01]","DE01360"]));
+            console.log(distincFilters(newData))
+
+            setCargaFiltersCCC(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    
+  }
+  function distincFilters(ArrayObj){
+    const distinctValues = ArrayObj.reduce((acc, obj) => {
+      for (let key in obj) {
+        if (!acc[key]) {
+          acc[key] = new Set();
+        }
+        acc[key].add(obj[key]);
+      }
+      return acc;
+    }, {});
+    const distinctValuesArray = {
+      glosa: [...distinctValues.glosa],
+      codigoRef: [...distinctValues.codigoRef],
+      carta: [...distinctValues.carta]
+    };
+    return distinctValuesArray;
+  }
+  function filterArrayOfObjectsByProperties(arr, propertyNames, searchString) {
+    const filtered = arr.filter((obj) => {
+      return propertyNames.every((key) => {
+        const value = obj[key];
+        if (typeof value === 'string') {
+          const lowercaseValue = value.toLowerCase();
+          return searchString.some((searchItem) => lowercaseValue.includes(searchItem.toLowerCase()));
+        } else if (typeof value === 'number') {
+          if (isFloat(value)) {
+            return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
+          } else {
+            return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
+          }
+        }
+        return false;
+      });
+    });
+    return filtered;
+  }
+  function filterArrayOfObjectsByProperties(arr, objectToSearch) {
+    const filtrarPorAtributos = (atributos) => {
+      return arr.filter(objeto => {
+        return Object.entries(atributos).reduce((resultado, [atributo, valor]) => {
+          return resultado && objeto[atributo] === valor;
+        }, true);
+      });
+    };
+   return filtrarPorAtributos(objectToSearch);
+  }
+
   function prueba() {
     let specPrueba = {
       PageIndex: 1,
@@ -585,7 +687,7 @@ export default function Instrucciones(props) {
               "PRUEBAAA",
               Array.from(new Set(newData.map(JSON.stringify)), JSON.parse)
             );
-            setCargaFiltersCCC(false);
+            // setCargaFiltersCCC(false);
           })
           .catch((error) => {
             console.log(error);
@@ -1120,6 +1222,7 @@ export default function Instrucciones(props) {
     FiltersOne();
     GetInstructions();
     prueba();
+    GetAllInstructions();
   }, [id]);
   useEffect(() => {
     if (!selected.buscar) {
@@ -1133,15 +1236,6 @@ export default function Instrucciones(props) {
       GetInstructions();
     }
   }, [selected.buscar]);
-  // useEffect(() => {
-  //   if(getDataInstruction){
-  //     tableData = getDataInstruction.data
-  //     setPagination(getDataInstruction.count)
-  //     setPageCount(getDataInstruction.pageCount + 1);
-  //     setLoadingApis(verificacarga());
-  //   }
-
-  // }, [getDataInstruction,fetchInstructions])
   useEffect(() => {
     if (!table) {
       setPageIndex(1);
