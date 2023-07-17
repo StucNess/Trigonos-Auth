@@ -427,18 +427,21 @@ export default function Instrucciones(props) {
 
   //PRRUEBA
   const [filtersPrueba, setFiltersPrueba] = useState([]);
-
+  const [getFiltersCCC, { isLoading: isLoadingFilterCCC }] =
+  useGetFiltersCCCMutation();
+  // obtener cantidad de instrucciones para iterar
   const [getNumFilter, { isLoading: isLoadinFilters }] =
     useGetNumFilterMutation();
-  const [getFiltersCCC, { isLoading: isLoadingFilterCCC }] =
-    useGetFiltersCCCMutation();
-  const [cargaFiltersCCC, setCargaFiltersCCC] = useState(false);
-
+ 
+  const [cargaFilters, setCargaFilters] = useState(false);
+  // obtener las instrucciones por pagina hasta obener el total en conjunto con el getNumFilter, logica para filtrado
   const [getAllDataInst, { isLoading: isLoadingAllData }] =
     useGetAllInstructionsMutation();
+  const [allDataInstrucc, setAllDataInstrucc] = useState([]);
+  const [filtersInstruc, setFilterInstruct] = useState([]);
 
   function GetAllInstructions() {
-    setCargaFiltersCCC(true);
+    setCargaFilters(true);
     let specPrueba = {
       PageIndex: 1,
       PageSize: 500,
@@ -462,31 +465,31 @@ export default function Instrucciones(props) {
             const newData = responses
               .map((response) => response.data.data)
               .flat();
-            // setFiltersPrueba((prevLista) => {
-            //   if (Array.isArray(prevLista)) {
-            //     return [...prevLista, ...newData];
-            //   } else {
-            //     return [...newData];
-            //   }
-            // });
             console.log(
               `TODAS LAS INSTRUCCIONES DEL PARTICIPANTE ${id}`,
               newData
             );
 
-            // console.log(distincFilters(newData));
+            //SIRVE PARA FILTRAR RECUERDALOOO
             console.log(
               filterArrayOfObjectsByProperties(newData, {
                 // glosa: "SEN_[TEE_][Abr23][L][V01]",
                 // carta: "DE02245",
-
-                deudor: 474,
+                deudor: 521,
               })
             );
-            // console.log(filterArrayOfObjectsByProperties(newData,["glosa","carta"],["SEN_[TEE_][Abr23][L][V01]","DE01360"]));
-            // console.log(distincFilters(newData));
+            //GUARDAR LAS INSTRUCCIONES EN UN ESTADO
+            setAllDataInstrucc(newData);
+            //GUARDAR LOS FILTROS (COLUMNAS A FILTRAR CON UN DISTINCT) EN UN ESTADO
+            setFilterInstruct( distincFilters(newData));
+            const distincts = distincFilters(newData);
+            console.log(distincts)
+            setConceptFilter(distincts.glosa);
+            setCodRefFilter(distincts.codigoRef);
+            setCartaFilter(distincts.carta);
+          
 
-            setCargaFiltersCCC(false);
+            setCargaFilters(false);
           })
           .catch((error) => {
             console.log(error);
@@ -510,6 +513,10 @@ export default function Instrucciones(props) {
       glosa: [...distinctValues.glosa],
       codigoRef: [...distinctValues.codigoRef],
       carta: [...distinctValues.carta],
+      nombreAcreedor: [...distinctValues.nombreAcreedor],
+      nombreDeudor: [...distinctValues.nombreDeudor],
+      rutAcreedor: [...distinctValues.rutAcreedor],
+      rutDeudor: [...distinctValues.rutDeudor],
     };
     return distinctValuesArray;
   }
@@ -545,6 +552,12 @@ export default function Instrucciones(props) {
     };
     return filtrarPorAtributos(objectToSearch);
   }
+  useEffect(() => {
+    
+    console.log(allDataInstrucc);
+    console.log(filtersInstruc);
+  }, [allDataInstrucc,filtersInstruc])
+  
 
   function prueba() {
     let specPrueba = {
@@ -1171,7 +1184,7 @@ export default function Instrucciones(props) {
       ...selected,
       buscar: true,
     });
-    FiltersOne();
+    // FiltersOne();
     GetInstructions();
   }
   useEffect(() => {
@@ -1179,13 +1192,14 @@ export default function Instrucciones(props) {
       if (
         [
           cargaInstructions,
-          cargaConcept,
-          cargaCodRef,
-          cargaCarta,
-          cargaNombreAcre,
-          cargaNombreDeu,
-          cargaRutAcre,
-          cargaRutDeudor,
+          cargaFilters
+          // cargaConcept,
+          // cargaCodRef,
+          // cargaCarta,
+          // cargaNombreAcre,
+          // cargaNombreDeu,
+          // cargaRutAcre,
+          // cargaRutDeudor,
         ].every((valor) => valor === false)
       ) {
         return false;
@@ -1196,27 +1210,29 @@ export default function Instrucciones(props) {
 
     if (verificacarga() === false) {
       if (
-        !cargaInstructions &&
-        !cargaConcept &&
-        !cargaCodRef &&
-        !cargaCarta &&
-        !cargaNombreAcre &&
-        !cargaNombreDeu &&
-        !cargaRutAcre &&
-        !cargaRutDeudor
+        !cargaInstructions && 
+        !cargaFilters
+        // !cargaConcept &&
+        // !cargaCodRef &&
+        // !cargaCarta &&
+        // !cargaNombreAcre &&
+        // !cargaNombreDeu &&
+        // !cargaRutAcre &&
+        // !cargaRutDeudor
       ) {
         setLoadingApis(false);
       }
     }
   }, [
     cargaInstructions,
-    cargaConcept,
-    cargaCodRef,
-    cargaCarta,
-    cargaNombreAcre,
-    cargaNombreDeu,
-    cargaRutAcre,
-    cargaRutDeudor,
+    cargaFilters,
+    // cargaConcept,
+    // cargaCodRef,
+    // cargaCarta,
+    // cargaNombreAcre,
+    // cargaNombreDeu,
+    // cargaRutAcre,
+    // cargaRutDeudor,
   ]);
 
   const isOptionEqualToValue = (option, value) => {
@@ -1230,7 +1246,7 @@ export default function Instrucciones(props) {
     setRowsPerPage(5);
     // clearFilters();
     clearStates();
-    FiltersOne();
+    // FiltersOne();
     GetInstructions();
     prueba();
     GetAllInstructions();
@@ -1243,7 +1259,7 @@ export default function Instrucciones(props) {
       setRowsPerPage(5);
 
       clearStates();
-      FiltersOne();
+      // FiltersOne();
       GetInstructions();
     }
   }, [selected.buscar]);
@@ -1254,7 +1270,7 @@ export default function Instrucciones(props) {
       setPageCount(0);
       setRowsPerPage(5);
 
-      FiltersOne();
+      // FiltersOne();
       GetInstructions();
       reloadEstadisticas();
       setReloadEstadistica(!reloadEstadistica);
@@ -1266,17 +1282,17 @@ export default function Instrucciones(props) {
       setLoadingApis(true);
 
       FiltersDeu();
-      FiltersOne();
+      // FiltersOne();
       GetInstructions();
     } else if (state.deudor) {
       setLoadingApis(true);
       FiltersAcree();
-      FiltersOne();
+      // FiltersOne();
       GetInstructions();
     } else {
       setLoadingApis(true);
 
-      FiltersOne();
+      // FiltersOne();
       GetInstructions();
     }
   }, [state]);
