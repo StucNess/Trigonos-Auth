@@ -428,11 +428,11 @@ export default function Instrucciones(props) {
   //PRRUEBA
   const [filtersPrueba, setFiltersPrueba] = useState([]);
   const [getFiltersCCC, { isLoading: isLoadingFilterCCC }] =
-  useGetFiltersCCCMutation();
+    useGetFiltersCCCMutation();
   // obtener cantidad de instrucciones para iterar
   const [getNumFilter, { isLoading: isLoadinFilters }] =
     useGetNumFilterMutation();
- 
+
   const [cargaFilters, setCargaFilters] = useState(false);
   // obtener las instrucciones por pagina hasta obener el total en conjunto con el getNumFilter, logica para filtrado
   const [getAllDataInst, { isLoading: isLoadingAllData }] =
@@ -481,13 +481,12 @@ export default function Instrucciones(props) {
             //GUARDAR LAS INSTRUCCIONES EN UN ESTADO
             setAllDataInstrucc(newData);
             //GUARDAR LOS FILTROS (COLUMNAS A FILTRAR CON UN DISTINCT) EN UN ESTADO
-            setFilterInstruct( distincFilters(newData));
+            setFilterInstruct(distincFilters(newData));
             const distincts = distincFilters(newData);
-            console.log(distincts)
+            console.log(distincts);
             setConceptFilter(distincts.glosa);
             setCodRefFilter(distincts.codigoRef);
             setCartaFilter(distincts.carta);
-          
 
             setCargaFilters(false);
           })
@@ -552,12 +551,13 @@ export default function Instrucciones(props) {
     };
     return filtrarPorAtributos(objectToSearch);
   }
+  function setAllFilters(objtosearch) {
+    filterArrayOfObjectsByProperties;
+  }
   useEffect(() => {
-    
     console.log(allDataInstrucc);
     console.log(filtersInstruc);
-  }, [allDataInstrucc,filtersInstruc])
-  
+  }, [allDataInstrucc, filtersInstruc]);
 
   function prueba() {
     let specPrueba = {
@@ -1192,7 +1192,7 @@ export default function Instrucciones(props) {
       if (
         [
           cargaInstructions,
-          cargaFilters
+          cargaFilters,
           // cargaConcept,
           // cargaCodRef,
           // cargaCarta,
@@ -1210,7 +1210,7 @@ export default function Instrucciones(props) {
 
     if (verificacarga() === false) {
       if (
-        !cargaInstructions && 
+        !cargaInstructions &&
         !cargaFilters
         // !cargaConcept &&
         // !cargaCodRef &&
@@ -1281,12 +1281,15 @@ export default function Instrucciones(props) {
     if (state.acreedor) {
       setLoadingApis(true);
 
-      FiltersDeu();
+      // FiltersDeu();
       // FiltersOne();
+
+      //crear la busqueda de los filtros
+
       GetInstructions();
     } else if (state.deudor) {
       setLoadingApis(true);
-      FiltersAcree();
+      // FiltersAcree();
       // FiltersOne();
       GetInstructions();
     } else {
@@ -1318,10 +1321,6 @@ export default function Instrucciones(props) {
         ...state,
         [event.target.name]: event.target.checked,
       });
-
-      // setLoadingApis(true)
-      // FiltersOne();
-      // GetInstructions();
     }
   };
 
