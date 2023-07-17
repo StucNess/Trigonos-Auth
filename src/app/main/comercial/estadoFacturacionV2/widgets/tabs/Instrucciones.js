@@ -435,9 +435,9 @@ export default function Instrucciones(props) {
   const [cargaFiltersCCC, setCargaFiltersCCC] = useState(false);
 
   const [getAllDataInst, { isLoading: isLoadingAllData }] =
-  useGetAllInstructionsMutation();
+    useGetAllInstructionsMutation();
 
-  function GetAllInstructions(){
+  function GetAllInstructions() {
     setCargaFiltersCCC(true);
     let specPrueba = {
       PageIndex: 1,
@@ -454,7 +454,7 @@ export default function Instrucciones(props) {
             id: id,
             PageIndex: specPrueba.PageIndex,
             PageSize: specPrueba.PageSize,
-          })
+          });
         });
 
         Promise.all(requests)
@@ -470,12 +470,21 @@ export default function Instrucciones(props) {
             //   }
             // });
             console.log(
-              `TODAS LAS INSTRUCCIONES DEL PARTICIPANTE ${id}`,newData
+              `TODAS LAS INSTRUCCIONES DEL PARTICIPANTE ${id}`,
+              newData
             );
-      
-            console.log(distincFilters(newData))
-            console.log(filterArrayOfObjectsByProperties(newData,["glosa","carta"],["SEN_[TEE_][Feb21][R][V01]","DE01360"]));
-            console.log(distincFilters(newData))
+
+            // console.log(distincFilters(newData));
+            console.log(
+              filterArrayOfObjectsByProperties(newData, {
+                // glosa: "SEN_[TEE_][Abr23][L][V01]",
+                // carta: "DE02245",
+
+                deudor: 474,
+              })
+            );
+            // console.log(filterArrayOfObjectsByProperties(newData,["glosa","carta"],["SEN_[TEE_][Abr23][L][V01]","DE01360"]));
+            // console.log(distincFilters(newData));
 
             setCargaFiltersCCC(false);
           })
@@ -486,9 +495,8 @@ export default function Instrucciones(props) {
       .catch((error) => {
         console.log(error);
       });
-    
   }
-  function distincFilters(ArrayObj){
+  function distincFilters(ArrayObj) {
     const distinctValues = ArrayObj.reduce((acc, obj) => {
       for (let key in obj) {
         if (!acc[key]) {
@@ -501,38 +509,41 @@ export default function Instrucciones(props) {
     const distinctValuesArray = {
       glosa: [...distinctValues.glosa],
       codigoRef: [...distinctValues.codigoRef],
-      carta: [...distinctValues.carta]
+      carta: [...distinctValues.carta],
     };
     return distinctValuesArray;
   }
-  function filterArrayOfObjectsByProperties(arr, propertyNames, searchString) {
-    const filtered = arr.filter((obj) => {
-      return propertyNames.every((key) => {
-        const value = obj[key];
-        if (typeof value === 'string') {
-          const lowercaseValue = value.toLowerCase();
-          return searchString.some((searchItem) => lowercaseValue.includes(searchItem.toLowerCase()));
-        } else if (typeof value === 'number') {
-          if (isFloat(value)) {
-            return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
-          } else {
-            return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
-          }
-        }
-        return false;
-      });
-    });
-    return filtered;
-  }
+  // function filterArrayOfObjectsByProperties(arr, propertyNames, searchString) {
+  //   const filtered = arr.filter((obj) => {
+  //     return propertyNames.every((key) => {
+  //       const value = obj[key];
+  //       if (typeof value === 'string') {
+  //         const lowercaseValue = value.toLowerCase();
+  //         return searchString.some((searchItem) => lowercaseValue.includes(searchItem.toLowerCase()));
+  //       } else if (typeof value === 'number') {
+  //         if (isFloat(value)) {
+  //           return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
+  //         } else {
+  //           return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
+  //         }
+  //       }
+  //       return false;
+  //     });
+  //   });
+  //   return filtered;
+  // }
   function filterArrayOfObjectsByProperties(arr, objectToSearch) {
     const filtrarPorAtributos = (atributos) => {
-      return arr.filter(objeto => {
-        return Object.entries(atributos).reduce((resultado, [atributo, valor]) => {
-          return resultado && objeto[atributo] === valor;
-        }, true);
+      return arr.filter((objeto) => {
+        return Object.entries(atributos).reduce(
+          (resultado, [atributo, valor]) => {
+            return resultado && objeto[atributo] === valor;
+          },
+          true
+        );
       });
     };
-   return filtrarPorAtributos(objectToSearch);
+    return filtrarPorAtributos(objectToSearch);
   }
 
   function prueba() {
