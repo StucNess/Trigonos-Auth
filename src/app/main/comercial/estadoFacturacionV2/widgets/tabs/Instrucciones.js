@@ -122,7 +122,7 @@ const columns = [
   { id: "nombreDeudor", label: "Nombre Deudor" },
   { id: "rutDeudor", label: "Rut Deudor" },
   { id: "glosa", label: "Glosa" },
-  { id: "concepto", label: "Concepto" },
+  // { id: "concepto", label: "Concepto" },
   { id: "montoNeto", label: "Monto Neto" },
   { id: "montoBruto", label: "Monto Bruto" },
   { id: "tipo_instruccion", label: "tipo_instruccion" },
@@ -136,7 +136,7 @@ let tableData = [];
 let columnsHidden = [
   "id_instruccions",
   "editar",
-  "trgnS_dte_reception_status_name",
+  // "trgnS_dte_reception_status_name",
   "ceN_dte_acceptance_status_name",
   "tipo_instruccion",
 ];
@@ -270,7 +270,7 @@ export default function Instrucciones(props) {
         buscar: "",
       },
       () => {
-        console.log("funcion");
+        // console.log("funcion");
       }
     );
     // GetInstructions();
@@ -465,25 +465,25 @@ export default function Instrucciones(props) {
             const newData = responses
               .map((response) => response.data.data)
               .flat();
-            console.log(
-              `TODAS LAS INSTRUCCIONES DEL PARTICIPANTE ${id}`,
-              newData
-            );
+            // console.log(
+            //   `TODAS LAS INSTRUCCIONES DEL PARTICIPANTE ${id}`,
+            //   newData
+            // );
 
             //SIRVE PARA FILTRAR RECUERDALOOO
-            console.log(
-              filterArrayOfObjectsByProperties(newData, {
-                // glosa: "SEN_[TEE_][Abr23][L][V01]",
-                // carta: "DE02245",
-                deudor: 521,
-              })
-            );
+            // console.log(
+            //   filterArrayOfObjectsByProperties(newData, {
+            //     // glosa: "SEN_[TEE_][Abr23][L][V01]",
+            //     // carta: "DE02245",
+            //     deudor: 521,
+            //   })
+            // );
             //GUARDAR LAS INSTRUCCIONES EN UN ESTADO
             setAllDataInstrucc(newData);
             //GUARDAR LOS FILTROS (COLUMNAS A FILTRAR CON UN DISTINCT) EN UN ESTADO
             setFilterInstruct(distincFilters(newData));
             const distincts = distincFilters(newData);
-            console.log(distincts);
+            // console.log(distincts);
             setConceptFilter(distincts.glosa);
             setCodRefFilter(distincts.codigoRef);
             setCartaFilter(distincts.carta);
@@ -558,10 +558,10 @@ export default function Instrucciones(props) {
           (resultado, [atributo, valor]) => {
             if (valor !== undefined) {
               if (atributo === 'montoBruto') {
-                return resultado && objeto[atributo] >= valor;
+                return resultado && objeto[atributo] === valor;
               }
               else if (atributo === 'montoNeto') {
-                return resultado && objeto[atributo] >= valor;
+                return resultado && objeto[atributo] === valor;
               }
               
               else {
@@ -579,7 +579,7 @@ export default function Instrucciones(props) {
   function setAllFilters(arr,objtosearch, isacreedor=undefined) {
     
     const distincts = distincFilters(filterArrayOfObjectsByProperties(arr,objtosearch));
-    console.log(distincts);
+    
     setConceptFilter(distincts.glosa?distincts.glosa:[]);
     setCodRefFilter(distincts.codigoRef?distincts.codigoRef:[]);
     setCartaFilter(distincts.carta?distincts.carta:[]);
@@ -595,8 +595,7 @@ export default function Instrucciones(props) {
 
   }
   useEffect(() => {
-    console.log(allDataInstrucc);
-    console.log(filtersInstruc);
+    
   }, [allDataInstrucc, filtersInstruc]);
 
   function prueba() {
@@ -747,10 +746,10 @@ export default function Instrucciones(props) {
                 return [...newData];
               }
             });
-            console.log(
-              "PRUEBAAA",
-              Array.from(new Set(newData.map(JSON.stringify)), JSON.parse)
-            );
+            // console.log(
+            //   "PRUEBAAA",
+            //   Array.from(new Set(newData.map(JSON.stringify)), JSON.parse)
+            // );
             // setCargaFiltersCCC(false);
           })
           .catch((error) => {
@@ -828,6 +827,7 @@ export default function Instrucciones(props) {
       },
     })
       .then((response) => {
+        console.log(response.data)
         setDataInstruction(response.data);
         setPagination(response.data.count);
         setPageCount(response.data.pageCount + 1);
@@ -1224,7 +1224,7 @@ export default function Instrucciones(props) {
       ...selected,
       buscar: true,
     });
-    console.log(selected.sFolio)
+    // console.log(selected.sFolio)
     // FiltersOne();
     setAllFilters(allDataInstrucc,{
 
@@ -2662,7 +2662,7 @@ export default function Instrucciones(props) {
                                 );
                               } else if (
                                 column.label === "E.Emision" ||
-                                column.label === "E.Pago"
+                                column.label === "E.Pago" || column.label === "E.Recepcion" 
                               ) {
                                 if (value.includes("No")) {
                                   return (
