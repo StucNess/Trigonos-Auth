@@ -149,28 +149,26 @@ export default function Deudor(props) {
         scroll={"paper"}
       >
         {cargando ? (
-          <div className="flex justify-center items-center h-[250px] w-[300px]">
-            <CircularProgress color="secondary" />
+          <div className="flex flex-col justify-center items-center min-h-[250px] min-w-[300px]">
+           
+            <CircularProgress color="secondary"  />
+            <span className="text-center text-pantonerojo pt-[20px]">  Cargando...</span>
+            
           </div>
         ) : (
           <div>
             {msgResp && (
-              <div className="flex justify-center items-center h-[250px] w-[300px]">
+              <div className="flex justify-center items-center min-h-[250px] min-w-[300px]">
                 {msgError ? (
-                  <div className="flex justify-center items-center h-[250px] w-[300px]">
-                    <WarningIcon className="w-[68px] h-[68px] text-red" />
-                    <span className="absolute bottom-[70px] text-red">
-                      {" "}
-                      <b>{msgText}</b>
-                    </span>
+                  <div className="flex flex-col justify-center items-center min-h-[250px] min-w-[300px]">
+                    <WarningIcon className="w-[68px] h-[68px]  text-red" />
+                  
+                    <span className="text-center text-red pt-[20px] text-justify break-all max-w-[300px] px-[20px]"> {msgText}</span>
                   </div>
                 ) : (
-                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                  <div className="flex  flex-col justify-center items-center min-h-[250px] min-w-[300px]">
                     <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
-                    <span className="absolute bottom-[70px] text-green">
-                      {" "}
-                      <b>{msgText}</b>
-                    </span>
+                    <span className="text-center  text-green pt-[20px] text-justify break-all max-w-[300px] px-[20px]">{msgText}</span>
                   </div>
                 )}
               </div>

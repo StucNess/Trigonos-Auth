@@ -91,6 +91,7 @@ import {
   useGetInstruccionesSpecmMutation,
   useGetNumFilterMutation,
   useGetFiltersCCCMutation,
+  useGetAllInstructionsMutation,
 } from "app/store/instrucciones/instruccionesApi";
 import {
   useGetBusinessNameQuery,
@@ -121,7 +122,7 @@ const columns = [
   { id: "nombreDeudor", label: "Nombre Deudor" },
   { id: "rutDeudor", label: "Rut Deudor" },
   { id: "glosa", label: "Glosa" },
-  { id: "concepto", label: "Concepto" },
+  // { id: "concepto", label: "Concepto" },
   { id: "montoNeto", label: "Monto Neto" },
   { id: "montoBruto", label: "Monto Bruto" },
   { id: "tipo_instruccion", label: "tipo_instruccion" },
@@ -135,7 +136,7 @@ let tableData = [];
 let columnsHidden = [
   "id_instruccions",
   "editar",
-  "trgnS_dte_reception_status_name",
+  // "trgnS_dte_reception_status_name",
   "ceN_dte_acceptance_status_name",
   "tipo_instruccion",
 ];
@@ -269,7 +270,7 @@ export default function Instrucciones(props) {
         buscar: "",
       },
       () => {
-        console.log("funcion");
+        // console.log("funcion");
       }
     );
     // GetInstructions();
@@ -426,12 +427,176 @@ export default function Instrucciones(props) {
 
   //PRRUEBA
   const [filtersPrueba, setFiltersPrueba] = useState([]);
-
-  const [getNumFilter, { isLoading: isLoadinFilters }] =
-    useGetNumFilterMutation();
   const [getFiltersCCC, { isLoading: isLoadingFilterCCC }] =
     useGetFiltersCCCMutation();
-  const [cargaFiltersCCC, setCargaFiltersCCC] = useState(false);
+  // obtener cantidad de instrucciones para iterar
+  const [getNumFilter, { isLoading: isLoadinFilters }] =
+    useGetNumFilterMutation();
+
+  const [cargaFilters, setCargaFilters] = useState(false);
+  // obtener las instrucciones por pagina hasta obener el total en conjunto con el getNumFilter, logica para filtrado
+  const [getAllDataInst, { isLoading: isLoadingAllData }] =
+    useGetAllInstructionsMutation();
+  const [allDataInstrucc, setAllDataInstrucc] = useState([]);
+  const [filtersInstruc, setFilterInstruct] = useState([]);
+
+  function GetAllInstructions() {
+    setCargaFilters(true);
+    let specPrueba = {
+      PageIndex: 1,
+      PageSize: 500,
+    };
+    getNumFilter({
+      id: id,
+    })
+      .then((response) => {
+        const buclesF = Math.round(response.data / 500 + 0.49) + 1;
+        const requests = Array.from({ length: buclesF - 1 }, (_, index) => {
+          specPrueba.PageIndex = index + 1;
+          return getAllDataInst({
+            id: id,
+            PageIndex: specPrueba.PageIndex,
+            PageSize: specPrueba.PageSize,
+          });
+        });
+
+        Promise.all(requests)
+          .then((responses) => {
+            const newData = responses
+              .map((response) => response.data.data)
+              .flat();
+            // console.log(
+            //   `TODAS LAS INSTRUCCIONES DEL PARTICIPANTE ${id}`,
+            //   newData
+            // );
+
+            //SIRVE PARA FILTRAR RECUERDALOOO
+            // console.log(
+            //   filterArrayOfObjectsByProperties(newData, {
+            //     // glosa: "SEN_[TEE_][Abr23][L][V01]",
+            //     // carta: "DE02245",
+            //     deudor: 521,
+            //   })
+            // );
+            //GUARDAR LAS INSTRUCCIONES EN UN ESTADO
+            setAllDataInstrucc(newData);
+            //GUARDAR LOS FILTROS (COLUMNAS A FILTRAR CON UN DISTINCT) EN UN ESTADO
+            setFilterInstruct(distincFilters(newData));
+            const distincts = distincFilters(newData);
+            // console.log(distincts);
+            setConceptFilter(distincts.glosa);
+            setCodRefFilter(distincts.codigoRef);
+            setCartaFilter(distincts.carta);
+
+            setCargaFilters(false);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  function distincFilters(ArrayObj) {
+    const distinctValues = ArrayObj.reduce((acc, obj) => {
+      for (let key in obj) {
+        if (!acc[key]) {
+          acc[key] = new Set();
+        }
+        acc[key].add(obj[key]);
+      }
+      return acc;
+    }, {});
+    const distinctValuesArray = {
+      glosa: distinctValues.glosa? [...distinctValues.glosa]:[],
+      codigoRef: distinctValues.codigoRef?[...distinctValues.codigoRef]:[],
+      carta: distinctValues.carta?[...distinctValues.carta]:[],
+      nombreAcreedor:distinctValues.nombreAcreedor? [...distinctValues.nombreAcreedor]:[],
+      nombreDeudor: distinctValues.nombreDeudor?[...distinctValues.nombreDeudor]:[],
+      rutAcreedor: distinctValues.rutAcreedor?[...distinctValues.rutAcreedor]:[],
+      rutDeudor: distinctValues.rutDeudor?[...distinctValues.rutDeudor]:[],
+    };
+    return distinctValuesArray;
+  }
+  // function filterArrayOfObjectsByProperties(arr, propertyNames, searchString) {
+  //   const filtered = arr.filter((obj) => {
+  //     return propertyNames.every((key) => {
+  //       const value = obj[key];
+  //       if (typeof value === 'string') {
+  //         const lowercaseValue = value.toLowerCase();
+  //         return searchString.some((searchItem) => lowercaseValue.includes(searchItem.toLowerCase()));
+  //       } else if (typeof value === 'number') {
+  //         if (isFloat(value)) {
+  //           return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
+  //         } else {
+  //           return searchString.some((searchItem) => value.toString().toLowerCase().includes(searchItem.toLowerCase()));
+  //         }
+  //       }
+  //       return false;
+  //     });
+  //   });
+  //   return filtered;
+  // }
+  // function filterArrayOfObjectsByProperties(arr, objectToSearch) {
+  //   const filtrarPorAtributos = (atributos) => {
+  //     return arr.filter((objeto) => {
+  //       return Object.entries(atributos).reduce(
+  //         (resultado, [atributo, valor]) => {
+  //           return resultado && objeto[atributo] === valor;
+  //         },
+  //         true
+  //       );
+  //     });
+  //   };
+  //   return filtrarPorAtributos(objectToSearch);
+  // }
+  function filterArrayOfObjectsByProperties(arr, objectToSearch) {
+    const filtrarPorAtributos = (atributos) => {
+      return arr.filter((objeto) => {
+        return Object.entries(atributos).reduce(
+          (resultado, [atributo, valor]) => {
+            if (valor !== undefined) {
+              if (atributo === 'montoBruto') {
+                return resultado && objeto[atributo] === valor;
+              }
+              else if (atributo === 'montoNeto') {
+                return resultado && objeto[atributo] === valor;
+              }
+              
+              else {
+                return resultado && objeto[atributo] === valor;
+              }
+            }
+            return resultado;
+          },
+          true
+        );
+      });
+    };
+    return filtrarPorAtributos(objectToSearch);
+  }
+  function setAllFilters(arr,objtosearch, isacreedor=undefined) {
+    
+    const distincts = distincFilters(filterArrayOfObjectsByProperties(arr,objtosearch));
+    
+    setConceptFilter(distincts.glosa?distincts.glosa:[]);
+    setCodRefFilter(distincts.codigoRef?distincts.codigoRef:[]);
+    setCartaFilter(distincts.carta?distincts.carta:[]);
+    if(isacreedor ===1){
+      setBusinessName(distincts.nombreDeudor?distincts.nombreDeudor:[]);
+      setRutName(distincts.rutDeudor?distincts.rutDeudor:[]);
+
+    }else if(isacreedor === 0){
+      setBusinessName(distincts.nombreAcreedor?distincts.nombreAcreedor:[]);
+      setRutName(distincts.rutAcreedor?distincts.rutAcreedor:[]);
+
+    }
+
+  }
+  useEffect(() => {
+    
+  }, [allDataInstrucc, filtersInstruc]);
 
   function prueba() {
     let specPrueba = {
@@ -581,11 +746,11 @@ export default function Instrucciones(props) {
                 return [...newData];
               }
             });
-            console.log(
-              "PRUEBAAA",
-              Array.from(new Set(newData.map(JSON.stringify)), JSON.parse)
-            );
-            setCargaFiltersCCC(false);
+            // console.log(
+            //   "PRUEBAAA",
+            //   Array.from(new Set(newData.map(JSON.stringify)), JSON.parse)
+            // );
+            // setCargaFiltersCCC(false);
           })
           .catch((error) => {
             console.log(error);
@@ -662,6 +827,7 @@ export default function Instrucciones(props) {
       },
     })
       .then((response) => {
+        console.log(response.data)
         setDataInstruction(response.data);
         setPagination(response.data.count);
         setPageCount(response.data.pageCount + 1);
@@ -1058,7 +1224,46 @@ export default function Instrucciones(props) {
       ...selected,
       buscar: true,
     });
-    FiltersOne();
+    // console.log(selected.sFolio)
+    // FiltersOne();
+    setAllFilters(allDataInstrucc,{
+
+      ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
+      ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
+      ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
+      ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
+      ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
+      ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
+      ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
+      ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+      ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
+      ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
+      ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
+      ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
+      ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+      ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+      ...(sInicioPeriodo != ""? {folio:parseInt(selected.sFolio) } : {}),
+      ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+      InicioPeriodo:
+      sInicioPeriodo != ""
+        ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
+            sInicioPeriodo.getMonth() + 1
+          }/01`
+        : "",
+    TerminoPeriodo:
+      sTerminoPeriodo != ""
+        ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
+            sTerminoPeriodo.getMonth() + 1
+          }/01`
+        : "",
+      // Folio: selected.sFolio != "" ? selected.sFolio : "",
+
+    //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+    
+    //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+     
+    
+    });
     GetInstructions();
   }
   useEffect(() => {
@@ -1066,13 +1271,14 @@ export default function Instrucciones(props) {
       if (
         [
           cargaInstructions,
-          cargaConcept,
-          cargaCodRef,
-          cargaCarta,
-          cargaNombreAcre,
-          cargaNombreDeu,
-          cargaRutAcre,
-          cargaRutDeudor,
+          cargaFilters,
+          // cargaConcept,
+          // cargaCodRef,
+          // cargaCarta,
+          // cargaNombreAcre,
+          // cargaNombreDeu,
+          // cargaRutAcre,
+          // cargaRutDeudor,
         ].every((valor) => valor === false)
       ) {
         return false;
@@ -1084,26 +1290,28 @@ export default function Instrucciones(props) {
     if (verificacarga() === false) {
       if (
         !cargaInstructions &&
-        !cargaConcept &&
-        !cargaCodRef &&
-        !cargaCarta &&
-        !cargaNombreAcre &&
-        !cargaNombreDeu &&
-        !cargaRutAcre &&
-        !cargaRutDeudor
+        !cargaFilters
+        // !cargaConcept &&
+        // !cargaCodRef &&
+        // !cargaCarta &&
+        // !cargaNombreAcre &&
+        // !cargaNombreDeu &&
+        // !cargaRutAcre &&
+        // !cargaRutDeudor
       ) {
         setLoadingApis(false);
       }
     }
   }, [
     cargaInstructions,
-    cargaConcept,
-    cargaCodRef,
-    cargaCarta,
-    cargaNombreAcre,
-    cargaNombreDeu,
-    cargaRutAcre,
-    cargaRutDeudor,
+    cargaFilters,
+    // cargaConcept,
+    // cargaCodRef,
+    // cargaCarta,
+    // cargaNombreAcre,
+    // cargaNombreDeu,
+    // cargaRutAcre,
+    // cargaRutDeudor,
   ]);
 
   const isOptionEqualToValue = (option, value) => {
@@ -1117,9 +1325,8 @@ export default function Instrucciones(props) {
     setRowsPerPage(5);
     // clearFilters();
     clearStates();
-    FiltersOne();
     GetInstructions();
-    prueba();
+    GetAllInstructions();
   }, [id]);
   useEffect(() => {
     if (!selected.buscar) {
@@ -1129,19 +1336,10 @@ export default function Instrucciones(props) {
       setRowsPerPage(5);
 
       clearStates();
-      FiltersOne();
+      // FiltersOne();
       GetInstructions();
     }
   }, [selected.buscar]);
-  // useEffect(() => {
-  //   if(getDataInstruction){
-  //     tableData = getDataInstruction.data
-  //     setPagination(getDataInstruction.count)
-  //     setPageCount(getDataInstruction.pageCount + 1);
-  //     setLoadingApis(verificacarga());
-  //   }
-
-  // }, [getDataInstruction,fetchInstructions])
   useEffect(() => {
     if (!table) {
       setPageIndex(1);
@@ -1149,7 +1347,7 @@ export default function Instrucciones(props) {
       setPageCount(0);
       setRowsPerPage(5);
 
-      FiltersOne();
+      // FiltersOne();
       GetInstructions();
       reloadEstadisticas();
       setReloadEstadistica(!reloadEstadistica);
@@ -1159,19 +1357,82 @@ export default function Instrucciones(props) {
   useEffect(() => {
     if (state.acreedor) {
       setLoadingApis(true);
+      setAllFilters(allDataInstrucc,{
 
-      FiltersDeu();
-      FiltersOne();
+        ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
+        ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
+        ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
+        ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
+        ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
+        // ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
+        ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
+        // ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+        ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
+        ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
+        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
+        ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+        ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+
+        acreedor:id,
+      
+      },1);
+      // FiltersDeu();
+      // FiltersOne();
+
+      //crear la busqueda de los filtros
+
       GetInstructions();
     } else if (state.deudor) {
       setLoadingApis(true);
-      FiltersAcree();
-      FiltersOne();
+      // FiltersAcree();
+      // FiltersOne();
+      setAllFilters(allDataInstrucc,{
+        ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
+        ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
+        ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
+        ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
+        // ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
+        ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
+        // ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
+        ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+        ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
+        ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
+        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
+        ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+        ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+
+        deudor:id,
+      },0);
       GetInstructions();
     } else {
       setLoadingApis(true);
+ 
+      setAllFilters(allDataInstrucc,{
 
-      FiltersOne();
+        ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
+        ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
+        ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
+        ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
+        ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
+        ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
+        ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
+        ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+        ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
+        ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
+        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
+        ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+        ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+
+
+      //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+      //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+       
+      
+      });
+      // FiltersOne();
       GetInstructions();
     }
   }, [state]);
@@ -1197,10 +1458,6 @@ export default function Instrucciones(props) {
         ...state,
         [event.target.name]: event.target.checked,
       });
-
-      // setLoadingApis(true)
-      // FiltersOne();
-      // GetInstructions();
     }
   };
 
@@ -2405,7 +2662,7 @@ export default function Instrucciones(props) {
                                 );
                               } else if (
                                 column.label === "E.Emision" ||
-                                column.label === "E.Pago"
+                                column.label === "E.Pago" || column.label === "E.Recepcion" 
                               ) {
                                 if (value.includes("No")) {
                                   return (
