@@ -605,7 +605,7 @@ function TabInstrucciones(props) {
     );
     setVisibleRows(rowsOnMount);
   }
-  // useEffect(() => {
+
   //   return () => {
   //     rows = [];
   //      = [];
@@ -753,7 +753,6 @@ function TabInstrucciones(props) {
     [order, orderBy, page, rowsPerPage]
   );
 
-  //   const handleSelectAllClick = (event) => {
   //     if (event.target.checked) {
   //       const newSelected = rows.map((n) => n.codreferencia);
   //       setSelected(newSelected);
@@ -1087,9 +1086,7 @@ function TabInstrucciones(props) {
       "EsdocumentodetraspasoSsiNno",
     ],
   ];
-  const descargarExcel = () => {
-    console.log("DESCARGANDO EXCEL");
-  };
+
   function convertToSheet(data, nubox = 0) {
     const wb = XLSX.utils.book_new();
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
@@ -1119,6 +1116,8 @@ function TabInstrucciones(props) {
     });
   };
   function downloadExcelFile(filename, nubox = 0) {
+    setOpenDialog(true);
+    setCargando(true);
     let dataPrueba = [];
     const transformtToShortDate = (param) => {
       let fechaString = param;
@@ -1425,9 +1424,11 @@ function TabInstrucciones(props) {
       "https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
     axios
       .post(url, selected)
-      .then(function (response) {})
+      .then(function (response) {
+        mostrarMensaje(response);
+      })
       .catch(function (error) {
-        console.log(error);
+        mostrarMensaje({ error: "api error" });
       });
   }
 

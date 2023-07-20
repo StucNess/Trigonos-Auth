@@ -39,18 +39,20 @@ export default function Deudor(props) {
       });
       setCargando(false);
       setTimeout(() => {
+        window.location.reload();
         setOpenDialog(false);
-      }, 2000);
+      }, 6000);
     } else {
       setMsgAlert({
         msgResp: true,
-        msgText: "EXITO",
+        msgText: "ARCHIVO CARGADO !!",
         msgError: false,
       });
       setCargando(false);
       setTimeout(() => {
         setOpenDialog(false);
-      }, 2000);
+        window.location.reload();
+      }, 6000);
     }
   };
   const handleFileUpload = (event) => {

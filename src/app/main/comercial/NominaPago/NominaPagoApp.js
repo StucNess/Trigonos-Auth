@@ -56,6 +56,7 @@ const NominaPagoApp = () => {
   const [cargando, setCargando] = useState(false);
   const { data: getDataParticipant, isFetching: isFetchinParticipant } =
     useGetParticipantesById_Query(user.idUser);
+  console.log(getDataParticipant);
   useEffect(() => {
     discPrueba = false;
     changeDisc = undefined;
@@ -270,7 +271,10 @@ const NominaPagoApp = () => {
                 actualizarEstado={actualizarEstado}
                 changeDisc={getChangeDisc}
                 dataParticipant={getDataParticipant.data.filter(
-                  (p) => p.bank == 9 || p.bank == 4 || p.bank == 7
+                  (p) =>
+                    p.trgns_nomina == 2 ||
+                    p.trgns_nomina == 6 ||
+                    p.trgns_nomina == 1
                 )}
               />
             </motion.div>
@@ -289,7 +293,7 @@ const NominaPagoApp = () => {
                   <></>
                 ) : (
                   <Paper>
-                    {clientData.bank == 4 && (
+                    {clientData.trgns_nomina == 2 && (
                       <TablaNominaBCI
                         isLoading={dataNomina.isLoading}
                         payRollData={stateNomina}
@@ -298,7 +302,7 @@ const NominaPagoApp = () => {
                         payRollDataPrueba={stateNominaPrueba}
                       />
                     )}
-                    {clientData.bank == 9 && (
+                    {clientData.trgns_nomina == 6 && (
                       <TablaNominaSecurity
                         payRollData={stateNomina}
                         sendDiscData={getDiscData}
@@ -306,7 +310,7 @@ const NominaPagoApp = () => {
                         payRollDataPrueba={stateNominaPrueba}
                       />
                     )}
-                    {clientData.bank == 7 && (
+                    {clientData.trgns_nomina == 1 && (
                       <TablaNominaSantander
                         payRollData={stateNomina}
                         sendDiscData={getDiscData}

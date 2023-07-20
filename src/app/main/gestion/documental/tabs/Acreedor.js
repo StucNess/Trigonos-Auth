@@ -39,13 +39,13 @@ export default function Acreedor(props) {
     } else {
       setMsgAlert({
         msgResp: true,
-        msgText: "EXITO",
+        msgText: "SE CARGO EL ARCHIVO CORRECTAMENTE",
         msgError: false,
       });
       setCargando(false);
       setTimeout(() => {
         setOpenDialog(false);
-      }, 2000);
+      }, 6000);
     }
   };
   const handleFileUpload = (event) => {
