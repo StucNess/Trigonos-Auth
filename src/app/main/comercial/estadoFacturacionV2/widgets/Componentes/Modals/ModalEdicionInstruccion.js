@@ -150,7 +150,7 @@ export default function ModalEdicionInstruccion({
         setOpenDialog(true);
         setLoading(true);
         try {
-            await patchInstrucciones({
+           patchInstrucciones({
                 id:dataRow.id_instruccions, 
                 spec:{
                     FechaEmision:receptionDateF,

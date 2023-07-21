@@ -4,7 +4,7 @@ export const instruccionesApi = createApi({
   reducerPath: "instrucciones",
   tagTypes: ["instruccionesDef"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net",
+    baseUrl: "http://localhost:5205/",
   }),
   endpoints: (builder) => ({
     // GET QUERY //
@@ -1183,35 +1183,46 @@ export const instruccionesApi = createApi({
         },
         url:
           `/api/Instrucciones?id=${data.id}` +
-          (data.spec.Editor != undefined ? `&Editor=${data.spec.Editor}` : "") +
-          (data.spec.EstadoEmision != undefined
-            ? `&EstadoEmision=${data.spec.EstadoEmision}`
-            : "") +
-          (data.spec.EstadoRecepcion != undefined
-            ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
-            : "") +
-          (data.spec.EstadoPago != undefined
-            ? `&EstadoPago=${data.spec.EstadoPago}`
-            : "") +
-          (data.spec.EstadoAceptacion != undefined
-            ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
-            : "") +
-          (data.spec.FechaEmision != undefined
-            ? `&FechaEmision=${data.spec.FechaEmision}`
-            : "") +
-          (data.spec.FechaRecepcion != undefined
-            ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
-            : "") +
-          (data.spec.FechaPago != undefined
-            ? `&FechaPago=${data.spec.FechaPago}`
-            : "") +
-          (data.spec.FechaAceptacion != undefined
-            ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
-            : "") +
-          (data.spec.TipoInstructions != undefined
-            ? `&TipoInstructions=${data.spec.TipoInstructions}`
-            : "") +
-          (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : ""),
+          `&Editor=${data.spec.Editor}`+
+          // `&EstadoEmision=${data.spec.EstadoEmision}`+
+          // `&EstadoRecepcion=${data.spec.EstadoRecepcion}`+
+          // `&EstadoPago=${data.spec.EstadoPago}`+
+          // `&EstadoAceptacion=${data.spec.EstadoAceptacion}`+
+          `&FechaEmision=${data.spec.FechaEmision}`+
+          `&FechaRecepcion=${data.spec.FechaRecepcion}`+
+          `&FechaPago=${data.spec.FechaPago}`+
+          `&FechaAceptacion=${data.spec.FechaAceptacion}`+
+          `&TipoInstructions=${data.spec.TipoInstructions}`+
+          `&Folio=${data.spec.Folio}`,
+          // (data.spec.Editor != undefined ? `&Editor=${data.spec.Editor}` : {}) +
+          // (data.spec.EstadoEmision != undefined
+          //   ? `&EstadoEmision=${data.spec.EstadoEmision}`
+          //   : {}) +
+          // (data.spec.EstadoRecepcion != undefined
+          //   ? `&EstadoRecepcion=${data.spec.EstadoRecepcion}`
+          //   : {}) +
+          // (data.spec.EstadoPago != undefined
+          //   ? `&EstadoPago=${data.spec.EstadoPago}`
+          //   : {}) +
+          // (data.spec.EstadoAceptacion != undefined
+          //   ? `&EstadoAceptacion=${data.spec.EstadoAceptacion}`
+          //   : {}) +
+          // (data.spec.FechaEmision != undefined
+          //   ? `&FechaEmision=${data.spec.FechaEmision}`
+          //   : {}) +
+          // (data.spec.FechaRecepcion != undefined
+          //   ? `&FechaRecepcion=${data.spec.FechaRecepcion}`
+          //   : {}) +
+          // (data.spec.FechaPago != undefined
+          //   ? `&FechaPago=${data.spec.FechaPago}`
+          //   : {}) +
+          // (data.spec.FechaAceptacion != undefined
+          //   ? `&FechaAceptacion=${data.spec.FechaAceptacion}`
+          //   : {}) +
+          // (data.spec.TipoInstructions != undefined
+          //   ? `&TipoInstructions=${data.spec.TipoInstructions}`
+          //   : {}) +
+          // (data.spec.Folio != undefined ? `&Folio=${data.spec.Folio}` : ""),
         method: "PATCH",
       }),
     }),

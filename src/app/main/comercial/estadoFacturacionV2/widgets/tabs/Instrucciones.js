@@ -557,10 +557,10 @@ export default function Instrucciones(props) {
         return Object.entries(atributos).reduce(
           (resultado, [atributo, valor]) => {
             if (valor !== undefined) {
-              if (atributo === 'montoBruto') {
+              if (atributo === 'montoBrutoIgual') {
                 return resultado && objeto[atributo] === valor;
               }
-              else if (atributo === 'montoNeto') {
+              else if (atributo === 'montoNetoIgual') {
                 return resultado && objeto[atributo] === valor;
               }
               
