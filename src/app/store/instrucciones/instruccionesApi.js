@@ -768,11 +768,11 @@ export const instruccionesApi = createApi({
               : "") +
             (data.spec.NombreDeudor != undefined
               ? `&NombreDeudor=${data.spec.NombreDeudor}`
-              : "")+
-              (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
-              (data.spec.CodigoRef != undefined
-                ? `&CodigoRef=${data.spec.CodigoRef}`
-                : "") 
+              : "") +
+            (data.spec.Carta != undefined ? `&Carta=${data.spec.Carta}` : "") +
+            (data.spec.CodigoRef != undefined
+              ? `&CodigoRef=${data.spec.CodigoRef}`
+              : "")
           : `/GetFiltersCCC?id=${data.id}`,
         method: "GET",
       }),

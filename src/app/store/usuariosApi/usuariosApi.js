@@ -12,23 +12,26 @@ export const usuariosApi = createApi({
     }),
     getNumUsuarios: builder.mutation({
       query: (spec) => ({
-        headers: { "Content-type": "application/json",Authorization: `Bearer ${spec.token}`},
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${spec.token}`,
+        },
         url: "/NumUsuarios",
         method: "GET",
-        
       }),
       providesTags: ["usuarios"],
     }),
     getUsuariosPagination: builder.mutation({
       query: (spec) => ({
-        headers: {  "Content-type": "application/json",Authorization: `Bearer ${spec.token}` },
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${spec.token}`,
+        },
         url: spec
-          ? `/Pagination?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}`+
+          ? `/Pagination?PageIndex=${spec.PageIndex}&PageSize=${spec.PageSize}` +
             (spec.nombre != undefined ? `&Nombre=${spec.nombre}` : "") +
             (spec.apellido != undefined ? `&Apellido=${spec.apellido}` : "") +
             (spec.sort != undefined ? `&Sort=${spec.sort}` : "") +
-           
-          
             (spec.search != undefined ? `&Search=${spec.search}` : "")
           : "/Pagination",
         method: "GET",

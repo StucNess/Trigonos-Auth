@@ -94,13 +94,14 @@ export default function NominaPago(props) {
         msgResp: true,
         msgText:
           response.error == "true"
-            ? "EL EXCEL DEBE TENER MENOS DE 2000 FILAS"
+            ? "PORFAVOR CONTACTAR A SOPORTE TRIGONOS"
             : response.error.data.message,
         msgError: true,
       });
       setCargando(false);
       setTimeout(() => {
         setOpenDialog(false);
+        window.location.reload();
       }, 2000);
     } else {
       setMsgAlert({
@@ -111,6 +112,7 @@ export default function NominaPago(props) {
       setCargando(false);
       setTimeout(() => {
         setOpenDialog(false);
+        window.location.reload();
       }, 2000);
     }
   };
@@ -146,8 +148,7 @@ export default function NominaPago(props) {
           id: props.cliente.id,
           bank: props.cliente.bank,
           excelName: name,
-          fechaPago:
-            props.cliente.bank == 4 ? "" : handleChangeDataPicker(payDate),
+          fechaPago: handleChangeDataPicker(payDate),
           body: jsonData.slice(0, 1000),
         }).then((response) => {
           if (!(response.error == undefined)) {
@@ -158,10 +159,7 @@ export default function NominaPago(props) {
                 id: props.cliente.id,
                 bank: props.cliente.bank,
                 excelName: name,
-                fechaPago:
-                  props.cliente.bank == 4
-                    ? ""
-                    : handleChangeDataPicker(payDate),
+                fechaPago: handleChangeDataPicker(payDate),
                 body: jsonData.slice(1000, 2003),
               }).then((response) => {
                 mostrarMensaje(response);

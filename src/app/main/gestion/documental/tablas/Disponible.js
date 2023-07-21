@@ -84,7 +84,6 @@ let headMasivoDeudor = [
     "Rut",
     "Folio",
     "Fecha Recepcion",
-    "Fecha Aceptacion",
     "Concepto",
     "Monto",
   ],
@@ -97,9 +96,9 @@ let headHistoricoDeudor = [
     "Rut",
     "Folio",
     "Fecha Recepcion",
-    "Fecha Aceptacion",
+    "Fecha Emision",
+    "Fecha Pago",
     "Concepto",
-    "Fecha de Pago",
     "Monto",
   ],
 ];
@@ -140,13 +139,15 @@ export default function Disponible(props) {
         {
           id: 1,
           name: `DC-${props.cliente.rut}`,
-          description: "Cuadre Masivo de instrucciones deudor",
+          description:
+            "Cuadre Masivo de instrucciones deudor(Agregar Folio y Fecha de recepción, aceptación)",
           headerExcel: headMasivoDeudor,
         },
         {
           id: 2,
           name: `DC-HIST-${props.cliente.rut}`,
-          description: "Historia de instrucciones de deudor",
+          description:
+            "Historia de instrucciones de deudor(Agregar Folio y Fecha de recepción, aceptación, emisión y pago)",
           headerExcel: headHistoricoDeudor,
         },
       ];
@@ -169,7 +170,7 @@ export default function Disponible(props) {
         PageSize: 100,
         spec: props.acreedor
           ? { Folio: 0, Pagada: false, Acreedor: props.cliente.id }
-          : { Folio: 0, Pagada: false, Deudor: props.cliente.id },
+          : { Pagada: false, Deudor: props.cliente.id },
       };
     }
     setOpen(true);
@@ -184,6 +185,7 @@ export default function Disponible(props) {
               getInstructions(jsonApi)
                 .then((response) => {
                   response.data.data.map((el) => {
+                    console.log(response.data.data);
                     if (idDocumento == 1 && props.acreedor == true) {
                       array.push({
                         Id: el.id_instruccions,
@@ -191,8 +193,8 @@ export default function Disponible(props) {
                         nombre_deudor: el.nombreDeudor,
                         rut: el.rutAcreedor,
                         folio: el.folio,
-                        fecha_emision: el.fecha_emision,
-                        fecha_pago: el.fecha_pago,
+                        fecha_emision: el.fecha_emision.substring(0, 10),
+                        fecha_pago: el.fecha_pago.substring(0, 10),
                         glosa: el.glosa,
                         monto: el.montoNeto,
                       });
@@ -203,8 +205,8 @@ export default function Disponible(props) {
                         nombre_deudor: el.nombreDeudor,
                         rut: el.rutAcreedor,
                         folio: el.folio,
-                        fecha_emision: el.fecha_emision,
-                        fecha_pago: el.fecha_pago,
+                        fecha_emision: el.fecha_emision.substring(0, 10),
+                        fecha_pago: el.fecha_pago.substring(0, 10),
                         glosa: el.glosa,
                         monto: el.montoNeto,
                       });
@@ -215,8 +217,7 @@ export default function Disponible(props) {
                         nombre_deudor: props.cliente.business_Name,
                         rut: el.rutAcreedor,
                         folio: el.folio,
-                        fecha_recepcion: el.fecha_recepcion,
-                        fecha_aceptacion: el.fecha_aceptacion,
+                        fecha_recepcion: el.fecha_recepcion.substring(0, 10),
                         glosa: el.glosa,
                         monto: el.montoNeto,
                       });
@@ -227,10 +228,11 @@ export default function Disponible(props) {
                         nombre_deudor: props.cliente.business_Name,
                         rut: el.rutAcreedor,
                         folio: el.folio,
-                        fecha_recepcion: el.fecha_recepcion,
-                        fecha_aceptacion: el.fecha_aceptacion,
+                        fecha_recepcion: el.fecha_recepcion.substring(0, 10),
+                        fecha_emision: el.fecha_emision.substring(0, 10),
+                        fecha_pago: el.fecha_pago.substring(0, 10),
                         glosa: el.glosa,
-                        fecha_pago: el.fecha_pago,
+                        fecha_pago: el.fecha_pago.substring(0, 10),
                         monto: el.montoNeto,
                       });
                     }
