@@ -4,7 +4,7 @@ export const usuariosApi = createApi({
   reducerPath: "usuarios",
   tagTypes: ["usuarios", "usuariosroles"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/api/Usuarios",
+    baseUrl: "https://trigonosapi.azurewebsites.net/api/Usuarios",
   }),
   endpoints: (builder) => ({
     getUsuarios: builder.query({
