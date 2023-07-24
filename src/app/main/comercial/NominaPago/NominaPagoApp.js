@@ -156,7 +156,7 @@ const NominaPagoApp = () => {
           setOpen(true);
           setTimeout(() => {
             setOpen(false);
-          }, 7000);
+          }, 2000);
         });
     } else {
       getNominas({
@@ -184,7 +184,7 @@ const NominaPagoApp = () => {
                       setTimeout(() => {
                         setCargando(false);
                         temporal = 0;
-                      }, 7000);
+                      }, 2000);
                     }
                   })
                   .catch((error) => {
