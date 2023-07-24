@@ -53,12 +53,14 @@ const PaymentState = ["No Pagado", "Pagado", "Pagado con Atraso"];
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 export default function ModalEdicionInstruccion({
     setTable,
-    dataEdit
+    dataEdit,
+    getDataOfUpdate
 }) {
     console.log(dataEdit)
     const user = useSelector(selectUser);
     const {nombre, apellido,email} = user.data;
     const {  dataRow,dataBoleean,fechaEmision,fechaRecepcion} = dataEdit;
+    const [boolFechRecept, setFechRecept] = useState(fechaRecepcion);
     const [open, setOpen] = useState(true);
     const [openDialog, setOpenDialog] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -121,6 +123,10 @@ export default function ModalEdicionInstruccion({
             setOpen(false);
             setTable();
         };
+        const sendDataSuccesfull = (data_) => {
+          // setOpen(false);
+          getDataOfUpdate(data_);
+      };
       const { receptionDate, aceptationDate, billingDate, paymentDate } = dates;
       const viendoErrores = () => {};
       const ApiPatch = async () => {
@@ -150,19 +156,18 @@ export default function ModalEdicionInstruccion({
         setOpenDialog(true);
         setLoading(true);
         try {
-            await patchInstrucciones({
-                id:dataRow.id_instruccions, 
-                spec:{
-                    FechaEmision:receptionDateF,
-                    FechaRecepcion:receptionDateF,
-                    FechaPago:paymentDateF,
-                    FechaAceptacion:receptionDateF,
-                    FechaEmision:receptionDateF,
-                    TipoInstructions:1,
-                    Folio:folio,
-                    Editor:email
-                    }
-                }).then((response) => {
+          let dataNew= {
+            id:dataRow.id_instruccions, 
+            spec:{
+                FechaEmision:receptionDateF,
+                FechaRecepcion:receptionDateF,
+                FechaPago:paymentDateF,
+                FechaAceptacion:receptionDateF,
+                TipoInstructions:1,
+                Folio:folio,
+                Editor:email
+                }}
+           patchInstrucciones(dataNew).then((response) => {
                     // setAlertt(true);
                     setLoading(false);
                     if(response.error === undefined){
@@ -171,6 +176,8 @@ export default function ModalEdicionInstruccion({
                           msgText: "Exito, Operación Realizada",
                           msgError: false,
                         });
+                        setFechRecept(!fechaRecepcion);
+                        sendDataSuccesfull(dataNew);
                         setTimeout(() => {
                           setOpenDialog(false);
                         }, 1000);
@@ -180,6 +187,7 @@ export default function ModalEdicionInstruccion({
                           msgText: "No se logró realizar la operación",
                           msgError: true,
                         });
+
                         setTimeout(() => {
                           setOpenDialog(false);
                         }, 1000);
@@ -305,7 +313,7 @@ export default function ModalEdicionInstruccion({
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
             <MobileDatePicker
                 label="Fecha Recepcion"
-                disabled={!dataBoleean && !fechaRecepcion ? false : true}
+                disabled={!dataBoleean && !boolFechRecept ? false : true}
                 inputFormat="dd/MM/yyyy"
                 minDate={new Date("2017-01-02")}
                 maxDate={new Date("2024-01-01")}
@@ -337,7 +345,7 @@ export default function ModalEdicionInstruccion({
             <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
             <MobileDatePicker
                 label="Fecha Pago"
-                disabled={fechaRecepcion && dataBoleean ? false : true}
+                disabled={dataBoleean  &&  boolFechRecept? false : true}
                 inputFormat="dd/MM/yyyy"
                 value={paymentDate}
                 minDate={new Date("2017-01-02")}
@@ -368,7 +376,7 @@ export default function ModalEdicionInstruccion({
             label="Folio"
             id="outlined"
             value={folio}
-            disabled={!dataBoleean && !fechaRecepcion ? false : true}
+            disabled={!dataBoleean && !boolFechRecept ? false : true}
             onChange={(event) => {
                 setStates({ ...states, folio: event.target.value });
             }}
