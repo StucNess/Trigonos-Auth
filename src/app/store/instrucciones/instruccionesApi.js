@@ -4,7 +4,7 @@ export const instruccionesApi = createApi({
   reducerPath: "instrucciones",
   tagTypes: ["instruccionesDef"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net",
+    baseUrl: "http://localhost:5205",
   }),
   endpoints: (builder) => ({
     // GET QUERY //
@@ -1768,7 +1768,7 @@ export const instruccionesApi = createApi({
     //Mejoras
     getAllInstructions: builder.mutation({
       query: (data) => ({
-        url:`/api/Instrucciones/InstruccionesDef/${data.id}?PageIndex=${data.PageIndex}&PageSize=${data.PageSize}`,
+        url: `/api/Instrucciones/InstruccionesDef/${data.id}?PageIndex=${data.PageIndex}&PageSize=${data.PageSize}`,
         method: "GET",
       }),
       providesTags: ["instruccionesDefAll"],

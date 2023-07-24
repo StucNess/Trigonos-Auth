@@ -104,6 +104,7 @@ export default function HorizontalLinearStepper(props) {
       },
     }).then(({ data }) => {
       let buclesF = Math.round(data.count / 100 + 0.49) + 2;
+      console.log(buclesF);
       for (let x = 1; x < buclesF; x++) {
         getInstrucciones({
           id: idParticipant,
@@ -119,6 +120,7 @@ export default function HorizontalLinearStepper(props) {
           data.data.map((e) => {
             array2.push(e);
           });
+
           if (array2.length === data.count) {
             setCargando(false);
           }
@@ -199,7 +201,6 @@ export default function HorizontalLinearStepper(props) {
               {/* <Box> */}
               {cargando == true ? (
                 <Stack sx={{ width: "100%", color: "grey.500" }} spacing={2}>
-                  
                   <LinearProgress color="primary" />
                 </Stack>
               ) : (

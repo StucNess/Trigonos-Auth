@@ -4,7 +4,7 @@ export const metricsApi = createApi({
   reducerPath: "metrics",
   tagTypes: ["estPago", "estRecept", "estFact"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/api/Metrics/",
+    baseUrl: "http://localhost:5205/api/Metrics/",
   }),
   endpoints: (builder) => ({
     getEstadoPago: builder.query({
