@@ -105,16 +105,20 @@ const NominaPagoApp = () => {
                     response.data.data.map((e) => {
                       array.push(e);
                     });
+                    console.log(array);
+                    console.log(data);
                     if (array.length === data.count) {
-                      setCargando(false);
-                      temporal = 0;
+                      setTimeout(() => {
+                        setCargando(false);
+                        temporal = 0;
+                      }, 2000);
                     }
                   })
                   .catch((error) => {
                     console.log(error);
                   });
               }
-              temporal = 0;
+              // temporal = 0;
               setStateNomina({
                 data: data,
                 error: data.length > 0 ? false : true,
@@ -177,8 +181,10 @@ const NominaPagoApp = () => {
                       array.push(e);
                     });
                     if (array.length === data.count) {
-                      setCargando(false);
-                      temporal = 0;
+                      setTimeout(() => {
+                        setCargando(false);
+                        temporal = 0;
+                      }, 2000);
                     }
                   })
                   .catch((error) => {
