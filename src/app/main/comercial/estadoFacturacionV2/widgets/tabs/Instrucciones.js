@@ -167,6 +167,7 @@ export default function Instrucciones(props) {
     fechaEmision: undefined,
     fechaRecepcion: undefined,
   });
+
   const [pageIndex, setPageIndex] = useState(1);
   const [pagination, setPagination] = useState(0);
   const [pageCount, setPageCount] = useState(0);
@@ -557,16 +558,19 @@ export default function Instrucciones(props) {
         return Object.entries(atributos).reduce(
           (resultado, [atributo, valor]) => {
             if (valor !== undefined) {
-              if (atributo === 'montoBrutoIgual') {
-                return resultado && objeto[atributo] === valor;
-              }
-              else if (atributo === 'montoNetoIgual') {
-                return resultado && objeto[atributo] === valor;
-              }
+              // if (atributo === 'montoBrutoIgual') {
+              //   return resultado && objeto[atributo] === valor.replace(/\./g, "_");
+              // }
+              // else if (atributo === 'montoNetoIgual') {
+              //   return resultado && objeto[atributo] === valor;
+              // }
+              // else if(atributo === 'period' && atributo === 'periodEnd'){
+              //   return resultado && objeto[atributo] === valor;
+              // }
               
-              else {
+              // else {
                 return resultado && objeto[atributo] === valor;
-              }
+              // }
             }
             return resultado;
           },
@@ -579,7 +583,7 @@ export default function Instrucciones(props) {
   function setAllFilters(arr,objtosearch, isacreedor=undefined) {
     
     const distincts = distincFilters(filterArrayOfObjectsByProperties(arr,objtosearch));
-    
+    console.log(distincts);
     setConceptFilter(distincts.glosa?distincts.glosa:[]);
     setCodRefFilter(distincts.codigoRef?distincts.codigoRef:[]);
     setCartaFilter(distincts.carta?distincts.carta:[]);
@@ -595,8 +599,49 @@ export default function Instrucciones(props) {
 
   }
   useEffect(() => {
+    if(allDataInstrucc.length > 0){
+      allDataInstrucc.map((prev)=>{
+        if (prev.id_instruccions === 5027844) {
+          // Si hay coincidencia, retornamos el objeto actualizado
+          
+            console.log(prev.fecha_recepcion,
+              prev.fecha_aceptacion,
+              prev.fecha_emision,
+              prev.fecha_pago,
+           )
+            // Y así sucesivamente con los demás atributos que desees actualizar
+          
+        }
+      });
+
+      setAllFilters(allDataInstrucc,{
+
+        ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
+        ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
+        ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
+        ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
+        ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
+        ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
+        ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
+        ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+        ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
+        ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
+        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
+        ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
+        ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+        ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
+        ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
+  
+  
+      //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+      //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+       
+      
+      });
+    }
     
-  }, [allDataInstrucc, filtersInstruc]);
+  }, [allDataInstrucc]);
 
   function prueba() {
     let specPrueba = {
@@ -788,6 +833,8 @@ export default function Instrucciones(props) {
         Glosa: selected.sConcept != "" ? selected.sConcept : "",
         MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
         MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+        MontoNetoIgual: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+        MontoBrutoIgual: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
         Folio: selected.sFolio != "" ? selected.sFolio : "",
         NombreDeudor: state.acreedor
           ? selected.sBusinessName != ""
@@ -1239,23 +1286,26 @@ export default function Instrucciones(props) {
       ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
       ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
       ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
-      ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
-      ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+      ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
+      ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
       ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
-      ...(sInicioPeriodo != ""? {folio:parseInt(selected.sFolio) } : {}),
-      ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
-      InicioPeriodo:
-      sInicioPeriodo != ""
-        ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
-            sInicioPeriodo.getMonth() + 1
-          }/01`
-        : "",
-    TerminoPeriodo:
-      sTerminoPeriodo != ""
-        ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
-            sTerminoPeriodo.getMonth() + 1
-          }/01`
-        : "",
+      ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
+      ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
+      
+      // ...(sInicioPeriodo != ""? {folio:parseInt(selected.sFolio) } : {}),
+      // ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+    //   InicioPeriodo:
+    //   sInicioPeriodo != ""
+    //     ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
+    //         sInicioPeriodo.getMonth() + 1
+    //       }/01`
+    //     : "",
+    // TerminoPeriodo:
+    //   sTerminoPeriodo != ""
+    //     ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
+    //         sTerminoPeriodo.getMonth() + 1
+    //       }/01`
+    //     : "",
       // Folio: selected.sFolio != "" ? selected.sFolio : "",
 
     //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
@@ -1335,7 +1385,7 @@ export default function Instrucciones(props) {
       setPageCount(0);
       setRowsPerPage(5);
 
-      clearStates();
+      
       // FiltersOne();
       GetInstructions();
     }
@@ -1357,6 +1407,7 @@ export default function Instrucciones(props) {
   useEffect(() => {
     if (state.acreedor) {
       setLoadingApis(true);
+      
       setAllFilters(allDataInstrucc,{
 
         ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
@@ -1370,10 +1421,11 @@ export default function Instrucciones(props) {
         ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
         ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
         ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
-        ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
-        ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+        ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
         ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
-
+        ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
+        ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
         acreedor:id,
       
       },1);
@@ -1399,9 +1451,11 @@ export default function Instrucciones(props) {
         ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
         ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
         ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
-        ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
-        ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+        ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
         ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+        ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
+        ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
 
         deudor:id,
       },0);
@@ -1422,9 +1476,11 @@ export default function Instrucciones(props) {
         ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
         ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
         ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
-        ...(selected.sMontoNeto != ""? {montoNeto: selected.sMontoNeto } : {}), 
-        ...(selected.sMontoBruto != ""? {montoBruto: selected.sMontoBruto } : {}), 
+        ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
         ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+        ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
+        ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
 
 
       //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
@@ -1436,7 +1492,53 @@ export default function Instrucciones(props) {
       GetInstructions();
     }
   }, [state]);
+  useEffect(() => {
+    if(selected.sInicioPeriodo){
+      console.log(formatedDataToSearch(sInicioPeriodo))
+    }
+    if(selected.sTerminoPeriodo){
+      console.log(formatedDataToSearch(sTerminoPeriodo))
+    }
+    if(selected.sMontoNeto){
+      console.log(selected.sMontoNeto)
+    }
+    console.log({
 
+      ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
+      ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
+      ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
+      ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
+      ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
+      ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
+      ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
+      ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+      ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
+      ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
+      ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
+      ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
+      ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
+      ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+      ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
+      ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
+
+
+    //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
+    //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
+     
+    
+    })
+  }, [selected])
+  
+  function formatedDataToSearch(date){
+    const dia = date.getDate().toString().padStart(2, "0");
+    const mes = (date.getMonth() + 1).toString().padStart(2, "0"); 
+    const anio = date.getFullYear().toString();
+    const horas = date.getHours().toString();
+    const minutos = date.getMinutes().toString().padStart(2, "0");
+    const segundos = date.getSeconds().toString().padStart(2, "0");
+    const fechaFormateada = `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;
+    return fechaFormateada
+  }
   const handleChange = (event) => {
     if (event.target.name === "acreedor" && event.target.checked === true) {
       setState({
@@ -1573,6 +1675,7 @@ export default function Instrucciones(props) {
     }/20${thedate.getYear().toString().slice(1, 3)}`;
     return prueba;
   }
+  
   function returnInstructionState(id) {
     let estado = "vacio";
     if (id === 0) {
@@ -1584,6 +1687,19 @@ export default function Instrucciones(props) {
     }
     return estado;
   }
+  function formatDateToBD(strDate) {
+   // Separamos el string de fecha en sus componentes (año, mes y día)
+   const [year, month, day] = strDate.split('/');
+
+   // Creamos un objeto Date con los componentes de la fecha
+   const dateObj = new Date(year, month - 1, day); // Restamos 1 al mes ya que en JavaScript los meses comienzan en 0
+ 
+   // Obtenemos el formato deseado "2017-01-01T00:00:00" utilizando toISOString
+   const formattedDate = `${dateObj.toISOString().substring(0,11)}00:00:00`;
+ 
+   return formattedDate;
+  }
+  
   const clearOrderBy = () => {
     orderByList.orderByFolio = "";
     orderByList.orderByFechaCarta = "";
@@ -2328,9 +2444,9 @@ export default function Instrucciones(props) {
                           buscar: false,
                         };
                       });
-                      // setSelected({
-
-                      // });
+                      if(condicionFilters ===1){
+                        clearStates();
+                      }
                     }}
                     style={{
                       m: 1,
@@ -2716,11 +2832,48 @@ export default function Instrucciones(props) {
                 setTable={() => {
                   setTable(false);
                   setDataEdit({
-                    dataRow: {},
+                    // dataRow: {},
+                    ...dataEdit,
                     dataBoleean: false,
                     fechaEmision: undefined,
                     fechaRecepcion: undefined,
                   });
+                }}
+                getDataOfUpdate={(data) => {
+                 console.log(data)
+                  
+                    //CAMBIAMOS LOS DATOS DE LA INSTRUCCION SI SON EXITOSOS LOS CAMBIOS SE EJECUTA TODO EL GETDATAOFUPDATE()
+                    
+                    setAllDataInstrucc((prevstate) => {
+                      return prevstate.map((item) => {
+                        // Verificamos si el id del objeto actual coincide con data.id
+                        if (item.id_instruccions === data.id) {
+                          // Si hay coincidencia, retornamos el objeto actualizado
+                          return {
+                            ...item, // Mantenemos los atributos originales del objeto
+                            // Aquí puedes editar los atributos que necesitas cambiar en base a data
+                            fecha_recepcion: formatDateToBD(data.spec.FechaRecepcion),
+                            fecha_aceptacion: formatDateToBD(data.spec.FechaAceptacion),
+                            fecha_emision: formatDateToBD(data.spec.FechaEmision),
+                            fecha_pago: formatDateToBD(data.spec.FechaPago),
+                            // Y así sucesivamente con los demás atributos que desees actualizar
+                          };
+                        } else {
+                          // Si no hay coincidencia, simplemente devolvemos el objeto original sin cambios
+                          return item;
+                        }
+                      });
+                    });
+                   
+               
+                    // console.log(formatDateToBD(data.spec.FechaRecepcion));
+                    // console.log(formatDateToBD(data.spec.FechaPago));
+                    // console.log(formatDateToBD(data.spec.FechaAceptacion));
+                    // console.log(formatDateToBD(data.spec.FechaEmision));
+               
+
+
+
                 }}
                 dataEdit={dataEdit}
               />

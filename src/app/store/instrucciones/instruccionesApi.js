@@ -4,7 +4,7 @@ export const instruccionesApi = createApi({
   reducerPath: "instrucciones",
   tagTypes: ["instruccionesDef"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5205/",
+    baseUrl: "https://trigonosapi.azurewebsites.net/",
   }),
   endpoints: (builder) => ({
     // GET QUERY //
@@ -589,10 +589,10 @@ export const instruccionesApi = createApi({
               ? `&Deudor=${data.spec.Deudor}`
               : "") +
             (data.spec.MontoNeto != undefined
-              ? `&MontoNeto=${data.spec.MontoNeto}`
+              ? `&MontoNetoIgual=${data.spec.MontoNeto}`
               : "") +
             (data.spec.MontoBruto != undefined
-              ? `&MontoBruto=${data.spec.MontoBruto}`
+              ? `&MontoBrutoIgual=${data.spec.MontoBruto}`
               : "") +
             (data.spec.EstadoEmision != undefined
               ? `&EstadoEmision=${data.spec.EstadoEmision}`
