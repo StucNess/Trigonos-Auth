@@ -589,10 +589,10 @@ export const instruccionesApi = createApi({
               ? `&Deudor=${data.spec.Deudor}`
               : "") +
             (data.spec.MontoNeto != undefined
-              ? `&MontoNetoIgual=${data.spec.MontoNeto}`
+              ? `&MontoNeto=${data.spec.MontoNeto}`
               : "") +
             (data.spec.MontoBruto != undefined
-              ? `&MontoBrutoIgual=${data.spec.MontoBruto}`
+              ? `&MontoBruto=${data.spec.MontoBruto}`
               : "") +
             (data.spec.EstadoEmision != undefined
               ? `&EstadoEmision=${data.spec.EstadoEmision}`
