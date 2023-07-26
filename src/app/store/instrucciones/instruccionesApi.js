@@ -594,6 +594,12 @@ export const instruccionesApi = createApi({
             (data.spec.MontoBruto != undefined
               ? `&MontoBruto=${data.spec.MontoBruto}`
               : "") +
+            (data.spec.MontoNetoIgual != undefined
+              ? `&MontoNetoIgual=${data.spec.MontoNetoIgual}`
+              : "") +
+            (data.spec.MontoBrutoIgual != undefined
+              ? `&MontoBrutoIgual=${data.spec.MontoBrutoIgual}`
+              : "") +
             (data.spec.EstadoEmision != undefined
               ? `&EstadoEmision=${data.spec.EstadoEmision}`
               : "") +
