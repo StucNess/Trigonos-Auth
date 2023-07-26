@@ -4,7 +4,7 @@ export const nominasApi = createApi({
   reducerPath: "nominas",
   tagTypes: ["nominas"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/api/",
+    baseUrl: "http://localhost:5205/api/",
   }),
   endpoints: (builder) => ({
     //Revisar como utilizar el patch si no cambialo por post en .net

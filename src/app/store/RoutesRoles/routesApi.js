@@ -4,7 +4,7 @@ export const routesApi = createApi({
   reducerPath: "routes",
   tagTypes: ["RolesToken", "listarpaginaweb"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net/api/Rol/",
+    baseUrl: "http://localhost:5205/api/Rol/",
   }),
   endpoints: (builder) => ({
     getAllRoles: builder.query({ query: () => "" }),
