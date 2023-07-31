@@ -1428,7 +1428,7 @@ function TabInstrucciones(props) {
 
     let url;
     url =
-      "http://localhost:5205/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
+      "https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
     axios
       .post(url, selected)
       .then(function (response) {

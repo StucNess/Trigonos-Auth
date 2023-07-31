@@ -117,7 +117,7 @@ export const SimpleForm = ({ cerrar, diccionariop }) => {
   };
   const ApiPatch = () => {
     const apiPatchParticipante =
-      `http://localhost:5205/api/Participantes?` +
+      `https://trigonosapi.azurewebsites.net/api/Participantes?` +
       `id=${id}&` +
       `Name=${name}&` +
       `Rut=${rut}&` +

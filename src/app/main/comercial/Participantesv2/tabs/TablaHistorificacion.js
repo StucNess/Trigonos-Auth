@@ -211,7 +211,7 @@ export default function TablaUltimosCambios(props) {
     useGetHistorificacionMutation();
 
   // const { data: getDataHist, isFetching: fetchHist, refetch: refetchHist} =  useGetHistorificacionMutation({id:props.idParticipant, PageIndex:pageIndex, PageSize:rowsPerPage  });
-  // let url = `http://localhost:5205/Historificacion?id=${props.idParticipant}`;
+  // let url = `https://trigonosapi.azurewebsites.net/Historificacion?id=${props.idParticipant}`;
   function getHistData() {
     setLoadingApis(true);
     getDataHist({
