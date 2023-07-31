@@ -182,15 +182,20 @@ export default function Instrucciones(props) {
     estadoAceptacion: false,
     acreedor: false,
     deudor: false,
+    buscar:0,
+    limpiar:0,
   });
   const clearStates = () => {
-    setState({
+    setState((prevState)=>{
+      return {
       estadoEmision: false,
       estadoPago: false,
       estadoRecepcion: false,
       estadoAceptacion: false,
       acreedor: false,
       deudor: false,
+      buscar:0,
+      limpiar:prevState.limpiar+1}
     });
   };
   //filtros
@@ -216,45 +221,10 @@ export default function Instrucciones(props) {
     sCodRef: "",
     sInicioPeriodo: "",
     sTerminoPeriodo: "",
-    buscar: true,
+    buscar:0,
+    limpiar:false,
   });
-  const [dataSpec, setDataSpec] = useState({
-    id: id,
-    PageIndex: 1,
-    PageSize: 100,
-    spec: {
-      EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-      EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-      Acreedor: state.acreedor ? id : "",
-      Deudor: state.deudor ? id : "",
-      EstadoEmision: state.estadoEmision ? "Facturado" : "",
-      EstadoPago: state.estadoPago ? "Pagado" : "",
-      RutDeudor: state.acreedor
-        ? selected.sRut != ""
-          ? selected.sRut.slice(0, 8)
-          : ""
-        : "",
-      RutAcreedor: state.deudor
-        ? selected.sRut != ""
-          ? selected.sRut.slice(0, 8)
-          : ""
-        : "",
-      Glosa: selected.sConcept != "" ? selected.sConcept : "",
-      MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-      MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-      Folio: selected.sFolio != "" ? selected.sFolio : "",
-      NombreDeudor: state.acreedor
-        ? selected.sBusinessName != ""
-          ? selected.sBusinessName
-          : ""
-        : "",
-      NombreAcreedor: state.deudor
-        ? selected.sBusinessName != ""
-          ? selected.sBusinessName
-          : ""
-        : "",
-    },
-  });
+ 
   const clearFilters = () => {
     setSelected(
       {
@@ -270,12 +240,9 @@ export default function Instrucciones(props) {
         sTerminoPeriodo: "",
         buscar: "",
       },
-      () => {
-        // console.log("funcion");
-      }
+      
     );
-    // GetInstructions();
-    //   FiltersOne();
+   
   };
   const {
     sBusinessName,
@@ -309,50 +276,6 @@ export default function Instrucciones(props) {
     skipCarta: false,
   });
 
-  // const { data: getDataInstruction, isFetching: fetchInstructions, refetch: refetchInstruc} =
-  // useGetInstruccionesSpecQuery(
-  //   {
-  //   id: id,
-  //   PageIndex: pageIndex,
-  //   PageSize:rowsPerPage,
-  //   spec: {
-  //     EstadoAceptacion:state.estadoAceptacion?"Aceptado":"",
-  //     EstadoRecepcion:state.estadoRecepcion?"Recepcionado":"",
-  //     Acreedor:state.acreedor?id:"",
-  //     Deudor:state.deudor?id:"",
-  //     EstadoEmision:state.estadoEmision?"Facturado":"",
-  //     EstadoPago:state.estadoPago?"Pagado":"",
-  //     RutDeudor:buscar?(state.acreedor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //     RutAcreedor:buscar?(state.deudor?(sRut!=""?sRut.slice(0, 8):""):("")):"",
-  //     Glosa:buscar?(sConcept!=""?sConcept:""):"",
-  //     MontoNeto:buscar?(sMontoNeto!=""?sMontoNeto:""):"",
-  //     MontoBruto:buscar?(sMontoBruto!=""?sMontoBruto:""):"",
-  //     Folio:buscar?(sFolio!=""?sFolio:""):"",
-  //     NombreDeudor:buscar?(state.acreedor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //     NombreAcreedor:buscar?(state.deudor?(sBusinessName!=""?sBusinessName:""):("")):"",
-  //     Carta:buscar?(sCarta!=""?sCarta:""):"",
-  //     CodigoRef:buscar?(sCodRef!=""?sCodRef:""):"",
-  //     FechaEmision:"",
-  //     FechaRecepcion:"",
-  //     FechaPago:"",
-  //     FechaAceptacion:"",
-  //     Concepto:"",
-  //     InicioPeriodo:buscar?(sInicioPeriodo!=""?`20${sInicioPeriodo
-  //       .getYear()
-  //       .toString()
-  //       .slice(1, 3)}/${sInicioPeriodo.getMonth() + 1}/01`:""):"",
-  //     TerminoPeriodo:buscar?(sTerminoPeriodo!=""?`20${sTerminoPeriodo
-  //       .getYear()
-  //       .toString()
-  //       .slice(1, 3)}/${sTerminoPeriodo.getMonth() + 1}/01`:""):"",
-  //     OrderByNeto:"",
-  //     OrderByBruto:"",
-  //     OrderByFechaEmision:"",
-  //     OrderByFechaPago:"",
-  //     OrderByFechaCarta:"",
-  //     OrderByFolio:"",
-  //   }
-  //   },{skip:skipFetchs.skipInstructions});
   const {
     estadoEmision,
     estadoPago,
@@ -368,44 +291,12 @@ export default function Instrucciones(props) {
   const [codRefFilter, setCodRefFilter] = useState([]);
   const [cartaFilter, setCartaFilter] = useState([]);
   const [dataInstruction, setDataInstruction] = useState([]);
-  //--RutAcre RutDeudor NombreDeudor NombreAcreedor
-  const [rutAcreFilter, setRutAcreFilter] = useState([]);
-  const [rutDeuFilter, setRutDeuFilter] = useState([]);
-  const [nomAcreFilter, setNomAcreFilter] = useState([]);
-  const [nomDeuFilter, setNomDeuFilter] = useState([]);
-  //MUTATIONS COUNTERS
 
-  const [getNumConcept, { isLoading: isLoadingNConcept }] =
-    useGetNumberConceptMutation();
-  const [getNumCodRef, { isLoading: isLoadingNCodRef }] =
-    useGetNumberCodRefMutation();
-  const [getNumCarta, { isLoading: isLoadingCart }] =
-    useGetNumberCartaMutation();
-  const [getNumRutA, { isLoading: isLoadingRutAcre }] =
-    useGetNumberRutAcreedorMutation();
-  const [getNumRutD, { isLoading: isLoadingRutDeu }] =
-    useGetNumberRutDeudorMutation();
-  const [getNumNomAcre, { isLoading: isLoadingNnameAcre }] =
-    useGetNumberNombreAcreedorMutation();
-  const [getNumNomDeu, { isLoading: isLoadingNnameDeu }] =
-    useGetNumberNombreDeudorMutation();
+
 
   //MUTATIONS DATA
 
-  const [getConceptMutation, { isLoading: isLoadingConceptm }] =
-    useGetConceptomMutation();
-  const [getCodRefMutation, { isLoading: isLoadingCodRefm }] =
-    useGetCodRefmMutation();
-  const [getCartaMutation, { isLoading: isLoadingCartam }] =
-    useGetCartamMutation();
-  const [getRutDeudorMutation, { isLoading: isLoadingRutDeudorm }] =
-    useGetRutDeudormMutation();
-  const [getRutAcreMutation, { isLoading: isLoadingRutAcreedorm }] =
-    useGetRutAcreedormMutation();
-  const [getNombreDeudorMutation, { isLoading: isLoadingNombreDm }] =
-    useGetNombreDeudormMutation();
-  const [getNombreAcreedor, { isLoading: isLoadingNombreAm }] =
-    useGetNombreAcreedormMutation();
+
   const [getInstrucciones, { isLoading: isLoadingInst }] =
     useGetInstruccionesSpecmMutation();
 
@@ -417,11 +308,7 @@ export default function Instrucciones(props) {
   const [cargaConcept, setCargaConcept] = useState(true);
   const [cargaCodRef, setCargaCodRef] = useState(true);
   const [cargaCarta, setCargaCarta] = useState(true);
-  //estas se activan solo cuando hay cambios de los estados
-  const [cargaRutDeudor, setCargaRutDeudor] = useState(false);
-  const [cargaRutAcre, setCargaRutAcre] = useState(false);
-  const [cargaNombreAcre, setCargaNombreAcre] = useState(false);
-  const [cargaNombreDeu, setCargaNombreDeu] = useState(false);
+
   const [cargaInstructions, setCargaInstructions] = useState(false);
 
   const [LoadingApis, setLoadingApis] = useState(true);
@@ -580,67 +467,39 @@ export default function Instrucciones(props) {
     };
     return filtrarPorAtributos(objectToSearch);
   }
-  function setAllFilters(arr,objtosearch, isacreedor=undefined) {
-    
+  function setAllFilters(arr,objtosearch, isacreedor=undefined,isClear=true) {
     const distincts = distincFilters(filterArrayOfObjectsByProperties(arr,objtosearch));
-    console.log(distincts);
     setConceptFilter(distincts.glosa?distincts.glosa:[]);
     setCodRefFilter(distincts.codigoRef?distincts.codigoRef:[]);
     setCartaFilter(distincts.carta?distincts.carta:[]);
-    if(isacreedor ===1){
+    if(objtosearch.acreedor){
       setBusinessName(distincts.nombreDeudor?distincts.nombreDeudor:[]);
       setRutName(distincts.rutDeudor?distincts.rutDeudor:[]);
-
-    }else if(isacreedor === 0){
+    }else if(objtosearch.deudor){
       setBusinessName(distincts.nombreAcreedor?distincts.nombreAcreedor:[]);
       setRutName(distincts.rutAcreedor?distincts.rutAcreedor:[]);
-
     }
-
   }
   useEffect(() => {
     if(allDataInstrucc.length > 0){
-      allDataInstrucc.map((prev)=>{
-        if (prev.id_instruccions === 5027844) {
-          // Si hay coincidencia, retornamos el objeto actualizado
-          
-            console.log(prev.fecha_recepcion,
-              prev.fecha_aceptacion,
-              prev.fecha_emision,
-              prev.fecha_pago,
-           )
-            // Y así sucesivamente con los demás atributos que desees actualizar
-          
-        }
-      });
-
       setAllFilters(allDataInstrucc,{
-
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.deudor?  {deudor: id}:{acreedor: id}),
         ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
         ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
         ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
         ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
-        ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
-        ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
-        ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
-        ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sRut != ""?  {rutDeudor: selected.sRut}:{}:selected.sRut != ""? {rutAcreedor: selected.sRut}:{}),
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sBusinessName != ""? {nombreDeudor: selected.sBusinessName}:{}:selected.sBusinessName != ""?{nombreAcreedor: selected.sBusinessName}:{}),
         ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
         ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
-        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
+        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
         ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
         ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
         ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
         ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
         ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
-  
-  
-      //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-      //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-       
-      
-      });
+      },(state.acreedor?1:0)===0 && (state.deudor?1:0)===0 ?undefined:state.acreedor?1:0,true);
     }
-    
   }, [allDataInstrucc]);
 
   function prueba() {
@@ -885,155 +744,7 @@ export default function Instrucciones(props) {
       });
   }
   //concept, carta, codref
-  function FiltersOne() {
-    setPageIndex(1);
-    setPagination(0);
-    setPageCount(0);
-    setRowsPerPage(5);
-    setConceptFilter();
-    setCodRefFilter();
-    setCartaFilter();
-    setLoadingApis(true);
-    setCargaConcept(true);
-    setCargaCodRef(true);
-    setCargaCarta(true);
 
-    getConceptMutation({
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        RutAcreedor: state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        Glosa: selected.sConcept != "" ? selected.sConcept : "",
-        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-        Folio: selected.sFolio != "" ? selected.sFolio : "",
-        NombreDeudor: state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        NombreAcreedor: state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        Carta: selected.sCarta != "" ? selected.sCarta : "",
-        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
-      },
-    })
-      .then((response) => {
-        setConceptFilter(response.data);
-      })
-      .catch((error) => {
-        setCargaConcept(false);
-      });
-    getCodRefMutation({
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        RutAcreedor: state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        Glosa: selected.sConcept != "" ? selected.sConcept : "",
-        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-        Folio: selected.sFolio != "" ? selected.sFolio : "",
-        NombreDeudor: state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        NombreAcreedor: state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        Carta: selected.sCarta != "" ? selected.sCarta : "",
-        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
-      },
-    })
-      .then((response) => {
-        setCodRefFilter(response.data);
-      })
-      .catch((error) => {
-        setCargaCodRef(false);
-      });
-    getCartaMutation({
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        RutAcreedor: state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        Glosa: selected.sConcept != "" ? selected.sConcept : "",
-        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-        Folio: selected.sFolio != "" ? selected.sFolio : "",
-        NombreDeudor: state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        NombreAcreedor: state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        Carta: selected.sCarta != "" ? selected.sCarta : "",
-        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
-      },
-    })
-      .then((response) => {
-        setCartaFilter(response.data);
-      })
-      .catch((error) => {
-        setCargaCarta(false);
-      });
-  }
   useEffect(() => {
     if (conceptFilter) {
       setCargaConcept(false);
@@ -1046,274 +757,29 @@ export default function Instrucciones(props) {
     }
   }, [conceptFilter, codRefFilter, cartaFilter]);
 
-  //rut, nombre: acreedor y deudor
-  function FiltersAcree() {
-    setPageIndex(1);
-    setPagination(0);
-    setPageCount(0);
-    setRowsPerPage(5);
-    setBusinessName();
-    setRutName();
-    setLoadingApis(true);
-    setCargaNombreAcre(true);
-    setCargaRutAcre(true);
-    setRutAcreFilter(undefined);
-    setNomAcreFilter(undefined);
-
-    getRutAcreMutation({
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        RutAcreedor: state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        Glosa: selected.sConcept != "" ? selected.sConcept : "",
-        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-        Folio: selected.sFolio != "" ? selected.sFolio : "",
-        NombreDeudor: state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        NombreAcreedor: state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        Carta: selected.sCarta != "" ? selected.sCarta : "",
-        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
-      },
-    })
-      .then((response) => {
-        setRutName(response.data);
-        setCargaRutAcre(false);
-      })
-      .catch((error) => {
-        setCargaRutAcre(false);
-      });
-    getNombreAcreedor({
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        RutAcreedor: state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        Glosa: selected.sConcept != "" ? selected.sConcept : "",
-        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-        Folio: selected.sFolio != "" ? selected.sFolio : "",
-        NombreDeudor: state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        NombreAcreedor: state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        Carta: selected.sCarta != "" ? selected.sCarta : "",
-        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
-      },
-    })
-      .then((response) => {
-        setBusinessName(response.data);
-        setCargaNombreAcre(false);
-      })
-      .catch((error) => {
-        setCargaNombreAcre(false);
-      });
-  }
-  function FiltersDeu() {
-    setPageIndex(1);
-    setPagination(0);
-    setPageCount(0);
-    setRowsPerPage(5);
-    setBusinessName();
-    setRutName();
-    setLoadingApis(true);
-
-    setCargaNombreDeu(true);
-
-    setCargaRutDeudor(true);
-
-    setRutDeuFilter(undefined);
-
-    setNomDeuFilter(undefined);
-
-    getRutDeudorMutation({
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        RutAcreedor: state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        Glosa: selected.sConcept != "" ? selected.sConcept : "",
-        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-        Folio: selected.sFolio != "" ? selected.sFolio : "",
-        NombreDeudor: state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        NombreAcreedor: state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        Carta: selected.sCarta != "" ? selected.sCarta : "",
-        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
-      },
-    })
-      .then((response) => {
-        setRutName(response.data);
-        setCargaRutDeudor(false);
-      })
-      .catch((error) => {
-        setCargaRutDeudor(false);
-      });
-    getNombreDeudorMutation({
-      id: id,
-      PageIndex: 1,
-      PageSize: 100,
-      spec: {
-        EstadoAceptacion: state.estadoAceptacion ? "Aceptado" : "",
-        EstadoRecepcion: state.estadoRecepcion ? "Recepcionado" : "",
-        Acreedor: state.acreedor ? id : "",
-        Deudor: state.deudor ? id : "",
-        EstadoEmision: state.estadoEmision ? "Facturado" : "",
-        EstadoPago: state.estadoPago ? "Pagado" : "",
-        RutDeudor: state.acreedor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        RutAcreedor: state.deudor
-          ? selected.sRut != ""
-            ? selected.sRut.slice(0, 8)
-            : ""
-          : "",
-        Glosa: selected.sConcept != "" ? selected.sConcept : "",
-        MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-        MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-        Folio: selected.sFolio != "" ? selected.sFolio : "",
-        NombreDeudor: state.acreedor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        NombreAcreedor: state.deudor
-          ? selected.sBusinessName != ""
-            ? selected.sBusinessName
-            : ""
-          : "",
-        Carta: selected.sCarta != "" ? selected.sCarta : "",
-        CodigoRef: selected.sCodRef != "" ? selected.sCodRef : "",
-      },
-    })
-      .then((response) => {
-        setBusinessName(response.data);
-        setCargaNombreDeu(false);
-      })
-      .catch((error) => {
-        setCargaNombreDeu(false);
-      });
-  }
-
   function searchFilter() {
-    // setSelected({...selected,buscar: true});
-
-    setSelected({
-      ...selected,
-      buscar: true,
-    });
-    // console.log(selected.sFolio)
-    // FiltersOne();
+    setLoadingApis(true);
     setAllFilters(allDataInstrucc,{
-
+      ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.deudor?  {deudor: id}:{acreedor: id}),
       ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
       ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
       ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
       ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
-      ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
-      ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
-      ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
-      ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+      ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sRut != ""?  {rutDeudor: selected.sRut}:{}:selected.sRut != ""? {rutAcreedor: selected.sRut}:{}),
+      ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sBusinessName != ""? {nombreDeudor: selected.sBusinessName}:{}:selected.sBusinessName != ""?{nombreAcreedor: selected.sBusinessName}:{}),
       ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
       ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
-      ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
+      ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
       ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
       ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
       ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
       ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
       ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
-      
-      // ...(sInicioPeriodo != ""? {folio:parseInt(selected.sFolio) } : {}),
-      // ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
-    //   InicioPeriodo:
-    //   sInicioPeriodo != ""
-    //     ? `20${sInicioPeriodo.getYear().toString().slice(1, 3)}/${
-    //         sInicioPeriodo.getMonth() + 1
-    //       }/01`
-    //     : "",
-    // TerminoPeriodo:
-    //   sTerminoPeriodo != ""
-    //     ? `20${sTerminoPeriodo.getYear().toString().slice(1, 3)}/${
-    //         sTerminoPeriodo.getMonth() + 1
-    //       }/01`
-    //     : "",
-      // Folio: selected.sFolio != "" ? selected.sFolio : "",
-
-    //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-    
-    //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-     
-    
-    });
+    },(state.acreedor?1:0)===0 && (state.deudor?1:0)===0 ?undefined:state.acreedor?1:0,true);
+    setPageIndex(1);
+    setPagination(0);
+    setPageCount(0);
+    setRowsPerPage(5);
     GetInstructions();
   }
   useEffect(() => {
@@ -1379,25 +845,39 @@ export default function Instrucciones(props) {
     GetAllInstructions();
   }, [id]);
   useEffect(() => {
-    if (!selected.buscar) {
+    if (selected.buscar > 0|| selected.limpiar >0) {
+      setAllFilters(allDataInstrucc,{
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.deudor?  {deudor: id}:{acreedor: id}),
+        ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
+        ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
+        ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
+        ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sRut != ""?  {rutDeudor: selected.sRut}:{}:selected.sRut != ""? {rutAcreedor: selected.sRut}:{}),
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sBusinessName != ""? {nombreDeudor: selected.sBusinessName}:{}:selected.sBusinessName != ""?{nombreAcreedor: selected.sBusinessName}:{}),
+        ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
+        ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
+        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
+        ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
+        ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
+        ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
+        ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
+        ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
+      },(state.acreedor?1:0)===0 && (state.deudor?1:0)===0 ?undefined:state.acreedor?1:0,true);
       setPageIndex(1);
       setPagination(0);
       setPageCount(0);
       setRowsPerPage(5);
-
-      
-      // FiltersOne();
       GetInstructions();
     }
-  }, [selected.buscar]);
+
+  }, [selected.buscar, selected.limpiar]);
+  
   useEffect(() => {
     if (!table) {
       setPageIndex(1);
       setPagination(0);
       setPageCount(0);
       setRowsPerPage(5);
-
-      // FiltersOne();
       GetInstructions();
       reloadEstadisticas();
       setReloadEstadistica(!reloadEstadistica);
@@ -1405,19 +885,18 @@ export default function Instrucciones(props) {
   }, [table]);
 
   useEffect(() => {
-    if (state.acreedor) {
+   
+    if(!selected.buscar){
       setLoadingApis(true);
-      
+      console.log(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sRut != ""?  {rutDeudor: selected.sRut}:{}:selected.sRut != ""? {rutAcreedor: selected.sRut}:{})
       setAllFilters(allDataInstrucc,{
-
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.deudor?  {deudor: id}:{acreedor: id}),
         ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
         ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
         ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
         ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
-        ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
-        // ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
-        ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
-        // ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sRut != ""?  {rutDeudor: selected.sRut}:{}:selected.sRut != ""? {rutAcreedor: selected.sRut}:{}),
+        ...(((state.acreedor?1:0)===0 && (state.deudor?1:0)===0 )? {}:state.acreedor ? selected.sBusinessName != ""? {nombreDeudor: selected.sBusinessName}:{}:selected.sBusinessName != ""?{nombreAcreedor: selected.sBusinessName}:{}),
         ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
         ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
         ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
@@ -1426,71 +905,10 @@ export default function Instrucciones(props) {
         ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
         ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
         ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
-        acreedor:id,
-      
-      },1);
-      // FiltersDeu();
-      // FiltersOne();
-
-      //crear la busqueda de los filtros
-
-      GetInstructions();
-    } else if (state.deudor) {
-      setLoadingApis(true);
-      // FiltersAcree();
-      // FiltersOne();
-      setAllFilters(allDataInstrucc,{
-        ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
-        ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
-        ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
-        ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
-        // ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
-        ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
-        // ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
-        ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
-        ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
-        ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
-        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}),
-        ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
-        ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
-        ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
-        ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
-        ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
-
-        deudor:id,
-      },0);
-      GetInstructions();
-    } else {
-      setLoadingApis(true);
- 
-      setAllFilters(allDataInstrucc,{
-
-        ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
-        ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
-        ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
-        ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
-        ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
-        ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
-        ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
-        ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
-        ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
-        ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
-        ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
-        ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
-        ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
-        ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
-        ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
-        ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
-
-
-      //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-      //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-       
-      
-      });
-      // FiltersOne();
+      },(state.acreedor?1:0)===0 && (state.deudor?1:0)===0 ?undefined:state.acreedor?1:0,true);
       GetInstructions();
     }
+      
   }, [state]);
   useEffect(() => {
     if(selected.sInicioPeriodo){
@@ -1502,31 +920,7 @@ export default function Instrucciones(props) {
     if(selected.sMontoNeto){
       console.log(selected.sMontoNeto)
     }
-    console.log({
-
-      ...(state.estadoAceptacion ? { ceN_dte_acceptance_status_name: "Aceptado" } : {}),
-      ...(state.estadoRecepcion ? { trgnS_dte_reception_status_name: "Recepcionado" } : {}),
-      ...(state.estadoEmision ? { ceN_billing_status_type_name: "Facturado" } : {}),
-      ...(state.estadoPago ? { ceN_payment_status_type_name: "Pagado" } : {}),
-      ...(state.acreedor && selected.sRut != ""? {rutDeudor: selected.sRut.slice(0, 8)} : {}),
-      ...(state.deudor &&  selected.sRut != ""? {rutAcreedor: selected.sRut.slice(0, 8)}: {}),
-      ...(state.acreedor && selected.sBusinessName != ""?{nombreDeudor:  selected.sBusinessName} : {}),
-      ...(state.deudor && selected.sBusinessName? {nombreAcreedor:  selected.sBusinessName} : {}),
-      ...(selected.sCarta != ""? {carta: selected.sCarta } : {}),
-      ...(selected.sCodRef != ""? {codigoRef: selected.sCodRef } : {}),
-      ...(selected.sConcept != ""? {glosa: selected.sConcept } : {}), 
-      ...(selected.sMontoNeto != ""? {montoNeto: parseInt(selected.sMontoNeto.replace(/\./g, "_")) } : {}), 
-      ...(selected.sMontoBruto != ""? {montoBruto: parseInt(selected.sMontoBruto.replace(/\./g, "_")) } : {}), 
-      ...(selected.sFolio != ""? {folio:parseInt(selected.sFolio) } : {}),
-      ...(selected.sInicioPeriodo != ""? {period: formatedDataToSearch(selected.sInicioPeriodo) } : {}), 
-      ...(selected.sTerminoPeriodo != ""? {periodEnd: formatedDataToSearch(selected.sTerminoPeriodo) } : {}), 
-
-
-    //  MontoNeto: selected.sMontoNeto != "" ? selected.sMontoNeto : "",
-    //   MontoBruto: selected.sMontoBruto != "" ? selected.sMontoBruto : "",
-     
-    
-    })
+  
   }, [selected])
   
   function formatedDataToSearch(date){
@@ -1587,7 +981,7 @@ export default function Instrucciones(props) {
     currency: "CLP",
     style: "currency",
   });
-  //tabla
+
   const handleChangePage = () => {
     setLoadingApis(true);
 
@@ -1595,7 +989,7 @@ export default function Instrucciones(props) {
     if (pageIndex === pageCount) {
       setLoadingApis(false);
     }
-    // setPage(pageIndex + 1);
+  
 
     GetInstructions();
   };
@@ -2441,12 +1835,15 @@ export default function Instrucciones(props) {
                           sCodRef: "",
                           sInicioPeriodo: "",
                           sTerminoPeriodo: "",
-                          buscar: false,
+                          buscar: 0,
+                          limpiar: prevLista.limpiar+1,
                         };
                       });
                       if(condicionFilters ===1){
                         clearStates();
                       }
+                 
+                      
                     }}
                     style={{
                       m: 1,
