@@ -5,11 +5,11 @@ export const CallApi = async (PageIndex = 1, PageSize = 10, numero = 1) => {
   let response;
   let prueba;
   if (numero === 1) {
-    url = ` https://trigonosapi.azurewebsites.net/api/Participantes?All=s&PageIndex=${PageIndex}&PageSize=${PageSize}`;
+    url = `http://localhost:5205/api/Participantes?All=s&PageIndex=${PageIndex}&PageSize=${PageSize}`;
   } else if (numero === 0) {
-    url = ` https://trigonosapi.azurewebsites.net/api/Participantes`;
+    url = `http://localhost:5205/api/Participantes`;
   } else if (numero === 2) {
-    url = " https://trigonosapi.azurewebsites.net/api/Banks";
+    url = "http://localhost:5205/api/Banks";
   }
 
   response = await axios.get(url);

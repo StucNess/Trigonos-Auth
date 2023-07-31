@@ -613,6 +613,10 @@ function TabInstrucciones(props) {
   //   };
   // }, []);
   useEffect(() => {
+    //  props.excelData.data
+    //           .filter((e) => e.type == "Facturacion Masiva")
+    //           .map((row) => (
+
     const devuelveFechaHoy = (param = 0) => {
       let fechaActual = new Date();
       param === 1 && fechaActual.setDate(fechaActual.getDate() + 2);
@@ -698,6 +702,7 @@ function TabInstrucciones(props) {
     }, 1000);
     // }
   }, []);
+
   const mostrarMensaje = (response) => {
     if (!(response.error == undefined)) {
       setMsgAlert({
@@ -711,6 +716,7 @@ function TabInstrucciones(props) {
       setCargando(false);
       setTimeout(() => {
         setOpenDialog(false);
+        window.location.reload();
       }, 4000);
     } else {
       setMsgAlert({
@@ -721,6 +727,7 @@ function TabInstrucciones(props) {
       setCargando(false);
       setTimeout(() => {
         setOpenDialog(false);
+        window.location.reload();
       }, 4000);
     }
   };
@@ -1421,7 +1428,7 @@ function TabInstrucciones(props) {
 
     let url;
     url =
-      "https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
+      "http://localhost:5205/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
     axios
       .post(url, selected)
       .then(function (response) {
@@ -1554,6 +1561,11 @@ function TabInstrucciones(props) {
                               tabIndex={-1}
                               key={row.id}
                               selected={isItemSelected}
+                              style={
+                                props.dataPendiente.includes(row.id)
+                                  ? { backgroundColor: "#e4493f" }
+                                  : { backgroundColor: "white" }
+                              }
                             >
                               <StyledTableCell padding="checkbox">
                                 <Checkbox
@@ -1605,6 +1617,11 @@ function TabInstrucciones(props) {
                               tabIndex={-1}
                               key={row.id}
                               selected={isItemSelected}
+                              style={
+                                props.dataPendiente.includes(row.id)
+                                  ? { backgroundColor: "#e4493f" }
+                                  : { backgroundColor: "white" }
+                              }
                             >
                               <StyledTableCell padding="checkbox">
                                 <Checkbox
@@ -1683,6 +1700,11 @@ function TabInstrucciones(props) {
                               tabIndex={-1}
                               key={row.id}
                               selected={isItemSelected}
+                              style={
+                                props.dataPendiente.includes(row.id)
+                                  ? { backgroundColor: "#e4493f" }
+                                  : { backgroundColor: "white" }
+                              }
                             >
                               <StyledTableCell padding="checkbox">
                                 <Checkbox

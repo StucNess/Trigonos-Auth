@@ -42,6 +42,7 @@ const steps = [
 // let idErp = 0;
 let erpSelect;
 let array2 = [];
+let arrayPendientes = [];
 export default function HorizontalLinearStepper(props) {
   const [activeStep, setActiveStep] = useState(0);
   const [idParticipant, setIdParticipant] = useState(0);
@@ -83,6 +84,7 @@ export default function HorizontalLinearStepper(props) {
   };
 
   const handleReset = () => {
+    array2 = [];
     setActiveStep(0);
     setCargando(true);
   };
@@ -100,11 +102,11 @@ export default function HorizontalLinearStepper(props) {
         Folio: 0,
         Acreedor: idParticipant,
         MontoNeto: 10,
-        EstadoEmision: "No Facturado",
+        FacturacionMasiva: "A",
       },
     }).then(({ data }) => {
       let buclesF = Math.round(data.count / 100 + 0.49) + 2;
-      console.log(buclesF);
+
       for (let x = 1; x < buclesF; x++) {
         getInstrucciones({
           id: idParticipant,
@@ -114,11 +116,15 @@ export default function HorizontalLinearStepper(props) {
             Folio: 0,
             Acreedor: idParticipant,
             MontoNeto: 10,
-            EstadoEmision: "No Facturado",
+            FacturacionMasiva: "A",
           },
         }).then(({ data }) => {
           data.data.map((e) => {
             array2.push(e);
+            if (e.estado_emision == 4) {
+              console.log("entre aca ");
+              arrayPendientes.push(e.id_instruccions);
+            }
           });
 
           if (array2.length === data.count) {
@@ -128,6 +134,7 @@ export default function HorizontalLinearStepper(props) {
       }
     });
   };
+  console.log(arrayPendientes);
   return (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
@@ -196,7 +203,8 @@ export default function HorizontalLinearStepper(props) {
                 </Box>
               </div>
             </Box>
-          ) : activeStep === 1 ? ( //descarga de folio/instrucciones
+          ) : (
+            //descarga de folio/instrucciones
             <>
               {/* <Box> */}
               {cargando == true ? (
@@ -206,6 +214,7 @@ export default function HorizontalLinearStepper(props) {
               ) : (
                 <TabInstrucciones
                   dataInstructions={array2}
+                  dataPendiente={arrayPendientes}
                   erp={
                     props.dataParticipants.find((d) => d.id == idParticipant)
                       .trgns_erp
@@ -218,39 +227,6 @@ export default function HorizontalLinearStepper(props) {
 
               {/* </Box> */}
             </>
-          ) : (
-            //finalizacion del proceso
-            <Box>
-              <Box
-                className="flex justify-center   text-white p-[10px] m-[40px] "
-                sx={{ bgcolor: "primary.main" }}
-              >
-                <CheckCircleOutlinedIcon className="w-[30px] h-[30px]  mr-[10px] " />
-                <b>
-                  {" "}
-                  <span className="text-[20px]">Finalizar Proceso</span>
-                </b>
-              </Box>
-              <div className="flex  w-full items-center justify-evenly m-[10px]  ">
-                <Button
-                  className="w-[150px]"
-                  variant="contained"
-                  color="secondary"
-                  startIcon={<FileUploadIcon />}
-                  style={{
-                    m: 1,
-                    width: 250,
-                    margin: "0 auto",
-                    display: "flex",
-                    marginTop: 25,
-
-                    color: "white",
-                  }}
-                >
-                  Subir Archivo
-                </Button>
-              </div>
-            </Box>
           )}
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
             <Box sx={{ flex: "1 1 auto" }} />
@@ -263,7 +239,7 @@ export default function HorizontalLinearStepper(props) {
               Atrás
             </Button>
             <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finalizar" : "Siguiente"}
+              {activeStep === 0 && "Siguiente"}
             </Button>
           </Box>
         </React.Fragment>

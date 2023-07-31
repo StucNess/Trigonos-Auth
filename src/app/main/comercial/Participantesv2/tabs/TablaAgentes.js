@@ -226,7 +226,7 @@ export default function TablaAgentes(props) {
   const [cargaGetAgentsData, setCargaGetAgentsData] = useState(true);
 
   // const { data: getDataHist, isFetching: fetchHist, refetch: refetchHist} =  useGetHistorificacionMutation({id:props.idParticipant, PageIndex:pageIndex, PageSize:rowsPerPage  });
-  // let url = ` https://trigonosapi.azurewebsites.net/Historificacion?id=${props.idParticipant}`;
+  // let url = `http://localhost:5205/Historificacion?id=${props.idParticipant}`;
 
   const convertAndDownloadExcel = (header, data, name, tipoExcel) => {
     const wb = XLSX.utils.book_new();

@@ -11,7 +11,7 @@ export const getProjects = createAsyncThunk(
     const idUser = localStorage.getItem("idUser");
 
     const response = await axios.get(
-      ` https://trigonosapi.azurewebsites.net/api/Participantes?id=${idUser}`
+      `http://localhost:5205/api/Participantes?id=${idUser}`
     );
     return response.data.data;
   }
