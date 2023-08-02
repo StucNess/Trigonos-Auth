@@ -4,7 +4,7 @@ export const instruccionesApi = createApi({
   reducerPath: "instrucciones",
   tagTypes: ["instruccionesDef"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://trigonosapi.azurewebsites.net",
+    baseUrl: "http://localhost:5205",
   }),
   endpoints: (builder) => ({
     // GET QUERY //
@@ -299,7 +299,10 @@ export const instruccionesApi = createApi({
       }),
       providesTags: ["Carta"],
     }),
-
+    getLogsFacturacion: builder.query({
+      query: (id) =>
+        `/api/Instrucciones/LogsFacturacioncl?id=${id}&PageIndex=1&PageSize=1000`,
+    }),
     getNombreAcreedor: builder.query({
       query: (data) => ({
         url: data.spec
@@ -594,16 +597,11 @@ export const instruccionesApi = createApi({
             (data.spec.MontoBruto != undefined
               ? `&MontoBruto=${data.spec.MontoBruto}`
               : "") +
-<<<<<<< HEAD
-            (data.spec.FacturacionMasiva != undefined
-              ? `&FacturacionMasiva=${data.spec.MontoBruto}`
-=======
             (data.spec.MontoNetoIgual != undefined
               ? `&MontoNetoIgual=${data.spec.MontoNetoIgual}`
               : "") +
             (data.spec.MontoBrutoIgual != undefined
               ? `&MontoBrutoIgual=${data.spec.MontoBrutoIgual}`
->>>>>>> 3d6b0553b197b5987b910656b77efea170d3a038
               : "") +
             (data.spec.EstadoEmision != undefined
               ? `&EstadoEmision=${data.spec.EstadoEmision}`
@@ -1805,6 +1803,7 @@ export const {
   useGetInstruccionesSpecmMutation,
   useGetInstruccionesSpecQuery,
   useGetConceptoQuery,
+  useGetLogsFacturacionQuery,
   useGetNombreAcreedorQuery,
   useGetRutAcreedorQuery,
   useGetNombreDeudorQuery,

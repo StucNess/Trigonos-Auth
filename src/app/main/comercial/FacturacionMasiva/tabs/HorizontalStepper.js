@@ -6,13 +6,20 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import FormControl from "@mui/material/FormControl";
-import { useGetInstruccionesSpecmMutation } from "app/store/instrucciones/instruccionesApi";
+import {
+  useGetLogsFacturacionQuery,
+  useGetInstruccionesSpecmMutation,
+} from "app/store/instrucciones/instruccionesApi";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 // ELEMENTOS VISUALES
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 //
+import {
+  useGetAcreedorDocumentQuery,
+  useGetDeudorDocumentQuery,
+} from "app/store/instrucciones/instruccionesApi";
 import Select from "@mui/material/Select";
 import { HiOutlineInformationCircle, HiOutlineUser } from "react-icons/hi";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -49,6 +56,8 @@ export default function HorizontalLinearStepper(props) {
   const [getInstrucciones] = useGetInstruccionesSpecmMutation();
   const [facturador, setFacturador] = useState("Vacio");
   const [cargando, setCargando] = useState(true);
+  const { data: getParticipants, isLoading: isLoadParticipant } =
+    useGetLogsFacturacionQuery(idParticipant);
   const { data: dataWeb = [], isLoading: isloadingListar = true } =
     useGetInstruccionesQuery(idParticipant);
   useEffect(() => {
@@ -134,7 +143,7 @@ export default function HorizontalLinearStepper(props) {
       }
     });
   };
-  console.log(arrayPendientes);
+
   return (
     <Box sx={{ width: "100%" }}>
       <Stepper activeStep={activeStep}>
@@ -215,6 +224,7 @@ export default function HorizontalLinearStepper(props) {
                 <TabInstrucciones
                   dataInstructions={array2}
                   dataPendiente={arrayPendientes}
+                  dataLogsFacturacion={getParticipants.data}
                   erp={
                     props.dataParticipants.find((d) => d.id == idParticipant)
                       .trgns_erp

@@ -11,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
+import Paper from "@mui/material/Paper";
 //ICONS
 import { SiMicrosoftexcel, SiBitcoinsv } from "react-icons/si";
 import Checkbox from "@mui/material/Checkbox";
@@ -556,7 +557,7 @@ function TabInstrucciones(props) {
   const [openDialog, setOpenDialog] = useState(false);
 
   const { msgResp, msgText, msgError } = MsgAlert;
-
+  const [erroresFacturacion, setErroresFacturacion] = useState([]);
   function search(searchString) {
     if (searchString.length === 0) {
       return rowspermanent;
@@ -738,7 +739,37 @@ function TabInstrucciones(props) {
     rows = search(value.trim());
     rowsOnMount();
   };
-
+  const mostrarMensaje2 = (response) => {
+    console.log(response);
+    if (!(response.error == undefined)) {
+      setErroresFacturacion(JSON.parse(response.error.data.message));
+      var jsonArray = JSON.parse(response.error.data.message);
+      for (let i = 0; i < jsonArray.length; i++) {
+        const elemento = jsonArray[i].idInstruccion;
+      }
+      setMsgAlert({
+        msgResp: true,
+        msgText: response.error == response.error.data.message,
+        msgError: true,
+      });
+      setCargando(false);
+      // setTimeout(() => {
+      //   setOpenDialog(false);
+      //   window.location.reload();
+      // }, 4000);
+    } else {
+      setMsgAlert({
+        msgResp: true,
+        msgText: "SE HA FACTURADO CORRECTAMENTE",
+        msgError: false,
+      });
+      setCargando(false);
+      // setTimeout(() => {
+      //   setOpenDialog(false);
+      //   window.location.reload();
+      // }, 4000);
+    }
+  };
   const handleRequestSort = useCallback(
     (event, newOrderBy) => {
       const isAsc = orderBy === newOrderBy && order === "asc";
@@ -1119,7 +1150,7 @@ function TabInstrucciones(props) {
     setOpenDialog(true);
     setCargando(true);
     postFacturacion({ id: props.id, body: selected }).then((response) => {
-      mostrarMensaje(response);
+      mostrarMensaje2(response);
     });
   };
   function downloadExcelFile(filename, nubox = 0) {
@@ -1428,7 +1459,7 @@ function TabInstrucciones(props) {
 
     let url;
     url =
-      "https://trigonosapi.azurewebsites.net/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
+      "http://localhost:5205/api/Instrucciones/ActualizarEstEmision?estadoEmision=4";
     axios
       .post(url, selected)
       .then(function (response) {
@@ -1691,73 +1722,173 @@ function TabInstrucciones(props) {
                             </StyledTableRow>
                           );
                         } else if (props.erp == 7 || props.erp == 5) {
-                          return (
-                            <StyledTableRow
-                              hover
-                              role="checkbox"
-                              onClick={(event) => handleClick(event, row.id)}
-                              aria-checked={isItemSelected}
-                              tabIndex={-1}
-                              key={row.id}
-                              selected={isItemSelected}
-                              style={
-                                props.dataPendiente.includes(row.id)
-                                  ? { backgroundColor: "#e4493f" }
-                                  : { backgroundColor: "white" }
-                              }
-                            >
-                              <StyledTableCell padding="checkbox">
-                                <Checkbox
-                                  color="primary"
-                                  checked={isItemSelected}
-                                  inputProps={{
-                                    "aria-labelledby": "Disconformidad",
-                                  }}
-                                />
-                              </StyledTableCell>
-                              <StyledTableCell
-                                align="left"
-                                component="th"
-                                id={labelId}
-                                scope="row"
-                              >
-                                {row.numeroCorrelativo}
-                              </StyledTableCell>
-                              <StyledTableCell key={row.fecha} align="left">
-                                {row.fecha}
-                              </StyledTableCell>
-                              <StyledTableCell
-                                key={row.fechaVencimiento}
-                                align="left"
-                              >
-                                {row.fechaVencimiento}
-                              </StyledTableCell>
-                              <StyledTableCell
-                                key={row.codigoCliente}
-                                align="left"
-                              >
-                                {row.codigoCliente}
-                              </StyledTableCell>
-                              <StyledTableCell key={row.afecto} align="left">
-                                {chile.format(row.afecto)}
-                              </StyledTableCell>
-                              <StyledTableCell key={row.total} align="left">
-                                {chile.format(row.total)}
-                              </StyledTableCell>
-                              <StyledTableCell key={row.nombre} align="left">
-                                {row.nombre}
-                              </StyledTableCell>
-                              <StyledTableCell key={row.direccion} align="left">
-                                {row.direccion}
-                              </StyledTableCell>
-                              <StyledTableCell
-                                key={row.comentarioProducto}
-                                align="left"
-                              >
-                                {row.comentarioProducto}
-                              </StyledTableCell>
-                            </StyledTableRow>
+                          // console.log(row.id);
+                          console.log(
+                            props.dataLogsFacturacion.some(
+                              (objecto) => objecto.idInstruccion == row.id
+                            )
                           );
+                          // console.log(
+                          //   props.dataLogsFacturacion.includes(row.id)
+                          // );
+                          if (
+                            props.dataLogsFacturacion.some(
+                              (objecto) => objecto.idInstruccion == row.id
+                            ) == true
+                          ) {
+                            const objetoEncontrado =
+                              props.dataLogsFacturacion.find(
+                                (objecto) => objecto.idInstruccion == row.id
+                              );
+                            console.log(objetoEncontrado.error);
+                            return (
+                              <Tooltip title={objetoEncontrado.error}>
+                                <StyledTableRow
+                                  hover
+                                  role="checkbox"
+                                  onClick={(event) =>
+                                    handleClick(event, row.id)
+                                  }
+                                  aria-checked={isItemSelected}
+                                  tabIndex={-1}
+                                  key={row.id}
+                                  selected={isItemSelected}
+                                  style={{ backgroundColor: "#e4493f" }}
+                                >
+                                  <StyledTableCell padding="checkbox">
+                                    <Checkbox
+                                      color="primary"
+                                      checked={isItemSelected}
+                                      inputProps={{
+                                        "aria-labelledby": "Disconformidad",
+                                      }}
+                                    />
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    align="left"
+                                    component="th"
+                                    id={labelId}
+                                    scope="row"
+                                  >
+                                    {row.numeroCorrelativo}
+                                  </StyledTableCell>
+                                  <StyledTableCell key={row.fecha} align="left">
+                                    {row.fecha}
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    key={row.fechaVencimiento}
+                                    align="left"
+                                  >
+                                    {row.fechaVencimiento}
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    key={row.codigoCliente}
+                                    align="left"
+                                  >
+                                    {row.codigoCliente}
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    key={row.afecto}
+                                    align="left"
+                                  >
+                                    {chile.format(row.afecto)}
+                                  </StyledTableCell>
+                                  <StyledTableCell key={row.total} align="left">
+                                    {chile.format(row.total)}
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    key={row.nombre}
+                                    align="left"
+                                  >
+                                    {row.nombre}
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    key={row.direccion}
+                                    align="left"
+                                  >
+                                    {row.direccion}
+                                  </StyledTableCell>
+                                  <StyledTableCell
+                                    key={row.comentarioProducto}
+                                    align="left"
+                                  >
+                                    {row.comentarioProducto}
+                                  </StyledTableCell>
+                                </StyledTableRow>
+                              </Tooltip>
+                            );
+                          } else {
+                            return (
+                              <StyledTableRow
+                                hover
+                                role="checkbox"
+                                onClick={(event) => handleClick(event, row.id)}
+                                aria-checked={isItemSelected}
+                                tabIndex={-1}
+                                key={row.id}
+                                selected={isItemSelected}
+                                style={
+                                  props.dataPendiente.includes(row.id)
+                                    ? { backgroundColor: "#e4493f" }
+                                    : { backgroundColor: "white" }
+                                }
+                              >
+                                <StyledTableCell padding="checkbox">
+                                  <Checkbox
+                                    color="primary"
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                      "aria-labelledby": "Disconformidad",
+                                    }}
+                                  />
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  align="left"
+                                  component="th"
+                                  id={labelId}
+                                  scope="row"
+                                >
+                                  {row.numeroCorrelativo}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.fecha} align="left">
+                                  {row.fecha}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  key={row.fechaVencimiento}
+                                  align="left"
+                                >
+                                  {row.fechaVencimiento}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  key={row.codigoCliente}
+                                  align="left"
+                                >
+                                  {row.codigoCliente}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.afecto} align="left">
+                                  {chile.format(row.afecto)}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.total} align="left">
+                                  {chile.format(row.total)}
+                                </StyledTableCell>
+                                <StyledTableCell key={row.nombre} align="left">
+                                  {row.nombre}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  key={row.direccion}
+                                  align="left"
+                                >
+                                  {row.direccion}
+                                </StyledTableCell>
+                                <StyledTableCell
+                                  key={row.comentarioProducto}
+                                  align="left"
+                                >
+                                  {row.comentarioProducto}
+                                </StyledTableCell>
+                              </StyledTableRow>
+                            );
+                          }
                         }
                       }
                     })
@@ -1791,42 +1922,136 @@ function TabInstrucciones(props) {
           control={<Switch checked={dense} onChange={handleChangeDense} />}
           label="Disminuir espacio"
         />
-        <Dialog
-          open={openDialog}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          scroll={"paper"}
-        >
-          {cargando ? (
-            <div className="flex justify-center items-center h-[250px] w-[300px]">
-              <CircularProgress color="secondary" />
-            </div>
-          ) : (
-            <div>
-              {msgResp && (
-                <div className="flex justify-center items-center h-[250px] w-[300px]">
-                  {msgError ? (
-                    <div className="flex justify-center items-center h-[250px] w-[300px]">
-                      <WarningIcon className="w-[68px] h-[68px]  text-red" />
-                      <span className="absolute bottom-[20px] text-red">
-                        {" "}
-                        <b>{msgText}</b>
-                      </span>
+        {props.erp == 5 ? (
+          <Dialog
+            open={openDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            scroll={"paper"}
+          >
+            {cargando ? (
+              <div className="flex justify-center items-center h-[250px] w-[300px]">
+                <CircularProgress color="secondary" />
+              </div>
+            ) : (
+              <div>
+                {msgResp && (
+                  <div>
+                    <div className="flex justify-between">
+                      <div className="flex justify-center items-center">
+                        {/* <WarningIcon className="w-[50px] h-[50px] text-red" /> */}
+                        <p className="text-red">
+                          {" "}
+                          {/* ERROR AL FACTURAR LAS SIGUIENTES INSTRUCCIONES */}
+                        </p>
+                      </div>
                     </div>
-                  ) : (
-                    <div className="flex justify-center items-center h-[250px] w-[300px]">
-                      <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
-                      <span className="absolute bottom-[70px] text-green">
-                        {" "}
-                        <b>{msgText}</b>
-                      </span>
+
+                    {msgError ? (
+                      <>
+                        <div className="flex justify-center items-center">
+                          <WarningIcon className="w-[50px] h-[50px] text-red" />
+                          <p className="text-red">
+                            {" "}
+                            ERROR AL FACTURAR LAS SIGUIENTES INSTRUCCIONES
+                          </p>
+                        </div>
+                        <div className="flex justify-center items-center">
+                          <TableContainer
+                            component={Paper}
+                            className="bg-grey-100"
+                          >
+                            <Table aria-label="simple table">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>ID</TableCell>
+                                  <TableCell align="left">ERROR</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {erroresFacturacion.map((row) => (
+                                  <TableRow
+                                    key={row.idInstruccion}
+                                    sx={{
+                                      "&:last-child td, &:last-child th": {
+                                        border: 0,
+                                      },
+                                    }}
+                                  >
+                                    <TableCell component="th" scope="row">
+                                      {row.idInstruccion}
+                                    </TableCell>
+                                    <TableCell align="left">
+                                      {row.error}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex justify-center items-center h-[250px] w-[300px]">
+                        <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                        <span className="absolute bottom-[70px] text-green">
+                          {" "}
+                          <b>{msgText}</b>
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="flex justify-center items-center">
+                      <Button
+                        onClick={() => window.location.reload()}
+                        variant="outlined"
+                      >
+                        Cerrar
+                      </Button>
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </Dialog>
+                  </div>
+                )}
+              </div>
+            )}
+          </Dialog>
+        ) : (
+          <Dialog
+            open={openDialog}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+            scroll={"paper"}
+          >
+            {cargando ? (
+              <div className="flex justify-center items-center h-[250px] w-[300px]">
+                <CircularProgress color="secondary" />
+              </div>
+            ) : (
+              <div>
+                {msgResp && (
+                  <div className="flex justify-center items-center h-[250px] w-[300px]">
+                    {msgError ? (
+                      <div className="flex justify-center items-center h-[250px] w-[300px]">
+                        <WarningIcon className="w-[68px] h-[68px]  text-red" />
+                        <span className="absolute bottom-[20px] text-red">
+                          {" "}
+                          <b>{msgText}</b>
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex justify-center items-center h-[250px] w-[300px]">
+                        <CheckCircleIcon className="w-[68px] h-[68px] text-green" />
+                        <span className="absolute bottom-[70px] text-green">
+                          {" "}
+                          <b>{msgText}</b>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </Dialog>
+        )}
         //
       </>
     </Box>
